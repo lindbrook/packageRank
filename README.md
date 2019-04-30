@@ -89,4 +89,3 @@ devtools::install_github("lindbrook/packageRank")
 ### Note
 
 ‘packageRank’ relies on having an active internet connection.
-# packageRank
