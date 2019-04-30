@@ -1,0 +1,77 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">",
+  fig.path = "man/figures/README-"
+)
+```
+
+```{r, echo = FALSE}
+library(packageRank)
+```
+
+## 'packageRank'
+
+'packageRank' builds on the on the 'cranlogs' package (https://cran.r-project.org/package=cranlogs) by putting the raw counts of package downloads into context. Numerically, it computes a package's rank percentile among all downloads (e.g., the 90th percentile or the percent of packages with fewer downloads). Visually, it locates a package's position in the distribution of downloads either for individual days (cross-sectionally) or, in more limited fashion, over time (longitudinally).
+
+
+### Computation
+
+```{r example0}
+cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
+```
+
+```{r example}
+packageRank(package = "HistData", date = "2019-01-01")
+```
+
+### Visualization:
+
+Using the cran_downloads2() function, 'packageRank' includes an S3 plot method for 'cranlogs' output. These generate both base R graphics and 'ggplot2' style graphs:
+
+```{r cranlogsB, fig.width = 5, fig.height = 5, fig.align = "left"}
+plot(cran_downloads2(package = c("Rcpp", "rlang", "dplyr")), graphics_pkg = "base")
+```
+
+```{r cranlogsC, fig.width = 6, fig.height = 6, fig.align = "left"}
+plot(cran_downloads2(package = c("Rcpp", "rlang", "dplyr"), from = "2019-01-01", to = "2019-01-31"))
+```
+
+Using the packageRank() function, we get a cross-sectional view:
+
+```{r plot1, fig.width = 5, fig.height = 5, fig.align = "left"}
+plot(packageRank(package = "HistData", date = "2019-01-01"), graphics_pkg = "base")
+```
+
+```{r plot2, fig.width = 6, fig.height = 6, fig.align = "left"}
+plot(packageRank(package = c("HistData", "cholera", "regtools"), date = "2019-04-01"),
+  graphics_pkg = "ggplot2")
+```
+
+Using the packageRankTime() function, we get a longitudinal (time-series) view:
+
+```{r plot_ts, fig.width = 5, fig.height = 5, fig.align = "left"}
+plot(packageRankTime(package = "HistData", when = "last-month"), graphics_pkg = "base")
+```
+
+```{r plot_ts2, fig.width = 6, fig.height = 6, fig.align = "left"}
+plot(packageRankTime(package = c("Rcpp", "HistData", "rlang"), when = "last-month"))
+```
+
+### Installation
+
+To install the development version of 'packageRank' from GitHub:
+
+```{r, eval = FALSE}
+devtools::install_github("lindbrook/packageRank")
+```
+
+### Note
+
+'packageRank' relies on having an active internet connection.
