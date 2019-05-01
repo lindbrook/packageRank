@@ -12,16 +12,16 @@
 
 \item{graphics_pkg}{Character. "base" or "ggplot2".}
 
-\item{log_y}{Logical.}
+\item{log_y}{Logical. Logarithm of package downloads.}
 
 \item{cran_smpl_smooth}{Logical. lowess background.}
 
-\item{f}{Numeric. lowess smoothing window}
+\item{f}{Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.}
 
 \item{...}{Additional plotting parameters.}
 }
 \value{
-A base R plot.
+A base R or ggplot2 plot.
 }
 \description{
 Plot method for timeSeriesRank().

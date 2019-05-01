@@ -90,11 +90,11 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' Plot method for timeSeriesRank().
 #' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
-#' @param log_y Logical.
+#' @param log_y Logical. Logarithm of package downloads.
 #' @param cran_smpl_smooth Logical. lowess background.
-#' @param f Numeric. lowess smoothing window
+#' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
-#' @return A base R plot.
+#' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
@@ -175,11 +175,11 @@ summary.package_rank_time <- function(object, ...) {
 
 #' Base R Graphics Plot (Longitudinal).
 #' @param x Object.
-#' @param log_y Logical.
+#' @param log_y Logical. Logarithm of package downloads.
 #' @param cran_smpl Object.
 #' @param pkg.data Object.
 #' @param cran_smpl_smooth Logical. lowess background.
-#' @param f Numeric. lowess smoothing window
+#' @param f Numeric. stats::lowess() smoother window.
 #' @noRd
 
 basePlotTime <- function(x, log_y, cran_smpl, pkg.data, cran_smpl_smooth, f) {

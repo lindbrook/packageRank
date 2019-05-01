@@ -12,7 +12,7 @@
 
 \item{graphics_pkg}{Character. "base" or "ggplot2".}
 
-\item{log_y}{Logical.}
+\item{log_y}{Logical. Logarithm of package downloads.}
 
 \item{...}{Additional plotting parameters.}
 }

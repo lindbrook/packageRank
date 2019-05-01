@@ -79,7 +79,7 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
 #' Plot method for packageRank().
 #' @param x An object of class "package_rank" created by \code{packageRank()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
-#' @param log_y Logical.
+#' @param log_y Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
@@ -203,7 +203,7 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_y = TRUE, ...) {
 
 #' Base R Graphics Plot (Cross-sectional).
 #' @param pkg Object.
-#' @param log_y Logical.
+#' @param log_y Logical. Logarithm of package downloads.
 #' @param crosstab Object.
 #' @param iqr Object.
 #' @param package.data Object.

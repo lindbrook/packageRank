@@ -12,13 +12,13 @@
 
 \item{graphics_pkg}{Character. "base" or "ggplot2".}
 
-\item{points}{Logical}
+\item{points}{Logical. Plot points.}
 
-\item{log_y}{Logical}
+\item{log_y}{Logical. Logarithm of package downloads.}
 
-\item{smooth}{Logical.}
+\item{smooth}{Logical. Add smoother.}
 
-\item{se}{Logical.}
+\item{se}{Logical. For use with graphics_pkg = "ggplot2" only.}
 
 \item{...}{Additional plotting parameters.}
 }

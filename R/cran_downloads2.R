@@ -34,10 +34,10 @@ cran_downloads2 <- function(packages = NULL,
 #'
 #' @param x object.
 #' @param graphics_pkg Character. "base" or "ggplot2".
-#' @param points Logical
-#' @param log_y Logical
-#' @param smooth Logical.
-#' @param se Logical.
+#' @param points Logical. Plot points.
+#' @param log_y Logical. Logarithm of package downloads.
+#' @param smooth Logical. Add smoother.
+#' @param se Logical. For use with graphics_pkg = "ggplot2" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
