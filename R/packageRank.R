@@ -58,14 +58,13 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
     round(100 * mean(crosstab < crosstab[x]), 1)
   }, numeric(1L))
 
-  rank <- paste(format(nominal.rank, big.mark = ","), "of",
-                format(tot.pkgs, big.mark = ","))
-
   dat <- data.frame(date = ymd,
                     package = package,
                     downloads = c(crosstab[package]),
+                    rank = unlist(nominal.rank),
                     percentile = pkg.percentile,
-                    rank = rank,
+                    total.downloads = sum(crosstab),
+                    total.packages = tot.pkgs,
                     stringsAsFactors = FALSE,
                     row.names = NULL)
 
@@ -243,8 +242,8 @@ basePlot <- function(pkg, log_y, crosstab, iqr, package.data, y.max, date) {
     labels = paste(names(crosstab[1]), "=", format(crosstab[1],
     big.mark = ",")), cex = 0.8, col = "dodgerblue")
   text(which(names(crosstab) == names(crosstab[length(crosstab)])), y.max,
-    labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")),
-    cex = 0.8, col = "dodgerblue", pos = 2)
+    labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")), cex = 0.8,
+    col = "dodgerblue", pos = 2)
   title(main = paste(pkg, "@", date))
 }
 
@@ -254,7 +253,12 @@ basePlot <- function(pkg, log_y, crosstab, iqr, package.data, y.max, date) {
 #' @export
 
 print.package_rank <- function(x, ...) {
-  print(x$package.data)
+  dat <- x$package.data
+  rank <- paste(format(dat$rank, big.mark = ","), "of",
+                format(dat$total.packages, big.mark = ","))
+  out <- data.frame(dat[, c("date", "package", "downloads", "percentile")],
+    rank, stringsAsFactors = FALSE, row.names = NULL)
+  print(out)
 }
 
 #' Summary method for packageRank().
