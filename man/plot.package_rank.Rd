@@ -4,15 +4,15 @@
 \alias{plot.package_rank}
 \title{Plot method for packageRank().}
 \usage{
-\method{plot}{package_rank}(x, graphics_pkg = "ggplot2", log_y = TRUE,
-  ...)
+\method{plot}{package_rank}(x, graphics_pkg = "ggplot2",
+  log_count = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class "package_rank" created by \code{packageRank()}.}
 
 \item{graphics_pkg}{Character. "base" or "ggplot2".}
 
-\item{log_y}{Logical. Logarithm of package downloads.}
+\item{log_count}{Logical. Logarithm of package downloads.}
 
 \item{...}{Additional plotting parameters.}
 }

@@ -5,7 +5,7 @@
 \title{Plot method for cran_downloads2().}
 \usage{
 \method{plot}{cranlogs}(x, graphics_pkg = "ggplot2", points = TRUE,
-  log_y = FALSE, smooth = FALSE, se = FALSE, ...)
+  log_count = FALSE, smooth = FALSE, se = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -14,7 +14,7 @@
 
 \item{points}{Logical. Plot points.}
 
-\item{log_y}{Logical. Logarithm of package downloads.}
+\item{log_count}{Logical. Logarithm of package downloads.}
 
 \item{smooth}{Logical. Add smoother.}
 

@@ -78,14 +78,16 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
 #' Plot method for packageRank().
 #' @param x An object of class "package_rank" created by \code{packageRank()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
-#' @param log_y Logical. Logarithm of package downloads.
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 
-plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_y = TRUE, ...) {
+plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
+  ...) {
+    
   crosstab <- x$crosstab
   package.data <- x$package.data
   package  <- x$package
@@ -101,10 +103,10 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_y = TRUE, ...) {
   if (graphics_pkg == "base") {
     if (length(package) > 1) {
       invisible(lapply(package, function(x) {
-        basePlot(x, log_y, crosstab, iqr, package.data, y.max, date)
+        basePlot(x, log_count, crosstab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(package, log_y, crosstab, iqr, package.data, y.max, date)
+      basePlot(package, log_count, crosstab, iqr, package.data, y.max, date)
     }
   } else if (graphics_pkg == "ggplot2") {
     package.data <- x$package.data
@@ -196,13 +198,13 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_y = TRUE, ...) {
                         colour = "white", size = label.size, label = xlabel,
                         nudge_y = ylabel.nudge)
 
-    if (log_y) p + scale_y_log10() else p
+    if (log_count) p + scale_y_log10() else p
   } else stop('graphics_pkg must be "base" or "ggplot2"')
 }
 
 #' Base R Graphics Plot (Cross-sectional).
 #' @param pkg Object.
-#' @param log_y Logical. Logarithm of package downloads.
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param crosstab Object.
 #' @param iqr Object.
 #' @param package.data Object.
@@ -210,8 +212,8 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_y = TRUE, ...) {
 #' @param date Character.
 #' @noRd
 
-basePlot <- function(pkg, log_y, crosstab, iqr, package.data, y.max, date) {
-  if (log_y) {
+basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
+  if (log_count) {
     plot(c(crosstab), type = "l", xlab = "Rank", ylab = "log10(Count)",
       log = "y")
   } else {

@@ -5,14 +5,14 @@
 \title{Plot method for timeSeriesRank().}
 \usage{
 \method{plot}{package_rank_time}(x, graphics_pkg = "ggplot2",
-  log_y = TRUE, cran_smpl_smooth = TRUE, f = 1/3, ...)
+  log_count = TRUE, cran_smpl_smooth = TRUE, f = 1/3, ...)
 }
 \arguments{
 \item{x}{Object. An object of class "time_series" created by \code{packageRankTime()}.}
 
 \item{graphics_pkg}{Character. "base" or "ggplot2".}
 
-\item{log_y}{Logical. Logarithm of package downloads.}
+\item{log_count}{Logical. Logarithm of package downloads.}
 
 \item{cran_smpl_smooth}{Logical. lowess background.}
 

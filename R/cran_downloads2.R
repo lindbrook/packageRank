@@ -35,7 +35,7 @@ cran_downloads2 <- function(packages = NULL,
 #' @param x object.
 #' @param graphics_pkg Character. "base" or "ggplot2".
 #' @param points Logical. Plot points.
-#' @param log_y Logical. Logarithm of package downloads.
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. For use with graphics_pkg = "ggplot2" only.
 #' @param ... Additional plotting parameters.
@@ -45,7 +45,7 @@ cran_downloads2 <- function(packages = NULL,
 #' @export
 
 plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
-  log_y = FALSE, smooth = FALSE, se = FALSE, ...) {
+  log_count = FALSE, smooth = FALSE, se = FALSE, ...) {
 
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
@@ -58,7 +58,7 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
       } else {
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-          if (log_y) {
+          if (log_count) {
             plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
               ylab = "log10(Count)", log = "y")
           } else {
@@ -76,7 +76,7 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
         dotchart(dat$count, labels = dat$package, xlab = "count",
           main = days.observed)
       } else {
-        if (log_y) {
+        if (log_count) {
           plot(dat$date, dat$count, type = "o", xlab = "Rank",
             ylab = "log10(Count)", log = "y")
         } else {
@@ -102,21 +102,21 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
         theme_bw() +
         theme(panel.grid.minor = element_blank())
 
-      if (points & log_y & smooth) {
+      if (points & log_count & smooth) {
         p + geom_point() +
             scale_y_log10() +
             geom_smooth(method = "loess", se = se)
-      } else if (points & log_y & !smooth) {
+      } else if (points & log_count & !smooth) {
         p + geom_point() + scale_y_log10()
-      } else if (points & !log_y & smooth) {
+      } else if (points & !log_count & smooth) {
         p +  geom_point() + geom_smooth(method = "loess", se = se)
-      } else if (!points & log_y & smooth) {
+      } else if (!points & log_count & smooth) {
         p + scale_y_log10() + geom_smooth(method = "loess", se = se)
-      } else if (!points & !log_y & smooth) {
+      } else if (!points & !log_count & smooth) {
         p + geom_smooth(method = "loess", se = se)
-      } else if (points & !log_y & !smooth) {
+      } else if (points & !log_count & !smooth) {
         p + geom_point()
-      } else if (!points & log_y & !smooth) {
+      } else if (!points & log_count & !smooth) {
         p + scale_y_log10()
       } else p
     }

@@ -90,7 +90,7 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' Plot method for timeSeriesRank().
 #' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
-#' @param log_y Logical. Logarithm of package downloads.
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param cran_smpl_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
@@ -99,14 +99,14 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 
-plot.package_rank_time <- function(x, graphics_pkg = "ggplot2", log_y = TRUE,
-  cran_smpl_smooth = TRUE, f = 1/3, ...) {
+plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
+  log_count = TRUE, cran_smpl_smooth = TRUE, f = 1/3, ...) {
 
   cran_smpl <- x$data
   pkg.data <- x$pkg.data
   package <- x$package
 
-  if (log_y) {
+  if (log_count) {
     if (any(cran_smpl$count == 0)) cran_smpl$count <- cran_smpl$count + 1
     if (any(pkg.data$count == 0)) pkg.data$count <- pkg.data$count + 1
   }
@@ -115,11 +115,11 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2", log_y = TRUE,
     if (length(package) > 1) {
       invisible(lapply(package, function(pkg) {
         pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
-        basePlotTime(x, log_y, cran_smpl, pkg.data.sel, cran_smpl_smooth, f)
+        basePlotTime(x, log_count, cran_smpl, pkg.data.sel, cran_smpl_smooth, f)
         title(main = pkg)
       }))
     } else {
-      basePlotTime(x, log_y, cran_smpl, pkg.data, cran_smpl_smooth, f)
+      basePlotTime(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth, f)
       title(main = package)
     }
 
@@ -150,7 +150,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2", log_y = TRUE,
     }
 
     p <- p + geom_line(colour = "red", size = 1)
-    if (log_y) p + scale_y_log10() else p
+    if (log_count) p + scale_y_log10() else p
 
   } else stop('graphics_pkg must be "base" or "ggplot2"')
 }
@@ -175,15 +175,17 @@ summary.package_rank_time <- function(object, ...) {
 
 #' Base R Graphics Plot (Longitudinal).
 #' @param x Object.
-#' @param log_y Logical. Logarithm of package downloads.
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param cran_smpl Object.
 #' @param pkg.data Object.
 #' @param cran_smpl_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window.
 #' @noRd
 
-basePlotTime <- function(x, log_y, cran_smpl, pkg.data, cran_smpl_smooth, f) {
-  if (log_y) {
+basePlotTime <- function(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth,
+  f) {
+
+  if (log_count) {
     plot(cran_smpl$date, log10(cran_smpl$count), pch = NA,
       ylim = c(0, max(log10(x$y.max))), xlab = "Date", ylab = "log10(Count)")
 
