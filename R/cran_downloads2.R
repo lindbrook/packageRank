@@ -53,8 +53,13 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
   if (graphics_pkg == "base") {
     if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
-        dotchart(dat$count, labels = dat$package, xlab = "count",
-          main = days.observed)
+        if (log_count) {
+          dotchart(log10(dat$count), labels = dat$package,
+            xlab = "log10(Count)", main = days.observed)
+        } else {
+          dotchart(dat$count, labels = dat$package, xlab = "count",
+            main = days.observed)
+        }
       } else {
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
@@ -73,8 +78,13 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
       }
     } else {
       if (length(days.observed) == 1) {
-        dotchart(dat$count, labels = dat$package, xlab = "count",
-          main = days.observed)
+        if (log_count) {
+          dotchart(log10(dat$count), labels = dat$package,
+            xlab = "log10(Count)", main = days.observed)
+        } else {
+          dotchart(dat$count, labels = dat$package, xlab = "count",
+            main = days.observed)
+        }
       } else {
         if (log_count) {
           plot(dat$date, dat$count, type = "o", xlab = "Rank",
@@ -89,12 +99,15 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
 
   } else if (graphics_pkg == "ggplot2") {
     if (length(days.observed) == 1) {
-      ggplot(dat) +
-        geom_point(aes_string("count", "package")) +
-        theme_bw() +
-        theme(panel.grid.major.x = element_blank(),
-              panel.grid.minor = element_blank()) +
-        facet_wrap(~ date, ncol = 2)
+      p <- ggplot(dat) +
+           geom_point(aes_string("count", "package")) +
+           theme_bw() +
+           theme(panel.grid.major.x = element_blank(),
+                 panel.grid.minor = element_blank()) +
+           facet_wrap(~ date, ncol = 2)
+
+      if (log_count) p + scale_x_log10() + xlab("log10(count)") else p
+
     } else {
       p <- ggplot(data = dat, aes_string("date", "count")) +
         geom_line(size = 0.5) +
