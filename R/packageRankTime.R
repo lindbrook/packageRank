@@ -192,7 +192,7 @@ basePlotTime <- function(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth,
     if (cran_smpl_smooth) {
       for (nm in unique(cran_smpl$package)) {
         lines(stats::lowess(cran_smpl[cran_smpl$package == nm, "date"],
-              log10(cran_smpl[cran_smpl$package == nm, "count"]), f),
+              log10(cran_smpl[cran_smpl$package == nm, "count"]), f = f),
               col = "lightgray")
       }
     } else {
@@ -215,7 +215,7 @@ basePlotTime <- function(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth,
     if (cran_smpl_smooth) {
       for (nm in unique(cran_smpl$package)) {
         lines(stats::lowess(cran_smpl[cran_smpl$package == nm, "date"],
-              cran_smpl[cran_smpl$package == nm, "count"], f),
+              cran_smpl[cran_smpl$package == nm, "count"], f = f),
               col = "lightgray")
       }
     } else {

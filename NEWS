@@ -3,6 +3,7 @@ packageRank 0.0.9045
 
 - change log_y argument to log_count.
 - implement log_count for dotcharts.
+- add/fix f smoother span for stats::lowess().
 
 
 packageRank 0.0.9044
