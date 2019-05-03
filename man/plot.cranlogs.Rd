@@ -5,7 +5,7 @@
 \title{Plot method for cran_downloads2().}
 \usage{
 \method{plot}{cranlogs}(x, graphics_pkg = "ggplot2", points = TRUE,
-  log_count = FALSE, smooth = FALSE, se = FALSE, ...)
+  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -19,6 +19,8 @@
 \item{smooth}{Logical. Add smoother.}
 
 \item{se}{Logical. For use with graphics_pkg = "ggplot2" only.}
+
+\item{f}{Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.}
 
 \item{...}{Additional plotting parameters.}
 }

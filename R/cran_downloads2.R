@@ -38,6 +38,7 @@ cran_downloads2 <- function(packages = NULL,
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. For use with graphics_pkg = "ggplot2" only.
+#' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
@@ -45,7 +46,7 @@ cran_downloads2 <- function(packages = NULL,
 #' @export
 
 plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
-  log_count = FALSE, smooth = FALSE, se = FALSE, ...) {
+  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...) {
 
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
@@ -71,7 +72,8 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
               ylab = "Count")
           }
           if (smooth) {
-            lines(stats::lowess(pkg.dat$date, pkg.dat$count), col = "blue")
+            lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
+              col = "blue")
           }
           title(main = pkg)
         }))
@@ -92,7 +94,8 @@ plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
         } else {
           plot(dat$date, dat$count, type = "o", xlab = "Rank", ylab = "Count")
         }
-        if (smooth) lines(stats::lowess(dat$date, dat$count), col = "blue")
+        if (smooth) lines(stats::lowess(dat$date, dat$count, f = f),
+          col = "blue")
         title(main = x$package)
       }
     }
