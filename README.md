@@ -1,6 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9044-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9045-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
 ## ‘packageRank’
 
