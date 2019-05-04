@@ -1,3 +1,10 @@
+packageRank 0.0.9046
+==================
+
+- copyedit README.
+- tweak IQR percentile placement in plot.package_rank().
+
+
 packageRank 0.0.9045
 ==================
 

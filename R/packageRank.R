@@ -87,7 +87,7 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
 
 plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
   ...) {
-    
+
   crosstab <- x$crosstab
   package.data <- x$package.data
   package  <- x$package
@@ -223,9 +223,15 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
   abline(v = iqr, col = "gray", lty = "dotted")
   iqr.labels <- c("75th", "50th", "25th")
 
-  invisible(lapply(seq_along(iqr), function(i) {
-    text(iqr[[i]], 3 * y.max / 4, labels = iqr.labels[i], cex = 0.75)
-  }))
+  if (log_count) {
+    invisible(lapply(seq_along(iqr), function(i) {
+      text(iqr[[i]], y.max / 2, labels = iqr.labels[i], cex = 0.75)
+    }))
+  } else {
+    invisible(lapply(seq_along(iqr), function(i) {
+      text(iqr[[i]], 3 * y.max / 4, labels = iqr.labels[i], cex = 0.75)
+    }))
+  }
 
   abline(v = which(names(crosstab) == pkg), col = "red")
   abline(h = crosstab[pkg], col = "red")
