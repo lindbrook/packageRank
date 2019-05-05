@@ -14,49 +14,60 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 library(packageRank)
 ```
 
-## ‘packageRank’
+## packageRank: compute and visualize package download counts and percentiles
 
-The '[cranlogs](https://cran.r-project.org/package=cranlogs)' package computes the number of downloads from RStudio's [CRAN mirror](http://cran-logs.rstudio.com). For example, we can see that the '[HistData](https://cran.r-project.org/package=HistData)' package was downloaded 51 times on the first day of 2019:
+### features
+
+* provide S3 plot methods for 'cranlogs' output.
+* compute the rank percentile and nominal rank of a package's downloads from RStudio's [CRAN mirror](http://cran-logs.rstudio.com).
+* visualize a package's position in the  distribution of package download counts for a given day (cross-sectionally) or over time (longitudinally).
+
+NOTE: 'packageRank' relies on an active internet connection.
+
+### background
+
+The '[cranlogs](https://cran.r-project.org/package=cranlogs)' package computes the number of downloads using RStudio's [CRAN mirror](http://cran-logs.rstudio.com). For example, we can see that the '[HistData](https://cran.r-project.org/package=HistData)' package was downloaded 51 times on the first day of 2019:
 
 ```{r cranlogs1}
-cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
+cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01",
+  to = "2019-01-01")
 ```
 
 And 787 times in the first week:
 
 ```{r cranlogs2}
-cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-07")
+cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01",
+  to = "2019-01-07")
 ```
 
-In both cases, the "compared to what?" question lurks in the background. Is 51 downloads large or small? Is the pattern during that week typical or unusual?
-
-To help answer these questions, 'packageRank' provide some perspective on package download counts. First, it provides plot methods for 'cranlogs' output. Second, it computes a package's rank percentile of downloads: the percent of packages with fewer downloads. This is a statistic familiar to anyone who's taken a standardized exam. Third, it provides two ways to visualize a package's position in the  distribution of package downlod counts for a given day (cross-sectionally) or over time (longitudinally).
+In both cases, the "compared to what?" question lurks in the background. Is 51 downloads large or small? Is the pattern during that week typical or unusual? To help answer these questions, 'packageRank' tries to provide some perspective on package download counts.
 
 ### visualizing 'cranlogs'
 
-To visualize output from cranlogs::cran_download(), 'packageRank' provides S3 generic plot() methods. All you need to do is to use cran_downloads2() in place of cran_download():
+To visualize output from `cranlogs::cran_download()`, 'packageRank' provides easy-to-use S3 generic plot() methods. All you need to do is to use cran_downloads2() in place of cran_download():
 
 ```{r cranlogsB1, fig.width = 5, fig.height = 5, fig.align = "left"}
-plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"), from = "2019-01-01",
-  to = "2019-01-01"), graphics_pkg = "base")
+plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"),
+  from = "2019-01-01", to = "2019-01-01"), graphics_pkg = "base")
 ```
 
 ```{r cranlogsB2, fig.width = 5, fig.height = 5, fig.align = "left"}
-plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"), when = "last-month"))
+plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"),
+  when = "last-month"))
 ```
 
 ```{r cranlogsB3, fig.width = 6, fig.height = 6, fig.align = "left"}
-plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"), from = "2019-01-01",
-  to = "2019-01-31"))
+plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"),
+  from = "2019-01-01", to = "2019-01-31"))
 ```
 
-### computation of percentiles and ranks
+### compute percentiles and ranks
 
-In addition to raw download counts, `packageRank()` also computes a package's rank percentile ("percentile") and nominal rank ("rank"):
+To compute a package's rank percentile and nominal rank, use `packageRank()`:
 
 ```{r packageRank1}
 cran_downloads2(package = "HistData", from = "2019-01-01", to = "2019-01-01")
@@ -64,7 +75,9 @@ cran_downloads2(package = "HistData", from = "2019-01-01", to = "2019-01-01")
 packageRank(package = "HistData", date = "2019-01-01")
 ```
 
-Here, we see that those 51 downloads places 'HistData' in the 93rd percentile (93% of packages had fewer downloads) and puts it in 920th place of the 14,020 packages downloaded that day.^[Note that because packages with zero downloads are not recorded in the log, there is a censoring problem.] 920th place is only "nominal" because it's possible, especially when the number of downloads is small, that multiple packages will have the identical number of downloads. As a result, a package's nominal rank will sometimes be determined by alphabetical order. 'HistData''s 920th place benefits from the fact that it is second in the list (vector) of packages with 51 downloads:
+Doing so, we can see two additional numbers in addition to raw counts. First, 51 downloads places 'HistData' in the 93rd percentile. This statistic, familiar to people who've taken a standardized exam, tell us that 93% of packages had fewer downloads than 'HistData'.^[Because packages with zero downloads are not recorded in the log, there is a censoring problem.] Second, 51 downloads "nominally" puts 'HistData' in 920th place of the 14,020 packages downloaded.
+
+The rank is "nominal" because it's possible that multiple packages will have identical numbers of downloads. As a result, a package's nominal rank (but not its rank percentile) will sometimes be affected by it name: ties are sorted by the alphabetical order of package's name. Thus, 'HistData' benefits from the fact that it appears second in the list (vector) of packages with 51 downloads:
 
 ```{r nominal}
 pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
@@ -73,11 +86,11 @@ downloads <- pkg.rank$crosstab
 downloads[downloads == 51]
 ```
 
-Currently, `packageRank()` is limited to indvidual days. The reason is that the log for each date needs to be downloaded (the computation of ranks is not the bottleneck). However, to reduce the need to re-download logs for each function call, 'packageRank' makes use of the 'memoise' package.
+To avoid the bottleneck of downloading multiple log file, `packageRank()` is currently limited to individual days. However, to reduce the need to re-download logs for each function call, 'packageRank' will make use of memoization via the 'memoise' package.
 
 ### memoization
 
-Here's relevant code used to memoize the downloading of log files:
+Here's relevant code:
 
 ```{r memoization, eval = FALSE}
 fetchLog <- function(x) data.table::fread(x)
@@ -89,52 +102,46 @@ if (RCurl::url.exists(url)) {
 }
 ```
 
-While `fetchLog()` always downloads the log file, which can be as large as 50 MB, `mfetchLog()` caches the logs and only downloads logs that have not already been downloaded in the current session.
+If you use `fetchLog()`, the log file, which can be as large as 50 MB, will be downloaded with each function call. If you use `mfetchLog()`, logs are intelligently cached: logs that have already been downloaded in the current session will not be downloaded again.
 
 ### visualization (cross-sectional)
 
-‘packageRank’ visualizes a package's position in the distribution of a given day's downloads.
+To visualize a package's position in the distribution on a given day's downloads, use the following:
 
 ```{r plot1, fig.width = 5, fig.height = 5, fig.align = "left"}
-plot(packageRank(package = "HistData", date = "2019-05-01"), graphics_pkg = "base")
+plot(packageRank(package = "HistData", date = "2019-05-01"),
+  graphics_pkg = "base")
 ```
 
-The cross-sectional view above plots a package's rank (x-axis) against the logarithm of its downloads (y-axis). The plot highlights the package's relative position in the overall distribution. In addition, it indicates its percentile and the number of downloads (in red);  the location of the 75th, 50th and 25th percentiles (dotted gray vertical; lines); the package with the most downloads (in this case 'devtools') and the total number of downloads (2,982,767) from the CRAN mirror on that day (both in blue).
+This cross-sectional view plots a package's rank (x-axis) against the logarithm of its downloads (y-axis) and highlights the package's relative position in the overall distribution. In addition, it illustrates its percentile and its number of downloads (in red); the location of the 75th, 50th and 25th percentiles (dotted gray vertical lines); the package with the most downloads (in this case 'devtools') and the total number of downloads (2,982,767) from the CRAN mirror on that day (both in blue).
 
 Just like cranlogs::cran_downloads(), you can also pass a vector of packages:
 
 ```{r plot2, fig.width = 6, fig.height = 6, fig.align = "left"}
-plot(packageRank(package = c("cholera", "HistData", "regtools"), date = "2019-05-01"))
+plot(packageRank(package = c("cholera", "HistData", "regtools"),
+  date = "2019-05-01"))
 ```
 
 ### visualization (longitudinal)
 
-‘packageRank’ visualizes a package's position in the distribution of downloads over time (currently only "last-week" and "last-month" is available).
+To visualize a package's position in the distribution on a given day's downloads, use `packageRankTime()`. Currently, only two time frames, "last-week" and "last-month" are available.
 
 ```{r plot_ts, fig.width = 5, fig.height = 5, fig.align = "left"}
-plot(packageRankTime(package = "HistData", when = "last-month"), graphics_pkg = "base")
+plot(packageRankTime(package = "HistData", when = "last-month"),
+  graphics_pkg = "base")
 ```
-The longitudinal view above plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, the function plots the same data (in gray) for a cohort defined by a stratified random sample of packages.^[Within each 5% rank percentile bin (e.g., 0 to 5, 5 to 10, etc.), a random sample of 5% of packages is selected and then tracked over time as a cohort.] This cohort is way to get an estimate of the overall temporal pattern of package downloads in the selected time period.
+
+The longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, we can see same data, plotted in gray, for a cohort of packages defined by a stratified random sample of packages.^[Within each 5% rank percentile bin (e.g., 0 to 5, 5 to 10, etc.), a random sample of 5% of packages is selected and then tracked over time.] This cohort is used to approximate the overall temporal pattern of package downloads in the selected time period.
 
 As above, you can pass a vector of packages:
 
 ```{r plot_ts2, fig.width = 6, fig.height = 6, fig.align = "left"}
-plot(packageRankTime(package = c("Rcpp", "HistData", "rlang"), when = "last-month"))
+plot(packageRankTime(package = c("Rcpp", "HistData", "rlang"),
+  when = "last-month"))
 ```
 
 ### graphics: base R and 'ggplot2'
 
 All plot are available as both base R graphics and 'ggplot2' figures via the graphics_pkg argument ("base" or "ggplot2") in the plot() methods.
-
-
-### Installation
-
-To install the development version of 'packageRank' from GitHub:
-
-```{r, eval = FALSE}
-devtools::install_github("lindbrook/packageRank")
-```
-
-'packageRank' relies on an active internet connection.
 
 ### Notes

@@ -2,11 +2,11 @@ Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
 Version: 0.0.9046
-Date: 2019-05-04
-Authors@R: person("lindbrook", email = "lindbrook@gmail.com", 
+Date: 2019-05-05
+Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
-Description: Compute and visualize the cross-sectional and longitudinal number 
+Description: Compute and visualize the cross-sectional and longitudinal number
     and rank percentile of package downloads from RStudio's CRAN mirror.
 Depends: R (>= 3.4)
 License: GPL (>= 2)
@@ -20,7 +20,7 @@ Imports:
     memoise,
     parallel,
     RCurl
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
