@@ -11,6 +11,7 @@ Description: Compute and visualize the cross-sectional and longitudinal number
 Depends: R (>= 3.4)
 License: GPL (>= 2)
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 RoxygenNote: 6.1.1
 Imports:
