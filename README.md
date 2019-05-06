@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9047-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
 ## packageRank: compute and visualize package download counts and percentiles
@@ -103,7 +102,7 @@ packages downloaded.
 
 The rank is “nominal” because it’s possible that multiple packages will
 have identical numbers of downloads. As a result, a package’s nominal
-rank (but not its rank percentile) will sometimes be affected by it
+rank (but not its rank percentile) will sometimes be affected by its
 name: ties are sorted by the alphabetical order of package’s name. Thus,
 ‘HistData’ benefits from the fact that it appears second in the list
 (vector) of packages with 51 downloads:
@@ -113,12 +112,12 @@ pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
->
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools
->              51              51              51              51
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls
->              51              51              51              51
->        webutils            zoom
+> 
+>  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
+>              51              51              51              51 
+>   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
+>              51              51              51              51 
+>        webutils            zoom 
 >              51              51
 ```
 

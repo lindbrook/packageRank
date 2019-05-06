@@ -77,7 +77,7 @@ packageRank(package = "HistData", date = "2019-01-01")
 
 Doing so, we can see two additional numbers in addition to raw counts. First, 51 downloads places 'HistData' in the 93rd percentile. This statistic, familiar to people who've taken a standardized exam, tell us that 93% of packages had fewer downloads than 'HistData'.^[Because packages with zero downloads are not recorded in the log, there is a censoring problem.] Second, 51 downloads "nominally" puts 'HistData' in 920th place of the 14,020 packages downloaded.
 
-The rank is "nominal" because it's possible that multiple packages will have identical numbers of downloads. As a result, a package's nominal rank (but not its rank percentile) will sometimes be affected by it name: ties are sorted by the alphabetical order of package's name. Thus, 'HistData' benefits from the fact that it appears second in the list (vector) of packages with 51 downloads:
+The rank is "nominal" because it's possible that multiple packages will have identical numbers of downloads. As a result, a package's nominal rank (but not its rank percentile) will sometimes be affected by its name: ties are sorted by the alphabetical order of package's name. Thus, 'HistData' benefits from the fact that it appears second in the list (vector) of packages with 51 downloads:
 
 ```{r nominal}
 pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
