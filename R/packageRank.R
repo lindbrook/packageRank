@@ -43,7 +43,7 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
     crosstab[crosstab %in% crosstab[nm]]
   })
 
-  # ties arbitrarily broken (offset) by alphabetical order
+  # offset: ties arbitrarily broken by alphabetical order
   pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
     which(names(pkg.bin[[i]]) %in% package[i])
   }, numeric(1L))
