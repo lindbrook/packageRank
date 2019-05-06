@@ -20,6 +20,7 @@ Imports:
     ggplot2,
     memoise,
     parallel,
+    R.utils,
     RCurl
 Suggests:
     knitr,
