@@ -1,3 +1,9 @@
+packageRank 0.0.9047
+==================
+
+- switch from cohort to simple stratified sample in packageRankTime().
+
+
 packageRank 0.0.9046
 ==================
 

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9046-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9047-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
 ## packageRank: compute and visualize package download counts and percentiles
 
@@ -113,12 +113,12 @@ pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
-> 
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
->              51              51              51              51 
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
->              51              51              51              51 
->        webutils            zoom 
+>
+>  dynamicTreeCut        HistData          kimisc  NeuralNetTools
+>              51              51              51              51
+>   OpenStreetMap       pkgKitten plotlyGeoAssets            spls
+>              51              51              51              51
+>        webutils            zoom
 >              51              51
 ```
 
@@ -192,10 +192,10 @@ plot(packageRankTime(package = "HistData", when = "last-month"),
 <img src="man/figures/README-plot_ts-1.png" style="display: block; margin: auto auto auto 0;" />
 
 The longitudinal view plots the date (x-axis) against the logarithm of a
-package’s downloads (y-axis). In the background, we can see same data,
-plotted in gray, for a cohort of packages defined by a stratified random
-sample of packages.\[2\] This cohort is used to approximate the overall
-temporal pattern of package downloads in the selected time period.
+package’s downloads (y-axis). In the background, we can see the same
+data, plotted in gray, for a stratified random sample of packages.\[2\]
+This sample is used to approximate the temporal pattern of all package
+downloads.
 
 As above, you can pass a vector of packages:
 
@@ -228,6 +228,6 @@ devtools::install_github("lindbrook/packageRank", build_opts = c("--no-resave-da
 1.  Because packages with zero downloads are not recorded in the log,
     there is a censoring problem.
 
-2.  Within each 5% rank percentile bin (e.g., 0 to 5, 5 to 10, etc.), a
-    random sample of 5% of packages is selected and then tracked over
-    time.
+2.  Within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10,
+    95 to 100, etc.), a random sample of 5% of packages is selected and
+    tracked over time.

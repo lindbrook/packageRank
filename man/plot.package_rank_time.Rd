@@ -5,7 +5,8 @@
 \title{Plot method for timeSeriesRank().}
 \usage{
 \method{plot}{package_rank_time}(x, graphics_pkg = "ggplot2",
-  log_count = TRUE, cran_smpl_smooth = TRUE, f = 1/3, ...)
+  log_count = TRUE, pkg_smooth = TRUE, sample_smooth = TRUE,
+  f = 1/3, ...)
 }
 \arguments{
 \item{x}{Object. An object of class "time_series" created by \code{packageRankTime()}.}
@@ -14,7 +15,9 @@
 
 \item{log_count}{Logical. Logarithm of package downloads.}
 
-\item{cran_smpl_smooth}{Logical. lowess background.}
+\item{pkg_smooth}{Logical. Add smoother.}
+
+\item{sample_smooth}{Logical. lowess background.}
 
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.}
 

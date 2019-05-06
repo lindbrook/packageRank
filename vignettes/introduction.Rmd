@@ -124,14 +124,14 @@ plot(packageRank(package = c("cholera", "HistData", "regtools"),
 
 ### visualization (longitudinal)
 
-To visualize a package's position in the distribution on a given day's downloads, use `packageRankTime()`. Currently, only two time frames, "last-week" and "last-month" are available.
+To visualize a package's position in the distribution on a given day's downloads, use `packageRankTime()`. Currently, only two time frames are available: "last-week" and "last-month".
 
 ```{r plot_ts, fig.width = 5, fig.height = 5, fig.align = "left"}
 plot(packageRankTime(package = "HistData", when = "last-month"),
   graphics_pkg = "base")
 ```
 
-The longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, we can see same data, plotted in gray, for a cohort of packages defined by a stratified random sample of packages.^[Within each 5% rank percentile bin (e.g., 0 to 5, 5 to 10, etc.), a random sample of 5% of packages is selected and then tracked over time.] This cohort is used to approximate the overall temporal pattern of package downloads in the selected time period.
+The longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, we can see the same data, plotted in gray, for a stratified random sample of packages.^[Within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked over time.] This sample is used to approximate the temporal pattern of all package downloads.
 
 As above, you can pass a vector of packages:
 

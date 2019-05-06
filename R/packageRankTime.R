@@ -21,7 +21,6 @@ packageRankTime <- function(package = "HistData", when = "last-month",
   start.date <- pkg.data$date[1]
   end.date <- pkg.data$date[nrow(pkg.data)]
 
-  # needed ?
   top10 <- cranlogs::cran_top_downloads(when = when)
   top10.max <- lapply(1:5, function(i) {
     cranlogs::cran_downloads(packages = top10$package[i], when = when)$count
@@ -35,18 +34,7 @@ packageRankTime <- function(package = "HistData", when = "last-month",
   init.pkgs <- unique(cran_log$package)
   init.pkgs <- stats::na.omit(init.pkgs)
 
-  urlB <- paste0(rstudio.url, year, '/', end.date, ".csv.gz")
-  cran_logB <- mfetchLog(urlB)
-  end.pkgs <- unique(cran_log$package)
-  end.pkgs <- stats::na.omit(end.pkgs)
-
-  # define cohort #
-
-  if (length(setdiff(init.pkgs, end.pkgs)) != 0) {
-    pkg.intersect <- intersect(init.pkgs, end.pkgs)
-    pkgs <- cran_log[cran_log$package %in% pkg.intersect, ]
-  } else pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
-
+  pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
   crosstab <- table(pkgs$package)
 
   rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
@@ -91,7 +79,8 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
-#' @param cran_smpl_smooth Logical. lowess background.
+#' @param pkg_smooth Logical. Add smoother.
+#' @param sample_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
@@ -100,7 +89,7 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' @export
 
 plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
-  log_count = TRUE, cran_smpl_smooth = TRUE, f = 1/3, ...) {
+  log_count = TRUE, pkg_smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
   cran_smpl <- x$data
   pkg.data <- x$pkg.data
@@ -115,11 +104,11 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
     if (length(package) > 1) {
       invisible(lapply(package, function(pkg) {
         pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
-        basePlotTime(x, log_count, cran_smpl, pkg.data.sel, cran_smpl_smooth, f)
+        basePlotTime(x, log_count, cran_smpl, pkg.data.sel, sample_smooth, f)
         title(main = pkg)
       }))
     } else {
-      basePlotTime(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth, f)
+      basePlotTime(x, log_count, cran_smpl, pkg.data, sample_smooth, f)
       title(main = package)
     }
 
@@ -136,7 +125,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
       cran_smpl.data <- cran_smpl.lst[[i]]
       for (pkg in unique(cran_smpl.data$package)) {
         sel <- cran_smpl.data$package == pkg
-        if (cran_smpl_smooth) {
+        if (sample_smooth) {
           p <- p + geom_smooth(data = cran_smpl.data[sel, c("date", "count")],
                                method = "loess",
                                se = FALSE,
@@ -149,7 +138,13 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
       }
     }
 
-    p <- p + geom_line(colour = "red", size = 1)
+    p <- p + geom_line(colour = "red", size = 0.75) +
+             geom_point(shape = 1, colour = "red", size = 2)
+
+    if (pkg_smooth) p <- p + geom_smooth(colour = "blue",
+                                         method = "loess",
+                                         se = FALSE)
+
     if (log_count) p + scale_y_log10() else p
 
   } else stop('graphics_pkg must be "base" or "ggplot2"')
@@ -178,18 +173,18 @@ summary.package_rank_time <- function(object, ...) {
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param cran_smpl Object.
 #' @param pkg.data Object.
-#' @param cran_smpl_smooth Logical. lowess background.
+#' @param sample_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window.
 #' @noRd
 
-basePlotTime <- function(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth,
+basePlotTime <- function(x, log_count, cran_smpl, pkg.data, sample_smooth,
   f) {
 
   if (log_count) {
     plot(cran_smpl$date, log10(cran_smpl$count), pch = NA,
       ylim = c(0, max(log10(x$y.max))), xlab = "Date", ylab = "log10(Count)")
 
-    if (cran_smpl_smooth) {
+    if (sample_smooth) {
       for (nm in unique(cran_smpl$package)) {
         lines(stats::lowess(cran_smpl[cran_smpl$package == nm, "date"],
               log10(cran_smpl[cran_smpl$package == nm, "count"]), f = f),
@@ -212,7 +207,7 @@ basePlotTime <- function(x, log_count, cran_smpl, pkg.data, cran_smpl_smooth,
     plot(cran_smpl$date, cran_smpl$count, pch = NA, ylim = c(0, max(x$y.max)),
       xlab = "Date", ylab = "Count")
 
-    if (cran_smpl_smooth) {
+    if (sample_smooth) {
       for (nm in unique(cran_smpl$package)) {
         lines(stats::lowess(cran_smpl[cran_smpl$package == nm, "date"],
               cran_smpl[cran_smpl$package == nm, "count"], f = f),
