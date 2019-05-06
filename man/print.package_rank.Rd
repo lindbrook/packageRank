@@ -7,7 +7,7 @@
 \method{print}{package_rank}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "packag_rank" created by \code{packageRank()}}
+\item{x}{An object of class "package_rank" created by \code{packageRank()}}
 
 \item{...}{Additional parameters.}
 }

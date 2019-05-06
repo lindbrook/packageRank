@@ -7,7 +7,7 @@
 \method{summary}{package_rank}(object, ...)
 }
 \arguments{
-\item{object}{Object. An object of class "packag_rank" created by \code{packageRank()}}
+\item{object}{Object. An object of class "package_rank" created by \code{packageRank()}}
 
 \item{...}{Additional parameters.}
 }

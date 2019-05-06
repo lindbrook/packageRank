@@ -256,7 +256,7 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
 }
 
 #' Print method for packageRank().
-#' @param x An object of class "packag_rank" created by \code{packageRank()}
+#' @param x An object of class "package_rank" created by \code{packageRank()}
 #' @param ... Additional parameters.
 #' @export
 
@@ -270,7 +270,7 @@ print.package_rank <- function(x, ...) {
 }
 
 #' Summary method for packageRank().
-#' @param object Object. An object of class "packag_rank" created by \code{packageRank()}
+#' @param object Object. An object of class "package_rank" created by \code{packageRank()}
 #' @param ... Additional parameters.
 #' @export
 
