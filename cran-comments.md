@@ -43,7 +43,7 @@ Fedora Linux, R-devel, clang, gfortran
 Debian Linux, R-release, GCC
 * 0 errors | 0 warnings | 1 note
   - New submission
-  -
+  
 
 ### Reverse dependencies
 
