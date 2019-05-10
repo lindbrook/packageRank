@@ -127,7 +127,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
         basePlotTime(x, log_count, cran_smpl, pkg.data.sel, sample_smooth, f)
         title(main = pkg)
       }))
-    } else {
+    } else if (length(packages) == 1) {
       basePlotTime(x, log_count, cran_smpl, pkg.data, sample_smooth, f)
       title(main = packages)
     }
