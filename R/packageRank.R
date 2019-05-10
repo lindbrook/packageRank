@@ -1,7 +1,7 @@
 #' Package download counts and rank percentiles (cross-sectional).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param package Character. Vector of package name(s).
+#' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
 #' @param memoization Logical. Use memoisation when downloading logs.
 #' @return An R data frame.
@@ -10,11 +10,11 @@
 #' @examples
 #' \dontrun{
 #'
-#' packageRank(package = "HistData", date = "2019-03-01")
-#' plot(packageRank(package = "HistData", date = "2019-03-01"))
+#' packageRank(packages = "HistData", date = "2019-01-01")
+#' packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01")
 #' }
 
-packageRank <- function(package = "HistData", date = Sys.Date() - 1,
+packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   memoization = TRUE) {
 
   ymd <- as.Date(date)
@@ -32,35 +32,35 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
   }
 
   # tools::CRAN_package_db() not always current/up-to-date?
-  if (any(package %in% unique(cran_log$package) == FALSE)) {
+  if (any(packages %in% unique(cran_log$package) == FALSE)) {
     stop("Package not found in log.")
   }
 
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
 
   # packages in bin
-  pkg.bin <- lapply(package, function(nm) {
+  pkg.bin <- lapply(packages, function(nm) {
     crosstab[crosstab %in% crosstab[nm]]
   })
 
   # offset: ties arbitrarily broken by alphabetical order
   pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
-    which(names(pkg.bin[[i]]) %in% package[i])
+    which(names(pkg.bin[[i]]) %in% packages[i])
   }, numeric(1L))
 
-  nominal.rank <- lapply(seq_along(package), function(i) {
-    sum(crosstab > crosstab[package[i]]) + pkg.bin.delta[i]
+  nominal.rank <- lapply(seq_along(packages), function(i) {
+    sum(crosstab > crosstab[packages[i]]) + pkg.bin.delta[i]
   })
 
   tot.pkgs <- length(crosstab)
 
-  pkg.percentile <- vapply(package, function(x) {
+  pkg.percentile <- vapply(packages, function(x) {
     round(100 * mean(crosstab < crosstab[x]), 1)
   }, numeric(1L))
 
   dat <- data.frame(date = ymd,
-                    package = package,
-                    downloads = c(crosstab[package]),
+                    packages = packages,
+                    downloads = c(crosstab[packages]),
                     rank = unlist(nominal.rank),
                     percentile = pkg.percentile,
                     total.downloads = sum(crosstab),
@@ -68,7 +68,7 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
                     stringsAsFactors = FALSE,
                     row.names = NULL)
 
-  out <- list(package = package, date = ymd, package.data = dat,
+  out <- list(packages = packages, date = ymd, package.data = dat,
     crosstab = crosstab)
 
   class(out) <- "package_rank"
@@ -84,13 +84,21 @@ packageRank <- function(package = "HistData", date = Sys.Date() - 1,
 #' @import graphics ggplot2
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
+#' @examples
+#' \dontrun{
+#'
+#' plot(packageRank(packages = "HistData", date = "2019-01-01"))
+#' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
+#' }
 
 plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
   ...) {
 
+  if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
+
   crosstab <- x$crosstab
   package.data <- x$package.data
-  package  <- x$package
+  packages  <- x$packages
   date <- x$date
   y.max <- crosstab[1]
   q <- stats::quantile(crosstab)[2:4]
@@ -101,24 +109,24 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
   }, numeric(1L))
 
   if (graphics_pkg == "base") {
-    if (length(package) > 1) {
-      invisible(lapply(package, function(x) {
+    if (length(packages) > 1) {
+      invisible(lapply(packages, function(x) {
         basePlot(x, log_count, crosstab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(package, log_count, crosstab, iqr, package.data, y.max, date)
+      basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
     }
   } else if (graphics_pkg == "ggplot2") {
     package.data <- x$package.data
-    id <- paste(package.data$package, "@", date)
+    id <- paste(package.data$packages, "@", date)
 
     download.data <- data.frame(x = 1:length(crosstab),
                                 y = c(crosstab),
-                                package = row.names(crosstab),
+                                packages = row.names(crosstab),
                                 row.names = NULL,
                                 stringsAsFactors = FALSE)
 
-    download.lst <- rep(list(download.data), length(x$package))
+    download.lst <- rep(list(download.data), length(x$packages))
 
     for (i in seq_along(download.lst)) {
       download.lst[[i]]$id <- id[i]
@@ -129,26 +137,26 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
       length(x$crosstab) + 1
     last <- sum(vapply(download.lst, nrow, numeric(1L)))
     iqr.labels <- c("75th", "50th", "25th")
-    iqr.data <- data.frame(x = rep(iqr, length(x$package)),
+    iqr.data <- data.frame(x = rep(iqr, length(x$packages)),
                            y = stats::quantile(crosstab, 0.995),
-                           label = rep(iqr.labels, length(x$package)),
+                           label = rep(iqr.labels, length(x$packages)),
                            id = rep(id, each = length(iqr)),
                            row.names = NULL)
 
-    point.data <- lapply(seq_along(package), function(i) {
-      download.lst[[i]][download.lst[[i]]$package %in% package[i], ]
+    point.data <- lapply(seq_along(packages), function(i) {
+      download.lst[[i]][download.lst[[i]]$packages %in% packages[i], ]
     })
 
     point.data <- do.call(rbind, point.data)
 
-    top.pkg <- paste(download.data[first, "package"], "=",
+    top.pkg <- paste(download.data[first, "packages"], "=",
       format(download.data[first, "y"], big.mark = ","))
     tot.dwnld <- paste("Total =", format(sum(crosstab), big.mark = ","))
 
     xlabel <- paste0(round(package.data$percentile, 2), "%")
     ylabel <- format(point.data$y, big.mark = ",")
 
-    if (length(package) > 1) {
+    if (length(packages) > 1) {
       label.size <- 2.5
       ylabel.nudge <- 0.75
     } else {
@@ -181,8 +189,8 @@ plot.package_rank <- function(x, graphics_pkg = "ggplot2", log_count = TRUE,
                    size = 3) +
          geom_text(data = iqr.data, label = iqr.data$label)
 
-    for (i in seq_along(package)) {
-      sel <- point.data$package == package[i] & point.data$id == id[i]
+    for (i in seq_along(packages)) {
+      sel <- point.data$package == packages[i] & point.data$id == id[i]
       p <- p + geom_vline(data = point.data[sel, ],
                           aes_string(xintercept = "x"), colour = "red") +
                geom_hline(data = point.data[sel, ],
@@ -264,7 +272,7 @@ print.package_rank <- function(x, ...) {
   dat <- x$package.data
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
-  out <- data.frame(dat[, c("date", "package", "downloads", "percentile")],
+  out <- data.frame(dat[, c("date", "packages", "downloads", "percentile")],
     rank, stringsAsFactors = FALSE, row.names = NULL)
   print(out)
 }
@@ -273,6 +281,7 @@ print.package_rank <- function(x, ...) {
 #' @param object Object. An object of class "package_rank" created by \code{packageRank()}
 #' @param ... Additional parameters.
 #' @export
+#' @note This is useful for directly accessing the data frame.
 
 summary.package_rank <- function(object, ...) {
   object$package.data

@@ -18,7 +18,7 @@
 
 \item{smooth}{Logical. Add smoother.}
 
-\item{se}{Logical. For use with graphics_pkg = "ggplot2" only.}
+\item{se}{Logical. Works only with graphics_pkg = "ggplot2".}
 
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.}
 
@@ -29,4 +29,12 @@ A base R or ggplot2 plot.
 }
 \description{
 Plot method for cran_downloads2().
+}
+\examples{
+\dontrun{
+
+plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01", 
+  to = "2019-05-01"))
+plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+}
 }

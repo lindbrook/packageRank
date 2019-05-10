@@ -4,11 +4,11 @@
 \alias{packageRank}
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
-packageRank(package = "HistData", date = Sys.Date() - 1,
+packageRank(packages = "HistData", date = Sys.Date() - 1,
   memoization = TRUE)
 }
 \arguments{
-\item{package}{Character. Vector of package name(s).}
+\item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date.}
 
@@ -23,7 +23,7 @@ From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 \examples{
 \dontrun{
 
-packageRank(package = "HistData", date = "2019-03-01")
-plot(packageRank(package = "HistData", date = "2019-03-01"))
+packageRank(packages = "HistData", date = "2019-01-01")
+packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01")
 }
 }

@@ -14,3 +14,6 @@
 \description{
 Summary method for timeSeriesRank().
 }
+\note{
+This is useful for directly accessing the data frame.
+}

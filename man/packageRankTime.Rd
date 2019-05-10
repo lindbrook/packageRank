@@ -4,11 +4,11 @@
 \alias{packageRankTime}
 \title{Package download counts and rank percentiles (longitudinal).}
 \usage{
-packageRankTime(package = "HistData", when = "last-month",
+packageRankTime(packages = "HistData", when = "last-month",
   sample.pct = 5, multi.core = FALSE)
 }
 \arguments{
-\item{package}{Character. Character. Vector of package name(s).}
+\item{packages}{Character. Character. Vector of package name(s).}
 
 \item{when}{Character. "last-month" or "last-week".}
 
@@ -18,4 +18,14 @@ packageRankTime(package = "HistData", when = "last-month",
 }
 \description{
 Temporal pattern over last week or month.
+}
+\note{
+Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
+}
+\examples{
+\dontrun{
+
+packageRankTime(packages = "HistData", when = "last-week")
+packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
+}
 }

@@ -29,3 +29,10 @@ A base R or ggplot2 plot.
 \description{
 Plot method for timeSeriesRank().
 }
+\examples{
+\dontrun{
+
+plot(packageRankTime(packages = "HistData", when = "last-week"))
+plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+}
+}

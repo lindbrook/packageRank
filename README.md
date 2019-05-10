@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9047-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9048-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
 ## packageRank: compute and visualize package download counts and percentiles
 
@@ -112,12 +112,12 @@ pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
-> 
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
->              51              51              51              51 
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
->              51              51              51              51 
->        webutils            zoom 
+>
+>  dynamicTreeCut        HistData          kimisc  NeuralNetTools
+>              51              51              51              51
+>   OpenStreetMap       pkgKitten plotlyGeoAssets            spls
+>              51              51              51              51
+>        webutils            zoom
 >              51              51
 ```
 

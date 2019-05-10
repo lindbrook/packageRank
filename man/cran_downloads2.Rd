@@ -25,3 +25,10 @@ If this is given, then \code{from} and \code{to} are ignored.}
 \description{
 S3 implementation of cranlogs::cran_downloads().
 }
+\examples{
+\dontrun{
+
+cran_downloads2(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
+cran_downloads2(packages = c("Rcpp", "rlang"), when = "last-week")
+}
+}

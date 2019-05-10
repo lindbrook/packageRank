@@ -12,6 +12,12 @@
 #' @param to End date, in \code{yyyy-mm-dd} format, or
 #'   \code{last-day}. It is ignored if \code{when} is given.
 #' @export
+#' @examples
+#' \dontrun{
+#'
+#' cran_downloads2(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
+#' cran_downloads2(packages = c("Rcpp", "rlang"), when = "last-week")
+#' }
 
 cran_downloads2 <- function(packages = NULL,
   when = c("last-day", "last-week", "last-month"), from = "last-day",
@@ -37,16 +43,28 @@ cran_downloads2 <- function(packages = NULL,
 #' @param points Logical. Plot points.
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
-#' @param se Logical. For use with graphics_pkg = "ggplot2" only.
+#' @param se Logical. Works only with graphics_pkg = "ggplot2".
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
+#' @examples
+#' \dontrun{
+#'
+#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01", 
+#'   to = "2019-05-01"))
+#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+#' }
 
 plot.cranlogs <- function(x, graphics_pkg = "ggplot2", points = TRUE,
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...) {
+
+  if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
+  if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
+  if (is.logical(se) == FALSE) stop("se must be TRUE or FALSE.")
+  if (is.numeric(f) == FALSE) stop("f must be numeric.")
 
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
@@ -152,6 +170,7 @@ print.cranlogs <- function(x, ...) {
 #' @param object Object.
 #' @param ... Additional parameters.
 #' @export
+#' @note This is useful for directly accessing the data frame.
 
 summary.cranlogs <- function(object, ...) {
   object$cranlogs.data

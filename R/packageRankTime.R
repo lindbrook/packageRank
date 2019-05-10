@@ -1,14 +1,21 @@
 #' Package download counts and rank percentiles (longitudinal).
 #'
 #' Temporal pattern over last week or month.
-#' @param package Character. Character. Vector of package name(s).
+#' @param packages Character. Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
 #' @param sample.pct Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @import cranlogs
 #' @export
+#' @note Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
+#' @examples
+#' \dontrun{
+#'
+#' packageRankTime(packages = "HistData", when = "last-week")
+#' packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
+#' }
 
-packageRankTime <- function(package = "HistData", when = "last-month",
+packageRankTime <- function(packages = "HistData", when = "last-month",
   sample.pct = 5, multi.core = FALSE) {
 
   if (when %in% c("last-month", "last-week") == FALSE) {
@@ -17,7 +24,7 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 
   cores <- multiCore(multi.core)
 
-  pkg.data <- cranlogs::cran_downloads(packages = package, when = when)
+  pkg.data <- cranlogs::cran_downloads(packages = packages, when = when)
   start.date <- pkg.data$date[1]
   end.date <- pkg.data$date[nrow(pkg.data)]
 
@@ -67,7 +74,7 @@ packageRankTime <- function(package = "HistData", when = "last-month",
   cohort <- pct[unlist(sample.id), "pkg"]
   out <- list(data = cranlogs::cran_downloads(cohort, when = when),
               pkg.data = pkg.data,
-              package = package,
+              packages = packages,
               when = when,
               y.max =  max(unlist(top10.max)))
 
@@ -87,13 +94,26 @@ packageRankTime <- function(package = "HistData", when = "last-month",
 #' @import graphics ggplot2
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
+#' @examples
+#' \dontrun{
+#'
+#' plot(packageRankTime(packages = "HistData", when = "last-week"))
+#' plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+#' }
 
 plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
   log_count = TRUE, pkg_smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
+  if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
+  if (is.logical(pkg_smooth) == FALSE) stop("pkg_smooth must be TRUE or FALSE.")
+  if (is.logical(sample_smooth) == FALSE) {
+    stop("sample_smooth must be TRUE or FALSE.")
+  }
+  if (is.numeric(f) == FALSE) stop("f must be numeric.")
+
   cran_smpl <- x$data
   pkg.data <- x$pkg.data
-  package <- x$package
+  packages <- x$packages
 
   if (log_count) {
     if (any(cran_smpl$count == 0)) cran_smpl$count <- cran_smpl$count + 1
@@ -101,15 +121,15 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
   }
 
   if (graphics_pkg == "base") {
-    if (length(package) > 1) {
-      invisible(lapply(package, function(pkg) {
-        pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
+    if (length(packages) > 1) {
+      invisible(lapply(packages, function(pkg) {
+        pkg.data.sel <- pkg.data[pkg.data$packages == pkg, ]
         basePlotTime(x, log_count, cran_smpl, pkg.data.sel, sample_smooth, f)
         title(main = pkg)
       }))
     } else {
       basePlotTime(x, log_count, cran_smpl, pkg.data, sample_smooth, f)
-      title(main = package)
+      title(main = packages)
     }
 
   } else if (graphics_pkg == "ggplot2") {
@@ -119,9 +139,9 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
                  panel.grid.minor = element_blank()) +
            facet_wrap(~ package, ncol = 2)
 
-    cran_smpl.lst <- rep(list(cran_smpl), length(package))
+    cran_smpl.lst <- rep(list(cran_smpl), length(packages))
 
-    for (i in seq_along(package)) {
+    for (i in seq_along(packages)) {
       cran_smpl.data <- cran_smpl.lst[[i]]
       for (pkg in unique(cran_smpl.data$package)) {
         sel <- cran_smpl.data$package == pkg
@@ -156,13 +176,14 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
 #' @export
 
 print.package_rank_time <- function(x, ...) {
-  print(x[c("package", "when")])
+  print(x[c("packages", "when")])
 }
 
 #' Summary method for timeSeriesRank().
 #' @param object Object. An object of class "time_series" created by \code{packageRankTime()}.
 #' @param ... Additional parameters.
 #' @export
+#' @note This is useful for directly accessing the data frame.
 
 summary.package_rank_time <- function(object, ...) {
   object$pkg.data

@@ -22,3 +22,10 @@ A base R or ggplot2 plot.
 \description{
 Plot method for packageRank().
 }
+\examples{
+\dontrun{
+
+plot(packageRank(packages = "HistData", date = "2019-01-01"))
+plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
+}
+}
