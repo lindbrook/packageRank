@@ -2,7 +2,7 @@
 
 * local macOS 10 install: R 3.6.0 (2019-04-26)
 * win-builder: devel, oldrelease and release
-* R-hub: Windows Server 2008 R2 SP1, Fedora Linux, Ubuntu Linux 16.04 LTS
+* R-hub: Windows Server 2008 R2 SP1, Fedora Linux, Ubuntu Linux 16.04 LTS, Debian Linux
 
 
 ### R CMD check results
