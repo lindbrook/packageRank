@@ -13,7 +13,7 @@
 #'   \code{last-day}. It is ignored if \code{when} is given.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' cran_downloads2(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
 #' cran_downloads2(packages = c("Rcpp", "rlang"), when = "last-week")
@@ -51,9 +51,9 @@ cran_downloads2 <- function(packages = NULL,
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01", 
+#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01",
 #'   to = "2019-05-01"))
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' }

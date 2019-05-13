@@ -30,7 +30,7 @@ A base R or ggplot2 plot.
 Plot method for timeSeriesRank().
 }
 \examples{
-\dontrun{
+\donttest{
 
 plot(packageRankTime(packages = "HistData", when = "last-week"))
 plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))

@@ -31,9 +31,9 @@ A base R or ggplot2 plot.
 Plot method for cran_downloads2().
 }
 \examples{
-\dontrun{
+\donttest{
 
-plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01", 
+plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01",
   to = "2019-05-01"))
 plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 }

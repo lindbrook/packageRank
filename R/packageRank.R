@@ -8,7 +8,7 @@
 #' @import data.table RCurl
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' packageRank(packages = "HistData", date = "2019-01-01")
 #' packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01")
@@ -85,7 +85,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' plot(packageRank(packages = "HistData", date = "2019-01-01"))
 #' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))

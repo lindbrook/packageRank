@@ -23,7 +23,7 @@ Temporal pattern over last week or month.
 Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
 }
 \examples{
-\dontrun{
+\donttest{
 
 packageRankTime(packages = "HistData", when = "last-week")
 packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
