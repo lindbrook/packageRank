@@ -65,17 +65,30 @@ plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"),
 
 ### compute percentiles and ranks
 
-To compute a package's rank percentile and nominal rank, use `packageRank()`:
+To compute a package's rank percentile and nominal rank, in addition to raw download counts, use `packageRank()`:
 
 ```{r packageRank1}
-cran_downloads2(package = "HistData", from = "2019-01-01", to = "2019-01-01")
-
 packageRank(package = "HistData", date = "2019-01-01")
 ```
 
-Doing so, we can see two additional numbers in addition to raw counts. First, 51 downloads places 'HistData' in the 93rd percentile. This statistic, familiar to people who've taken a standardized exam, tell us that 93% of packages had fewer downloads than 'HistData'.^[Because packages with zero downloads are not recorded in the log, there is a censoring problem.] Second, 51 downloads "nominally" puts 'HistData' in 920th place of the 14,020 packages downloaded.
+Doing so, we see that 51 downloads places 'HistData' in the 93rd percentile. This statistic, familiar to anyone who's taken a standardized test, tell us that 93% of packages had fewer downloads than 'HistData':^[Note that because packages with zero downloads are not recorded in the log, there is a censoring problem.]
 
-The rank is "nominal" because it's possible that multiple packages will have identical numbers of downloads. As a result, a package's nominal rank (but not its rank percentile) will sometimes be affected by its name: ties are sorted by the alphabetical order of package's name. Thus, 'HistData' benefits from the fact that it appears second in the list (vector) of packages with 51 downloads:
+```{r percentile}
+pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
+downloads <- pkg.rank$crosstab
+
+round(100 * mean(downloads < downloads["HistData"]), 1)
+
+# OR
+
+(pkgs.with.fewer.downloads <- sum(downloads < downloads["HistData"]) )
+
+(tot.pkgs <- length(downloads))
+
+round(100 * pkgs.with.fewer.downloads / tot.pkgs , 1)
+```
+
+We also see that 51 downloads "nominally" earns 'HistData' 920th place of the 14,020 packages downloaded. The rank is "nominal" because it's possible that multiple packages will have identical numbers of downloads. As a result, a package's nominal rank (but not its rank percentile) will sometimes be affected by the fact that ties are sorted by the alphabetical order of packagess names. Here, 'HistData' benefits from the fact that it appears second in the list (vector) of packages with 51 downloads:
 
 ```{r nominal}
 pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")

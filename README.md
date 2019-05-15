@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.0.9048-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.1-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
 ## packageRank: compute and visualize package download counts and percentiles
 
@@ -80,44 +80,59 @@ plot(cran_downloads2(package = c("data.table", "Rcpp", "rlang"),
 
 ### compute percentiles and ranks
 
-To compute a package’s rank percentile and nominal rank, use
-`packageRank()`:
+To compute a package’s rank percentile and nominal rank, in addition to
+raw download counts, use `packageRank()`:
 
 ``` r
-cran_downloads2(package = "HistData", from = "2019-01-01", to = "2019-01-01")
->         date count  package
-> 1 2019-01-01    51 HistData
-
 packageRank(package = "HistData", date = "2019-01-01")
->         date  package downloads percentile          rank
+>         date packages downloads percentile          rank
 > 1 2019-01-01 HistData        51       93.4 920 of 14,020
 ```
 
-Doing so, we can see two additional numbers in addition to raw counts.
-First, 51 downloads places ‘HistData’ in the 93rd percentile. This
-statistic, familiar to people who’ve taken a standardized exam, tell us
-that 93% of packages had fewer downloads than ‘HistData’.\[1\] Second,
-51 downloads “nominally” puts ‘HistData’ in 920th place of the 14,020
-packages downloaded.
+Doing so, we see that 51 downloads places ‘HistData’ in the 93rd
+percentile. This statistic, familiar to anyone who’s taken a
+standardized test, tell us that 93% of packages had fewer downloads than
+‘HistData’:\[1\]
 
-The rank is “nominal” because it’s possible that multiple packages will
-have identical numbers of downloads. As a result, a package’s nominal
-rank (but not its rank percentile) will sometimes be affected by its
-name: ties are sorted by the alphabetical order of package’s name. Thus,
-‘HistData’ benefits from the fact that it appears second in the list
-(vector) of packages with 51 downloads:
+``` r
+pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
+downloads <- pkg.rank$crosstab
+
+round(100 * mean(downloads < downloads["HistData"]), 1)
+> [1] 93.4
+
+# OR
+
+(pkgs.with.fewer.downloads <- sum(downloads < downloads["HistData"]) )
+> [1] 13092
+
+(tot.pkgs <- length(downloads))
+> [1] 14020
+
+round(100 * pkgs.with.fewer.downloads / tot.pkgs , 1)
+> [1] 93.4
+```
+
+We also see that 51 downloads “nominally” earns ‘HistData’ 920th place
+of the 14,020 packages downloaded. The rank is “nominal” because it’s
+possible that multiple packages will have identical numbers of
+downloads. As a result, a package’s nominal rank (but not its rank
+percentile) will sometimes be affected by the fact that ties are sorted
+by the alphabetical order of packagess names. Here, ‘HistData’ benefits
+from the fact that it appears second in the list (vector) of packages
+with 51 downloads:
 
 ``` r
 pkg.rank <- packageRank(package = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
->
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools
->              51              51              51              51
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls
->              51              51              51              51
->        webutils            zoom
+> 
+>  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
+>              51              51              51              51 
+>   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
+>              51              51              51              51 
+>        webutils            zoom 
 >              51              51
 ```
 
@@ -224,8 +239,8 @@ devtools::install_github("lindbrook/packageRank", build_opts = c("--no-resave-da
 
 ### Notes
 
-1.  Because packages with zero downloads are not recorded in the log,
-    there is a censoring problem.
+1.  Note that because packages with zero downloads are not recorded in
+    the log, there is a censoring problem.
 
 2.  Within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10,
     95 to 100, etc.), a random sample of 5% of packages is selected and
