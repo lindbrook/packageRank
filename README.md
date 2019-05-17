@@ -78,7 +78,7 @@ round(100 * mean(downloads < downloads["HistData"]), 1)
 
 # OR
 
-(pkgs.with.fewer.downloads <- sum(downloads < downloads["HistData"]) )
+(pkgs.with.fewer.downloads <- sum(downloads < downloads["HistData"]))
 > [1] 13092
 
 (tot.pkgs <- length(downloads))
