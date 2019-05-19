@@ -127,7 +127,7 @@ The longitudinal view plots the date (x-axis) against the logarithm of a package
 
 As above, you can pass a vector of packages:
 
-```{r plot_ts2, fig.width = 6, fig.height = 6, fig.align = "left", eval = FALSE}
+```{r plot_ts2, fig.width = 6, fig.height = 6, fig.align = "left"}
 plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"),
   when = "last-month"))
 ```

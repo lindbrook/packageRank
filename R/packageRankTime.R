@@ -123,7 +123,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
   if (graphics_pkg == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
-        pkg.data.sel <- pkg.data[pkg.data$packages == pkg, ]
+        pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
         basePlotTime(x, log_count, cran_smpl, pkg.data.sel, sample_smooth, f)
         title(main = pkg)
       }))

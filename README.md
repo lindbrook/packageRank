@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 
@@ -192,6 +191,8 @@ As above, you can pass a vector of packages:
 plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"),
   when = "last-month"))
 ```
+
+<img src="man/figures/README-plot_ts2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ### visualizing ‘cranlogs’
 
