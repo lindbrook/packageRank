@@ -86,7 +86,7 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 #' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
 #' @param graphics_pkg Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
-#' @param pkg_smooth Logical. Add smoother.
+#' @param smooth Logical. Add smoother for selected package.
 #' @param sample_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
 #' @param ... Additional plotting parameters.
@@ -102,10 +102,10 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 #' }
 
 plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
-  log_count = TRUE, pkg_smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
+  log_count = TRUE, smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
-  if (is.logical(pkg_smooth) == FALSE) stop("pkg_smooth must be TRUE or FALSE.")
+  if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
   if (is.logical(sample_smooth) == FALSE) {
     stop("sample_smooth must be TRUE or FALSE.")
   }
@@ -124,11 +124,12 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
-        basePlotTime(x, log_count, cran_smpl, pkg.data.sel, sample_smooth, f)
+        basePlotTime(x, log_count, cran_smpl, pkg.data.sel, smooth,
+          sample_smooth, f)
         title(main = pkg)
       }))
     } else if (length(packages) == 1) {
-      basePlotTime(x, log_count, cran_smpl, pkg.data, sample_smooth, f)
+      basePlotTime(x, log_count, cran_smpl, pkg.data, smooth, sample_smooth, f)
       title(main = packages)
     }
 
@@ -161,9 +162,9 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
     p <- p + geom_line(colour = "red", size = 0.75) +
              geom_point(shape = 1, colour = "red", size = 2)
 
-    if (pkg_smooth) p <- p + geom_smooth(colour = "blue",
-                                         method = "loess",
-                                         se = FALSE)
+    if (smooth) p <- p + geom_smooth(colour = "blue",
+                                     method = "loess",
+                                     se = FALSE)
 
     if (log_count) p + scale_y_log10() else p
 
@@ -194,12 +195,13 @@ summary.package_rank_time <- function(object, ...) {
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param cran_smpl Object.
 #' @param pkg.data Object.
+#' @param smooth Logical. Add smoother for selected package.
 #' @param sample_smooth Logical. lowess background.
 #' @param f Numeric. stats::lowess() smoother window.
 #' @noRd
 
-basePlotTime <- function(x, log_count, cran_smpl, pkg.data, sample_smooth,
-  f) {
+basePlotTime <- function(x, log_count, cran_smpl, pkg.data, smooth,
+  sample_smooth, f) {
 
   if (log_count) {
     plot(cran_smpl$date, log10(cran_smpl$count), pch = NA,
@@ -221,9 +223,10 @@ basePlotTime <- function(x, log_count, cran_smpl, pkg.data, sample_smooth,
 
     lines(pkg.data$date, log10(pkg.data$count), lwd = 2, col = "red",
       type = "o")
-    lines(stats::lowess(pkg.data$date, log10(pkg.data$count), f = f),
-      col = "blue", lwd = 2)
-
+    if (smooth) {
+      lines(stats::lowess(pkg.data$date, log10(pkg.data$count), f = f),
+        col = "blue", lwd = 2)
+    }
   } else {
     plot(cran_smpl$date, cran_smpl$count, pch = NA, ylim = c(0, max(x$y.max)),
       xlab = "Date", ylab = "Count")
