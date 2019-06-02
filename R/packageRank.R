@@ -180,6 +180,110 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
   title(main = paste(pkg, "@", date))
 }
 
+#' ggplot2 Graphics Plot (Cross-sectional).
+#' @param x Object.
+#' @param log_count Logical. Logarithm of package downloads.
+#' @param crosstab Object.
+#' @param iqr Object.
+#' @param package.data Object.
+#' @param y.max Numeric.
+#' @param date Character.
+#' @noRd
+
+ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
+  package.data <- x$package.data
+  packages <- x$packages
+  id <- paste(package.data$packages, "@", date)
+
+  download.data <- data.frame(x = 1:length(crosstab),
+                              y = c(crosstab),
+                              packages = row.names(crosstab),
+                              row.names = NULL,
+                              stringsAsFactors = FALSE)
+
+  download.lst <- rep(list(download.data), length(x$packages))
+
+  for (i in seq_along(download.lst)) {
+    download.lst[[i]]$id <- id[i]
+  }
+
+  download.data <- do.call(rbind, download.lst)
+  first <- cumsum(vapply(download.lst, nrow, numeric(1L))) -
+    length(crosstab) + 1
+  last <- sum(vapply(download.lst, nrow, numeric(1L)))
+  iqr.labels <- c("75th", "50th", "25th")
+  iqr.data <- data.frame(x = rep(iqr, length(x$packages)),
+                         y = stats::quantile(crosstab, 0.995),
+                         label = rep(iqr.labels, length(x$packages)),
+                         id = rep(id, each = length(iqr)),
+                         row.names = NULL)
+
+  point.data <- lapply(seq_along(packages), function(i) {
+    download.lst[[i]][download.lst[[i]]$packages %in% packages[i], ]
+  })
+
+  point.data <- do.call(rbind, point.data)
+
+  top.pkg <- paste(download.data[first, "packages"], "=",
+    format(download.data[first, "y"], big.mark = ","))
+  tot.dwnld <- paste("Total =", format(sum(crosstab), big.mark = ","))
+
+  xlabel <- paste0(round(package.data$percentile, 2), "%")
+  ylabel <- format(point.data$y, big.mark = ",")
+
+  if (length(packages) > 1) {
+    label.size <- 2.5
+    ylabel.nudge <- 0.75
+  } else {
+    label.size <- 3.5
+    ylabel.nudge <- 0.5
+  }
+
+  p <- ggplot(data = download.data, aes_string("x", "y")) +
+       geom_line() +
+       geom_vline(xintercept = iqr, colour = "gray", linetype = "dotted") +
+       xlab("Rank") +
+       ylab("Count") +
+       facet_wrap(~ id, ncol = 2) +
+       theme_bw() +
+       theme(panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             plot.title = element_text(hjust = 0.5)) +
+       geom_point(data = download.data[first, ],
+                  shape = 1,
+                  colour = "dodgerblue") +
+       geom_text(data = download.data[first, ],
+                 colour = "dodgerblue",
+                 label = top.pkg,
+                 hjust = -0.1,
+                 size = 3) +
+       geom_text(data = data.frame(x = download.data[last, "x"], y = y.max),
+                 colour = "dodgerblue",
+                 label = tot.dwnld,
+                 hjust = 1,
+                 size = 3) +
+       geom_text(data = iqr.data, label = iqr.data$label)
+
+  for (i in seq_along(packages)) {
+    sel <- point.data$package == packages[i] & point.data$id == id[i]
+    p <- p + geom_vline(data = point.data[sel, ],
+                        aes_string(xintercept = "x"), colour = "red") +
+             geom_hline(data = point.data[sel, ],
+                        aes_string(yintercept = "y"), colour = "red")
+  }
+
+  p <- p + geom_point(data = point.data, aes_string("x", "y"), shape = 1,
+                      colour = "red", size = 2) +
+           geom_label(data = point.data, aes_string("x", "y"), fill = "red",
+                      colour = "white", size = label.size, label = ylabel,
+                      nudge_x = 2000) +
+           geom_label(data = point.data, aes_string("x", "y"), fill = "red",
+                      colour = "white", size = label.size, label = xlabel,
+                      nudge_y = ylabel.nudge)
+
+  if (log_count) p + scale_y_log10() else p
+}
+
 #' Print method for packageRank().
 #' @param x An object of class "package_rank" created by \code{packageRank()}
 #' @param ... Additional parameters.

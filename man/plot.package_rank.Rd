@@ -4,8 +4,8 @@
 \alias{plot.package_rank}
 \title{Plot method for packageRank().}
 \usage{
-\method{plot}{package_rank}(x, graphics_pkg = "ggplot2",
-  log_count = TRUE, ...)
+\method{plot}{package_rank}(x, graphics_pkg = NULL, log_count = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "package_rank" created by \code{packageRank()}.}
