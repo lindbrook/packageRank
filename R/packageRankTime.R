@@ -4,7 +4,6 @@
 #' @param packages Character. Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
 #' @param sample.pct Numeric.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @import cranlogs
 #' @export
 #' @note Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
@@ -16,13 +15,11 @@
 #' }
 
 packageRankTime <- function(packages = "HistData", when = "last-month",
-  sample.pct = 5, multi.core = FALSE) {
+  sample.pct = 5) {
 
   if (when %in% c("last-month", "last-week") == FALSE) {
     stop('when must either be "last-month" or "last-week".')
   }
-
-  cores <- multiCore(multi.core)
 
   pkg.data <- cranlogs::cran_downloads(packages = packages, when = when)
   start.date <- pkg.data$date[1]
@@ -43,20 +40,10 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 
   pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
   crosstab <- table(pkgs$package)
-  # crosstab.nms <- names(crosstab)
 
-  if (.Platform$OS.type == "unix") {
-    rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
-      mean(crosstab < crosstab[nm])
-    }, mc.cores = cores)
-  } else {
-    cl <- parallel::makePSOCKcluster(cores)
-    parallel::clusterExport(cl = cl, varlist = "crosstab")
-    rank.percentile <- parallel::parLapply(cl, names(crosstab), function(nm) {
-      mean(crosstab < crosstab[nm])
-    })
-    parallel::stopCluster(cl)
-  }
+  rank.percentile <- lapply(names(crosstab), function(nm) {
+    mean(crosstab < crosstab[nm])
+  })
 
   rank.percentile <- unlist(rank.percentile)
 

@@ -1,7 +1,7 @@
 packageRank 0.1.9003
 ==================
 
-- add parLapply() prototype to packageRankTime().
+- deprecate multi.core argument in packageRankTime().
 
 
 packageRank 0.1.9002
