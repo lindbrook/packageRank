@@ -43,10 +43,20 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 
   pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
   crosstab <- table(pkgs$package)
+  # crosstab.nms <- names(crosstab)
 
-  rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
-    mean(crosstab < crosstab[nm])
-  }, mc.cores = cores)
+  if (.Platform$OS.type == "unix") {
+    rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
+      mean(crosstab < crosstab[nm])
+    }, mc.cores = cores)
+  } else {
+    cl <- parallel::makePSOCKcluster(cores)
+    parallel::clusterExport(cl = cl, varlist = "crosstab")
+    rank.percentile <- parallel::parLapply(cl, names(crosstab), function(nm) {
+      mean(crosstab < crosstab[nm])
+    })
+    parallel::stopCluster(cl)
+  }
 
   rank.percentile <- unlist(rank.percentile)
 
