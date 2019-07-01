@@ -81,11 +81,11 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 
 #' Plot method for timeSeriesRank().
 #' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
-#' @param graphics_pkg Character. "base" or "ggplot2".
+#' @param graphics Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother for selected package.
 #' @param sample_smooth Logical. lowess background.
-#' @param f Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.
+#' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @import graphics ggplot2
@@ -98,8 +98,8 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 #' plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' }
 
-plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
-  log_count = TRUE, smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
+plot.package_rank_time <- function(x, graphics = "ggplot2", log_count = TRUE,
+  smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
@@ -117,7 +117,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
     if (any(pkg.data$count == 0)) pkg.data$count <- pkg.data$count + 1
   }
 
-  if (graphics_pkg == "base") {
+  if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
@@ -130,7 +130,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
       title(main = packages)
     }
 
-  } else if (graphics_pkg == "ggplot2") {
+  } else if (graphics == "ggplot2") {
     p <- ggplot(data = pkg.data, aes_string("date", "count")) +
            theme_bw() +
            theme(panel.grid.major = element_blank(),
@@ -165,7 +165,7 @@ plot.package_rank_time <- function(x, graphics_pkg = "ggplot2",
 
     if (log_count) p + scale_y_log10() else p
 
-  } else stop('graphics_pkg must be "base" or "ggplot2"')
+  } else stop('graphics must be "base" or "ggplot2"')
 }
 
 #' Print method for timeSeriesRank().

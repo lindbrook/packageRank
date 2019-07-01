@@ -77,7 +77,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 
 #' Plot method for packageRank().
 #' @param x An object of class "package_rank" created by \code{packageRank()}.
-#' @param graphics_pkg Character. "base" or "ggplot2".
+#' @param graphics Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
@@ -91,8 +91,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
 #' }
 
-plot.package_rank <- function(x, graphics_pkg = NULL, log_count = TRUE,
-  ...) {
+plot.package_rank <- function(x, graphics = NULL, log_count = TRUE, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
 
@@ -108,13 +107,13 @@ plot.package_rank <- function(x, graphics_pkg = NULL, log_count = TRUE,
     dat[length(dat)]
   }, numeric(1L))
 
-  if (is.null(graphics_pkg)) {
+  if (is.null(graphics)) {
     if (length(packages) == 1) {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
     } else if (length(packages) > 1) {
       ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
     } else stop("Error.")
-  } else if (graphics_pkg == "base") {
+  } else if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         basePlot(pkg, log_count, crosstab, iqr, package.data, y.max, date)
@@ -122,9 +121,9 @@ plot.package_rank <- function(x, graphics_pkg = NULL, log_count = TRUE,
     } else {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
     }
-  } else if (graphics_pkg == "ggplot2") {
+  } else if (graphics == "ggplot2") {
     ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
-  } else stop('graphics_pkg must be "base" or "ggplot2"')
+  } else stop('graphics must be "base" or "ggplot2"')
 }
 
 #' Base R Graphics Plot (Cross-sectional).

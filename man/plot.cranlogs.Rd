@@ -4,13 +4,13 @@
 \alias{plot.cranlogs}
 \title{Plot method for cran_downloads2().}
 \usage{
-\method{plot}{cranlogs}(x, graphics_pkg = "ggplot2", points = TRUE,
+\method{plot}{cranlogs}(x, graphics = "ggplot2", points = TRUE,
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...)
 }
 \arguments{
 \item{x}{object.}
 
-\item{graphics_pkg}{Character. "base" or "ggplot2".}
+\item{graphics}{Character. "base" or "ggplot2".}
 
 \item{points}{Logical. Plot points.}
 
@@ -18,9 +18,9 @@
 
 \item{smooth}{Logical. Add smoother.}
 
-\item{se}{Logical. Works only with graphics_pkg = "ggplot2".}
+\item{se}{Logical. Works only with graphics = "ggplot2".}
 
-\item{f}{Numeric. stats::lowess() smoother window. For use with graphics_pkg = "base" only.}
+\item{f}{Numeric. stats::lowess() smoother window. For use with graphics = "base" only.}
 
 \item{...}{Additional plotting parameters.}
 }
