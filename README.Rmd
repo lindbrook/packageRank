@@ -166,11 +166,7 @@ install.packages("packageRank")
 To install the development version of 'packageRank' from GitHub:
 
 ```{r, eval = FALSE}
-# For 'devtools' (< 2.0.0)
 devtools::install_github("lindbrook/packageRank", build_vignettes = TRUE)
-
-# For 'devtools' (>= 2.0.0)
-devtools::install_github("lindbrook/packageRank", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ### Notes

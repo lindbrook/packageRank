@@ -1,8 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.9003-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
-
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.9004-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and percentiles
 
 ### features
@@ -234,14 +233,11 @@ To install ‘packageRank’ from CRAN:
 install.packages("packageRank")
 ```
 
-To install the development version of ‘packageRank’ from GitHub:
+To install the development version of ‘packageRank’ from
+GitHub:
 
 ``` r
-# For 'devtools' (< 2.0.0)
 devtools::install_github("lindbrook/packageRank", build_vignettes = TRUE)
-
-# For 'devtools' (>= 2.0.0)
-devtools::install_github("lindbrook/packageRank", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ### Notes
