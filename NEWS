@@ -3,6 +3,7 @@ packageRank 0.1.9004
 
 - change argument graphics_pkg -> graphics.
 - update GitHub instructions.
+- remove multiCore().
 
 
 packageRank 0.1.9003
