@@ -4,7 +4,7 @@
 \alias{plot.cranlogs}
 \title{Plot method for cran_downloads2().}
 \usage{
-\method{plot}{cranlogs}(x, graphics = "ggplot2", points = TRUE,
+\method{plot}{cranlogs}(x, graphics = NULL, points = TRUE,
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...)
 }
 \arguments{

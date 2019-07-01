@@ -58,7 +58,7 @@ cran_downloads2 <- function(packages = NULL,
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' }
 
-plot.cranlogs <- function(x, graphics = "ggplot2", points = TRUE,
+plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
@@ -68,6 +68,14 @@ plot.cranlogs <- function(x, graphics = "ggplot2", points = TRUE,
 
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
+
+  if (is.null(graphics)) {
+    if (length(x$packages) == 1) graphics <- "base"
+    else if (length(x$packages) > 1) graphics <- "ggplot2"
+  } else {
+    if (all(graphics %in% c("base", "ggplot2") == FALSE))
+    stop('graphics must be "base" or "ggplot2"')
+  }
 
   if (graphics == "base") {
     if (length(x$packages) > 1) {

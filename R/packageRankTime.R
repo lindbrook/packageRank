@@ -98,7 +98,7 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 #' plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' }
 
-plot.package_rank_time <- function(x, graphics = "ggplot2", log_count = TRUE,
+plot.package_rank_time <- function(x, graphics = NULL, log_count = TRUE,
   smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
@@ -115,6 +115,14 @@ plot.package_rank_time <- function(x, graphics = "ggplot2", log_count = TRUE,
   if (log_count) {
     if (any(cran_smpl$count == 0)) cran_smpl$count <- cran_smpl$count + 1
     if (any(pkg.data$count == 0)) pkg.data$count <- pkg.data$count + 1
+  }
+
+  if (is.null(graphics)) {
+    if (length(x$packages) == 1) graphics <- "base"
+    else if (length(x$packages) > 1) graphics <- "ggplot2"
+  } else {
+    if (all(graphics %in% c("base", "ggplot2") == FALSE))
+    stop('graphics must be "base" or "ggplot2"')
   }
 
   if (graphics == "base") {

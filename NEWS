@@ -1,3 +1,10 @@
+packageRank 0.1.9005
+==================
+
+- use base graphics for 1 package and ggplot2 for > 1 packages in 
+  plot.cranlogs() and packageRankTime().
+  
+
 packageRank 0.1.9004
 ==================
 
@@ -16,7 +23,7 @@ packageRank 0.1.9002
 ==================
 
 - add ggPlot().
-- use base graphics for single packages and ggplot2 for multiple packages in
+- use base graphics for 1 package and ggplot2 for > 1 package in
   plot.package_rank().
   
 
