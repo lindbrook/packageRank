@@ -3,10 +3,12 @@
 #' Temporal pattern over last week or month.
 #' @param packages Character. Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
-#' @param sample.pct Numeric.
+#' @param sample.pct Numeric. Percent of packages to sample.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @import cranlogs
 #' @export
-#' @note Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
+#' @note Most useful with plot() method. Note that packageRankTime() is computationally intensive.
 #' @examples
 #' \donttest{
 #'
@@ -15,10 +17,10 @@
 #' }
 
 packageRankTime <- function(packages = "HistData", when = "last-month",
-  sample.pct = 5) {
+  sample.pct = 5, multi.core = FALSE, dev.mode = FALSE) {
 
   if (when %in% c("last-month", "last-week") == FALSE) {
-    stop('when must either be "last-month" or "last-week".')
+    stop('when can only be "last-month" or "last-week".')
   }
 
   pkg.data <- cranlogs::cran_downloads(packages = packages, when = when)
@@ -35,15 +37,26 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 
   url <- paste0(rstudio.url, year, '/', start.date, ".csv.gz")
   cran_log <- mfetchLog(url)
-  init.pkgs <- unique(cran_log$package)
+  init.pkgs <- unique(cran_log$package) # remove duplicated pkgs (diff versions)
   init.pkgs <- stats::na.omit(init.pkgs)
 
   pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
   crosstab <- table(pkgs$package)
+  cores <- multiCore(multi.core)
 
-  rank.percentile <- lapply(names(crosstab), function(nm) {
-    mean(crosstab < crosstab[nm])
-  })
+  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    cl <- parallel::makeCluster(cores)
+    parallel::clusterExport(cl = cl, envir = environment(),
+      varlist = "crosstab")
+    rank.percentile <- parallel::parLapply(cl, names(crosstab), function(nm) {
+      mean(crosstab < crosstab[nm])
+    })
+    parallel::stopCluster(cl)
+  } else {
+    rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
+      mean(crosstab < crosstab[nm])
+    }, mc.cores = cores)
+  }
 
   rank.percentile <- unlist(rank.percentile)
 

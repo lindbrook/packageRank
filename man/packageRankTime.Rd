@@ -5,20 +5,24 @@
 \title{Package download counts and rank percentiles (longitudinal).}
 \usage{
 packageRankTime(packages = "HistData", when = "last-month",
-  sample.pct = 5)
+  sample.pct = 5, multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Character. Vector of package name(s).}
 
 \item{when}{Character. "last-month" or "last-week".}
 
-\item{sample.pct}{Numeric.}
+\item{sample.pct}{Numeric. Percent of packages to sample.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 Temporal pattern over last week or month.
 }
 \note{
-Most useful with plot() method. packageRankTime() takes longer to run because it replicates cranlogs::cran_downloads(when = "last-week" or "last-month") with additional computation for ranks and cohort.
+Most useful with plot() method. Note that packageRankTime() is computationally intensive.
 }
 \examples{
 \donttest{
