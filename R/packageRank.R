@@ -92,7 +92,6 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' }
 
 plot.package_rank <- function(x, graphics = NULL, log_count = TRUE, ...) {
-
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
 
   crosstab <- x$crosstab
