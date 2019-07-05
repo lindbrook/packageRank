@@ -2,6 +2,7 @@ packageRank 0.1.9006
 ==================
 
 - add parallelization prototype of packageRankTime().
+- use physical cores for Windows; logical cores macOS/unix
 
 
 packageRank 0.1.9005
