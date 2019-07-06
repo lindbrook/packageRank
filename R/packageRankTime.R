@@ -4,11 +4,10 @@
 #' @param packages Character. Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
 #' @param sample.pct Numeric. Percent of packages to sample.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. macOS and Unix only.
 #' @import cranlogs
 #' @export
-#' @note Most useful with plot() method. Note that packageRankTime() is computationally intensive.
+#' @note Most useful with plot() method. packageRankTime() is computationally intensive. No support for multi.core on Windows at this time because parallel::parLapply() performance degrades with increasing number of cores.
 #' @examples
 #' \donttest{
 #'
@@ -17,7 +16,7 @@
 #' }
 
 packageRankTime <- function(packages = "HistData", when = "last-month",
-  sample.pct = 5, multi.core = FALSE, dev.mode = FALSE) {
+  sample.pct = 5, multi.core = FALSE) {
 
   if (when %in% c("last-month", "last-week") == FALSE) {
     stop('when can only be "last-month" or "last-week".')
@@ -44,19 +43,9 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
   crosstab <- table(pkgs$package)
   cores <- multiCore(multi.core)
 
-  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-    cl <- parallel::makeCluster(cores)
-    parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = "crosstab")
-    rank.percentile <- parallel::parLapply(cl, names(crosstab), function(nm) {
-      mean(crosstab < crosstab[nm])
-    })
-    parallel::stopCluster(cl)
-  } else {
-    rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
-      mean(crosstab < crosstab[nm])
-    }, mc.cores = cores)
-  }
+  rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
+    mean(crosstab < crosstab[nm])
+  }, mc.cores = cores)
 
   rank.percentile <- unlist(rank.percentile)
 

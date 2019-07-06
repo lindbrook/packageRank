@@ -5,7 +5,7 @@
 \title{Package download counts and rank percentiles (longitudinal).}
 \usage{
 packageRankTime(packages = "HistData", when = "last-month",
-  sample.pct = 5, multi.core = FALSE, dev.mode = FALSE)
+  sample.pct = 5, multi.core = FALSE)
 }
 \arguments{
 \item{packages}{Character. Character. Vector of package name(s).}
@@ -14,15 +14,13 @@ packageRankTime(packages = "HistData", when = "last-month",
 
 \item{sample.pct}{Numeric. Percent of packages to sample.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
-
-\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. macOS and Unix only.}
 }
 \description{
 Temporal pattern over last week or month.
 }
 \note{
-Most useful with plot() method. Note that packageRankTime() is computationally intensive.
+Most useful with plot() method. packageRankTime() is computationally intensive. No support for multi.core on Windows at this time because parallel::parLapply() performance degrades with increasing number of cores.
 }
 \examples{
 \donttest{

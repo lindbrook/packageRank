@@ -1,7 +1,8 @@
 packageRank 0.1.9007
 ==================
 
-- fix setting of number of logical cores in multiCore()
+- fix setting of number of logical cores in multiCore().
+- deprecate parallelized Windows implementation of packageRankTime().
 
 
 packageRank 0.1.9006
