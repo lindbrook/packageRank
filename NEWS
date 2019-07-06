@@ -1,3 +1,9 @@
+packageRank 0.1.9007
+==================
+
+- fix setting of number of logical cores in multiCore()
+
+
 packageRank 0.1.9006
 ==================
 
