@@ -14,7 +14,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' cran_downloads2(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
 #' cran_downloads2(packages = c("Rcpp", "rlang"), when = "last-week")
 #' }
@@ -52,7 +51,6 @@ cran_downloads2 <- function(packages = NULL,
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01",
 #'   to = "2019-05-01"))
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))

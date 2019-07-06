@@ -23,7 +23,6 @@ Plot method for packageRank().
 }
 \examples{
 \donttest{
-
 plot(packageRank(packages = "HistData", date = "2019-01-01"))
 plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
 }

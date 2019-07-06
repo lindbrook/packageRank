@@ -24,7 +24,6 @@ Most useful with plot() method. packageRankTime() is computationally intensive. 
 }
 \examples{
 \donttest{
-
 packageRankTime(packages = "HistData", when = "last-week")
 packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
 }

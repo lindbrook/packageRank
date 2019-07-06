@@ -30,7 +30,6 @@ Plot method for timeSeriesRank().
 }
 \examples{
 \donttest{
-
 plot(packageRankTime(packages = "HistData", when = "last-week"))
 plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 }

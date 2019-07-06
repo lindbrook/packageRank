@@ -9,7 +9,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' packageRank(packages = "HistData", date = "2019-01-01")
 #' packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01")
 #' }
@@ -86,7 +85,6 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' plot(packageRank(packages = "HistData", date = "2019-01-01"))
 #' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
 #' }
