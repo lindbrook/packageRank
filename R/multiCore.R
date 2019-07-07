@@ -10,7 +10,7 @@ multiCore <- function(x = TRUE) {
     if (is.logical(x) | is.numeric(x)) {
       if (is.logical(x)) {
         if (x == TRUE) {
-          cores <- parallel::detectCores(logical = logical.cores)
+          cores <- parallel::detectCores()
         } else {
           cores <- 1L
         }
