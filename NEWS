@@ -1,3 +1,10 @@
+packageRank 0.1.9008
+==================
+
+- set cores to 1 for Windows in multiCore().
+- set multi.core to TRUE for packageRankTime().
+
+
 packageRank 0.1.9007
 ==================
 

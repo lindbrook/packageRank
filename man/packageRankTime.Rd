@@ -5,7 +5,7 @@
 \title{Package download counts and rank percentiles (longitudinal).}
 \usage{
 packageRankTime(packages = "HistData", when = "last-month",
-  sample.pct = 5, multi.core = FALSE)
+  sample.pct = 5, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Character. Vector of package name(s).}
@@ -14,7 +14,7 @@ packageRankTime(packages = "HistData", when = "last-month",
 
 \item{sample.pct}{Numeric. Percent of packages to sample.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. macOS and Unix only.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations on Windows, the number of cores defaults to one.}
 }
 \description{
 Temporal pattern over last week or month.

@@ -4,7 +4,7 @@
 #' @param packages Character. Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
 #' @param sample.pct Numeric. Percent of packages to sample.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. macOS and Unix only.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations on Windows, the number of cores defaults to one.
 #' @import cranlogs
 #' @export
 #' @note Most useful with plot() method. packageRankTime() is computationally intensive. No support for multi.core on Windows at this time because parallel::parLapply() performance degrades with increasing number of cores.
@@ -15,7 +15,7 @@
 #' }
 
 packageRankTime <- function(packages = "HistData", when = "last-month",
-  sample.pct = 5, multi.core = FALSE) {
+  sample.pct = 5, multi.core = TRUE) {
 
   if (when %in% c("last-month", "last-week") == FALSE) {
     stop('when can only be "last-month" or "last-week".')
