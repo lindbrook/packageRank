@@ -10,8 +10,8 @@
 #' @note Most useful with plot() method. packageRankTime() is computationally intensive. No support for multi.core on Windows at this time because parallel::parLapply() performance degrades with increasing number of cores.
 #' @examples
 #' \donttest{
-#' packageRankTime(packages = "HistData", when = "last-week")
-#' packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
+#' plot(packageRankTime(packages = "HistData", when = "last-week"))
+#' plot(packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month"))
 #' }
 
 packageRankTime <- function(packages = "HistData", when = "last-month",
