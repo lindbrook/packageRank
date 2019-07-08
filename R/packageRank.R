@@ -3,7 +3,7 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
-#' @param memoization Logical. Use memoisation when downloading logs.
+#' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @import data.table RCurl
 #' @export
