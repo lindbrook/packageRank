@@ -14,17 +14,17 @@ packageRankTime(packages = "HistData", when = "last-month",
 
 \item{sample.pct}{Numeric. Percent of packages to sample.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations on Windows, the number of cores defaults to one.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.}
 }
 \description{
 Temporal pattern over last week or month.
 }
 \note{
-Most useful with plot() method. packageRankTime() is computationally intensive. No support for multi.core on Windows at this time because parallel::parLapply() performance degrades with increasing number of cores.
+Most useful with plot() method.
 }
 \examples{
 \donttest{
-packageRankTime(packages = "HistData", when = "last-week")
-packageRankTime(packages = c("Rcpp", "rlang"), when = "last-month")
+plot(packageRankTime(packages = "HistData", when = "last-week"))
+plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 }
 }

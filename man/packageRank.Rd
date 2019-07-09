@@ -12,7 +12,7 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 
 \item{date}{Character. Date.}
 
-\item{memoization}{Logical. Use memoisation when downloading logs.}
+\item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \value{
 An R data frame.
