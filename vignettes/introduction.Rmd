@@ -26,4 +26,4 @@ NOTE: 'packageRank' relies on an active internet connection.
 
 ### documentation
 
-Possibly due to the use of memoization, a vignette with R code examples does not pass all CRAN tests (Debian platform specifically.) For documentation about 'packageRank', see the README on [CRAN](https://cran.r-project.org/web/packages/packageRank/readme/README.html) or the more current version on [GitHub](https://github.com/lindbrook/packageRank).
+See the README on [GitHub](https://github.com/lindbrook/packageRank).
