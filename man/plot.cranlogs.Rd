@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{object.}
 
-\item{graphics}{Character. "base" or "ggplot2".}
+\item{graphics}{Character. NULL, "base" or "ggplot2".}
 
 \item{points}{Logical. Plot points.}
 

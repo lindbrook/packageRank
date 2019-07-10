@@ -38,7 +38,7 @@ cran_downloads2 <- function(packages = NULL,
 #' Plot method for cran_downloads2().
 #'
 #' @param x object.
-#' @param graphics Character. "base" or "ggplot2".
+#' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param points Logical. Plot points.
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
@@ -68,8 +68,9 @@ plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
   days.observed <- unique(dat$date)
 
   if (is.null(graphics)) {
-    if (length(x$packages) == 1) graphics <- "base"
-    else if (length(x$packages) > 1) graphics <- "ggplot2"
+    if (length(x$packages) == 1 | length(unique(dat$date)) == 1) {
+      graphics <- "base"
+    } else graphics <- "ggplot2"
   } else {
     if (all(graphics %in% c("base", "ggplot2") == FALSE))
     stop('graphics must be "base" or "ggplot2"')
