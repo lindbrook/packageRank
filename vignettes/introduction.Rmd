@@ -26,4 +26,4 @@ NOTE: 'packageRank' relies on an active internet connection.
 
 ### documentation
 
-See the README on [GitHub](https://github.com/lindbrook/packageRank).
+See the README on [CRAN](https://CRAN.R-project.org/package=packageRank) or [GitHub](https://github.com/lindbrook/packageRank).
