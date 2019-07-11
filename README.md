@@ -75,9 +75,6 @@ of a package’s downloads:
 
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
-> Registered S3 method overwritten by 'R.oo':
->   method        from       
->   throw.default R.methodsS3
 >         date packages downloads percentile          rank
 > 1 2019-01-01 HistData        51       93.4 920 of 14,020
 ```
