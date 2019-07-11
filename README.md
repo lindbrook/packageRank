@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.9010-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.1.9011-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and percentiles
 
 ### features
@@ -9,9 +9,9 @@
   - compute the rank percentile and nominal rank of a package’s
     downloads from RStudio’s [CRAN
     mirror](http://cran-logs.rstudio.com).
-  - visualize a package’s position in the distribution of package
-    download counts for a given day (cross-sectionally) or over time
-    (longitudinally).
+  - visualize a package’s relative and absolute position in the
+    distribution of package downloads for a day (cross-sectionally) or
+    over time (longitudinally).
   - provide S3 plot methods for ‘cranlogs’ output.
 
 NOTE: ‘packageRank’ relies on an active internet connection.
@@ -24,7 +24,7 @@ To install ‘packageRank’ from CRAN:
 install.packages("packageRank")
 ```
 
-To install the current development version from
+To install the latest development version from
 GitHub:
 
 ``` r
@@ -36,23 +36,23 @@ devtools::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ### background
 
 The ‘[cranlogs](https://cran.r-project.org/package=cranlogs)’ package
-computes the number of downloads using RStudio’s [CRAN
+computes the raw number of downloads using RStudio’s [CRAN
 mirror](http://cran-logs.rstudio.com). For example, we can see that the
 ‘[HistData](https://cran.r-project.org/package=HistData)’ package was
-downloaded 51 times on the first day of 2019:
+downloaded 51 times on the first day of
+2019:
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01",
-  to = "2019-01-01")
+cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-01")
 >         date count  package
 > 1 2019-01-01    51 HistData
 ```
 
-And 787 times in the first week:
+And 787 times in the first
+week:
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01",
-  to = "2019-01-07")
+cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-07")
 >         date count  package
 > 1 2019-01-01    51 HistData
 > 2 2019-01-02   100 HistData
@@ -63,18 +63,21 @@ cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01",
 > 7 2019-01-07   205 HistData
 ```
 
-In both cases, the “compared to what?” question lurks in the background.
-Is 51 downloads large or small? Is the pattern during that week typical
-or unusual? To help answer these questions, ‘packageRank’ tries to
-provide some perspective on package download counts.
+In both cases, lurking in the background is the “compared to what?”
+question. Is 51 downloads large or small? Is the pattern that week
+typical or unusual? To answer these questions, ‘packageRank’ puts
+package download counts into greater context.
 
 ### compute percentiles and ranks
 
-To do so, we can compute the rank percentile and nominal rank of a
-package’s downloads. Simply use `packageRank()`:
+To do so, the package can compute the rank percentile and nominal rank
+of a package’s downloads:
 
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
+> Registered S3 method overwritten by 'R.oo':
+>   method        from       
+>   throw.default R.methodsS3
 >         date packages downloads percentile          rank
 > 1 2019-01-01 HistData        51       93.4 920 of 14,020
 ```
@@ -103,14 +106,14 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs , 1)
 > [1] 93.4
 ```
 
-We also see that 51 downloads earns ‘HistData’ 920th place among the
-14,020 packages downloaded. Note that this rank is “nominal” because
-it’s possible that multiple packages can have identical download
-counts. In such cases, a package’s nominal rank (but not its rank
-percentile) will sometimes be determined by its name: packages with the
-same number of downloads are sorted in alphabetical order. For the case
-at hand, ‘HistData’ benefits from the fact that it is second in the list
-(vector) of packages with 51 downloads:
+We also see that 51 downloads puts ‘HistData’ in 920th place among the
+14,020 packages with at least one download. What makes this rank
+“nominal” is the fact that multiple packages can have the same number
+of downloads. As a result, a package’s nominal rank (but not its rank
+percentile) will sometimes be affected by its name: packages with the
+same number of downloads will be sorted in alphabetical order. For the
+case at hand, ‘HistData’ benefits from the fact that it is second in the
+list (vector) of packages with 51 downloads:
 
 ``` r
 pkg.rank <- packageRank(packages = "HistData", date = "2019-01-01")
@@ -128,8 +131,8 @@ downloads[downloads == 51]
 
 ### visualization (cross-sectional)
 
-To visualize a package’s position in the distribution on a given day’s
-downloads, use the
+To visualize a package’s relative position on a given day’s downloads,
+simply use the
 following:
 
 ``` r
@@ -142,72 +145,72 @@ This cross-sectional view plots a package’s rank (x-axis) against the
 logarithm of its downloads (y-axis) and highlights its position in the
 overall distribution of downloads.
 
-In addition, it also illustrates 1) the package’s rank percentile and
+In addition, it also illustrates 1) a package’s rank percentile and its
 raw count of downloads (in red); 2) the location of the 75th, 50th and
 25th percentiles (dotted gray vertical lines); 3) the package with the
-most downloads (in this case ‘devtools’); and 4) the total number of
-downloads (2,982,767) on that day (both in blue).
+most downloads, in this case ‘devtools’ (in blue); and 4) the total
+number of downloads (2,982,767) on that day (in blue).
 
-Just like cranlogs::cran\_downloads(), you can also pass a vector of
+Note that you can even pass a vector of
 packages:
 
 ``` r
-plot(packageRank(packages = c("cholera", "HistData", "regtools"),
-  date = "2019-05-01"))
+plot(packageRank(packages = c("cholera", "HistData", "regtools"), date = "2019-05-01"))
 ```
 
 <img src="man/figures/README-plot2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ### visualization (longitudinal)
 
-To visualize a package’s position over time, use `packageRankTime()`.
-Only two time frames are available: “last-week” and “last-month”.
+To visualize a package’s relative position over time, use
+`packageRankTime()`:
 
 ``` r
-plot(packageRankTime(packages = "HistData", when = "last-month"),
-  graphics_pkg = "base")
+plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg = "base")
 ```
 
 <img src="man/figures/README-plot_ts-1.png" style="display: block; margin: auto auto auto 0;" />
 
-The longitudinal view plots the date (x-axis) against the logarithm of a
-package’s downloads (y-axis). In the background, we can see the same
-data, plotted in gray, for a stratified random sample of packages.\[2\]
-This sample is used to approximate the temporal pattern of overall
-pattern of package downloads.
+This longitudinal view plots the date (x-axis) against the logarithm of
+a package’s downloads (y-axis).
 
-As above, you can pass a vector of packages:
+In the background, the same variable are plotted (in gray) for a
+stratified random sample of packages.\[2\] This sample approximates the
+“typical” pattern of package downloads for that time period.
+
+As above, you can pass a vector of
+packages:
 
 ``` r
-plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"),
-  when = "last-month"))
+plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"), when = "last-month"))
 ```
 
 <img src="man/figures/README-plot_ts2-1.png" style="display: block; margin: auto auto auto 0;" />
 
+Note that only two time frames are available: “last-week” and
+“last-month”.
+
 ### visualizing ‘cranlogs’
 
 To visualize the download counts from `cranlogs::cran_download()`,
-‘packageRank’ uses generic S3 plot() methods. All you need to do is to
-use cran\_downloads2() in place of cran\_download():
+‘packageRank’ prvoides a generic S3 plot() method. All you need to do
+is substitute cran\_downloads2() for
+cran\_download():
 
 ``` r
-plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"),
-  from = "2019-01-01", to = "2019-01-01"))
+plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"), from = "2019-01-01", to = "2019-01-01"))
 ```
 
 <img src="man/figures/README-cranlogsB1-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ``` r
-plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"),
-  when = "last-month"))
+plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"), when = "last-month"))
 ```
 
 <img src="man/figures/README-cranlogsB2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ``` r
-plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"),
-  from = "2019-01-01", to = "2019-01-31"))
+plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"), from = "2019-01-01", to = "2019-01-31"))
 ```
 
 <img src="man/figures/README-cranlogsB3-1.png" style="display: block; margin: auto auto auto 0;" />
@@ -215,9 +218,9 @@ plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"),
 ### graphics: base R and ‘ggplot2’
 
 All plot are available as both base R and ‘ggplot2’ graphs. By default,
-single packages use base graphics while multiple packages use ‘ggplot2’.
-You can override these defaults via the “graphics” argument in the
-plot() method.
+plot with single frame/panels (one package or one day) use base graphics
+while those with multiple frames/panels use ‘ggplot2’. You can override
+these defaults by using the “graphics” argument in the plot() method.
 
 ### memoization
 
@@ -240,9 +243,9 @@ if (RCurl::url.exists(url)) {
 
 If you use `fetchLog()`, the log file, which can sometimes be as large
 as 50 MB, will be downloaded every time you call the function. If you
-use `mfetchLog()`, logs are intelligently cached: logs that have already
-been downloaded (in your current R session) will not be downloaded
-again.
+use `mfetchLog()`, logs are intelligently cached; those that have
+already been downloaded, in your current R session, will not be
+downloaded again.
 
 ### Notes
 
