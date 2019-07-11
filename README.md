@@ -216,7 +216,7 @@ plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"),
 
 All plot are available as both base R and ‘ggplot2’ graphs. By default,
 single packages use base graphics while multiple packages use ‘ggplot2’.
-You can override these defautls via the “graphics” argument in the
+You can override these defaults via the “graphics” argument in the
 plot() method.
 
 ### memoization
