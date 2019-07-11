@@ -132,7 +132,7 @@ Note that only two time frames are available: "last-week" and "last-month".
 
 ### visualizing 'cranlogs'
 
-To visualize the download counts from `cranlogs::cran_download()`, 'packageRank' prvoides a generic S3 plot() method. All you need to do is substitute cran_downloads2() for cran_download():
+To visualize the download counts from `cranlogs::cran_download()`, 'packageRank' provides a generic S3 plot() method. All you need to do is substitute cran_downloads2() for cran_download():
 
 ```{r cranlogsB1, fig.width = 5, fig.height = 5, fig.align = "left"}
 plot(cran_downloads2(packages = c("data.table", "Rcpp", "rlang"), from = "2019-01-01", to = "2019-01-01"))

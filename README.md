@@ -190,7 +190,7 @@ Note that only two time frames are available: “last-week” and
 ### visualizing ‘cranlogs’
 
 To visualize the download counts from `cranlogs::cran_download()`,
-‘packageRank’ prvoides a generic S3 plot() method. All you need to do
+‘packageRank’ provides a generic S3 plot() method. All you need to do
 is substitute cran\_downloads2() for
 cran\_download():
 
