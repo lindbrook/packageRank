@@ -54,6 +54,8 @@ cran_downloads2 <- function(packages = NULL,
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01",
 #'   to = "2019-05-01"))
 #' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+#' plot(cran_downloads2(packages = "R"), from = "2019-05-01", to = "2019-05-01"))
+#' plot(cran_downloads2(packages = "R", when = "last-month"))
 #' }
 
 plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
@@ -103,28 +105,76 @@ plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
           title(main = pkg)
         }))
       }
+
     } else {
       if (length(days.observed) == 1) {
-        if (log_count) {
-          dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10(Count)", main = days.observed)
+        if (x$packages == "R") {
+          os <- unique(dat$os)
+
+          count <- vapply(os, function(x) {
+            sum(dat[dat$os == x, "count"])
+          }, numeric(1L))
+
+          if ("NA" %in% names(count) == FALSE) {
+            count <- c(count, 0)
+            names(count)[length(count)] <- "NA"
+          }
+
+          count <- count[order(names(count))]
+          dotchart(sort(count), xlab = "count", main = days.observed)
         } else {
-          dotchart(dat$count, labels = dat$package, xlab = "count",
-            main = days.observed)
+          if (log_count) {
+            dotchart(log10(dat$count), labels = dat$package,
+              xlab = "log10(Count)", main = days.observed)
+          } else {
+            dotchart(dat$count, labels = dat$package, xlab = "count",
+              main = days.observed)
+          }
         }
       } else {
-        if (log_count) {
-          plot(dat$date, dat$count, type = "o", xlab = "Rank",
-            ylab = "log10(Count)", log = "y")
+        if (x$packages == "R") {
+          daily <- lapply(days.observed, function(day) {
+            os <- unique(dat[dat$date == day, "os"])
+            day.data <- dat[dat$date == day, ]
+            tot.downloads <- sum(day.data$count)
+            count <- vapply(os, function(x) {
+              sum(day.data[day.data$os == x, "count"])
+            }, numeric(1L))
+            if ("NA" %in% names(count) == FALSE) {
+              count <- c(count, 0)
+              names(count)[length(count)] <- "NA"
+            }
+            count[order(names(count))]
+          })
+
+          daily <- as.data.frame(do.call(rbind, daily))
+          plot(unique(dat$date), daily$win, type = "o", ylim = range(daily))
+          lines(unique(dat$date), daily$osx, type = "o", pch = 0, col = "red")
+          lines(unique(dat$date), daily$src, type = "o", pch = 2, col = "blue")
+          lines(unique(dat$date), daily$`NA`, type = "o", pch = 3,
+            col = "green")
+          legend(x = "topleft",
+                 legend = c("win", "mac", "src", "NA"),
+                 col = c("black", "red", "blue", "green"),
+                 pch = c(1, 0, 2, 3),
+                 bg = "white",
+                 cex = 2/3,
+                 title = "Platform",
+                 lwd = 1)
         } else {
-          plot(dat$date, dat$count, type = "o", xlab = "Rank", ylab = "Count")
+          if (log_count) {
+            plot(dat$date, dat$count, type = "o", xlab = "Rank",
+              ylab = "log10(Count)", log = "y")
+          } else {
+            plot(dat$date, dat$count, type = "o", xlab = "Rank", ylab = "Count")
+          }
+          if (smooth) lines(stats::lowess(dat$date, dat$count, f = f),
+            col = "blue")
+          title(main = x$package)
         }
-        if (smooth) lines(stats::lowess(dat$date, dat$count, f = f),
-          col = "blue")
-        title(main = x$package)
+
       }
     }
-
   } else if (graphics == "ggplot2") {
     if (length(days.observed) == 1) {
       p <- ggplot(dat) +
