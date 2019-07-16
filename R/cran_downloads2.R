@@ -51,10 +51,11 @@ cran_downloads2 <- function(packages = NULL,
 #' @export
 #' @examples
 #' \donttest{
-#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), from = "2019-05-01",
-#'   to = "2019-05-01"))
-#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
-#' plot(cran_downloads2(packages = "R"), from = "2019-05-01", to = "2019-05-01"))
+#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), 
+#'   from = "2019-05-01", to = "2019-05-01"))
+#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), 
+#'   when = "last-month"))
+#' plot(cran_downloads2(packages = "R", from = "2019-05-01", to = "2019-05-01"))
 #' plot(cran_downloads2(packages = "R", when = "last-month"))
 #' }
 
@@ -92,11 +93,21 @@ plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
           if (log_count) {
-            plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
-              ylab = "log10(Count)", log = "y")
+            if (points) {
+              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
+                ylab = "log10(Count)", log = "y")
+            } else {
+              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Rank",
+                ylab = "log10(Count)", log = "y")
+            }
           } else {
-            plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
-              ylab = "Count")
+            if (points) {
+              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
+                ylab = "Count")
+            } else {
+              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Rank",
+                ylab = "Count")
+            }
           }
           if (smooth) {
             lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
@@ -163,10 +174,21 @@ plot.cranlogs <- function(x, graphics = NULL, points = TRUE,
                  lwd = 1)
         } else {
           if (log_count) {
-            plot(dat$date, dat$count, type = "o", xlab = "Rank",
-              ylab = "log10(Count)", log = "y")
+            if (points) {
+              plot(dat$date, dat$count, type = "o", xlab = "Rank",
+                ylab = "log10(Count)", log = "y")
+            } else {
+              plot(dat$date, dat$count, type = "l", xlab = "Rank",
+                ylab = "log10(Count)", log = "y")
+            }
           } else {
-            plot(dat$date, dat$count, type = "o", xlab = "Rank", ylab = "Count")
+            if (points) {
+              plot(dat$date, dat$count, type = "o", xlab = "Rank",
+                ylab = "Count")
+            } else {
+              plot(dat$date, dat$count, type = "l", xlab = "Rank",
+                ylab = "Count")
+            }
           }
           if (smooth) lines(stats::lowess(dat$date, dat$count, f = f),
             col = "blue")
