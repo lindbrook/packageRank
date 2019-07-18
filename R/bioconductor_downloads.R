@@ -1,4 +1,4 @@
-#' Daily package downloads from Bioconductor.
+#' Annual/monthly package downloads from Bioconductor (prototype).
 #'
 #' @param pkg A character vector.
 #' @param obs Unit of observation: "month" or "year"
@@ -7,7 +7,7 @@
 bioconductor_downloads <- function(pkg = "clusterProfiler", obs = "year") {
   url <- paste0("https://bioconductor.org/packages/stats/bioc/", pkg, "/", pkg,
     "_stats.tab", collapse = "")
-  pkg.data <- as.data.frame(data.table::fread(url))
+  pkg.data <- as.data.frame(mfetchLog(url))
 
   if (obs == "year") {
     dat <- lapply(unique(pkg.data$Year), function(yr) {

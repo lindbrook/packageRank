@@ -2,7 +2,7 @@
 % Please edit documentation in R/bioconductor_downloads.R
 \name{bioconductor_downloads}
 \alias{bioconductor_downloads}
-\title{Daily package downloads from Bioconductor.}
+\title{Annual/monthly package downloads from Bioconductor (prototype).}
 \usage{
 bioconductor_downloads(pkg = "clusterProfiler", obs = "year")
 }
@@ -12,5 +12,5 @@ bioconductor_downloads(pkg = "clusterProfiler", obs = "year")
 \item{obs}{Unit of observation: "month" or "year"}
 }
 \description{
-Daily package downloads from Bioconductor.
+Annual/monthly package downloads from Bioconductor (prototype).
 }
