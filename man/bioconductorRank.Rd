@@ -2,7 +2,7 @@
 % Please edit documentation in R/bioconductorRank.R
 \name{bioconductorRank}
 \alias{bioconductorRank}
-\title{Package download counts and rank percentiles (cross-sectional).}
+\title{Package download counts and rank percentiles (cross-sectional) (prototype).}
 \usage{
 bioconductorRank(pkg = "clusterProfiler", yr.mo = "2019-06",
   count = "download")
@@ -18,5 +18,5 @@ bioconductorRank(pkg = "clusterProfiler", yr.mo = "2019-06",
 An R data frame.
 }
 \description{
-From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+From bioconductor
 }
