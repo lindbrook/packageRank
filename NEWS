@@ -1,3 +1,9 @@
+packageRank 0.2.0.9005
+==================
+
+- incorporate bio_yr() and bio_mo() into bioconductor_downloads2() prototype.
+
+
 packageRank 0.2.0.9004
 ==================
 
