@@ -1,3 +1,10 @@
+packageRank 0.2.0.9006
+==================
+
+- add print.bioconductor2() and summary.bioconductor2().
+- amend plot.bioconductor2() for in progress year or month.
+
+
 packageRank 0.2.0.9005
 ==================
 

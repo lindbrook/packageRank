@@ -4,12 +4,15 @@
 \alias{plot.bioconductor2}
 \title{Plot method for bioconductor_downloads().}
 \usage{
-\method{plot}{bioconductor2}(x, count = "download", smooth = TRUE, ...)
+\method{plot}{bioconductor2}(x, count = "download", add.points = TRUE,
+  smooth = TRUE, ...)
 }
 \arguments{
 \item{x}{object.}
 
 \item{count}{Character. "download" or "ip".}
+
+\item{add.points}{Logical. Add points.}
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 

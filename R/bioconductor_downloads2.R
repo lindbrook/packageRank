@@ -88,7 +88,8 @@ bioconductor_downloads2 <- function(year = NULL, month = NULL, end.year = NULL,
     dat
   }
 
-  out <- list(obs = observation, data = dat, pkg = pkg)
+  out <- list(obs = observation, data = dat, pkg = pkg, date = cal.date,
+    year = current.yr)
   class(out) <- "bioconductor2"
   out
 }
@@ -97,47 +98,106 @@ bioconductor_downloads2 <- function(year = NULL, month = NULL, end.year = NULL,
 #'
 #' @param x object.
 #' @param count Character. "download" or "ip".
+#' @param add.points Logical. Add points.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.bioconductor2 <- function(x, count = "download", smooth = TRUE, ...) {
+plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
+  smooth = TRUE, ...) {
+
+  dat <- x$data
+
   if (x$obs == "year") {
+    next.year <- as.Date(paste0(x$year + 1, "-01-01"))
+    yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
+
     if (count == "download") {
-      plot(x$data$Year, x$data$Nb_of_downloads, type = "o", xlab = "Year",
+      plot(dat$Year, dat$Nb_of_downloads, type = "l", xlab = "Year",
         ylab = "Downloads")
+
+      if (add.points) {
+        if (yr.in.progress) {
+          points(dat[1:(nrow(dat) - 1), "Year"],
+                 dat[1:(nrow(dat) - 1), "Nb_of_downloads"],
+                 pch = 1)
+          points(dat[nrow(dat), "Year"],
+                 dat[nrow(dat), "Nb_of_downloads"],
+                 pch = 15, col = "red")
+        }
+      }
+
       if (smooth) {
-        lines(stats::lowess(x$data$Year, x$data$Nb_of_downloads), col = "red")
+        lines(stats::lowess(dat$Year, dat$Nb_of_downloads), col = "blue")
       }
     } else if (count == "ip") {
-      plot(x$data$Year, x$data$Nb_of_distinct_IPs, type = "o", xlab = "Year",
+      plot(dat$Year, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
         ylab = "Unique IP Addresses")
+
+      if (add.points) {
+        if (yr.in.progress) {
+          points(dat[1:(nrow(dat) - 1), "Year"],
+                 dat[1:(nrow(dat) - 1), "Nb_of_distinct_IPs"],
+                 pch = 1)
+          points(dat[nrow(dat), "Year"],
+                 dat[nrow(dat), "Nb_of_distinct_IPs"],
+                 pch = 15, col = "red")
+        }
+      }
+
       if (smooth) {
-        lines(stats::lowess(x$data$Year, x$data$Nb_of_distinct_IPs),
-          col = "red")
+        lines(stats::lowess(dat$Year, dat$Nb_of_distinct_IPs),
+          col = "blue")
       }
     }
   } else if (x$obs == "month") {
-    mo <- vapply(x$data$Month, function(mo) which(mo == month.abb), numeric(1L))
-    x$data$date <- as.Date(paste0(x$data$Year, "-", mo, "-01"))
+    mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
+    dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+    next.month <- dat[dat$date > x$date, "date"][1]
+    mo.in.progress <- ifelse(x$date < next.month - 1, TRUE, FALSE)
+    dat <- dat[dat$date < x$date, ]
 
     if (count == "download") {
-      plot(x$data$date, x$data$Nb_of_downloads, type = "o", xlab = "Year",
+      plot(dat$date, dat$Nb_of_downloads, type = "l", xlab = "Year",
         ylab = "Downloads")
+
+      if (add.points) {
+        if (mo.in.progress) {
+          points(dat[1:(nrow(dat) - 1), "date"],
+                 dat[1:(nrow(dat) - 1), "Nb_of_downloads"],
+                 pch = 1)
+          points(dat[nrow(dat), "date"],
+                 dat[nrow(dat), "Nb_of_downloads"],
+                 pch = 15, col = "red")
+        }
+      }
+
       if (smooth) {
-        lines(stats::lowess(x$data$date, x$data$Nb_of_downloads), col = "red")
+        lines(stats::lowess(dat$date, dat$Nb_of_downloads), col = "blue")
       }
     } else if (count == "ip") {
-      plot(x$data$date, x$data$Nb_of_distinct_IPs, type = "o", xlab = "Year",
+      plot(dat$date, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
         ylab = "Unique IP Addresses")
+
+      if (add.points) {
+        if (mo.in.progress) {
+          points(dat[1:(nrow(dat) - 1), "date"],
+                 dat[1:(nrow(dat) - 1), "Nb_of_distinct_IPs"],
+                 pch = 1)
+          points(dat[nrow(dat), "date"],
+                 dat[nrow(dat), "Nb_of_distinct_IPs"],
+                 pch = 15, col = "red")
+        }
+      }
+
       if (smooth) {
-        lines(stats::lowess(x$data$date, x$data$Nb_of_distinct_IPs),
-          col = "red")
+        lines(stats::lowess(dat$date, dat$Nb_of_distinct_IPs),
+          col = "blue")
       }
     }
   } else stop('count must be "download" or "ip".')
 
-  title(main = x$pkg)
+  if (is.null(x$pkg)) title(main = "All Packages") else title(main = x$pkg)
 }
 
 #' @export
