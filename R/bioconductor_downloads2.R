@@ -139,3 +139,9 @@ plot.bioconductor2 <- function(x, count = "download", smooth = TRUE, ...) {
 
   title(main = x$pkg)
 }
+
+#' @export
+print.bioconductor2 <- function(x, ...) print(x$data)
+
+#' @export
+summary.bioconductor2 <- function(object, ...) object$data
