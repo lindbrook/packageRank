@@ -8,8 +8,8 @@
 #' @param observation Character. "year" or "month"
 #' @export
 
-bioconductor_downloads2 <- function(year = NULL, month = NULL, end.year = NULL,
-  end.month = NULL, pkg = NULL, observation = "year") {
+bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
+  end.year = NULL, end.month = NULL, observation = "month") {
 
   cal.date <- Sys.Date()
   current.yr <- data.table::year(cal.date)
@@ -100,11 +100,15 @@ bioconductor_downloads2 <- function(year = NULL, month = NULL, end.year = NULL,
 #' @param count Character. "download" or "ip".
 #' @param add.points Logical. Add points.
 #' @param smooth Logical. Add stats::lowess smoother.
+#' @param smooth.f Numeric. smoother span.
 #' @param ... Additional plotting parameters.
 #' @export
+#' @examples
+#' plot(bioconductor_downloads2(pkg = "graph"))
+#' plot(bioconductor_downloads2(pkg = "graph", year = 2019))
 
 plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
-  smooth = TRUE, ...) {
+  smooth = FALSE, smooth.f = 2/3, ...) {
 
   dat <- x$data
 
@@ -128,7 +132,8 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$Year, dat$Nb_of_downloads), col = "blue")
+        lines(stats::lowess(dat$Year, dat$Nb_of_downloads, f = smooth.f),
+          col = "blue")
       }
     } else if (count == "ip") {
       plot(dat$Year, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
@@ -146,7 +151,7 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$Year, dat$Nb_of_distinct_IPs),
+        lines(stats::lowess(dat$Year, dat$Nb_of_distinct_IPs, f = smooth.f),
           col = "blue")
       }
     }
@@ -173,7 +178,8 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$date, dat$Nb_of_downloads), col = "blue")
+        lines(stats::lowess(dat$date, dat$Nb_of_downloads, f = smooth.f),
+          col = "blue")
       }
     } else if (count == "ip") {
       plot(dat$date, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
@@ -191,7 +197,7 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$date, dat$Nb_of_distinct_IPs),
+        lines(stats::lowess(dat$date, dat$Nb_of_distinct_IPs, f = smooth.f),
           col = "blue")
       }
     }

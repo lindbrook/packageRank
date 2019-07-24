@@ -1,3 +1,9 @@
+packageRank 0.2.0.9007
+==================
+
+- add plot.bioconductor2(smooth.f) smoother span argument.
+
+
 packageRank 0.2.0.9006
 ==================
 

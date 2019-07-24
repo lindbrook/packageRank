@@ -4,10 +4,12 @@
 \alias{bioconductor_downloads2}
 \title{Annual/monthly package downloads from Bioconductor (prototype).}
 \usage{
-bioconductor_downloads2(year = NULL, month = NULL, end.year = NULL,
-  end.month = NULL, pkg = NULL, observation = "year")
+bioconductor_downloads2(pkg = NULL, year = NULL, month = NULL,
+  end.year = NULL, end.month = NULL, observation = "month")
 }
 \arguments{
+\item{pkg}{Character.}
+
 \item{year}{Numeric.}
 
 \item{month}{Numeric.}
@@ -15,8 +17,6 @@ bioconductor_downloads2(year = NULL, month = NULL, end.year = NULL,
 \item{end.year}{Numeric.}
 
 \item{end.month}{Numeric.}
-
-\item{pkg}{Character.}
 
 \item{observation}{Character. "year" or "month"}
 }

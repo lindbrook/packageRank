@@ -5,7 +5,7 @@
 \title{Plot method for bioconductor_downloads().}
 \usage{
 \method{plot}{bioconductor2}(x, count = "download", add.points = TRUE,
-  smooth = TRUE, ...)
+  smooth = FALSE, smooth.f = 2/3, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -16,8 +16,14 @@
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
+\item{smooth.f}{Numeric. smoother span.}
+
 \item{...}{Additional plotting parameters.}
 }
 \description{
 Plot method for bioconductor_downloads().
+}
+\examples{
+plot(bioconductor_downloads2(pkg = "graph"))
+plot(bioconductor_downloads2(pkg = "graph", year = 2019))
 }
