@@ -106,6 +106,7 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
 #' @examples
 #' plot(bioconductor_downloads2(pkg = "graph"))
 #' plot(bioconductor_downloads2(pkg = "graph", year = 2019))
+#' plot(bioconductor_downloads2(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
 
 plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
   smooth = FALSE, smooth.f = 2/3, ...) {
@@ -158,23 +159,27 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
   } else if (x$obs == "month") {
     mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
     dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
-    next.month <- dat[dat$date > x$date, "date"][1]
-    mo.in.progress <- ifelse(x$date < next.month - 1, TRUE, FALSE)
-    dat <- dat[dat$date < x$date, ]
+
+    if ( any(dat$date < x$date) ) {
+      dat <- dat[dat$date < x$date, ]
+    }
+
+    data.yr_mo <- extractYearMonth(dat[nrow(dat), "date"])
+    current.yr_mo <- extractYearMonth(x$date)
 
     if (count == "download") {
       plot(dat$date, dat$Nb_of_downloads, type = "l", xlab = "Year",
         ylab = "Downloads")
 
       if (add.points) {
-        if (mo.in.progress) {
+        if (identical(data.yr_mo, current.yr_mo)) {
           points(dat[1:(nrow(dat) - 1), "date"],
                  dat[1:(nrow(dat) - 1), "Nb_of_downloads"],
                  pch = 1)
           points(dat[nrow(dat), "date"],
                  dat[nrow(dat), "Nb_of_downloads"],
                  pch = 15, col = "red")
-        }
+        } else points(dat[, c("date", "Nb_of_downloads")])
       }
 
       if (smooth) {
@@ -186,14 +191,14 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
         ylab = "Unique IP Addresses")
 
       if (add.points) {
-        if (mo.in.progress) {
+        if (identical(data.yr_mo, current.yr_mo)) {
           points(dat[1:(nrow(dat) - 1), "date"],
                  dat[1:(nrow(dat) - 1), "Nb_of_distinct_IPs"],
                  pch = 1)
           points(dat[nrow(dat), "date"],
                  dat[nrow(dat), "Nb_of_distinct_IPs"],
                  pch = 15, col = "red")
-        }
+        } else points(dat[, c("date", "Nb_of_distinct_IPs")])
       }
 
       if (smooth) {
@@ -211,3 +216,6 @@ print.bioconductor2 <- function(x, ...) print(x$data)
 
 #' @export
 summary.bioconductor2 <- function(object, ...) object$data
+
+extractYearMonth <- function(z) substr(z, 1, 7)
+
