@@ -1,3 +1,10 @@
+packageRank 0.2.0.9008
+==================
+
+- fix endpoint in plot.bioconductor2().
+- sort bioconductor_downloads2(observation = "month").
+
+
 packageRank 0.2.0.9007
 ==================
 

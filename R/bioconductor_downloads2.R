@@ -39,7 +39,7 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
     dat <- dat[order(dat$Year), ]
     row.names(dat) <- NULL
     if (is.null(pkg) == FALSE) dat$pkg <- pkg
-    dat
+    dat <- dat[order(dat$Year), ]
 
   } else if (observation == "month") {
     pkg.data <- pkg.data[pkg.data$Month != "all", ]
@@ -73,16 +73,33 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
       dat <- pkg.data[sel, ]
 
     } else if (!is.null(year) & !is.null(end.year) &
-                !is.null(month) & !is.null(end.month)) {
-       sel <- pkg.data$Year == year &
-              pkg.data$Month %in% month.abb[month:12] |
-              pkg.data$Year == end.year &
-              pkg.data$Month %in% month.abb[1:end.month]
+               !is.null(month) & !is.null(end.month)) {
+
+      sel.endpts <- pkg.data$Year == year &
+                    pkg.data$Month %in% month.abb[month:12] |
+                    pkg.data$Year == end.year &
+                    pkg.data$Month %in% month.abb[1:end.month]
+
+      if (end.year - year == 1) {
+        sel <- sel.endpts
+      } else {
+        yrs <- seq(year, end.year)
+        sel.yrs <- pkg.data$Year %in% yrs[yrs %in% c(year, end.year) == FALSE]
+        sel <- sel.endpts | sel.yrs
+      }
+
        dat <- pkg.data[sel, ]
 
     } else stop('error.')
 
-    dat <- dat[order(dat$Year), ]
+    dat$mo <- NA
+
+    for (i in seq_along(month.abb)) {
+      dat[dat$Month == month.abb[i], "mo"] <- i
+    }
+
+    dat <- dat[order(dat$Year, dat$mo), ]
+    dat$mo <- NULL
     row.names(dat) <- NULL
     if (is.null(pkg) == FALSE) dat$pkg <- pkg
     dat
@@ -218,4 +235,3 @@ print.bioconductor2 <- function(x, ...) print(x$data)
 summary.bioconductor2 <- function(object, ...) object$data
 
 extractYearMonth <- function(z) substr(z, 1, 7)
-

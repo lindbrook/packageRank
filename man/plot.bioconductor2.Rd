@@ -26,4 +26,5 @@ Plot method for bioconductor_downloads().
 \examples{
 plot(bioconductor_downloads2(pkg = "graph"))
 plot(bioconductor_downloads2(pkg = "graph", year = 2019))
+plot(bioconductor_downloads2(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
 }
