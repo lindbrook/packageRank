@@ -7,6 +7,16 @@
 #' @param pkg Character.
 #' @param observation Character. "year" or "month"
 #' @export
+#' @examples 
+#' # entire history
+#' bioconductor_downloads2(pkg = "clusterProfiler")
+#' 
+#' # year-to-date
+#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2019)
+#' 
+#' # June 2014 througg March 2018
+#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2014, 
+#'   end.year = 2018, month = 6, end.month = 3)
 
 bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
