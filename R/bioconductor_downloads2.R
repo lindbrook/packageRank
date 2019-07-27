@@ -7,22 +7,26 @@
 #' @param pkg Character.
 #' @param observation Character. "year" or "month"
 #' @export
-#' @examples 
+#' @examples
 #' # entire history
 #' bioconductor_downloads2(pkg = "clusterProfiler")
-#' 
+#'
 #' # year-to-date
 #' bioconductor_downloads2(pkg = "clusterProfiler", year = 2019)
-#' 
+#'
 #' # June 2014 througg March 2018
-#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2014, 
+#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2014,
 #'   end.year = 2018, month = 6, end.month = 3)
+#'
+#' # last 12 months
+#' bioconductor_downloads2(pkg = "clusterProfiler", year = "last-year")
 
 bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
 
   cal.date <- Sys.Date()
   current.yr <- data.table::year(cal.date)
+  current.mo <- data.table::month(cal.date)
 
   if (is.null(pkg)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
@@ -58,12 +62,12 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
         is.null(month) & is.null(end.month)) {
       dat <- pkg.data
 
-    } else if (!is.null(year) & is.null(end.year) &
-        is.null(month) & is.null(end.month)) {
+    } else if (!is.null(year) & !is.character(year) & is.null(end.year) &
+               is.null(month) & is.null(end.month)) {
       dat <- pkg.data[pkg.data$Year == year, ]
 
     } else if (!is.null(year) & !is.null(end.year) &
-        is.null(month) & is.null(end.month)) {
+               is.null(month) & is.null(end.month)) {
       dat <- pkg.data[pkg.data$Year %in% year:end.year, ]
 
     } else if (!is.null(year) & is.null(end.year) &
@@ -100,12 +104,28 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
 
        dat <- pkg.data[sel, ]
 
+     } else if (is.character(year) & is.null(end.year) &
+                is.null(month) & is.null(end.month)) {
+       if (year == "last-year") {
+         sel.start <- pkg.data$Year == current.yr - 1 &
+                      pkg.data$Month %in% month.abb[current.mo:12]
+
+         sel.end <- pkg.data$Year == current.yr &
+                    pkg.data$Month %in% month.abb[1:current.mo]
+
+         dat <- pkg.data[sel.start | sel.end, ]
+       }
     } else stop('error.')
 
     dat$mo <- NA
 
     for (i in seq_along(month.abb)) {
       dat[dat$Month == month.abb[i], "mo"] <- i
+    }
+
+    if (any(dat$Year == current.yr & dat$mo > current.mo)) {
+      dat0 <- dat[dat$Year != current.yr, ]
+      dat <- rbind(dat0, dat[dat$Year == current.yr & dat$mo <= current.mo, ])
     }
 
     dat <- dat[order(dat$Year, dat$mo), ]

@@ -31,6 +31,9 @@ bioconductor_downloads2(pkg = "clusterProfiler")
 bioconductor_downloads2(pkg = "clusterProfiler", year = 2019)
 
 # June 2014 througg March 2018
-bioconductor_downloads2(pkg = "clusterProfiler", year = 2014, 
+bioconductor_downloads2(pkg = "clusterProfiler", year = 2014,
   end.year = 2018, month = 6, end.month = 3)
+
+# last 12 months
+bioconductor_downloads2(pkg = "clusterProfiler", year = "last-year")
 }
