@@ -2,6 +2,7 @@ packageRank 0.2.0.9009
 ==================
 
 - add bioconductor_downloads2(year = "last-year").
+- add bioconductor_downloads2(year, month, end.year, end.month = NULL).
 
 
 packageRank 0.2.0.9008

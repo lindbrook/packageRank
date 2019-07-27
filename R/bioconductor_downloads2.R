@@ -87,6 +87,23 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
       dat <- pkg.data[sel, ]
 
     } else if (!is.null(year) & !is.null(end.year) &
+               !is.null(month) & is.null(end.month)) {
+
+      sel.endpts <- pkg.data$Year == year &
+                   pkg.data$Month %in% month.abb[month:12] |
+                   pkg.data$Year == end.year
+
+      if (end.year - year == 1) {
+         sel <- sel.endpts
+      } else {
+         yrs <- seq(year, end.year)
+         sel.yrs <- pkg.data$Year %in% yrs[yrs %in% c(year, end.year) == FALSE]
+         sel <- sel.endpts | sel.yrs
+      }
+
+      dat <- pkg.data[sel, ]
+
+    } else if (!is.null(year) & !is.null(end.year) &
                !is.null(month) & !is.null(end.month)) {
 
       sel.endpts <- pkg.data$Year == year &
