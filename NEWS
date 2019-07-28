@@ -1,3 +1,10 @@
+packageRank 0.2.0.9010
+==================
+
+- rename bioconductor_downloads2() to bioconductorDownloads().
+- deprecate bioconductor_downloads().
+
+
 packageRank 0.2.0.9009
 ==================
 

@@ -8,20 +8,23 @@
 #' @param observation Character. "year" or "month"
 #' @export
 #' @examples
+#' # all downloads
+#' bioconductorDownloads()
+#' 
 #' # entire history
-#' bioconductor_downloads2(pkg = "clusterProfiler")
+#' bioconductorDownloads(pkg = "clusterProfiler")
 #'
 #' # year-to-date
-#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2019)
+#' bioconductorDownloads(pkg = "clusterProfiler", year = 2019)
 #'
 #' # June 2014 througg March 2018
-#' bioconductor_downloads2(pkg = "clusterProfiler", year = 2014,
+#' bioconductorDownloads(pkg = "clusterProfiler", year = 2014,
 #'   end.year = 2018, month = 6, end.month = 3)
 #'
 #' # last 12 months
-#' bioconductor_downloads2(pkg = "clusterProfiler", year = "last-year")
+#' bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
 
-bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
+bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
 
   cal.date <- Sys.Date()
@@ -154,7 +157,7 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
 
   out <- list(obs = observation, data = dat, pkg = pkg, date = cal.date,
     year = current.yr)
-  class(out) <- "bioconductor2"
+  class(out) <- "bioconductor"
   out
 }
 
@@ -168,11 +171,12 @@ bioconductor_downloads2 <- function(pkg = NULL, year = NULL, month = NULL,
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
-#' plot(bioconductor_downloads2(pkg = "graph"))
-#' plot(bioconductor_downloads2(pkg = "graph", year = 2019))
-#' plot(bioconductor_downloads2(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
+#' plot(bioconductorDownloads())
+#' plot(bioconductorDownloads(pkg = "graph"))
+#' plot(bioconductorDownloads(pkg = "graph", year = 2019))
+#' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
 
-plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
+plot.bioconductor <- function(x, count = "download", add.points = TRUE,
   smooth = FALSE, smooth.f = 2/3, ...) {
 
   dat <- x$data
@@ -276,9 +280,9 @@ plot.bioconductor2 <- function(x, count = "download", add.points = TRUE,
 }
 
 #' @export
-print.bioconductor2 <- function(x, ...) print(x$data)
+print.bioconductor <- function(x, ...) print(x$data)
 
 #' @export
-summary.bioconductor2 <- function(object, ...) object$data
+summary.bioconductor <- function(object, ...) object$data
 
 extractYearMonth <- function(z) substr(z, 1, 7)
