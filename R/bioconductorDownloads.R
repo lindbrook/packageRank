@@ -10,7 +10,7 @@
 #' @examples
 #' # all downloads
 #' bioconductorDownloads()
-#' 
+#'
 #' # entire history
 #' bioconductorDownloads(pkg = "clusterProfiler")
 #'
@@ -279,9 +279,15 @@ plot.bioconductor <- function(x, count = "download", add.points = TRUE,
   if (is.null(x$pkg)) title(main = "All Packages") else title(main = x$pkg)
 }
 
+#' Print method for bioconductorDownloads().
+#' @param x object.
+#' @param ... Additional parameters.
 #' @export
 print.bioconductor <- function(x, ...) print(x$data)
 
+#' Summary method for bioconductorDownloads().
+#' @param object Object.
+#' @param ... Additional parameters.
 #' @export
 summary.bioconductor <- function(object, ...) object$data
 
