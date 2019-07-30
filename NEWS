@@ -1,3 +1,9 @@
+packageRank 0.2.0.9012
+==================
+
+- rename bioc() to bioc_download().
+
+
 packageRank 0.2.0.9011
 ==================
 
