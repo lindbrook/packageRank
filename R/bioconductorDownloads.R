@@ -1,10 +1,10 @@
-#' Annual/monthly package downloads from Bioconductor (prototype).
+#' Annual/monthly package downloads from Bioconductor (beta).
 #'
+#' @param pkg Character. Vector of package names.
 #' @param year Numeric.
 #' @param month Numeric.
 #' @param end.year Numeric.
 #' @param end.month Numeric.
-#' @param pkg Character.
 #' @param observation Character. "year" or "month"
 #' @export
 #' @examples

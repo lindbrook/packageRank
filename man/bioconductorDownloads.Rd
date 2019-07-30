@@ -2,13 +2,13 @@
 % Please edit documentation in R/bioconductorDownloads.R
 \name{bioconductorDownloads}
 \alias{bioconductorDownloads}
-\title{Annual/monthly package downloads from Bioconductor (prototype).}
+\title{Annual/monthly package downloads from Bioconductor (beta).}
 \usage{
 bioconductorDownloads(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month")
 }
 \arguments{
-\item{pkg}{Character.}
+\item{pkg}{Character. Vector of package names.}
 
 \item{year}{Numeric.}
 
@@ -21,7 +21,7 @@ bioconductorDownloads(pkg = NULL, year = NULL, month = NULL,
 \item{observation}{Character. "year" or "month"}
 }
 \description{
-Annual/monthly package downloads from Bioconductor (prototype).
+Annual/monthly package downloads from Bioconductor (beta).
 }
 \examples{
 # entire history
