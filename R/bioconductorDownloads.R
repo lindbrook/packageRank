@@ -8,9 +8,6 @@
 #' @param observation Character. "year" or "month"
 #' @export
 #' @examples
-#' # all downloads
-#' bioconductorDownloads()
-#'
 #' # entire history
 #' bioconductorDownloads(pkg = "clusterProfiler")
 #'
@@ -30,6 +27,27 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   cal.date <- Sys.Date()
   current.yr <- data.table::year(cal.date)
   current.mo <- data.table::month(cal.date)
+
+  if (length(pkg) > 1) {
+    dat <- lapply(pkg, function(p) {
+      bioc(p, year, month, end.year, end.month, observation, current.yr,
+        current.mo, cal.date)
+    })
+    names(dat) <- pkg
+
+  } else if (length(pkg) == 1) {
+    dat <- bioc(pkg, year, month, end.year, end.month, observation, current.yr,
+      current.mo, cal.date)
+  }
+
+  out <- list(data = dat, pkg = pkg, obs = observation, date = cal.date,
+    current.yr = current.yr, current.mo = current.mo)
+  class(out) <- "bioconductor"
+  out
+}
+
+bioc <- function(pkg, year, month, end.year, end.month, observation,
+  current.yr, current.mo, cal.date) {
 
   if (is.null(pkg)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
@@ -56,6 +74,7 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
     dat <- dat[order(dat$Year), ]
     row.names(dat) <- NULL
     if (is.null(pkg) == FALSE) dat$pkg <- pkg
+
     dat <- dat[order(dat$Year), ]
 
   } else if (observation == "month") {
@@ -91,7 +110,6 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 
     } else if (!is.null(year) & !is.null(end.year) &
                !is.null(month) & is.null(end.month)) {
-
       sel.endpts <- pkg.data$Year == year &
                    pkg.data$Month %in% month.abb[month:12] |
                    pkg.data$Year == end.year
@@ -129,10 +147,8 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
        if (year == "last-year") {
          sel.start <- pkg.data$Year == current.yr - 1 &
                       pkg.data$Month %in% month.abb[current.mo:12]
-
          sel.end <- pkg.data$Year == current.yr &
                     pkg.data$Month %in% month.abb[1:current.mo]
-
          dat <- pkg.data[sel.start | sel.end, ]
        }
     } else stop('error.')
@@ -155,10 +171,7 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
     dat
   }
 
-  out <- list(obs = observation, data = dat, pkg = pkg, date = cal.date,
-    year = current.yr)
-  class(out) <- "bioconductor"
-  out
+  dat
 }
 
 #' Plot method for bioconductor_downloads().
@@ -171,7 +184,6 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
-#' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(pkg = "graph"))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2019))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
@@ -179,116 +191,87 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 plot.bioconductor <- function(x, count = "download", add.points = TRUE,
   smooth = FALSE, smooth.f = 2/3, ...) {
 
-  dat <- x$data
+  next.year <- as.Date(paste0(data.table::year(x$date) + 1, "-01-01"))
+  yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
 
-  if (x$obs == "year") {
-    next.year <- as.Date(paste0(x$year + 1, "-01-01"))
-    yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
-
-    if (count == "download") {
-      plot(dat$Year, dat$Nb_of_downloads, type = "l", xlab = "Year",
-        ylab = "Downloads")
-
-      if (add.points) {
-        if (yr.in.progress) {
-          points(dat[1:(nrow(dat) - 1), "Year"],
-                 dat[1:(nrow(dat) - 1), "Nb_of_downloads"],
-                 pch = 1)
-          points(dat[nrow(dat), "Year"],
-                 dat[nrow(dat), "Nb_of_downloads"],
-                 pch = 15, col = "red")
-        }
-      }
-
-      if (smooth) {
-        lines(stats::lowess(dat$Year, dat$Nb_of_downloads, f = smooth.f),
-          col = "blue")
-      }
-    } else if (count == "ip") {
-      plot(dat$Year, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
-        ylab = "Unique IP Addresses")
-
-      if (add.points) {
-        if (yr.in.progress) {
-          points(dat[1:(nrow(dat) - 1), "Year"],
-                 dat[1:(nrow(dat) - 1), "Nb_of_distinct_IPs"],
-                 pch = 1)
-          points(dat[nrow(dat), "Year"],
-                 dat[nrow(dat), "Nb_of_distinct_IPs"],
-                 pch = 15, col = "red")
-        }
-      }
-
-      if (smooth) {
-        lines(stats::lowess(dat$Year, dat$Nb_of_distinct_IPs, f = smooth.f),
-          col = "blue")
-      }
-    }
-  } else if (x$obs == "month") {
-    mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-    dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
-
-    if ( any(dat$date < x$date) ) {
-      dat <- dat[dat$date < x$date, ]
-    }
-
-    data.yr_mo <- extractYearMonth(dat[nrow(dat), "date"])
-    current.yr_mo <- extractYearMonth(x$date)
-
-    if (count == "download") {
-      plot(dat$date, dat$Nb_of_downloads, type = "l", xlab = "Year",
-        ylab = "Downloads")
-
-      if (add.points) {
-        if (identical(data.yr_mo, current.yr_mo)) {
-          points(dat[1:(nrow(dat) - 1), "date"],
-                 dat[1:(nrow(dat) - 1), "Nb_of_downloads"],
-                 pch = 1)
-          points(dat[nrow(dat), "date"],
-                 dat[nrow(dat), "Nb_of_downloads"],
-                 pch = 15, col = "red")
-        } else points(dat[, c("date", "Nb_of_downloads")])
-      }
-
-      if (smooth) {
-        lines(stats::lowess(dat$date, dat$Nb_of_downloads, f = smooth.f),
-          col = "blue")
-      }
-    } else if (count == "ip") {
-      plot(dat$date, dat$Nb_of_distinct_IPs, type = "l", xlab = "Year",
-        ylab = "Unique IP Addresses")
-
-      if (add.points) {
-        if (identical(data.yr_mo, current.yr_mo)) {
-          points(dat[1:(nrow(dat) - 1), "date"],
-                 dat[1:(nrow(dat) - 1), "Nb_of_distinct_IPs"],
-                 pch = 1)
-          points(dat[nrow(dat), "date"],
-                 dat[nrow(dat), "Nb_of_distinct_IPs"],
-                 pch = 15, col = "red")
-        } else points(dat[, c("date", "Nb_of_distinct_IPs")])
-      }
-
-      if (smooth) {
-        lines(stats::lowess(dat$date, dat$Nb_of_distinct_IPs, f = smooth.f),
-          col = "blue")
-      }
-    }
-  } else stop('count must be "download" or "ip".')
-
-  if (is.null(x$pkg)) title(main = "All Packages") else title(main = x$pkg)
+  if (is.data.frame(x$data)) {
+    bioc_plot(x$data, x, count, add.points, smooth, smooth.f, yr.in.progress)
+  } else if (is.list(x$data)) {
+    invisible(lapply(x$data, function(dat) {
+      bioc_plot(dat, x, count, add.points, smooth, smooth.f, yr.in.progress)
+    }))
+  }
 }
 
 #' Print method for bioconductorDownloads().
 #' @param x object.
 #' @param ... Additional parameters.
 #' @export
-print.bioconductor <- function(x, ...) print(x$data)
+
+print.bioconductor <- function(x, ...) {
+  if (is.data.frame(x$data)) print(x$data)
+  else if (is.list(x$data)) {
+    out <- do.call(rbind, x$data)
+    row.names(out) <- NULL
+    print(out)
+  }
+}
 
 #' Summary method for bioconductorDownloads().
 #' @param object Object.
 #' @param ... Additional parameters.
 #' @export
-summary.bioconductor <- function(object, ...) object$data
+
+summary.bioconductor <- function(object, ...) {
+  if (is.data.frame(object$data)) object$data
+  else if (is.list(object$data)) {
+    out <- do.call(rbind, object$data)
+    row.names(out) <- NULL
+    out
+  }
+}
 
 extractYearMonth <- function(z) substr(z, 1, 7)
+
+#' @param dat object.
+#' @noRd
+
+bioc_plot <- function(dat, x, count, add.points, smooth, smooth.f,
+  yr.in.progress) {
+
+  obs <- x$obs
+
+  if (count == "download") {
+    y.var <- "Nb_of_downloads"
+    y.lab <- "Downloads"
+  } else if (count == "ip") {
+    y.var <- "Nb_of_distinct_IPs"
+    y.lab <- "Unique IP Addresses"
+  }
+
+  if (obs == "month") {
+    mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
+    dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+
+    if (any(dat$date < x$date)) {
+      dat <- dat[dat$date < x$date, ]
+    }
+  }
+
+  plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+
+  if (add.points) {
+    if (yr.in.progress) {
+      points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
+        pch = 1)
+      points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
+        col = "red")
+    }
+  }
+
+  if (smooth) {
+    lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
+  }
+
+  title(main = unique(dat$pkg))
+}
