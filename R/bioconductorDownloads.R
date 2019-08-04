@@ -8,6 +8,9 @@
 #' @param observation Character. "year" or "month"
 #' @export
 #' @examples
+#' # all packages
+#' bioconductorDownloads()
+#'
 #' # entire history
 #' bioconductorDownloads(pkg = "clusterProfiler")
 #'
@@ -28,16 +31,21 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   current.yr <- data.table::year(cal.date)
   current.mo <- data.table::month(cal.date)
 
-  if (length(pkg) > 1) {
-    dat <- lapply(pkg, function(p) {
-      bioc_download(p, year, month, end.year, end.month, observation,
-        current.yr, current.mo, cal.date)
-    })
-    names(dat) <- pkg
-
-  } else if (length(pkg) == 1) {
+  if (is.null(pkg)) {
     dat <- bioc_download(pkg, year, month, end.year, end.month, observation,
       current.yr, current.mo, cal.date)
+  } else {
+    if (length(pkg) > 1) {
+      dat <- lapply(pkg, function(p) {
+        bioc_download(p, year, month, end.year, end.month, observation,
+          current.yr, current.mo, cal.date)
+      })
+      names(dat) <- pkg
+
+    } else if (length(pkg) == 1) {
+      dat <- bioc_download(pkg, year, month, end.year, end.month, observation,
+        current.yr, current.mo, cal.date)
+    }
   }
 
   out <- list(data = dat, pkg = pkg, obs = observation, date = cal.date,
@@ -53,9 +61,11 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 #' @param add.points Logical. Add points.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param smooth.f Numeric. smoother span.
+# #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
+#' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(pkg = "graph"))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2019))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
@@ -67,10 +77,10 @@ plot.bioconductor <- function(x, count = "download", add.points = TRUE,
   yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
 
   if (is.data.frame(x$data)) {
-    bioc_plot(x$data, x, count, add.points, smooth, smooth.f, yr.in.progress)
+    bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
   } else if (is.list(x$data)) {
     invisible(lapply(x$data, function(dat) {
-      bioc_plot(dat, x, count, add.points, smooth, smooth.f, yr.in.progress)
+      bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
     }))
   }
 }
@@ -231,10 +241,11 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
   dat
 }
 
-bioc_plot <- function(dat, x, count, add.points, smooth, smooth.f,
+bioc_plot <- function(x, count, add.points, smooth, smooth.f,
   yr.in.progress) {
 
   obs <- x$obs
+  dat <- x$data
 
   if (count == "download") {
     y.var <- "Nb_of_downloads"
@@ -251,22 +262,37 @@ bioc_plot <- function(dat, x, count, add.points, smooth, smooth.f,
     if (any(dat$date < x$date)) {
       dat <- dat[dat$date < x$date, ]
     }
-  }
 
-  plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+    plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
 
-  if (add.points) {
-    if (yr.in.progress) {
-      points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
-        pch = 1)
-      points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
-        col = "red")
+    if (add.points) {
+      if (yr.in.progress) {
+        points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
+          pch = 1)
+        points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
+          col = "red")
+      }
+    }
+
+    if (smooth) {
+      lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
+    }
+  } else if (obs == "year") {
+   plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+
+    if (add.points) {
+      if (yr.in.progress) {
+        points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
+          pch = 1)
+        points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
+          col = "red")
+      }
     }
   }
 
-  if (smooth) {
-    lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
+  if (is.null(dat$pkg)) {
+    title(main = "All Packages")
+  } else {
+    title(main = unique(dat$pkg))
   }
-
-  title(main = unique(dat$pkg))
 }

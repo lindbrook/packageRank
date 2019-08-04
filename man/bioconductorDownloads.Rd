@@ -24,6 +24,9 @@ bioconductorDownloads(pkg = NULL, year = NULL, month = NULL,
 Annual/monthly package downloads from Bioconductor (beta).
 }
 \examples{
+# all packages
+bioconductorDownloads()
+
 # entire history
 bioconductorDownloads(pkg = "clusterProfiler")
 

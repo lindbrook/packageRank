@@ -1,3 +1,9 @@
+packageRank 0.2.0.9013
+==================
+
+- enable plot(bioconductorDownloads(observation = "year")).
+
+
 packageRank 0.2.0.9012
 ==================
 
