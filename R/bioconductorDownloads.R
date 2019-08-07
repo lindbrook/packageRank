@@ -241,11 +241,9 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
   dat
 }
 
-bioc_plot <- function(x, count, add.points, smooth, smooth.f,
-  yr.in.progress) {
-
+bioc_plot <- function(x, count, add.points, smooth, smooth.f, yr.in.progress) {
   obs <- x$obs
-  dat <- x$data
+  date <- x$date
 
   if (count == "download") {
     y.var <- "Nb_of_downloads"
@@ -255,44 +253,47 @@ bioc_plot <- function(x, count, add.points, smooth, smooth.f,
     y.lab <- "Unique IP Addresses"
   }
 
-  if (obs == "month") {
-    mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-    dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+  invisible(lapply(x$data, function(dat) {
+    if (obs == "month") {
+      mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
+      dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
 
-    if (any(dat$date < x$date)) {
-      dat <- dat[dat$date < x$date, ]
-    }
-
-    plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
-
-    if (add.points) {
-      if (yr.in.progress) {
-        points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
-          pch = 1)
-        points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
-          col = "red")
+      if (any(dat$date < x$date)) {
+        dat <- dat[dat$date < x$date, ]
       }
-    }
 
-    if (smooth) {
-      lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
-    }
-  } else if (obs == "year") {
-   plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+      plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
 
-    if (add.points) {
-      if (yr.in.progress) {
-        points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
-          pch = 1)
-        points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
-          col = "red")
-      }
-    }
-  }
+       if (add.points) {
+         if (yr.in.progress) {
+           points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
+             pch = 1)
+           points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
+             col = "red")
+         } else points(dat$date, dat[, y.var])
+       }
 
-  if (is.null(dat$pkg)) {
-    title(main = "All Packages")
-  } else {
-    title(main = unique(dat$pkg))
-  }
+       if (smooth) {
+         lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f),
+           col = "blue")
+       }
+     } else if (obs == "year") {
+       plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+
+       if (add.points) {
+         if (yr.in.progress) {
+           points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
+             pch = 1)
+           points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
+             col = "red")
+         } else points(dat$date, dat[, y.var])
+       }
+     }
+
+    if (is.null(dat$pkg)) {
+       title(main = "All Packages")
+     } else {
+       title(main = unique(dat$pkg))
+     }
+  }))
 }
