@@ -32,8 +32,8 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   current.mo <- data.table::month(cal.date)
 
   if (is.null(pkg)) {
-    dat <- bioc_download(pkg, year, month, end.year, end.month, observation,
-      current.yr, current.mo, cal.date)
+    dat <- list(bioc_download(pkg, year, month, end.year, end.month,
+      observation, current.yr, current.mo, cal.date))
   } else {
     if (length(pkg) > 1) {
       dat <- lapply(pkg, function(p) {
@@ -43,8 +43,8 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
       names(dat) <- pkg
 
     } else if (length(pkg) == 1) {
-      dat <- bioc_download(pkg, year, month, end.year, end.month, observation,
-        current.yr, current.mo, cal.date)
+      dat <- list(bioc_download(pkg, year, month, end.year, end.month,
+        observation, current.yr, current.mo, cal.date))
     }
   }
 
