@@ -72,17 +72,9 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 
 plot.bioconductor <- function(x, count = "download", add.points = TRUE,
   smooth = FALSE, smooth.f = 2/3, ...) {
-
   next.year <- as.Date(paste0(data.table::year(x$date) + 1, "-01-01"))
   yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
-
-  if (is.data.frame(x$data)) {
-    bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
-  } else if (is.list(x$data)) {
-    invisible(lapply(x$data, function(dat) {
-      bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
-    }))
-  }
+  bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
 }
 
 #' Print method for bioconductorDownloads().
