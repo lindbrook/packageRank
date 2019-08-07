@@ -57,11 +57,13 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 #' Plot method for bioconductor_downloads().
 #'
 #' @param x object.
+#' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
 #' @param add.points Logical. Add points.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param smooth.f Numeric. smoother span.
-# #' @param graphics Character. NULL, "base" or "ggplot2".
+#' @param se Logical. Works only with graphics = "ggplot2".
+#' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
@@ -70,11 +72,26 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 #' plot(bioconductorDownloads(pkg = "graph", year = 2019))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
 
-plot.bioconductor <- function(x, count = "download", add.points = TRUE,
-  smooth = FALSE, smooth.f = 2/3, ...) {
+plot.bioconductor <- function(x, graphics = NULL, count = "download",
+  add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  log_count = FALSE, ...) {
+
   next.year <- as.Date(paste0(data.table::year(x$date) + 1, "-01-01"))
   yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
-  bioc_plot(x, count, add.points, smooth, smooth.f, yr.in.progress)
+
+  if (is.null(graphics)) graphics <- "base"
+  else {
+    if (all(graphics %in% c("base", "ggplot2") == FALSE))
+    stop('graphics must be "base" or "ggplot2"')
+  }
+
+  if (graphics == "base") {
+    bioc_plot(x, graphics, count, add.points, smooth, smooth.f, log_count,
+      yr.in.progress)
+  } else if (graphics == "ggplot2") {
+    gg_bioc_plot(x, graphics, count, add.points, smooth, smooth.f, se,
+      log_count)
+  }
 }
 
 #' Print method for bioconductorDownloads().
@@ -233,7 +250,9 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
   dat
 }
 
-bioc_plot <- function(x, count, add.points, smooth, smooth.f, yr.in.progress) {
+bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
+  log_count, yr.in.progress) {
+
   obs <- x$obs
   date <- x$date
 
@@ -254,7 +273,12 @@ bioc_plot <- function(x, count, add.points, smooth, smooth.f, yr.in.progress) {
         dat <- dat[dat$date < x$date, ]
       }
 
-      plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+      if (log_count) {
+        plot(dat$date, dat[, y.var], type = "l", xlab = "Year",
+          ylab = paste0("log10(", y.lab, ")"), log = "y")
+      } else {
+        plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+      }
 
        if (add.points) {
          if (yr.in.progress) {
@@ -270,7 +294,12 @@ bioc_plot <- function(x, count, add.points, smooth, smooth.f, yr.in.progress) {
            col = "blue")
        }
      } else if (obs == "year") {
-       plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+       if (log_count) {
+         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
+           ylab = paste0("log10(", y.lab, ")"), log = "y")
+       } else {
+        plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+      }
 
        if (add.points) {
          if (yr.in.progress) {
@@ -288,4 +317,42 @@ bioc_plot <- function(x, count, add.points, smooth, smooth.f, yr.in.progress) {
        title(main = unique(dat$pkg))
      }
   }))
+}
+
+gg_bioc_plot <- function(x, count, add.points, smooth, smooth.f, se, log_count,
+  yr.in.progress) {
+
+  obs <- x$obs
+  date <- x$date
+  dat <- summary(x)
+
+  mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
+      dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+
+  if (count == "download") {
+    p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+         ylab("Downloads")
+  } else if (count == "ip") {
+    p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+         ylab("Unique IP Addresses")
+  }
+
+  p <- p + geom_line(size = 0.5) + facet_wrap(~ pkg, ncol = 2) + xlab("Date") +
+    theme_bw() + theme(panel.grid.minor = element_blank())
+
+  if (add.points & log_count & smooth) {
+    p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
+  } else if (add.points & log_count & !smooth) {
+    p + geom_point() + scale_y_log10()
+  } else if (add.points & !log_count & smooth) {
+    p +  geom_point() + geom_smooth(method = "loess", se = se)
+  } else if (!add.points & log_count & smooth) {
+    p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+  } else if (!add.points & !log_count & smooth) {
+    p + geom_smooth(method = "loess", se = se)
+  } else if (add.points & !log_count & !smooth) {
+    p + geom_point()
+  } else if (!add.points & log_count & !smooth) {
+    p + scale_y_log10()
+  } else p
 }

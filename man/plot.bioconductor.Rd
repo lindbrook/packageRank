@@ -4,11 +4,14 @@
 \alias{plot.bioconductor}
 \title{Plot method for bioconductor_downloads().}
 \usage{
-\method{plot}{bioconductor}(x, count = "download", add.points = TRUE,
-  smooth = FALSE, smooth.f = 2/3, ...)
+\method{plot}{bioconductor}(x, graphics = NULL, count = "download",
+  add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  log_count = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
+
+\item{graphics}{Character. NULL, "base" or "ggplot2".}
 
 \item{count}{Character. "download" or "ip".}
 
@@ -17,6 +20,10 @@
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
 \item{smooth.f}{Numeric. smoother span.}
+
+\item{se}{Logical. Works only with graphics = "ggplot2".}
+
+\item{log_count}{Logical. Logarithm of package downloads.}
 
 \item{...}{Additional plotting parameters.}
 }
