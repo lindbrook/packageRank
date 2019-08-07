@@ -32,10 +32,8 @@ Plot method for cran_downloads2().
 }
 \examples{
 \donttest{
-plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), 
-  from = "2019-05-01", to = "2019-05-01"))
-plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), 
-  when = "last-month"))
+plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table")))
+plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 plot(cran_downloads2(packages = "R", from = "2019-05-01", to = "2019-05-01"))
 plot(cran_downloads2(packages = "R", when = "last-month"))
 }
