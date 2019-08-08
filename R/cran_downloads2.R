@@ -46,8 +46,6 @@ cran_downloads2 <- function(packages = NULL,
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
-#' @import graphics ggplot2
-#' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 #' @examples
 #' \donttest{
