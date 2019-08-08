@@ -90,7 +90,7 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
       yr.in.progress)
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, add.points, smooth, smooth.f, se,
-      log_count)
+      log_count, yr.in.progress)
   }
 }
 
@@ -327,7 +327,7 @@ gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
   dat <- summary(x)
 
   mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-      dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+  dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
 
   if (count == "download") {
     p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
