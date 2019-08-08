@@ -319,8 +319,8 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
   }))
 }
 
-gg_bioc_plot <- function(x, count, add.points, smooth, smooth.f, se, log_count,
-  yr.in.progress) {
+gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
+  log_count, yr.in.progress) {
 
   obs <- x$obs
   date <- x$date

@@ -1,3 +1,9 @@
+packageRank 0.2.0.9016
+==================
+
+- fix plot.bioconductor(graphics = "ggplot2").
+
+
 packageRank 0.2.0.9015
 ==================
 
