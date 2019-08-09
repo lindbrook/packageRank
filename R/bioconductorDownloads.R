@@ -169,10 +169,12 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
       dat <- do.call(rbind, dat)
     } else if (!is.null(year) & is.null(end.year)) {
       dat <- pkg.data[pkg.data$Year == year & pkg.data$Month == "all", ]
+    } else if (is.null(year) & !is.null(end.year)) {
+      dat <- pkg.data[pkg.data$Year <= end.year & pkg.data$Month == "all", ]
     } else if (!is.null(year) & !is.null(end.year)) {
       dat <- pkg.data[pkg.data$Year %in% year:end.year &
                       pkg.data$Month == "all", ]
-    } else stop('If you provide "end.year", you must also provide "year".')
+    }
 
     dat <- dat[order(dat$Year), ]
     row.names(dat) <- NULL
