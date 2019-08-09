@@ -2,6 +2,9 @@ packageRank 0.2.0.9016
 ==================
 
 - fix plot.bioconductor(graphics = "ggplot2").
+- export end.date from bioconductorDownloads().
+- enable end.date wild card in bioconductorDownloads().
+- fix bioc_plot() for observation = "year".
 
 
 packageRank 0.2.0.9015
