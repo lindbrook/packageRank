@@ -48,8 +48,24 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
     }
   }
 
+  if (observation == "year") {
+    if (is.null(end.year)) {
+      end.date <- cal.date
+    } else if (is.null(end.year) == FALSE) {
+      end.date <- as.Date(paste0(end.year, "-12-01"))
+    }
+  } else if (observation == "month") {
+    if (is.null(end.year) & is.null(end.month)) {
+      end.date <- cal.date
+    } else if (is.null(end.year) == FALSE & is.null(end.month)) {
+      end.date <- as.Date(paste0(end.year, "-12-01"))
+    } else if (is.null(end.year) == FALSE & is.null(end.month) == FALSE) {
+      end.date <- as.Date(paste0(end.year, "-", end.month ,"-01"))
+    }
+  }
+
   out <- list(data = dat, pkg = pkg, obs = observation, date = cal.date,
-    current.yr = current.yr, current.mo = current.mo)
+    current.yr = current.yr, current.mo = current.mo, end.date = end.date)
   class(out) <- "bioconductor"
   out
 }
@@ -76,8 +92,19 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
   add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...) {
 
-  next.year <- as.Date(paste0(data.table::year(x$date) + 1, "-01-01"))
-  yr.in.progress <- ifelse(x$date < next.year, TRUE, FALSE)
+  if (x$obs == "year") {
+    date.test <- data.table::year(x$date) == data.table::year(x$end.date)
+    obs.in.progress <- ifelse(date.test, TRUE, FALSE)
+
+  } else if (x$obs == "month") {
+    current.yr <- data.table::year(x$date)
+    start.obs <- as.Date(paste0(current.yr, "-", data.table::month(x$date),
+      "-01"))
+    stop.obs <- as.Date(paste0(current.yr, "-", data.table::month(x$date) + 1,
+      "-01"))
+    obs.in.progress <- ifelse(x$end.date >= start.obs & x$end.date < stop.obs,
+      TRUE, FALSE)
+  }
 
   if (is.null(graphics)) graphics <- "base"
   else {
@@ -87,10 +114,10 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
 
   if (graphics == "base") {
     bioc_plot(x, graphics, count, add.points, smooth, smooth.f, log_count,
-      yr.in.progress)
+      obs.in.progress)
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, add.points, smooth, smooth.f, se,
-      log_count, yr.in.progress)
+      log_count, obs.in.progress)
   }
 }
 
@@ -251,7 +278,7 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
 }
 
 bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
-  log_count, yr.in.progress) {
+  log_count, obs.in.progress) {
 
   obs <- x$obs
   date <- x$date
@@ -281,7 +308,7 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
       }
 
        if (add.points) {
-         if (yr.in.progress) {
+         if (obs.in.progress) {
            points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
              pch = 1)
            points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
@@ -320,7 +347,7 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
 }
 
 gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
-  log_count, yr.in.progress) {
+  log_count, obs.in.progress) {
 
   obs <- x$obs
   date <- x$date
