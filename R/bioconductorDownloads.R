@@ -325,16 +325,16 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
          plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
            ylab = paste0("log10(", y.lab, ")"), log = "y")
        } else {
-        plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
-      }
+         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+       }
 
        if (add.points) {
-         if (yr.in.progress) {
+         if (obs.in.progress) {
            points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
              pch = 1)
            points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
              col = "red")
-         } else points(dat$date, dat[, y.var])
+         } else points(dat$Year, dat[, y.var])
        }
      }
 
