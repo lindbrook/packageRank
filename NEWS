@@ -1,3 +1,9 @@
+packageRank 0.2.0.9017
+==================
+
+- donttest{} bioconductorDownloads() examples.
+
+
 packageRank 0.2.0.9016
 ==================
 

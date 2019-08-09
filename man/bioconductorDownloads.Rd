@@ -24,6 +24,7 @@ bioconductorDownloads(pkg = NULL, year = NULL, month = NULL,
 Annual/monthly package downloads from Bioconductor (beta).
 }
 \examples{
+\donttest{
 # all packages
 bioconductorDownloads()
 
@@ -39,4 +40,5 @@ bioconductorDownloads(pkg = "clusterProfiler", year = 2014,
 
 # last 12 months
 bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
+}
 }

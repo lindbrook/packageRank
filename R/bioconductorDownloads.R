@@ -8,6 +8,7 @@
 #' @param observation Character. "year" or "month"
 #' @export
 #' @examples
+#' \donttest{
 #' # all packages
 #' bioconductorDownloads()
 #'
@@ -23,6 +24,7 @@
 #'
 #' # last 12 months
 #' bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
+#' }
 
 bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
@@ -83,10 +85,12 @@ bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
+#' \donttest{
 #' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(pkg = "graph"))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2019))
 #' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
+#' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
   add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,

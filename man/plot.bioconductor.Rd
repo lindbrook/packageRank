@@ -31,8 +31,10 @@
 Plot method for bioconductor_downloads().
 }
 \examples{
+\donttest{
 plot(bioconductorDownloads())
 plot(bioconductorDownloads(pkg = "graph"))
 plot(bioconductorDownloads(pkg = "graph", year = 2019))
 plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
+}
 }
