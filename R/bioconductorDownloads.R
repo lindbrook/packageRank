@@ -29,6 +29,10 @@
 bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
 
+  if (observation %in% c("month", "year") == FALSE) {
+    stop('observation must be "month" or "year".')
+  }
+
   cal.date <- Sys.Date()
   current.yr <- data.table::year(cal.date)
   current.mo <- data.table::month(cal.date)
