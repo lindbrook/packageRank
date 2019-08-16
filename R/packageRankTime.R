@@ -1,7 +1,7 @@
 #' Package download counts and rank percentiles (longitudinal).
 #'
 #' Temporal pattern over last week or month.
-#' @param packages Character. Character. Vector of package name(s).
+#' @param packages Character. Vector of package name(s).
 #' @param when Character. "last-month" or "last-week".
 #' @param sample.pct Numeric. Percent of packages to sample.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.

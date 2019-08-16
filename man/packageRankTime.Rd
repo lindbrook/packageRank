@@ -8,7 +8,7 @@ packageRankTime(packages = "HistData", when = "last-month",
   sample.pct = 5, multi.core = TRUE)
 }
 \arguments{
-\item{packages}{Character. Character. Vector of package name(s).}
+\item{packages}{Character. Vector of package name(s).}
 
 \item{when}{Character. "last-month" or "last-week".}
 
