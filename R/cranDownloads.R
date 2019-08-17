@@ -337,3 +337,29 @@ print.cran_downloads <- function(x, ...) {
 summary.cran_downloads <- function(object, ...) {
   object$cranlogs.data
 }
+
+checkDate <- function(string, end.date = FALSE) {
+  if (is.character(string) == FALSE) stop("string must a text string.")
+
+  if ((nchar(string) == 10 | nchar(string) == 7) == FALSE) {
+    stop('Format must be "yyyy-mm-dd" or "yyyy-mm".')
+  }
+
+  date.parts <- unlist(strsplit(string, "-"))
+
+  if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
+    stop("The month must be between 01 and 12.")
+  }
+
+  if (end.date) {
+    end.candidates <- lapply(28:31, function(day) {
+      as.Date(paste0(string , "-", day), optional = TRUE)
+    })
+    end.candidates <- do.call(c, end.candidates)
+    end.selelct <- rev(end.candidates[!is.na(end.candidates)])[1]
+    out <- as.Date(end.selelct, optional = TRUE)
+  } else {
+    out <- as.Date(paste0(string , "-01"), optional = TRUE)
+  }
+
+  out
