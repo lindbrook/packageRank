@@ -30,11 +30,9 @@ If this is given, then \code{from} and \code{to} are ignored.}
 
 \item{end.day}{Numeric.}
 
-\item{from}{Start date, in \code{yyyy-mm-dd} format, or
-\code{last-day}.}
+\item{from}{Start date as \code{yyyy-mm-dd} or \code{yyyy-mm} format.}
 
-\item{to}{End date, in \code{yyyy-mm-dd} format, or
-\code{last-day}.}
+\item{to}{End date as \code{yyyy-mm-dd} or \code{yyyy-mm} format}
 }
 \description{
 S3 implementation of cranlogs::cran_downloads().
@@ -44,9 +42,6 @@ S3 implementation of cranlogs::cran_downloads().
 cranDownloads(packages = "HistData")
 cranDownloads(packages = "HistData", "last-week")
 cranDownloads(packages = "HistData", "last-month")
-
-# year-to-date
-cranDownloads(packages = "HistData", start.year = 2019)
 
 # first two weeks of January 2019
 cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")

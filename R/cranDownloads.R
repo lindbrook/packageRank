@@ -13,19 +13,14 @@
 #' @param end.year Numeric.
 #' @param end.month Numeric.
 #' @param end.day Numeric.
-#' @param from Start date, in \code{yyyy-mm-dd} format, or
-#'   \code{last-day}.
-#' @param to End date, in \code{yyyy-mm-dd} format, or
-#'   \code{last-day}.
+#' @param from Start date as \code{yyyy-mm-dd} or \code{yyyy-mm} format.
+#' @param to End date as \code{yyyy-mm-dd} or \code{yyyy-mm} format
 #' @export
 #' @examples
 #' \donttest{
 #' cranDownloads(packages = "HistData")
 #' cranDownloads(packages = "HistData", "last-week")
 #' cranDownloads(packages = "HistData", "last-month")
-#'
-#' # year-to-date
-#' cranDownloads(packages = "HistData", start.year = 2019)
 #'
 #' # first two weeks of January 2019
 #' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
@@ -38,83 +33,38 @@ cranDownloads <- function(packages = NULL,
 
   cal.date <- Sys.Date() - 1
 
-  if (!missing(when)) {
+  if (missing(when) & missing(from) & missing (to)) {
+    args <- list(packages = packages, from = cal.date, to = cal.date)
+
+  } else if (!missing(when)) {
     args <- list(packages = packages, when = when)
+
   } else if (!missing(from) & !missing(to)) {
-    from <- as.Date(from, optional = TRUE)
-    to <- as.Date(to, optional = TRUE)
-    if (!is.na(from) & !is.na(to)) {
-      args <- list(packages, from = from, to = to)
-    } else stop("Check dates!")
-  } else {
 
-    ## start date ##
+    if (all(vapply(c(to, from), nchar, integer(1L)) == 10)) {
+      from <- as.Date(from, optional = TRUE)
+      to <- as.Date(to, optional = TRUE)
 
-    if (is.null(start.year) & is.null(start.month) & is.null(start.day)) {
-      start.date <- cal.date
+      if (!is.na(from) & !is.na(to)) {
+        args <- list(packages, from = from, to = to)
+      } else if (is.na(from) & !is.na(to)) {
+        stop("Invalid start date.")
+      } else if (!is.na(from) & is.na(to)) {
+        stop("Invalid end date.")
+      } else {
+        stop("Invalid start and end date.")
+      }
 
-    } else if (!is.null(start.year) & is.null(start.month) &
-      is.null(start.day)) {
-        start.date <- as.Date(paste0(start.year, "-01-01"), optional = TRUE)
-
-    } else if (!is.null(start.year) & !is.null(start.month) &
-      is.null(start.day)) {
-
-      if (start.month < 10) start.month <- paste0("0", start.month)
-      else if (start.month > 12 | start.month < 1) stop("1 <= Month <= 12.")
-        date.string <- paste0(start.year, "-", start.month, "-01")
-        start.date <- as.Date(date.string, optional = TRUE)
-
-     } else if (!is.null(start.year) & !is.null(start.month) &
-         !is.null(start.day)) {
-
-       if (start.month < 10) start.month <- paste0("0", start.month)
-       else if (start.month > 12 | start.month < 10) stop("1 <= Month <= 12.")
-       if (start.day < 10) start.day <- paste0("0", start.day)
-       else if (start.day > 31 | start.day < 0) stop("1 <= Day <= 31.")
-
-       date.sting <- paste0(start.year, "-", start.month ,"-", start.day)
-       start.date <- as.Date(date.sting, optional = TRUE)
-       if (is.na(start.date)) stop('Not a valid date! Check "start.day"')
-     }
-
-    ## end date ##
-
-    if (is.null(end.year) & is.null(end.month) & is.null(end.day)) {
-      end.date <- cal.date
-
-    } else if (!is.null(end.year) & is.null(end.month) & is.null(end.day)) {
-      end.date <- as.Date(paste0(end.year, "-12-31"), optional = TRUE)
-
-    } else if (!is.null(end.year) & !is.null(end.month) & is.null(end.day)) {
-      if (end.month < 10) end.month <- paste0("0", end.month)
-      else if (end.month > 12 | end.month < 10) stop("1 <= Month <= 12.")
-
-       end.candidates <- lapply(28:31, function(day) {
-         paste0(end.year, "-", end.month , "-", day)
-       })
-
-      end.candidates <- do.call(c, end.candidates)
-      end.selelct <- rev(end.candidates[!is.na(end.candidates)])[1]
-      end.date <- as.Date(end.selelct, optional = TRUE)
-
-    } else if (!is.null(end.year) & !is.null(end.month) & !is.null(end.day)) {
-      if (end.month < 10) end.month <- paste0("0", end.month)
-      else if (end.month > 12 | end.month < 10) stop("1 <= Month <= 12.")
-
-      if (end.day < 10) end.day <- paste0("0", end.day)
-      else if (end.day > 31 | end.day < 0) stop("1 <= Day <= 31.")
-
-      date.sting <- paste0(end.year, "-", end.month ,"-", end.day)
-      end.date <- as.Date(date.sting, optional = TRUE)
+    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7)) {
+      start.date <- checkDate(from)
+      end.date <- checkDate(to, end.date = TRUE)
+      args <- list(packages, from = start.date, to = end.date)
     }
-
-    if (is.na(end.date)) {
-      stop("Not a valid date!")
-    } else if (start.date > end.date) {
-      stop ('"start.date" <= "end.date".')
-    } else args <- list(packages, from = start.date, to = end.date)
   }
+
+  # if (start.date > end.date) {
+  #   stop ('"start.date" <= "end.date".')
+  # }
 
   out <- list(packages = packages,
               cranlogs.data = do.call(cranlogs::cran_downloads, args))
@@ -363,3 +313,4 @@ checkDate <- function(string, end.date = FALSE) {
   }
 
   out
+}
