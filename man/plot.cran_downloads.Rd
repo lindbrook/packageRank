@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDownloads.R
 \name{plot.cran_downloads}
 \alias{plot.cran_downloads}
-\title{Plot method for cran_downloads2().}
+\title{Plot method for cranDownloads().}
 \usage{
 \method{plot}{cran_downloads}(x, graphics = NULL, points = TRUE,
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...)
@@ -28,13 +28,13 @@
 A base R or ggplot2 plot.
 }
 \description{
-Plot method for cran_downloads2().
+Plot method for cranDownloads().
 }
 \examples{
 \donttest{
-plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table")))
-plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
-plot(cran_downloads2(packages = "R", from = "2019-05-01", to = "2019-05-01"))
-plot(cran_downloads2(packages = "R", when = "last-month"))
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
+plot(cranDownloads(packages = "R", when = "last-month"))
 }
 }

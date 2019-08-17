@@ -13,22 +13,45 @@
 #' @param end.year Numeric.
 #' @param end.month Numeric.
 #' @param end.day Numeric.
-
+#' @param from Start date, in \code{yyyy-mm-dd} format, or
+#'   \code{last-day}.
+#' @param to End date, in \code{yyyy-mm-dd} format, or
+#'   \code{last-day}.
 #' @export
+#' @examples
+#' \donttest{
+#' cranDownloads(packages = "HistData")
+#' cranDownloads(packages = "HistData", "last-week")
+#' cranDownloads(packages = "HistData", "last-month")
+#'
+#' # year-to-date
+#' cranDownloads(packages = "HistData", start.year = 2019)
+#'
+#' # first two weeks of January 2019
+#' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
+#' }
 
 cranDownloads <- function(packages = NULL,
   when = c("last-day", "last-week", "last-month"),
   start.year = NULL, start.month = NULL, start.day = NULL,
-  end.year = NULL, end.month = NULL, end.day = NULL) {
+  end.year = NULL, end.month = NULL, end.day = NULL, from = NULL, to = NULL) {
+
+  cal.date <- Sys.Date() - 1
 
   if (!missing(when)) {
     args <- list(packages = packages, when = when)
+  } else if (!missing(from) & !missing(to)) {
+    from <- as.Date(from, optional = TRUE)
+    to <- as.Date(to, optional = TRUE)
+    if (!is.na(from) & !is.na(to)) {
+      args <- list(packages, from = from, to = to)
+    } else stop("Check dates!")
   } else {
 
     ## start date ##
 
     if (is.null(start.year) & is.null(start.month) & is.null(start.day)) {
-      stop('Provide at least "start.year".')
+      start.date <- cal.date
 
     } else if (!is.null(start.year) & is.null(start.month) &
       is.null(start.day)) {
@@ -38,35 +61,24 @@ cranDownloads <- function(packages = NULL,
       is.null(start.day)) {
 
       if (start.month < 10) start.month <- paste0("0", start.month)
-      else if (start.month > 12 | start.month < 1) stop("Invalid month.")
-
-       start.candidates <- lapply(28:31, function(day) {
-         date.sting <- paste0(start.year, "-", start.month , "-", day)
-         as.Date(date.sting, optional = TRUE)
-       })
-       start.candidates <- do.call(c, start.candidates)
-       start.date <- rev(start.candidates[!is.na(start.candidates)])[1]
+      else if (start.month > 12 | start.month < 1) stop("1 <= Month <= 12.")
+        date.string <- paste0(start.year, "-", start.month, "-01")
+        start.date <- as.Date(date.string, optional = TRUE)
 
      } else if (!is.null(start.year) & !is.null(start.month) &
          !is.null(start.day)) {
 
        if (start.month < 10) start.month <- paste0("0", start.month)
-       else if (start.month > 12 | start.month < 10) stop("Invalid month.")
-
+       else if (start.month > 12 | start.month < 10) stop("1 <= Month <= 12.")
        if (start.day < 10) start.day <- paste0("0", start.day)
-       else if (start.day > 31 | start.day < 0) stop("Invalid day.")
+       else if (start.day > 31 | start.day < 0) stop("1 <= Day <= 31.")
 
        date.sting <- paste0(start.year, "-", start.month ,"-", start.day)
        start.date <- as.Date(date.sting, optional = TRUE)
        if (is.na(start.date)) stop('Not a valid date! Check "start.day"')
      }
 
-
     ## end date ##
-
-    cal.date <- Sys.Date()
-    current.yr <- data.table::year(cal.date)
-    current.mo <- data.table::month(cal.date)
 
     if (is.null(end.year) & is.null(end.month) & is.null(end.day)) {
       end.date <- cal.date
@@ -76,29 +88,32 @@ cranDownloads <- function(packages = NULL,
 
     } else if (!is.null(end.year) & !is.null(end.month) & is.null(end.day)) {
       if (end.month < 10) end.month <- paste0("0", end.month)
-      else if (end.month > 12 | end.month < 10) stop("Invalid month.")
+      else if (end.month > 12 | end.month < 10) stop("1 <= Month <= 12.")
 
        end.candidates <- lapply(28:31, function(day) {
-         date.sting <- paste0(end.year, "-", end.month , "-", day)
-         as.Date(date.sting, optional = TRUE)
+         paste0(end.year, "-", end.month , "-", day)
        })
 
       end.candidates <- do.call(c, end.candidates)
-      end.date <- rev(end.candidates[!is.na(end.candidates)])[1]
+      end.selelct <- rev(end.candidates[!is.na(end.candidates)])[1]
+      end.date <- as.Date(end.selelct, optional = TRUE)
 
     } else if (!is.null(end.year) & !is.null(end.month) & !is.null(end.day)) {
       if (end.month < 10) end.month <- paste0("0", end.month)
-      else if (end.month > 12 | end.month < 10) stop("Invalid month.")
+      else if (end.month > 12 | end.month < 10) stop("1 <= Month <= 12.")
 
       if (end.day < 10) end.day <- paste0("0", end.day)
-      else if (end.day > 31 | end.day < 0) stop("Invalid day.")
+      else if (end.day > 31 | end.day < 0) stop("1 <= Day <= 31.")
 
       date.sting <- paste0(end.year, "-", end.month ,"-", end.day)
       end.date <- as.Date(date.sting, optional = TRUE)
-      if (is.na(end.date)) stop('Not a valid date! Check "end.day"')
     }
 
-    args <- list(packages, from = start.date, to = end.date)
+    if (is.na(end.date)) {
+      stop("Not a valid date!")
+    } else if (start.date > end.date) {
+      stop ('"start.date" <= "end.date".')
+    } else args <- list(packages, from = start.date, to = end.date)
   }
 
   out <- list(packages = packages,
@@ -108,8 +123,7 @@ cranDownloads <- function(packages = NULL,
   out
 }
 
-
-#' Plot method for cran_downloads2().
+#' Plot method for cranDownloads().
 #'
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
@@ -123,10 +137,10 @@ cranDownloads <- function(packages = NULL,
 #' @export
 #' @examples
 #' \donttest{
-#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table")))
-#' plot(cran_downloads2(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
-#' plot(cran_downloads2(packages = "R", from = "2019-05-01", to = "2019-05-01"))
-#' plot(cran_downloads2(packages = "R", when = "last-month"))
+#' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
+#' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+#' plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
+#' plot(cranDownloads(packages = "R", when = "last-month"))
 #' }
 
 plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
@@ -264,7 +278,6 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
             col = "blue")
           title(main = x$package)
         }
-
       }
     }
   } else if (graphics == "ggplot2") {

@@ -7,7 +7,7 @@
 cranDownloads(packages = NULL, when = c("last-day", "last-week",
   "last-month"), start.year = NULL, start.month = NULL,
   start.day = NULL, end.year = NULL, end.month = NULL,
-  end.day = NULL)
+  end.day = NULL, from = NULL, to = NULL)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,
@@ -29,7 +29,26 @@ If this is given, then \code{from} and \code{to} are ignored.}
 \item{end.month}{Numeric.}
 
 \item{end.day}{Numeric.}
+
+\item{from}{Start date, in \code{yyyy-mm-dd} format, or
+\code{last-day}.}
+
+\item{to}{End date, in \code{yyyy-mm-dd} format, or
+\code{last-day}.}
 }
 \description{
 S3 implementation of cranlogs::cran_downloads().
+}
+\examples{
+\donttest{
+cranDownloads(packages = "HistData")
+cranDownloads(packages = "HistData", "last-week")
+cranDownloads(packages = "HistData", "last-month")
+
+# year-to-date
+cranDownloads(packages = "HistData", start.year = 2019)
+
+# first two weeks of January 2019
+cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
+}
 }
