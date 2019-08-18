@@ -288,13 +288,9 @@ summary.cran_downloads <- function(object, ...) {
   object$cranlogs.data
 }
 
-checkDate <- function(string, end.date = FALSE) {
+dayOfMonth <- function(string, end.date = FALSE) {
   if (is.character(string) == FALSE) stop("string must a text string.")
-
-  if ((nchar(string) == 10 | nchar(string) == 7) == FALSE) {
-    stop('Format must be "yyyy-mm-dd" or "yyyy-mm".')
-  }
-
+  if (nchar(string) != 7) stop('Format must be "yyyy-mm".')
   date.parts <- unlist(strsplit(string, "-"))
 
   if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
