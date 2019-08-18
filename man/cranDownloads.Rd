@@ -4,10 +4,7 @@
 \alias{cranDownloads}
 \title{Daily package downloads from the RStudio CRAN mirror.}
 \usage{
-cranDownloads(packages = NULL, when = c("last-day", "last-week",
-  "last-month"), start.year = NULL, start.month = NULL,
-  start.day = NULL, end.year = NULL, end.month = NULL,
-  end.day = NULL, from = NULL, to = NULL)
+cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,
@@ -18,21 +15,9 @@ of R itself. \code{"R"} cannot be mixed with packages.}
 \item{when}{\code{last-day}, \code{last-week} or \code{last-month}.
 If this is given, then \code{from} and \code{to} are ignored.}
 
-\item{start.year}{Numeric.}
+\item{from}{Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
-\item{start.month}{Numeric.}
-
-\item{start.day}{Numeric.}
-
-\item{end.year}{Numeric.}
-
-\item{end.month}{Numeric.}
-
-\item{end.day}{Numeric.}
-
-\item{from}{Start date as \code{yyyy-mm-dd} or \code{yyyy-mm} format.}
-
-\item{to}{End date as \code{yyyy-mm-dd} or \code{yyyy-mm} format}
+\item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 }
 \description{
 S3 implementation of cranlogs::cran_downloads().
@@ -45,5 +30,11 @@ cranDownloads(packages = "HistData", "last-month")
 
 # first two weeks of January 2019
 cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
+
+# February to March 2019
+cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
+
+# year-to-date
+cranDownloads(packages = "HistData", from = 2019)
 }
 }

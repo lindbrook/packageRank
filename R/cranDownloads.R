@@ -7,14 +7,8 @@
 #'   of R itself. \code{"R"} cannot be mixed with packages.
 #' @param when \code{last-day}, \code{last-week} or \code{last-month}.
 #'   If this is given, then \code{from} and \code{to} are ignored.
-#' @param start.year Numeric.
-#' @param start.month Numeric.
-#' @param start.day Numeric.
-#' @param end.year Numeric.
-#' @param end.month Numeric.
-#' @param end.day Numeric.
-#' @param from Start date as \code{yyyy-mm-dd} or \code{yyyy-mm} format.
-#' @param to End date as \code{yyyy-mm-dd} or \code{yyyy-mm} format
+#' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
+#' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @export
 #' @examples
 #' \donttest{
@@ -24,26 +18,34 @@
 #'
 #' # first two weeks of January 2019
 #' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
+#'
+#' # February to March 2019
+#' cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
+#'
+#' # year-to-date
+#' cranDownloads(packages = "HistData", from = 2019)
 #' }
 
-cranDownloads <- function(packages = NULL,
-  when = c("last-day", "last-week", "last-month"),
-  start.year = NULL, start.month = NULL, start.day = NULL,
-  end.year = NULL, end.month = NULL, end.day = NULL, from = NULL, to = NULL) {
+cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
+  to = NULL) {
 
   cal.date <- Sys.Date() - 1
 
-  if (missing(when) & missing(from) & missing (to)) {
+  if (is.null(when) & is.null(from) & is.null(to)) {
     args <- list(packages = packages, from = cal.date, to = cal.date)
 
-  } else if (!missing(when)) {
-    args <- list(packages = packages, when = when)
+  } else if (!is.null(when)) {
+    if (when %in% c("last-day", "last-week", "last-month")) {
+      args <- list(packages = packages, when = when)
+    } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
-  } else if (!missing(from) & !missing(to)) {
-
+  } else if (!is.null(from)) {
     if (all(vapply(c(to, from), nchar, integer(1L)) == 10)) {
-      from <- as.Date(from, optional = TRUE)
-      to <- as.Date(to, optional = TRUE)
+      start.date <- as.Date(from, optional = TRUE)
+
+      if (is.null(to)) {
+        end.date <- cal.date
+      } else end.date <- as.Date(to, optional = TRUE)
 
       if (!is.na(from) & !is.na(to)) {
         args <- list(packages, from = from, to = to)
@@ -55,20 +57,46 @@ cranDownloads <- function(packages = NULL,
         stop("Invalid start and end date.")
       }
 
+      if (start.date > end.date) stop ('"from" must be <= "to".')
+
     } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7)) {
-      start.date <- checkDate(from)
-      end.date <- checkDate(to, end.date = TRUE)
+      start.date <- dayOfMonth(from)
+
+      if (is.null(to)) {
+        end.date <- cal.date
+      } else end.date <- dayOfMonth(to, end.date = TRUE)
+
+      if (!is.na(start.date) & !is.na(end.date)) {
+        args <- list(packages, from = start.date, to = end.date)
+      } else if (is.na(start.date) & !is.na(end.date)) {
+        stop("Invalid start date.")
+      } else if (!is.na(start.date) & is.na(end.date)) {
+        stop("Invalid end date.")
+      } else {
+        stop("Invalid start and end date.")
+      }
+
+      if (start.date > end.date) stop ('"from" must be <= "to".')
+
+    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4)) {
+      start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
+
+      if (is.null(to)) {
+        end.date <- cal.date
+      } else end.date <- as.Date(paste0(to,  "-12-31"), optional = TRUE)
+
+
+      if (is.na(end.date)) {
+        stop("Invalid year")
+      } else if (start.date > end.date) stop ('"from" must be <= "to".')
+
+
       args <- list(packages, from = start.date, to = end.date)
     }
   }
 
-  # if (start.date > end.date) {
-  #   stop ('"start.date" <= "end.date".')
-  # }
-
-  out <- list(packages = packages,
-              cranlogs.data = do.call(cranlogs::cran_downloads, args))
-
+  cranlogs.data <- do.call(cranlogs::cran_downloads, args)
+  out <- list(packages = packages, cranlogs.data = cranlogs.data)
   class(out) <- "cran_downloads"
   out
 }
@@ -90,7 +118,7 @@ cranDownloads <- function(packages = NULL,
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
-#' plot(cranDownloads(packages = "R", when = "last-month"))
+#' plot(cranDownloads(packages = "R", from = 2019))
 #' }
 
 plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,

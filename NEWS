@@ -1,3 +1,10 @@
+packageRank 0.2.0.9021
+==================
+
+- use "yyyy-mm-dd", "yyyy-mm" or "yyyy" in cranDownloads(from, to).
+- rename/amend checkDate() to dayOfMonth().
+
+
 packageRank 0.2.0.9020
 ==================
 

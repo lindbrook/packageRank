@@ -35,6 +35,6 @@ Plot method for cranDownloads().
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
-plot(cranDownloads(packages = "R", when = "last-month"))
+plot(cranDownloads(packages = "R", from = 2019))
 }
 }
