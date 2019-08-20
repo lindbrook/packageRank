@@ -50,11 +50,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (!is.na(from) & !is.na(to)) {
         args <- list(packages, from = from, to = to)
       } else if (is.na(from) & !is.na(to)) {
-        stop("Invalid start date.")
+        stop("No such start date.")
       } else if (!is.na(from) & is.na(to)) {
-        stop("Invalid end date.")
+        stop("No such end date.")
       } else {
-        stop("Invalid start and end date.")
+        stop("No such start and end dates.")
       }
 
       if (start.date > end.date) stop ('"from" must be <= "to".')
@@ -69,11 +69,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (!is.na(start.date) & !is.na(end.date)) {
         args <- list(packages, from = start.date, to = end.date)
       } else if (is.na(start.date) & !is.na(end.date)) {
-        stop("Invalid start date.")
+        stop("No such start date.")
       } else if (!is.na(start.date) & is.na(end.date)) {
-        stop("Invalid end date.")
+        stop("No such end date.")
       } else {
-        stop("Invalid start and end date.")
+        stop("No such start and end dates.")
       }
 
       if (start.date > end.date) stop ('"from" must be <= "to".')
@@ -85,11 +85,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         end.date <- cal.date
       } else end.date <- as.Date(paste0(to,  "-12-31"), optional = TRUE)
 
-
       if (is.na(end.date)) {
         stop("Invalid year")
       } else if (start.date > end.date) stop ('"from" must be <= "to".')
-
 
       args <- list(packages, from = start.date, to = end.date)
     }
