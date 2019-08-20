@@ -29,6 +29,8 @@
 bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
   end.year = NULL, end.month = NULL, observation = "month") {
 
+  # January 2009
+  
   if (observation %in% c("month", "year") == FALSE) {
     stop('observation must be "month" or "year".')
   }
