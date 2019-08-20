@@ -40,7 +40,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
   } else if (!is.null(from)) {
-    if (all(vapply(c(to, from), nchar, integer(1L)) == 10)) {
+    if (all(vapply(c(from, to), nchar, integer(1L)) == 10)) {
       start.date <- as.Date(from, optional = TRUE)
 
       if (is.null(to)) {
@@ -58,6 +58,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       }
 
       if (start.date > end.date) stop ('"from" must be <= "to".')
+      if (start.date < as.Date("2012-10-01")) {
+        warning('Logs begin on "2012-10-01"')
+        start.date <- as.Date("2012-10-01")
+      }
 
     } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7)) {
       start.date <- dayOfMonth(from)
@@ -77,9 +81,17 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       }
 
       if (start.date > end.date) stop ('"from" must be <= "to".')
+      if (start.date < as.Date("2012-10-01")) {
+        warning('Logs begin on "2012-10-01"')
+        start.date <- as.Date("2012-10-01")
+      }
 
     } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4)) {
       start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
+      if (start.date < as.Date("2012-10-01")) {
+        warning('Logs begin on "2012-10-01"')
+        start.date <- as.Date("2012-10-01")
+      }
 
       if (is.null(to)) {
         end.date <- cal.date
