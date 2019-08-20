@@ -31,6 +31,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   }
 
   # tools::CRAN_package_db() not always current/up-to-date?
+  # available.packages()
   if (any(packages %in% unique(cran_log$package) == FALSE)) {
     stop("Package not found in log.")
   }
