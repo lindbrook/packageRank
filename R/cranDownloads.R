@@ -103,13 +103,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         start.date <- first.log
       }
 
-      if (is.null(to)) {
-        end.date <- cal.date
-      } else end.date <- as.Date(paste0(to,  "-12-31"), optional = TRUE)
+      if (is.null(to)) end.date <- cal.date
+      else end.date <- as.Date(paste0(to,  "-12-31"), optional = TRUE)
 
-      if (is.na(end.date)) {
-        stop("Invalid year")
-      } else if (start.date > end.date) stop ('"from" must be <= "to".')
+      if (is.na(end.date)) stop("Invalid year")
+      else if (start.date > end.date) stop ('"from" must be <= "to".')
+      else if (end.date > cal.date) end.date <- cal.date
 
       args <- list(packages, from = start.date, to = end.date)
     } else stop('Date format needs to be "yyyy-mm-dd", "yyyy-mm" or "yyyy".')
