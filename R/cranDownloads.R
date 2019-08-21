@@ -91,9 +91,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         start.date <- first.log
       }
 
-    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4) &
-        all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
-
+    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4)) {
       start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
 
       if (is.na(start.date)) {
