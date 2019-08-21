@@ -1,3 +1,9 @@
+packageRank 0.2.0.9022
+==================
+
+- add more error/format checking in cranDownloads().
+
+
 packageRank 0.2.0.9021
 ==================
 

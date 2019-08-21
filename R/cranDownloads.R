@@ -29,6 +29,7 @@
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   to = NULL) {
 
+  first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1
 
   if (is.null(when) & is.null(from) & is.null(to)) {
@@ -40,35 +41,14 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
   } else if (!is.null(from)) {
-    if (all(vapply(c(from, to), nchar, integer(1L)) == 10)) {
+    if (all(vapply(c(from, to), nchar, integer(1L)) == 10) &
+      all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+
       start.date <- as.Date(from, optional = TRUE)
 
       if (is.null(to)) {
         end.date <- cal.date
       } else end.date <- as.Date(to, optional = TRUE)
-
-      if (!is.na(from) & !is.na(to)) {
-        args <- list(packages, from = from, to = to)
-      } else if (is.na(from) & !is.na(to)) {
-        stop("No such start date.")
-      } else if (!is.na(from) & is.na(to)) {
-        stop("No such end date.")
-      } else {
-        stop("No such start and end dates.")
-      }
-
-      if (start.date > end.date) stop ('"from" must be <= "to".')
-      if (start.date < as.Date("2012-10-01")) {
-        warning('Logs begin on "2012-10-01"')
-        start.date <- as.Date("2012-10-01")
-      }
-
-    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7)) {
-      start.date <- dayOfMonth(from)
-
-      if (is.null(to)) {
-        end.date <- cal.date
-      } else end.date <- dayOfMonth(to, end.date = TRUE)
 
       if (!is.na(start.date) & !is.na(end.date)) {
         args <- list(packages, from = start.date, to = end.date)
@@ -81,16 +61,48 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       }
 
       if (start.date > end.date) stop ('"from" must be <= "to".')
-      if (start.date < as.Date("2012-10-01")) {
-        warning('Logs begin on "2012-10-01"')
-        start.date <- as.Date("2012-10-01")
+      if (start.date < as.Date(first.log)) {
+        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+        start.date <- first.log
       }
 
-    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4)) {
+    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7) &
+        all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+
+      start.date <- dayOfMonth(from, first.log)
+
+      if (is.null(to)) {
+        end.date <- cal.date
+      } else end.date <- dayOfMonth(to, first.log, end.date = TRUE)
+
+      if (!is.na(start.date) & !is.na(end.date)) {
+        args <- list(packages, from = start.date, to = end.date)
+      } else if (is.na(start.date) & !is.na(end.date)) {
+        stop("No such start date.")
+      } else if (!is.na(start.date) & is.na(end.date)) {
+        stop("No such end date.")
+      } else {
+        stop("No such start and end dates.")
+      }
+
+      if (start.date > end.date) stop ('"from" must be <= "to".')
+      if (start.date < as.Date(first.log)) {
+        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+        start.date <- first.log
+      }
+
+    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4) &
+        all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+
       start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
-      if (start.date < as.Date("2012-10-01")) {
-        warning('Logs begin on "2012-10-01"')
-        start.date <- as.Date("2012-10-01")
+
+      if (is.na(start.date)) {
+        msg1 <- "No such start date. "
+        msg2 <- 'Check year: must be "yyyy" (character) or yyyy (numeric).'
+        stop(msg1, msg2)
+      } else if (start.date < as.Date(first.log)) {
+        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+        start.date <- first.log
       }
 
       if (is.null(to)) {
@@ -102,7 +114,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       } else if (start.date > end.date) stop ('"from" must be <= "to".')
 
       args <- list(packages, from = start.date, to = end.date)
-    }
+    } else stop('Date format needs to be "yyyy-mm-dd", "yyyy-mm" or "yyyy".')
   }
 
   cranlogs.data <- do.call(cranlogs::cran_downloads, args)
@@ -326,13 +338,19 @@ summary.cran_downloads <- function(object, ...) {
   object$cranlogs.data
 }
 
-dayOfMonth <- function(string, end.date = FALSE) {
+dayOfMonth <- function(string, first.log, end.date = FALSE) {
   if (is.character(string) == FALSE) stop("string must a text string.")
-  if (nchar(string) != 7) stop('Format must be "yyyy-mm".')
-  date.parts <- unlist(strsplit(string, "-"))
 
-  if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
-    stop("The month must be between 01 and 12.")
+  if (nchar(string) != 7 | (grepl("-", string) == FALSE)) {
+    stop('Format must be "yyyy-mm".')
+  } else {
+    date.parts <- unlist(strsplit(string, "-"))
+    if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
+      stop("Month must be between 01 and 12.")
+    }
+    if (date.parts[1] < data.table::year(first.log)) {
+      warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+    }
   }
 
   if (end.date) {
