@@ -395,3 +395,18 @@ gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
     p + scale_y_log10()
   } else p
 }
+
+checkDate <- function(string, end.date = FALSE) {
+  if (is.character(string) == FALSE) stop("string must a text string.")
+  if (nchar(string) != 7 | (grepl("-", string) == FALSE)) {
+    stop('Format must be "yyyy-mm".')
+  } else {
+    date.parts <- unlist(strsplit(string, "-"))
+    if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
+      stop("Month must be between 01 and 12.")
+    }
+    if (date.parts[1] < 2009) {
+      warning(paste0('Bioconductor logs begin ', "January 2009", "."))
+    }
+  }
+  as.Date(paste0(string, "-01"), optional = TRUE)
