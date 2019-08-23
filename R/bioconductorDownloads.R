@@ -22,7 +22,7 @@
 #' bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
 #'
 #' # last 12 months
-#' bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
+#' bioconductorDownloads(pkg = "clusterProfiler", when = "last-year")
 #' }
 
 bioconductorDownloads <- function(pkg = NULL, from = NULL, to = NULL,
@@ -153,56 +153,80 @@ bioc_download <- function(pkg, from, to, when, current.date, current.yr,
 
   bioc.data <- as.data.frame(mfetchLog(url))
 
-  if (is.null(from) & is.null(to)) {
+  if (!is.null(when)) {
+    if (when != "last-year") stop()
     if (observation == "month") {
-      dat <- bioc.data[bioc.data$Month != "all", ]
+      log.data <- bioc.data[bioc.data$Month != "all", ]
+
+      month.num <- vapply(log.data$Month, function(x) {
+        which(x == month.abb)
+      }, integer(1L))
+
+      month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+      log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+      mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
+      then <- as.Date(paste0(current.yr - 1, "-", mo, "-01"))
+      dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
+
     } else if (observation == "year") {
-      dat <- bioc.data[bioc.data$Month == "all", ]
+      log.data <- bioc.data[bioc.data$Month == "all", ]
+      dat <- log.data[log.data$Year %in% c(current.yr, current.yr - 1), ]
     }
 
     dat <- dat[order(dat$Year), ]
 
-  } else if (all(c(from, to) %in% 2009:current.yr)) {
-    log.data <- bioc.data[bioc.data$Month == "all", ]
-
-    if (!is.null(from) & is.null(to)) {
-      dat <- log.data[log.data$Year >= from, ]
-    } else if (is.null(from) & !is.null(to)) {
-      dat <- log.data[log.data$Year <= to, ]
-    } else if (!is.null(from) & !is.null(to)) {
-      dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
-    } else dat <- log.data
-
-    dat <- dat[order(dat$Year), ]
-
-  } else if (all(vapply(c(from, to), is.character, logical(1L))) &
-             all(vapply(c(from, to), nchar, integer(1L)) == 7) &
-             all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
-
-    log.data <- bioc.data[bioc.data$Month != "all", ]
-
-    month.num <- vapply(log.data$Month, function(x) {
-      which(x == month.abb)
-    }, integer(1L))
-
-    month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
-    log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
-
-    if (!is.null(from) & is.null(to)) {
-      dat <- log.data[log.data$date %in% checkDate(from):current.date, ]
-    } else if (is.null(from) & !is.null(to)) {
-      dat <- log.data[log.data$date <= checkDate(to), ]
-    } else if (!is.null(from) & !is.null(to)) {
-      sel <- log.data$date >= checkDate(from) & log.data$date <= checkDate(to)
-      dat <- log.data[sel, ]
-    } else dat <- log.data
-
-    dat <- dat[order(dat$date), ]
-
   } else {
-    msg1 <- '"from" and "to" are formatted as "yyyy" or "yyyy-mm". '
-    msg2 <- 'Logs begin January 2009.'
-    stop(msg1, msg2)
+    if (is.null(from) & is.null(to)) {
+      if (observation == "month") {
+        dat <- bioc.data[bioc.data$Month != "all", ]
+      } else if (observation == "year") {
+        dat <- bioc.data[bioc.data$Month == "all", ]
+      }
+      dat <- dat[order(dat$Year), ]
+
+    } else if (all(c(from, to) %in% 2009:current.yr)) {
+      log.data <- bioc.data[bioc.data$Month == "all", ]
+
+      if (!is.null(from) & is.null(to)) {
+        dat <- log.data[log.data$Year >= from, ]
+      } else if (is.null(from) & !is.null(to)) {
+        dat <- log.data[log.data$Year <= to, ]
+      } else if (!is.null(from) & !is.null(to)) {
+        dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
+      } else dat <- log.data
+
+      dat <- dat[order(dat$Year), ]
+
+    } else if (
+      all(vapply(c(from, to), is.character, logical(1L))) &
+      all(vapply(c(from, to), nchar, integer(1L)) == 7) &
+      all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+
+      log.data <- bioc.data[bioc.data$Month != "all", ]
+
+      month.num <- vapply(log.data$Month, function(x) {
+        which(x == month.abb)
+      }, integer(1L))
+
+      month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+      log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+
+      if (!is.null(from) & is.null(to)) {
+        dat <- log.data[log.data$date %in% checkDate(from):current.date, ]
+      } else if (is.null(from) & !is.null(to)) {
+        dat <- log.data[log.data$date <= checkDate(to), ]
+      } else if (!is.null(from) & !is.null(to)) {
+        sel <- log.data$date >= checkDate(from) & log.data$date <= checkDate(to)
+        dat <- log.data[sel, ]
+      } else dat <- log.data
+
+      dat <- dat[order(dat$date), ]
+
+    } else {
+      msg1 <- '"from" and "to" are formatted as "yyyy" or "yyyy-mm". '
+      msg2 <- 'Logs begin January 2009.'
+      stop(msg1, msg2)
+    }
   }
 
   row.names(dat) <- NULL

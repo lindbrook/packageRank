@@ -1,3 +1,9 @@
+packageRank 0.2.0.9024
+==================
+
+- add bioconductorDownloads(when = "last-year").
+
+
 packageRank 0.2.0.9023
 ==================
 

@@ -37,6 +37,6 @@ bioconductorDownloads(pkg = "clusterProfiler", from = 2014, to = 2015)
 bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
 
 # last 12 months
-bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
+bioconductorDownloads(pkg = "clusterProfiler", when = "last-year")
 }
 }
