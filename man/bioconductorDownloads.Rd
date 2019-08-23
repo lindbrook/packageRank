@@ -4,21 +4,20 @@
 \alias{bioconductorDownloads}
 \title{Annual/monthly package downloads from Bioconductor (beta).}
 \usage{
-bioconductorDownloads(pkg = NULL, year = NULL, month = NULL,
-  end.year = NULL, end.month = NULL, observation = "month")
+bioconductorDownloads(pkg = NULL, from = NULL, to = NULL,
+  when = NULL, observation = "month")
 }
 \arguments{
 \item{pkg}{Character. Vector of package names.}
 
-\item{year}{Numeric.}
+\item{from}{Start date as \code{yyyy-mm} or \code{yyyy}.}
 
-\item{month}{Numeric.}
+\item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
-\item{end.year}{Numeric.}
+\item{when}{\code{last-day}, \code{last-week} or \code{last-month}.
+If this is given, then \code{from} and \code{to} are ignored.}
 
-\item{end.month}{Numeric.}
-
-\item{observation}{Character. "year" or "month"}
+\item{observation}{"year" or "month".}
 }
 \description{
 Annual/monthly package downloads from Bioconductor (beta).
@@ -32,11 +31,10 @@ bioconductorDownloads()
 bioconductorDownloads(pkg = "clusterProfiler")
 
 # year-to-date
-bioconductorDownloads(pkg = "clusterProfiler", year = 2019)
+bioconductorDownloads(pkg = "clusterProfiler", from = 2014, to = 2015)
 
 # June 2014 througg March 2018
-bioconductorDownloads(pkg = "clusterProfiler", year = 2014,
-  end.year = 2018, month = 6, end.month = 3)
+bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
 
 # last 12 months
 bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")

@@ -1,3 +1,10 @@
+packageRank 0.2.0.9023
+==================
+
+- add checkDate().
+- amend bioconductorDownloads() interface.
+
+
 packageRank 0.2.0.9022
 ==================
 

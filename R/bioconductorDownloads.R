@@ -1,11 +1,11 @@
 #' Annual/monthly package downloads from Bioconductor (beta).
 #'
 #' @param pkg Character. Vector of package names.
-#' @param year Numeric.
-#' @param month Numeric.
-#' @param end.year Numeric.
-#' @param end.month Numeric.
-#' @param observation Character. "year" or "month"
+#' @param when \code{last-day}, \code{last-week} or \code{last-month}.
+#'   If this is given, then \code{from} and \code{to} are ignored.
+#' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
+#' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
+#' @param observation "year" or "month".
 #' @export
 #' @examples
 #' \donttest{
@@ -16,64 +16,46 @@
 #' bioconductorDownloads(pkg = "clusterProfiler")
 #'
 #' # year-to-date
-#' bioconductorDownloads(pkg = "clusterProfiler", year = 2019)
+#' bioconductorDownloads(pkg = "clusterProfiler", from = 2014, to = 2015)
 #'
 #' # June 2014 througg March 2018
-#' bioconductorDownloads(pkg = "clusterProfiler", year = 2014,
-#'   end.year = 2018, month = 6, end.month = 3)
+#' bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
 #'
 #' # last 12 months
 #' bioconductorDownloads(pkg = "clusterProfiler", year = "last-year")
 #' }
 
-bioconductorDownloads <- function(pkg = NULL, year = NULL, month = NULL,
-  end.year = NULL, end.month = NULL, observation = "month") {
+bioconductorDownloads <- function(pkg = NULL, from = NULL, to = NULL,
+  when = NULL, observation = "month") {
 
   # January 2009
-  
   if (observation %in% c("month", "year") == FALSE) {
     stop('observation must be "month" or "year".')
   }
 
-  cal.date <- Sys.Date()
-  current.yr <- data.table::year(cal.date)
-  current.mo <- data.table::month(cal.date)
+  current.date <- Sys.Date()
+  current.yr <- data.table::year(current.date)
+  current.mo <- data.table::month(current.date)
 
   if (is.null(pkg)) {
-    dat <- list(bioc_download(pkg, year, month, end.year, end.month,
-      observation, current.yr, current.mo, cal.date))
+    dat <- list(bioc_download(pkg, from, to, when, current.yr, current.mo,
+      current.date, observation))
   } else {
     if (length(pkg) > 1) {
       dat <- lapply(pkg, function(p) {
-        bioc_download(p, year, month, end.year, end.month, observation,
-          current.yr, current.mo, cal.date)
+        bioc_download(p, from, to, when, current.date, current.yr, current.mo,
+          observation)
       })
       names(dat) <- pkg
 
     } else if (length(pkg) == 1) {
-      dat <- list(bioc_download(pkg, year, month, end.year, end.month,
-        observation, current.yr, current.mo, cal.date))
+      dat <- list(bioc_download(pkg, from, to, when, current.date, current.yr,
+        current.mo, observation))
     }
   }
 
-  if (observation == "year") {
-    if (is.null(end.year)) {
-      end.date <- cal.date
-    } else if (is.null(end.year) == FALSE) {
-      end.date <- as.Date(paste0(end.year, "-12-01"))
-    }
-  } else if (observation == "month") {
-    if (is.null(end.year) & is.null(end.month)) {
-      end.date <- cal.date
-    } else if (is.null(end.year) == FALSE & is.null(end.month)) {
-      end.date <- as.Date(paste0(end.year, "-12-01"))
-    } else if (is.null(end.year) == FALSE & is.null(end.month) == FALSE) {
-      end.date <- as.Date(paste0(end.year, "-", end.month ,"-01"))
-    }
-  }
-
-  out <- list(data = dat, pkg = pkg, obs = observation, date = cal.date,
-    current.yr = current.yr, current.mo = current.mo, end.date = end.date)
+  out <- list(data = dat, pkg = pkg, current.date = current.date,
+    current.yr = current.yr, current.mo = current.mo)
   class(out) <- "bioconductor"
   out
 }
@@ -159,8 +141,8 @@ summary.bioconductor <- function(object, ...) {
   }
 }
 
-bioc_download <- function(pkg, year, month, end.year, end.month, observation,
-  current.yr, current.mo, cal.date) {
+bioc_download <- function(pkg, from, to, when, current.date, current.yr,
+  current.mo, observation) {
 
   if (is.null(pkg)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
@@ -169,123 +151,62 @@ bioc_download <- function(pkg, year, month, end.year, end.month, observation,
       pkg, "_stats.tab", collapse = "")
   }
 
-  pkg.data <- as.data.frame(mfetchLog(url))
+  bioc.data <- as.data.frame(mfetchLog(url))
 
-  if (observation == "year") {
-    if (is.null(year) & is.null(end.year)) {
-      dat <- lapply(unique(pkg.data$Year), function(yr) {
-        pkg.data[pkg.data$Year == yr & pkg.data$Month == "all", ]
-      })
-      dat <- do.call(rbind, dat)
-    } else if (!is.null(year) & is.null(end.year)) {
-      dat <- pkg.data[pkg.data$Year == year & pkg.data$Month == "all", ]
-    } else if (is.null(year) & !is.null(end.year)) {
-      dat <- pkg.data[pkg.data$Year <= end.year & pkg.data$Month == "all", ]
-    } else if (!is.null(year) & !is.null(end.year)) {
-      dat <- pkg.data[pkg.data$Year %in% year:end.year &
-                      pkg.data$Month == "all", ]
+  if (is.null(from) & is.null(to)) {
+    if (observation == "month") {
+      dat <- bioc.data[bioc.data$Month != "all", ]
+    } else if (observation == "year") {
+      dat <- bioc.data[bioc.data$Month == "all", ]
     }
 
     dat <- dat[order(dat$Year), ]
-    row.names(dat) <- NULL
-    if (is.null(pkg) == FALSE) dat$pkg <- pkg
+
+  } else if (all(c(from, to) %in% 2009:current.yr)) {
+    log.data <- bioc.data[bioc.data$Month == "all", ]
+
+    if (!is.null(from) & is.null(to)) {
+      dat <- log.data[log.data$Year >= from, ]
+    } else if (is.null(from) & !is.null(to)) {
+      dat <- log.data[log.data$Year <= to, ]
+    } else if (!is.null(from) & !is.null(to)) {
+      dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
+    } else dat <- log.data
 
     dat <- dat[order(dat$Year), ]
 
-  } else if (observation == "month") {
-    pkg.data <- pkg.data[pkg.data$Month != "all", ]
+  } else if (all(vapply(c(from, to), is.character, logical(1L))) &
+             all(vapply(c(from, to), nchar, integer(1L)) == 7) &
+             all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
 
-    if (is.null(year) & is.null(end.year) &
-        is.null(month) & is.null(end.month)) {
-      dat <- pkg.data
+    log.data <- bioc.data[bioc.data$Month != "all", ]
 
-    } else if (!is.null(year) & !is.character(year) & is.null(end.year) &
-               is.null(month) & is.null(end.month)) {
-      dat <- pkg.data[pkg.data$Year == year, ]
+    month.num <- vapply(log.data$Month, function(x) {
+      which(x == month.abb)
+    }, integer(1L))
 
-    } else if (!is.null(year) & !is.null(end.year) &
-               is.null(month) & is.null(end.month)) {
-      dat <- pkg.data[pkg.data$Year %in% year:end.year, ]
+    month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+    log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
 
-    } else if (!is.null(year) & is.null(end.year) &
-               !is.null(month) & is.null(end.month)) {
-      sel <- pkg.data$Year == year & pkg.data$Month == month.abb[month]
-      dat <- pkg.data[sel, ]
+    if (!is.null(from) & is.null(to)) {
+      dat <- log.data[log.data$date %in% checkDate(from):current.date, ]
+    } else if (is.null(from) & !is.null(to)) {
+      dat <- log.data[log.data$date <= checkDate(to), ]
+    } else if (!is.null(from) & !is.null(to)) {
+      sel <- log.data$date >= checkDate(from) & log.data$date <= checkDate(to)
+      dat <- log.data[sel, ]
+    } else dat <- log.data
 
-    } else if (!is.null(year) & is.null(end.year) &
-               !is.null(month) & is.null(end.month)) {
-      sel <- pkg.data$Year == year & pkg.data$Month == month.abb[month]
-      dat <- pkg.data[sel, ]
+    dat <- dat[order(dat$date), ]
 
-    } else if (!is.null(year) & is.null(end.year) &
-               !is.null(month) & !is.null(end.month)) {
-      sel <- pkg.data$Year == year &
-             pkg.data$Month %in% month.abb[month:end.month]
-      dat <- pkg.data[sel, ]
-
-    } else if (!is.null(year) & !is.null(end.year) &
-               !is.null(month) & is.null(end.month)) {
-      sel.endpts <- pkg.data$Year == year &
-                   pkg.data$Month %in% month.abb[month:12] |
-                   pkg.data$Year == end.year
-
-      if (end.year - year == 1) {
-         sel <- sel.endpts
-      } else {
-         yrs <- seq(year, end.year)
-         sel.yrs <- pkg.data$Year %in% yrs[yrs %in% c(year, end.year) == FALSE]
-         sel <- sel.endpts | sel.yrs
-      }
-
-      dat <- pkg.data[sel, ]
-
-    } else if (!is.null(year) & !is.null(end.year) &
-               !is.null(month) & !is.null(end.month)) {
-
-      sel.endpts <- pkg.data$Year == year &
-                    pkg.data$Month %in% month.abb[month:12] |
-                    pkg.data$Year == end.year &
-                    pkg.data$Month %in% month.abb[1:end.month]
-
-      if (end.year - year == 1) {
-        sel <- sel.endpts
-      } else {
-        yrs <- seq(year, end.year)
-        sel.yrs <- pkg.data$Year %in% yrs[yrs %in% c(year, end.year) == FALSE]
-        sel <- sel.endpts | sel.yrs
-      }
-
-       dat <- pkg.data[sel, ]
-
-     } else if (is.character(year) & is.null(end.year) &
-                is.null(month) & is.null(end.month)) {
-       if (year == "last-year") {
-         sel.start <- pkg.data$Year == current.yr - 1 &
-                      pkg.data$Month %in% month.abb[current.mo:12]
-         sel.end <- pkg.data$Year == current.yr &
-                    pkg.data$Month %in% month.abb[1:current.mo]
-         dat <- pkg.data[sel.start | sel.end, ]
-       }
-    } else stop('error.')
-
-    dat$mo <- NA
-
-    for (i in seq_along(month.abb)) {
-      dat[dat$Month == month.abb[i], "mo"] <- i
-    }
-
-    if (any(dat$Year == current.yr & dat$mo > current.mo)) {
-      dat0 <- dat[dat$Year != current.yr, ]
-      dat <- rbind(dat0, dat[dat$Year == current.yr & dat$mo <= current.mo, ])
-    }
-
-    dat <- dat[order(dat$Year, dat$mo), ]
-    dat$mo <- NULL
-    row.names(dat) <- NULL
-    if (is.null(pkg) == FALSE) dat$pkg <- pkg
-    dat
+  } else {
+    msg1 <- '"from" and "to" are formatted as "yyyy" or "yyyy-mm". '
+    msg2 <- 'Logs begin January 2009.'
+    stop(msg1, msg2)
   }
 
+  row.names(dat) <- NULL
+  if (is.null(pkg) == FALSE) dat$pkg <- pkg
   dat
 }
 
@@ -410,3 +331,4 @@ checkDate <- function(string, end.date = FALSE) {
     }
   }
   as.Date(paste0(string, "-01"), optional = TRUE)
+}
