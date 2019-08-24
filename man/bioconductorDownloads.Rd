@@ -4,11 +4,11 @@
 \alias{bioconductorDownloads}
 \title{Annual/monthly package downloads from Bioconductor (beta).}
 \usage{
-bioconductorDownloads(pkg = NULL, from = NULL, to = NULL,
+bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
   when = NULL, observation = "month")
 }
 \arguments{
-\item{pkg}{Character. Vector of package names.}
+\item{packages}{Character. Vector of package names.}
 
 \item{from}{Start date as \code{yyyy-mm} or \code{yyyy}.}
 
@@ -28,15 +28,15 @@ Annual/monthly package downloads from Bioconductor (beta).
 bioconductorDownloads()
 
 # entire history
-bioconductorDownloads(pkg = "clusterProfiler")
+bioconductorDownloads(packages = "clusterProfiler")
 
 # year-to-date
-bioconductorDownloads(pkg = "clusterProfiler", from = 2014, to = 2015)
+bioconductorDownloads(packages = "clusterProfiler", from = 2014, to = 2015)
 
 # June 2014 througg March 2018
-bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
+bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
 
 # last 12 months
-bioconductorDownloads(pkg = "clusterProfiler", when = "last-year")
+bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
 }
 }

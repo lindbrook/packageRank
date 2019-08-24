@@ -1,6 +1,6 @@
 #' Annual/monthly package downloads from Bioconductor (beta).
 #'
-#' @param pkg Character. Vector of package names.
+#' @param packages Character. Vector of package names.
 #' @param when \code{last-day}, \code{last-week} or \code{last-month}.
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
@@ -13,19 +13,19 @@
 #' bioconductorDownloads()
 #'
 #' # entire history
-#' bioconductorDownloads(pkg = "clusterProfiler")
+#' bioconductorDownloads(packages = "clusterProfiler")
 #'
 #' # year-to-date
-#' bioconductorDownloads(pkg = "clusterProfiler", from = 2014, to = 2015)
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2014, to = 2015)
 #'
 #' # June 2014 througg March 2018
-#' bioconductorDownloads(pkg = "clusterProfiler", from = "2014-06", to = "2015-03")
+#' bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
 #'
 #' # last 12 months
-#' bioconductorDownloads(pkg = "clusterProfiler", when = "last-year")
+#' bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
 #' }
 
-bioconductorDownloads <- function(pkg = NULL, from = NULL, to = NULL,
+bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   when = NULL, observation = "month") {
 
   # January 2009
@@ -37,24 +37,24 @@ bioconductorDownloads <- function(pkg = NULL, from = NULL, to = NULL,
   current.yr <- data.table::year(current.date)
   current.mo <- data.table::month(current.date)
 
-  if (is.null(pkg)) {
-    dat <- list(bioc_download(pkg, from, to, when, current.yr, current.mo,
+  if (is.null(packages)) {
+    dat <- list(bioc_download(packages, from, to, when, current.yr, current.mo,
       current.date, observation))
   } else {
-    if (length(pkg) > 1) {
-      dat <- lapply(pkg, function(p) {
+    if (length(packages) > 1) {
+      dat <- lapply(packages, function(p) {
         bioc_download(p, from, to, when, current.date, current.yr, current.mo,
           observation)
       })
-      names(dat) <- pkg
+      names(dat) <- packages
 
-    } else if (length(pkg) == 1) {
-      dat <- list(bioc_download(pkg, from, to, when, current.date, current.yr,
-        current.mo, observation))
+    } else if (length(packages) == 1) {
+      dat <- list(bioc_download(packages, from, to, when, current.date,
+        current.yr, current.mo, observation))
     }
   }
 
-  out <- list(data = dat, pkg = pkg, current.date = current.date,
+  out <- list(data = dat, packages = packages, current.date = current.date,
     current.yr = current.yr, current.mo = current.mo)
   class(out) <- "bioconductor"
   out
@@ -75,9 +75,9 @@ bioconductorDownloads <- function(pkg = NULL, from = NULL, to = NULL,
 #' @examples
 #' \donttest{
 #' plot(bioconductorDownloads())
-#' plot(bioconductorDownloads(pkg = "graph"))
-#' plot(bioconductorDownloads(pkg = "graph", year = 2019))
-#' plot(bioconductorDownloads(pkg = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
+#' plot(bioconductorDownloads(packages = "graph"))
+#' plot(bioconductorDownloads(packages = "graph", year = 2019))
+#' plot(bioconductorDownloads(packages = "graph", year = 2014, end.year = 2018, month = 6, end.month = 3))
 #' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
@@ -141,14 +141,14 @@ summary.bioconductor <- function(object, ...) {
   }
 }
 
-bioc_download <- function(pkg, from, to, when, current.date, current.yr,
+bioc_download <- function(packages, from, to, when, current.date, current.yr,
   current.mo, observation) {
 
-  if (is.null(pkg)) {
+  if (is.null(packages)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
   } else {
-    url <- paste0("https://bioconductor.org/packages/stats/bioc/", pkg, "/",
-      pkg, "_stats.tab", collapse = "")
+    url <- paste0("https://bioconductor.org/packages/stats/bioc/", packages,
+      "/", packages, "_stats.tab", collapse = "")
   }
 
   bioc.data <- as.data.frame(mfetchLog(url))
@@ -230,7 +230,7 @@ bioc_download <- function(pkg, from, to, when, current.date, current.yr,
   }
 
   row.names(dat) <- NULL
-  if (is.null(pkg) == FALSE) dat$pkg <- pkg
+  if (is.null(packages) == FALSE) dat$packages <- packages
   dat
 }
 
@@ -295,10 +295,10 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
        }
      }
 
-    if (is.null(dat$pkg)) {
+    if (is.null(dat$packages)) {
        title(main = "All Packages")
      } else {
-       title(main = unique(dat$pkg))
+       title(main = unique(dat$packages))
      }
   }))
 }
@@ -321,8 +321,8 @@ gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
          ylab("Unique IP Addresses")
   }
 
-  p <- p + geom_line(size = 0.5) + facet_wrap(~ pkg, ncol = 2) + xlab("Date") +
-    theme_bw() + theme(panel.grid.minor = element_blank())
+  p <- p + geom_line(size = 0.5) + facet_wrap(~ packages, ncol = 2) +
+    xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
 
   if (add.points & log_count & smooth) {
     p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
