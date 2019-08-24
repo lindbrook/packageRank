@@ -192,9 +192,9 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
   packages <- x$packages
   id <- paste(package.data$packages, "@", date)
 
-  download.data <- data.frame(x = 1:length(crosstab),
+  download.data <- data.frame(x = seq_along(crosstab),
                               y = c(crosstab),
-                              packages = row.names(crosstab),
+                              packages = names(crosstab),
                               row.names = NULL,
                               stringsAsFactors = FALSE)
 
