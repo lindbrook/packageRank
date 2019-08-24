@@ -4,13 +4,13 @@
 \alias{bioconductorRank}
 \title{Package download counts and rank percentiles (cross-sectional) (prototype).}
 \usage{
-bioconductorRank(pkg = "clusterProfiler", yr.mo = "2019-06",
+bioconductorRank(packages = "monocle", date = "2019-01",
   count = "download")
 }
 \arguments{
-\item{pkg}{Character. Vector of package name(s).}
+\item{packages}{Character. Vector of package name(s).}
 
-\item{yr.mo}{Character. Date.}
+\item{date}{Character. Date.}
 
 \item{count}{Character. "ip" or "download".}
 }

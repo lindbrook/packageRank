@@ -1,20 +1,20 @@
 #' Package download counts and rank percentiles (cross-sectional) (prototype).
 #'
 #' From bioconductor
-#' @param pkg Character. Vector of package name(s).
-#' @param yr.mo Character. Date.
+#' @param packages Character. Vector of package name(s).
+#' @param date Character. Date.
 #' @param count Character. "ip" or "download".
 #' @return An R data frame.
 #' @import data.table
 #' @export
 
-bioconductorRank <- function(pkg = "clusterProfiler", yr.mo = "2019-06",
+bioconductorRank <- function(packages = "monocle", date = "2019-01",
   count = "download") {
 
   pkg.url <- "https://bioconductor.org/packages/stats/bioc/bioc_pkg_stats.tab"
-  pkg.stats <-  as.data.frame(mfetchLog(pkg.url))
+  packages.stats <-  as.data.frame(mfetchLog(pkg.url))
 
-  dat <- pkg.stats[pkg.stats$Month != "all", ]
+  dat <- packages.stats[packages.stats$Month != "all", ]
   dat$month <- NA
 
   for (i in seq_along(month.abb)) {
@@ -28,46 +28,49 @@ bioconductorRank <- function(pkg = "clusterProfiler", yr.mo = "2019-06",
   dat$date <- as.Date(paste0(dat$Year, "-", dat$month, "-01"))
   dat <- dat[order(dat$date), ]
 
-  sel.data <- dat[dat$date == paste0(yr.mo, "-01"), ]
+  sel.data <- dat[dat$date == as.Date(paste0(date, "-01")), ]
 
-  if (count == "ip") ct <- sel.data$Nb_of_distinct_IPs
-  else if (count == "download") ct <- sel.data$Nb_of_downloads
+  if (count == "ip") {
+    ct <- sel.data$Nb_of_distinct_IPs
+  } else if (count == "download") {
+    ct <- sel.data$Nb_of_downloads
+  }
 
   names(ct) <- sel.data$Package
 
   crosstab <- sort(ct, decreasing = TRUE)
 
   # packages in bin
-  pkg.bin <- lapply(pkg, function(nm) {
+  packages.bin <- lapply(packages, function(nm) {
     crosstab[crosstab %in% crosstab[nm]]
   })
 
   # offset: ties arbitrarily broken by alphabetical order
-  pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
-    which(names(pkg.bin[[i]]) %in% pkg[i])
+  packages.bin.delta <- vapply(seq_along(packages.bin), function(i) {
+    which(names(packages.bin[[i]]) %in% packages[i])
   }, numeric(1L))
 
-  nominal.rank <- lapply(seq_along(pkg), function(i) {
-    sum(crosstab > crosstab[pkg[i]]) + pkg.bin.delta[i]
+  nominal.rank <- lapply(seq_along(packages), function(i) {
+    sum(crosstab > crosstab[packages[i]]) + packages.bin.delta[i]
   })
 
-  tot.pkgs <- length(crosstab)
+  tot.packagess <- length(crosstab)
 
-  pkg.percentile <- vapply(pkg, function(x) {
+  packages.percentile <- vapply(packages, function(x) {
     round(100 * mean(crosstab < crosstab[x]), 1)
   }, numeric(1L))
 
-  dat <- data.frame(date = yr.mo,
-                    packages = pkg,
-                    downloads = c(crosstab[pkg]),
+  dat <- data.frame(date = date,
+                    packages = packages,
+                    downloads = c(crosstab[packages]),
                     rank = unlist(nominal.rank),
-                    percentile = pkg.percentile,
+                    percentile = packages.percentile,
                     total.downloads = sum(ct),
-                    total.packages = tot.pkgs,
+                    total.packages = tot.packagess,
                     stringsAsFactors = FALSE,
                     row.names = NULL)
 
-  out <- list(packages = pkg, date = yr.mo, package.data = dat,
+  out <- list(packages = packages, date = date, package.data = dat,
     crosstab = crosstab)
 
   class(out) <- "bioconductor_rank"
