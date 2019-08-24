@@ -108,6 +108,7 @@ plot.package_rank <- function(x, graphics = NULL, log_count = TRUE, ...) {
   if (is.null(graphics)) {
     if (length(packages) == 1) {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      title(main = paste(packages, "@", x$date))
     } else if (length(packages) > 1) {
       ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
     } else stop("Error.")
@@ -115,9 +116,11 @@ plot.package_rank <- function(x, graphics = NULL, log_count = TRUE, ...) {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         basePlot(pkg, log_count, crosstab, iqr, package.data, y.max, date)
+        title(main = paste(packages, "@", x$date))
       }))
     } else {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      title(main = paste(packages, "@", x$date))
     }
   } else if (graphics == "ggplot2") {
     ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
@@ -174,7 +177,6 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
   text(which(names(crosstab) == names(crosstab[length(crosstab)])), y.max,
     labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")), cex = 0.8,
     col = "dodgerblue", pos = 2)
-  title(main = paste(pkg, "@", date))
 }
 
 #' ggplot2 Graphics Plot (Cross-sectional).

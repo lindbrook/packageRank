@@ -107,6 +107,7 @@ plot.bioconductor_rank <- function(x, graphics = "base", log_count = TRUE,
   if (is.null(graphics)) {
     if (length(packages) == 1) {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      title(main = paste(packages, "@", x$date))
     } else if (length(packages) > 1) {
       ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
     } else stop("Error.")
@@ -114,15 +115,16 @@ plot.bioconductor_rank <- function(x, graphics = "base", log_count = TRUE,
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         basePlot(pkg, log_count, crosstab, iqr, package.data, y.max, date)
+        title(main = paste(packages, "@", x$date))
       }))
     } else {
       basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      title(main = paste(packages, "@", x$date))
     }
   } else if (graphics == "ggplot2") {
     ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
   } else stop('graphics must be "base" or "ggplot2"')
 }
-
 
 #' Print method for bioconductorRank().
 #' @param x An object of class "bioconductor_rank" created by \code{bioconductorRank()}
