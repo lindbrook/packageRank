@@ -1,8 +1,7 @@
 #' Annual/monthly package downloads from Bioconductor (beta).
 #'
 #' @param packages Character. Vector of package names.
-#' @param when \code{last-day}, \code{last-week} or \code{last-month}.
-#'   If this is given, then \code{from} and \code{to} are ignored.
+#' @param when \code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.
 #' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param observation "year" or "month".
@@ -16,13 +15,26 @@
 #' bioconductorDownloads(packages = "clusterProfiler")
 #'
 #' # year-to-date
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2014, to = 2015)
-#'
-#' # June 2014 througg March 2018
-#' bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
+#' bioconductorDownloads(packages = "clusterProfiler", when = "ytd")
+#' bioconductorDownloads(packages = "clusterProfiler", when = "year-to-date")
 #'
 #' # last 12 months
 #' bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
+#'
+#' # from 2015 to current year
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2015)
+#'
+#' # 2015 through 2018
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015)
+#'
+#' # selected year (yearly)
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
+#'
+#' # selected year (monthly)
+#' bioconductorDownloads(packages = "clusterProfiler", from = "2015-01", to = "2015-12")
+#'
+#' # June 2014 through March 2018
+#' bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
 #' }
 
 bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
