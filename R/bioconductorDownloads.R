@@ -343,7 +343,7 @@ gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
 }
 
 checkDate <- function(string, end.date = FALSE) {
-  if (is.character(string) == FALSE) stop("string must a text string.")
+  if (!is.character(string)) stop("date must a character string.")
   if (nchar(string) != 7 | (grepl("-", string) == FALSE)) {
     stop('Format must be "yyyy-mm".')
   } else {
@@ -355,5 +355,9 @@ checkDate <- function(string, end.date = FALSE) {
       warning(paste0('Bioconductor logs begin ', "January 2009", "."))
     }
   }
-  as.Date(paste0(string, "-01"), optional = TRUE)
+
+  date.candidate <- as.Date(paste0(string, "-01"), optional = TRUE)
+  if (is.na(date.candidate)) stop("No such date.")
+  else if (date.candidate > Sys.Date()) stop("Date in future!")
+  else date.candidate
 }
