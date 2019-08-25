@@ -136,6 +136,7 @@ print.bioconductor <- function(x, ...) {
   else if (is.list(x$data)) {
     out <- do.call(rbind, x$data)
     row.names(out) <- NULL
+    out$date <- NULL
     print(out)
   }
 }
