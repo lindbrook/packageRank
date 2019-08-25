@@ -168,39 +168,58 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   bioc.data <- as.data.frame(mfetchLog(url))
 
   if (!is.null(when)) {
-    if (when != "last-year") stop()
-    if (observation == "month") {
-      log.data <- bioc.data[bioc.data$Month != "all", ]
+    if (when == "last-year") {
+      if (observation == "month") {
+        log.data <- bioc.data[bioc.data$Month != "all", ]
+        month.num <- vapply(log.data$Month, function(x) {
+          which(x == month.abb)
+        }, integer(1L))
+        month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+        log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+        mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
+        then <- as.Date(paste0(current.yr - 1, "-", mo, "-01"))
+        dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
+      } else if (observation == "year") {
+        log.data <- bioc.data[bioc.data$Month == "all", ]
+        dat <- log.data[log.data$Year %in% c(current.yr, current.yr - 1), ]
+        dat$date <- as.Date(paste0(dat$Year, "-01-01"))
+      } else stop('"observation must be "month" or "year"')
 
-      month.num <- vapply(log.data$Month, function(x) {
-        which(x == month.abb)
-      }, integer(1L))
-
-      month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
-      log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
-      mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
-      then <- as.Date(paste0(current.yr - 1, "-", mo, "-01"))
-      dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
-
-    } else if (observation == "year") {
-      log.data <- bioc.data[bioc.data$Month == "all", ]
-      dat <- log.data[log.data$Year %in% c(current.yr, current.yr - 1), ]
-    }
-
-    dat <- dat[order(dat$Year), ]
+    } else if (when == "year-to-date" | when == "ytd") {
+      if (observation == "month") {
+        log.data <- bioc.data[bioc.data$Month != "all", ]
+        month.num <- vapply(log.data$Month, function(x) {
+          which(x == month.abb)
+        }, integer(1L))
+        month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+        log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+        mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
+        then <- as.Date(paste0(current.yr, "-01-01"))
+        dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
+      } else if (observation == "year") {
+        log.data <- bioc.data[bioc.data$Month == "all", ]
+        dat <- log.data[log.data$Year == current.yr, ]
+        dat$date <- as.Date(paste0(dat$Year, "-01-01"))
+      } else stop('"observation must be "month" or "year"')
+    } else stop('when must be "last-year", "year-to-date" or "ytd".')
 
   } else {
     if (is.null(from) & is.null(to)) {
       if (observation == "month") {
-        dat <- bioc.data[bioc.data$Month != "all", ]
+        log.data <- bioc.data[bioc.data$Month != "all", ]
+        month.num <- vapply(log.data$Month, function(x) {
+          which(x == month.abb)
+        }, integer(1L))
+        month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+        log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+        dat <- log.data
       } else if (observation == "year") {
         dat <- bioc.data[bioc.data$Month == "all", ]
-      }
-      dat <- dat[order(dat$Year), ]
+        dat$date <- as.Date(paste0(dat$Year, "-01-01"))
+      } else stop('"observation must be "month" or "year"')
 
     } else if (all(c(from, to) %in% 2009:current.yr)) {
       log.data <- bioc.data[bioc.data$Month == "all", ]
-
       if (!is.null(from) & is.null(to)) {
         dat <- log.data[log.data$Year >= from, ]
       } else if (is.null(from) & !is.null(to)) {
@@ -208,8 +227,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
       } else if (!is.null(from) & !is.null(to)) {
         dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
       } else dat <- log.data
-
-      dat <- dat[order(dat$Year), ]
+      dat$date <- as.Date(paste0(dat$Year, "-01-01"))
 
     } else if (
       all(vapply(c(from, to), is.character, logical(1L))) &
@@ -217,11 +235,9 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
       all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
 
       log.data <- bioc.data[bioc.data$Month != "all", ]
-
       month.num <- vapply(log.data$Month, function(x) {
         which(x == month.abb)
       }, integer(1L))
-
       month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
       log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
 
@@ -233,126 +249,16 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         sel <- log.data$date >= checkDate(from) & log.data$date <= checkDate(to)
         dat <- log.data[sel, ]
       } else dat <- log.data
-
-      dat <- dat[order(dat$date), ]
-
     } else {
       msg1 <- '"from" and "to" are formatted as "yyyy" or "yyyy-mm". '
       msg2 <- 'Logs begin January 2009.'
       stop(msg1, msg2)
     }
   }
-
   row.names(dat) <- NULL
   if (is.null(packages) == FALSE) dat$packages <- packages
-  dat
-}
-
-bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
-  log_count, obs.in.progress) {
-
-  obs <- x$obs
-  date <- x$date
-
-  if (count == "download") {
-    y.var <- "Nb_of_downloads"
-    y.lab <- "Downloads"
-  } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
-    y.lab <- "Unique IP Addresses"
-  }
-
-  invisible(lapply(x$data, function(dat) {
-    if (obs == "month") {
-      mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-      dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
-
-      if (any(dat$date < x$date)) {
-        dat <- dat[dat$date < x$date, ]
-      }
-
-      if (log_count) {
-        plot(dat$date, dat[, y.var], type = "l", xlab = "Year",
-          ylab = paste0("log10(", y.lab, ")"), log = "y")
-      } else {
-        plot(dat$date, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
-      }
-
-       if (add.points) {
-         if (obs.in.progress) {
-           points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
-             pch = 1)
-           points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
-             col = "red")
-         } else points(dat$date, dat[, y.var])
-       }
-
-       if (smooth) {
-         lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f),
-           col = "blue")
-       }
-     } else if (obs == "year") {
-       if (log_count) {
-         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
-           ylab = paste0("log10(", y.lab, ")"), log = "y")
-       } else {
-         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
-       }
-
-       if (add.points) {
-         if (obs.in.progress) {
-           points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
-             pch = 1)
-           points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
-             col = "red")
-         } else points(dat$Year, dat[, y.var])
-       }
-     }
-
-    if (is.null(dat$packages)) {
-       title(main = "All Packages")
-     } else {
-       title(main = unique(dat$packages))
-     }
-  }))
-}
-
-gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
-  log_count, obs.in.progress) {
-
-  obs <- x$obs
-  date <- x$date
-  dat <- summary(x)
-
-  mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-  dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
-
-  if (count == "download") {
-    p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-         ylab("Downloads")
-  } else if (count == "ip") {
-    p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-         ylab("Unique IP Addresses")
-  }
-
-  p <- p + geom_line(size = 0.5) + facet_wrap(~ packages, ncol = 2) +
-    xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
-
-  if (add.points & log_count & smooth) {
-    p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
-  } else if (add.points & log_count & !smooth) {
-    p + geom_point() + scale_y_log10()
-  } else if (add.points & !log_count & smooth) {
-    p +  geom_point() + geom_smooth(method = "loess", se = se)
-  } else if (!add.points & log_count & smooth) {
-    p + scale_y_log10() + geom_smooth(method = "loess", se = se)
-  } else if (!add.points & !log_count & smooth) {
-    p + geom_smooth(method = "loess", se = se)
-  } else if (add.points & !log_count & !smooth) {
-    p + geom_point()
-  } else if (!add.points & log_count & !smooth) {
-    p + scale_y_log10()
-  } else p
+  dat <- dat[order(dat$date), ]
+  dat[dat$date <= current.date, ]
 }
 
 checkDate <- function(string, end.date = FALSE) {
