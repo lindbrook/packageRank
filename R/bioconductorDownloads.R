@@ -50,8 +50,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   current.mo <- data.table::month(current.date)
 
   if (is.null(packages)) {
-    dat <- list(bioc_download(packages, from, to, when, current.yr, current.mo,
-      current.date, observation))
+    dat <- list(bioc_download(packages, from, to, when, current.date,
+      current.yr, current.mo, observation))
   } else {
     if (length(packages) > 1) {
       dat <- lapply(packages, function(p) {
@@ -67,7 +67,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   }
 
   out <- list(data = dat, packages = packages, current.date = current.date,
-    current.yr = current.yr, current.mo = current.mo)
+    current.yr = current.yr, current.mo = current.mo, observation = observation)
   class(out) <- "bioconductor"
   out
 }
