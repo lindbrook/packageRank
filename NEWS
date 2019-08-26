@@ -1,8 +1,15 @@
+packageRank 0.2.0.9026
+==================
+
+- amend plot.bioconductor().
+
+
 packageRank 0.2.0.9025
 ==================
 
 - amend checkDate()
 - add bioconductorDownloads(when = c("year-to-date", "ytd")).
+
 
 packageRank 0.2.0.9024
 ==================

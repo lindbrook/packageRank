@@ -88,27 +88,21 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' \donttest{
 #' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(packages = "graph"))
-#' plot(bioconductorDownloads(packages = "graph", year = 2019))
-#' plot(bioconductorDownloads(packages = "graph", year = 2014, end.year = 2018, 
-#'   month = 6, end.month = 3))
+# #' plot(bioconductorDownloads(packages = "graph", from = 2019))
+#' plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
 #' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
   add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...) {
 
-  if (x$obs == "year") {
-    date.test <- data.table::year(x$date) == data.table::year(x$end.date)
-    obs.in.progress <- ifelse(date.test, TRUE, FALSE)
-
-  } else if (x$obs == "month") {
-    current.yr <- data.table::year(x$date)
-    start.obs <- as.Date(paste0(current.yr, "-", data.table::month(x$date),
-      "-01"))
-    stop.obs <- as.Date(paste0(current.yr, "-", data.table::month(x$date) + 1,
-      "-01"))
-    obs.in.progress <- ifelse(x$end.date >= start.obs & x$end.date < stop.obs,
-      TRUE, FALSE)
+  if (x$observation == "year") {
+    obs.in.progress <- x$current.yr == max(x$data[[1]]$Year)
+  } else if (x$observation == "month") {
+    start.obs <- x$data[[1]]$date[1]
+    stop.obs <- rev(x$data[[1]]$date)[1]
+    obs.in.progress <- x$current.yr == data.table::year(stop.obs) &
+                       x$current.mo == data.table::month(stop.obs)
   }
 
   if (is.null(graphics)) graphics <- "base"
@@ -259,6 +253,112 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   if (is.null(packages) == FALSE) dat$packages <- packages
   dat <- dat[order(dat$date), ]
   dat[dat$date <= current.date, ]
+}
+
+bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
+  log_count, obs.in.progress) {
+
+  obs <- x$observation
+
+  if (count == "download") {
+    y.var <- "Nb_of_downloads"
+    y.lab <- "Downloads"
+  } else if (count == "ip") {
+    y.var <- "Nb_of_distinct_IPs"
+    y.lab <- "Unique IP Addresses"
+  }
+
+  if (obs == "month") {
+    x.var <- "date"
+  } else if (obs == "year") {
+    x.var <- "Year"
+  }
+
+  invisible(lapply(x$data, function(dat) {
+    if (obs == "month") {
+      if (log_count) {
+        plot(dat[, x.var], dat[, y.var], type = "l", xlab = "Year",
+          ylab = paste0("log10(", y.lab, ")"), log = "y")
+      } else {
+        plot(dat[, x.var], dat[, y.var], type = "l", xlab = "Year",
+          ylab = y.lab)
+      }
+
+      if (add.points) {
+        if (obs.in.progress) {
+          points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
+            pch = 1)
+          points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
+            col = "red")
+        } else points(dat$date, dat[, y.var])
+      }
+
+       if (smooth) {
+         lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f),
+           col = "blue")
+       }
+     } else if (obs == "year") {
+       if (log_count) {
+         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
+           ylab = paste0("log10(", y.lab, ")"), log = "y")
+       } else {
+         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
+       }
+
+       if (add.points) {
+         if (obs.in.progress) {
+           points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
+             pch = 1)
+           points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
+             col = "red")
+         } else points(dat$Year, dat[, y.var])
+       }
+     }
+
+    if (is.null(dat$packages)) {
+       title(main = "All Packages")
+     } else {
+       title(main = unique(dat$packages))
+     }
+  }))
+}
+
+gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
+  log_count, obs.in.progress) {
+
+  obs <- x$observation
+  date <- x$date
+  dat <- summary(x)
+
+  mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
+  dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
+
+  if (count == "download") {
+    p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+         ylab("Downloads")
+  } else if (count == "ip") {
+    p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+         ylab("Unique IP Addresses")
+  }
+
+  p <- p + geom_line(size = 0.5) + facet_wrap(~ packages, ncol = 2) +
+    xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
+
+  if (add.points & log_count & smooth) {
+    p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
+  } else if (add.points & log_count & !smooth) {
+    p + geom_point() + scale_y_log10()
+  } else if (add.points & !log_count & smooth) {
+    p +  geom_point() + geom_smooth(method = "loess", se = se)
+  } else if (!add.points & log_count & smooth) {
+    p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+  } else if (!add.points & !log_count & smooth) {
+    p + geom_smooth(method = "loess", se = se)
+  } else if (add.points & !log_count & !smooth) {
+    p + geom_point()
+  } else if (!add.points & log_count & !smooth) {
+    p + scale_y_log10()
+  } else p
 }
 
 checkDate <- function(string, end.date = FALSE) {
