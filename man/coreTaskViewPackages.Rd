@@ -4,13 +4,16 @@
 \alias{coreTaskViewPackages}
 \title{Extract core CRAN Task View packages}
 \usage{
-coreTaskViewPackages(url)
+coreTaskViewPackages(url = url)
+}
+\arguments{
+\item{url}{Character. Task view URL.}
 }
 \value{
 A character vector of package names.
 }
 \description{
-url Character. Task view URL.
+Extract core CRAN Task View packages
 }
 \examples{
 # Bayesian Inference

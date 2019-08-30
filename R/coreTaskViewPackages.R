@@ -1,6 +1,6 @@
 #' Extract core CRAN Task View packages
 #'
-#' url Character. Task view URL.
+#' @param url Character. Task view URL.
 #' @return A character vector of package names.
 #' @export
 #' @examples
@@ -12,7 +12,7 @@
 #' url <- "https://cran.r-project.org/web/views/ChemPhys.html"
 #' coreTaskViewPackages(url)
 
-coreTaskViewPackages <- function(url) {
+coreTaskViewPackages <- function(url = url) {
   web_page <- readLines(url)
 
   start <- which(vapply(seq_along(web_page), function(i) {
@@ -35,3 +35,38 @@ coreTaskViewPackages <- function(url) {
 
   unlist(core.packages)
 }
+
+topicDataFrame <- function() {
+  web_page <- readLines("https://cran.r-project.org/web/views/")
+
+  start <- which(vapply(seq_along(web_page), function(i) {
+    grepl("Topics", web_page[i])
+  }, logical(1L))) + 2
+
+  dat <- web_page[start:length(web_page)]
+
+  id <- vapply(seq_along(dat), function(i) {
+    grepl("<td>", dat[i])
+  }, logical(1L))
+
+  dat <- dat[id]
+  even <- seq_along(dat) %% 2 == 0
+  odd <- seq_along(dat) %% 2 == 1
+
+  topic <- unlist(lapply(dat[even], function(x) {
+    tmp <- unlist(strsplit(x, "<td>"))[2]
+    unlist(strsplit(tmp, "</td>"))
+  }))
+
+  short.topic <- unlist(lapply(dat[odd], function(x) {
+    tmp <- unlist(strsplit(x, "\">"))[2]
+    unlist(strsplit(tmp, "</a></td>"))
+  }))
+
+  url <- unlist(lapply(short.topic, function(topic) {
+    paste0("https://CRAN.R-project.org/view=", topic)
+  }))
+
+  data.frame(short.topic = short.topic, url = url, topic = topic, stringsAsFactors = FALSE)
+}
+
