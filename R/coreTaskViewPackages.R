@@ -75,3 +75,32 @@ topicDataFrame <- function() {
   data.frame(short.topic = short.topic, url = url, topic = topic, stringsAsFactors = FALSE)
 }
 
+#' Get taskview data.
+#' @param taskview Character. Short task view name
+#' @export
+taskviewData <- function(taskview) {
+  task.lst <- lapply(packageRank::taskview.pkgs[[taskview]], function(x) {
+    packageRank::cranDownloads(x, from = "2019-01")$cranlogs.data
+  })
+  task.data <- do.call(rbind, task.lst)
+  list(dat = tapply(task.data$count, task.data$date, sum), taskview = taskview)
+}
+
+#' Plot taskview data.
+#' @param taskview Character. Short task view name
+#' @export
+taskviewPlot <- function(taskview) {
+  task.data <- taskviewData(taskview)
+  dat <- task.data[["dat"]]
+  plot(as.Date(names(dat)), dat, type = "l")
+  lines(stats::lowess(as.Date(names(dat)), dat), col = "red")
+  title(main =  task.data[["taskview"]])
+}
+
+# Documents taskview.pkgs.
+taskViewPackages <- function() {
+  taskview.data <- topicDataFrame()
+  taskview.pkgs <- lapply(taskview.data$url, coreTaskViewPackages)
+  names(taskview.pkgs) <- taskview.data$short.topic
+  # usethis::use_data(taskview.pkgs)
+}

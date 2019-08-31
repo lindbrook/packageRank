@@ -1,3 +1,11 @@
+packageRank 0.2.0.9029
+==================
+
+- add taskviewData() and taskviewPlot() prototypes.
+- @export topicDataFrame().
+- add taskview.pkgs.rda.
+
+
 packageRank 0.2.0.9028
 ==================
 
