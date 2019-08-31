@@ -36,6 +36,11 @@ coreTaskViewPackages <- function(url = url) {
   unlist(core.packages)
 }
 
+#' Extractct Task View Names and URLs
+#'
+#' @return R data frame
+#' @export
+
 topicDataFrame <- function() {
   web_page <- readLines("https://cran.r-project.org/web/views/")
 
