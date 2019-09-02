@@ -21,6 +21,7 @@ Imports:
     data.table (>= 1.12.2),
     ggplot2,
     memoise,
+    miniCRAN,
     RCurl
 Suggests: knitr,
           rmarkdown
