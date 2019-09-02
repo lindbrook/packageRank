@@ -3,12 +3,12 @@
 \docType{data}
 \name{taskview.pkgs}
 \alias{taskview.pkgs}
-\title{List of task view core packages1.}
+\title{List of task view core packages.}
 \format{An object of class \code{list} of length 40.}
 \usage{
 taskview.pkgs
 }
 \description{
-List of task view core packages1.
+List of task view core packages.
 }
 \keyword{datasets}
