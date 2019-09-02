@@ -152,7 +152,9 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
   days.observed <- unique(dat$date)
 
   if (is.null(graphics)) {
-    if (length(x$packages) == 1 | length(unique(dat$date)) == 1) {
+    if (is.null(x$packages)) {
+      graphics <- "base"
+    } else if (length(x$packages) == 1 | length(unique(dat$date)) == 1) {
       graphics <- "base"
     } else graphics <- "ggplot2"
   } else {
@@ -161,7 +163,10 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
   }
 
   if (graphics == "base") {
-    if (length(x$packages) > 1) {
+    if (is.null(x$packages)) {
+      rDownloadsPlot(x, graphics, points, log_count, smooth, se, f)
+
+    } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
         if (log_count) {
           dotchart(log10(dat$count), labels = dat$package,
@@ -278,7 +283,10 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
       }
     }
   } else if (graphics == "ggplot2") {
-    if (length(days.observed) == 1) {
+    if (is.null(x$packages)) {
+      rDownloadsPlot(x, graphics, points, log_count, smooth, se, f)
+
+    } else if (length(days.observed) == 1) {
       p <- ggplot(dat) +
            geom_point(aes_string("count", "package")) +
            theme_bw() +
@@ -417,3 +425,4 @@ rDownloadsPlot <- function(x, graphics, points, log_count, smooth, se, f) {
     } else p
 
   } else stop('graphics must be "base" or "ggplot2"')
+}

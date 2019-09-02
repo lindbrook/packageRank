@@ -1,3 +1,10 @@
+packageRank 0.2.0.9030
+==================
+
+- enable plot(cranDownloads(packages = NULL)).
+- add rDownloadsPlot().
+
+
 packageRank 0.2.0.9029
 ==================
 
