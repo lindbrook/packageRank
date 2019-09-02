@@ -16,6 +16,7 @@ A character vector of package names.
 Extract core CRAN Task View packages
 }
 \examples{
+\donttest{
 # Bayesian Inference
 url <- "https://cran.r-project.org/web/views/Bayesian.html"
 coreTaskViewPackages(url)
@@ -23,4 +24,5 @@ coreTaskViewPackages(url)
 # Chemometrics and Computational Physics
 url <- "https://cran.r-project.org/web/views/ChemPhys.html"
 coreTaskViewPackages(url)
+}
 }
