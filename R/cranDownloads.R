@@ -363,3 +363,57 @@ dayOfMonth <- function(string, first.log, end.date = FALSE) {
 
   out
 }
+
+rDownloadsPlot <- function(x, graphics, points, log_count, smooth, se, f) {
+  dat <- x$cranlogs.data
+
+  if (graphics == "base") {
+    if (log_count) {
+      if (points) {
+        plot(dat$date, dat$count, type = "o", xlab = "Date",
+          ylab = "log10(Count)", log = "y")
+      } else {
+        plot(dat$date, dat$count, type = "l", xlab = "Date",
+          ylab = "log10(Count)", log = "y")
+      }
+    } else {
+      if (points) {
+        plot(dat$date, dat$count, type = "o", xlab = "Date",
+          ylab = "Count")
+      } else {
+        plot(dat$date, dat$count, type = "l", xlab = "Date",
+          ylab = "Count")
+      }
+    }
+    if (smooth) {
+      lines(stats::lowess(dat$date, dat$count, f = f),
+        col = "blue")
+    }
+    title(main = "Total Package Downloads")
+
+  } else if (graphics == "ggplot2") {
+    p <- ggplot(data = dat, aes_string("date", "count")) +
+      geom_line(size = 0.5) +
+      theme_bw() +
+      ggtitle("Total Package Downloads") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    if (points & log_count & smooth) {
+      p + geom_point() +
+          scale_y_log10() +
+          geom_smooth(method = "loess", se = se)
+    } else if (points & log_count & !smooth) {
+      p + geom_point() + scale_y_log10()
+    } else if (points & !log_count & smooth) {
+      p +  geom_point() + geom_smooth(method = "loess", se = se)
+    } else if (!points & log_count & smooth) {
+      p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+    } else if (!points & !log_count & smooth) {
+      p + geom_smooth(method = "loess", se = se)
+    } else if (points & !log_count & !smooth) {
+      p + geom_point()
+    } else if (!points & log_count & !smooth) {
+      p + scale_y_log10()
+    } else p
+
+  } else stop('graphics must be "base" or "ggplot2"')
