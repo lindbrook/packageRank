@@ -1,3 +1,3 @@
-#' List of task view core packages.
+#' List of CRAN Task View package names.
 #' @docType data
-"taskview.pkgs"
+"taskview.package.names"
