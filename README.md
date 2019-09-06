@@ -28,9 +28,9 @@ To install the latest development version from
 GitHub:
 
 ``` r
-# You may need to first install the 'devtools' via install.packages("devtools").
+# You may need to first install the 'remotes' via install.packages("remotes").
 
-devtools::install_github("lindbrook/packageRank", build_vignettes = TRUE)
+remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
 ### background
