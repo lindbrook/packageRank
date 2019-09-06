@@ -1,3 +1,10 @@
+packageRank 0.2.0.9031
+==================
+
+- coreTaskViewPackages() -> taskViewPackages().
+- taskview.pkgs -> taskview.package.names.
+
+
 packageRank 0.2.0.9030
 ==================
 
