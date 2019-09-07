@@ -1,3 +1,10 @@
+packageRank 0.2.0.9033
+==================
+
+- add cranDependencies() and cran.dependencies (place holder).
+- add cranDependenciesNetwork().
+
+
 packageRank 0.2.0.9032
 ==================
 
