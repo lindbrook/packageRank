@@ -87,14 +87,15 @@ taskViewNameURL <- function() {
 #'
 #' @param core.packages Logical. TRUE for core packages; FALSE for all packages.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
-#' @note Documents \code{taskview.package.names}.
+#' @note Documents \code{taskview.package.names}
 #' @export
 
 taskViewPackageNames <- function(core.packages = FALSE, multi.core = TRUE) {
   tasks <- taskViewNameURL()
+  cores <- multiCore(multi.core)
 
   pkgs <- parallel::mclapply(tasks$url, taskViewPackages,
-    core.packages = core.packages, mc.cores = multiCore(multi.core))
+    core.packages = core.packages, mc.cores = cores)
 
   stats::setNames(pkgs, tasks$name)
   # usethis::use_data(taskview.package.names)

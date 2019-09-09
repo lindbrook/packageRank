@@ -15,5 +15,5 @@ taskViewPackageNames(core.packages = FALSE, multi.core = TRUE)
 List of CRAN Task View Package Names
 }
 \note{
-Documents \code{taskview.package.names}.
+Documents \code{taskview.package.names}
 }
