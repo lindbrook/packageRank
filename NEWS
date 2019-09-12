@@ -1,3 +1,10 @@
+packageRank 0.2.0.9037
+==================
+
+- fix packageDepends() prototype: "R ".
+- add packagePublished() prototype.
+
+
 packageRank 0.2.0.9036
 ==================
 
