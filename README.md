@@ -208,42 +208,29 @@ Bioconductor: the CRAN version has server side support via the
 
 To compute or plot package download counts, ‘packageRank’ offers a
 couple of choices. If you want to use ‘cranlogs’ style syntax, use
-‘cran\_downloads2()’. The only difference between this function and
+‘cran\_downloads2()’.
+
+``` r
+cranlogs::cran_downloads(packages = "HistData", when = "last-week")
+
+cran_downloads2(packages = "HistData", when = "last-week")
+```
+
+The only difference between this function and
 ‘cranlogs::cran\_downloads()’ is that ‘cran\_downloads2()’ has an
 generic S3 plot method.
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData", when = "last-week")
->         date count  package
-> 1 2019-09-06   153 HistData
-> 2 2019-09-07   155 HistData
-> 3 2019-09-08   161 HistData
-> 4 2019-09-09   259 HistData
-> 5 2019-09-10   276 HistData
-> 6 2019-09-11   387 HistData
-> 7 2019-09-12   242 HistData
-```
-
-``` r
-cran_downloads2(packages = "HistData", when = "last-week")
->         date count  package
-> 1 2019-09-06   153 HistData
-> 2 2019-09-07   155 HistData
-> 3 2019-09-08   161 HistData
-> 4 2019-09-09   259 HistData
-> 5 2019-09-10   276 HistData
-> 6 2019-09-11   387 HistData
-> 7 2019-09-12   242 HistData
 plot(cran_downloads2(packages = "HistData", when = "last-week"))
 ```
 
 ![](man/figures/README-cran_downloads2-1.png)<!-- -->
 
 Otherwise, I recommend using `cranDownloads()`. Not only does it have a
-generic S3 plot method, but it has a more flexible interface, especially
-for the ‘for’ and ‘to’ arguments. With ‘cranlogs::cran\_downloads’, you
-have to write out the entire 8 character date. With ‘cranDownloads()’,
-you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy.
+plot method, but it has a more flexible interface, especially for the
+‘for’ and ‘to’ arguments. With ‘cranlogs::cran\_downloads’, you have
+to write out the entire 10 character date. With ‘cranDownloads()’, you
+can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ``` r
 # Downloads from January through June 2019
