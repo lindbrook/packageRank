@@ -2,6 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9038-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+
 ## packageRank: compute and visualize package download counts and percentiles
 
 ### features
@@ -234,7 +235,8 @@ can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ``` r
 # Downloads from January through June 2019
-plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"), points = FALSE, smooth = TRUE)
+plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"), points = FALSE, 
+  smooth = TRUE)
 ```
 
 ![](man/figures/README-cranDownloads-1.png)<!-- -->
@@ -242,7 +244,8 @@ plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"
 ``` r
 
 # Downloads from January through June 2019
-plot(cranDownloads(packages = "HistData", from = "2019-01", to = "2019-06"), points = FALSE, smooth = TRUE)
+plot(cranDownloads(packages = "HistData", from = "2019-01", to = "2019-06"), points = FALSE, 
+  smooth = TRUE)
 ```
 
 ![](man/figures/README-cranDownloads-2.png)<!-- -->
