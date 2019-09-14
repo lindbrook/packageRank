@@ -23,14 +23,19 @@ packageDepends <- function(package = "cholera") {
       stop("Error.")
     } else if (any(R.check) & length(pkgs) > 1) {
       pkgs <- pkgs[R.check == FALSE]
-      version.check <- vapply(pkgs, function(x) grepl(" ", x), logical(1L))
-      if (any(version.check)) {
-        version.removed <- lapply(names(which(version.check)), function(nm) {
-          unlist(strsplit(nm, " "))[1]
-        })
-        pkgs <- sort(c(pkgs[version.check == FALSE], unlist(version.removed)))
-      }
-    } else if (any(R.check) & length(pkgs) == 1) pkgs <- NA
+    } else if (any(R.check) & length(pkgs) == 1) {
+      pkgs <- NA
+    }
+
+    version.check <- vapply(pkgs, function(x) grepl(" ", x), logical(1L))
+
+    if (any(version.check)) {
+      version.removed <- lapply(names(which(version.check)), function(nm) {
+        unlist(strsplit(nm, " "))[1]
+      })
+      pkgs <- sort(c(pkgs[version.check == FALSE], unlist(version.removed)))
+    }
+
     pkgs
   } else NA
 }
