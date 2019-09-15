@@ -3,6 +3,7 @@ packageRank 0.2.0.9040
 
 - fix R.check in packageDepends().
 - amend version.check in packageDepends().
+- fix 'configr' in availablePackages().
 
 
 packageRank 0.2.0.9039

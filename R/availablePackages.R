@@ -9,6 +9,12 @@ availablePackages <- function() {
   url.b <- "/available_packages_by_name.html"
   web_page <- readLines(paste0(url.a, url.b))
 
+  # configr fix
+  configr.id <- grep("(JSON/INI/YAML/TOML)", web_page)
+  fix <- paste(web_page[configr.id - 1], web_page[configr.id])
+  web_page[configr.id - 1] <- fix
+  web_page <- web_page[-configr.id]
+
   start <- which(vapply(seq_along(web_page), function(i) {
     grepl("Available CRAN packages by name.", web_page[i])
   }, logical(1L))) + 3
