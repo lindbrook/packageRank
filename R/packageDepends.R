@@ -30,10 +30,15 @@ packageDepends <- function(package = "cholera") {
     version.check <- vapply(pkgs, function(x) grepl(" ", x), logical(1L))
 
     if (any(version.check)) {
-      version.removed <- lapply(names(which(version.check)), function(nm) {
-        unlist(strsplit(nm, " "))[1]
+      version.parsed <- lapply(names(which(version.check)), function(nm) {
+        vec <- unlist(strsplit(nm, " "))
+        data.frame(pkg = vec[1], ver = unlist(strsplit(vec[3], ")")),
+          stringsAsFactors = FALSE)
       })
-      pkgs <- sort(c(pkgs[version.check == FALSE], unlist(version.removed)))
+
+      # version placeholder
+      version.parsed <- do.call(rbind, version.parsed)
+      pkgs <- sort(version.parsed$pkg)
     }
 
     pkgs
