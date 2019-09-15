@@ -17,7 +17,7 @@ packageDepends <- function(package = "cholera") {
     pkgs <- gsub("<.*?>", "", web_page[line.id])
     pkgs <- unlist(strsplit(pkgs, ", "))
 
-    R.check <- vapply(pkgs, function(x) grepl("R ", x), logical(1L))
+    R.check <- vapply(pkgs, function(x) substr(x, 1, 2) == "R ", logical(1L))
 
     if (sum(R.check) > 1) {
       stop("Error.")

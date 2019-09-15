@@ -1,3 +1,10 @@
+packageRank 0.2.0.9040
+==================
+
+- fix R.check in packageDepends().
+- amend version.check in packageDepends().
+
+
 packageRank 0.2.0.9039
 ==================
 
