@@ -28,3 +28,11 @@ availablePackages <- function() {
   pkgs <- unlist(pkgs)
   pkgs[!is.na(pkgs)]
 }
+
+# root.url <- "https://CRAN.R-project.org/package"
+# available.packages <- availablePackages()
+#
+# test <- vapply(available.packages, function(pkg) {
+#   url <- paste0(root.url, "=", pkg)
+#   RCurl::url.exists(url)
+# }, logical(1L))
