@@ -10,7 +10,7 @@
     of downloads from RStudio’s [CRAN
     mirror](http://cran-logs.rstudio.com) or from
     [Bioconductor](https://bioconductor.org/).
-  - provide S3 plot method sfor `cranlogs::cran_downloads()`.
+  - provide S3 plot methods for `cranlogs::cran_downloads()`.
 
 NOTE: ‘packageRank’ relies on an active internet connection.
 
@@ -35,9 +35,8 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 
 The ‘[cranlogs](https://cran.r-project.org/package=cranlogs)’ package
 computes the raw number of downloads of packages or R using RStudio’s
-[CRAN mirror](http://cran-logs.rstudio.com).
-
-For example, we can see that on the first day of 2019 the
+[CRAN mirror](http://cran-logs.rstudio.com). For example, we can see
+that on the first day of 2019 the
 ‘[HistData](https://cran.r-project.org/package=HistData)’ package was
 downloaded 51
 times:
@@ -48,30 +47,15 @@ cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-
 > 1 2019-01-01    51 HistData
 ```
 
-And 787 times in the first
-week:
-
-``` r
-cranlogs::cran_downloads(packages = "HistData", from = "2019-01-01", to = "2019-01-07")
->         date count  package
-> 1 2019-01-01    51 HistData
-> 2 2019-01-02   100 HistData
-> 3 2019-01-03   137 HistData
-> 4 2019-01-04   113 HistData
-> 5 2019-01-05    85 HistData
-> 6 2019-01-06    96 HistData
-> 7 2019-01-07   205 HistData
-```
-
-In both cases, the “compared to what?” question lurks in the background.
-Is 51 downloads large or small? Is the pattern that first week typical
-or unusual? To answer these questions, ‘packageRank’ puts package
-download counts into greater context.
+Lurking in the background is the “compared to what?” question. Is 51
+downloads large or small? To answer these questions, ‘packageRank’ puts
+package download counts into greater context.
 
 ### compute percentiles and ranks
 
-To do so, we can compute the rank percentile and nominal rank of a
-package’s downloads:
+One way to do so is to compute the rank percentile and nominal rank of a
+package’s downloads (See the section “computing rank percentiles” below
+for details on computation):
 
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
@@ -81,7 +65,188 @@ packageRank(packages = "HistData", date = "2019-01-01")
 
 Here, we see that 51 downloads put ‘HistData’ in the 93rd percentile.
 This statistic, familiar to anyone who’s taken a standardized test, tell
-us that 93% of packages had fewer downloads than ‘HistData’:\[1\]
+us that 93% of packages had fewer downloads than ‘HistData’ (Note that
+because packages with zero downloads are not recorded in the log, there
+is a censoring problem.).
+
+### visualization (cross-sectional)
+
+We can also visualize the rank percentile using packageRank()’s generic
+S3 plot
+method:
+
+``` r
+plot(packageRank(packages = "HistData", date = "2019-01-01"))
+```
+
+<img src="man/figures/README-plot1a-1.png" style="display: block; margin: auto auto auto 0;" />
+
+This cross-sectional view plots a package’s rank (x-axis) against the
+base 10 logarithm of its downloads (y-axis) and highlights its position
+in the overall distribution of downloads. In addition, the plot
+illustrates 1) a package’s rank percentile and raw count of downloads
+(in red); 2) the location of the 75th, 50th and 25th percentiles (dotted
+gray vertical lines); 3) the package with the most downloads, in this
+case ‘WGCNA’ (in blue, top left); and 4) the total number of downloads
+(2,982,767 for CRAN) (in blue, top right).
+
+You can also pass a vector of
+packages:
+
+``` r
+plot(packageRank(packages = c("cholera", "HistData", "regtools"), date = "2019-01-01"))
+```
+
+<img src="man/figures/README-plot2a-1.png" style="display: block; margin: auto auto auto 0;" />
+
+You can also look up [Bioconductor](https://bioconductor.org/)
+packages:
+
+``` r
+plot(bioconductorRank(packages = "cicero", date = "2019-01"))
+```
+
+<img src="man/figures/README-plot2b-1.png" style="display: block; margin: auto auto auto 0;" />
+
+### visualization (longitudinal)
+
+To visualize a package’s relative position over time, use
+`packageRankTime()`:
+
+``` r
+plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg = "base")
+```
+
+<img src="man/figures/README-plot_ts-1.png" style="display: block; margin: auto auto auto 0;" />
+
+This longitudinal view plots the date (x-axis) against the logarithm of
+a package’s downloads (y-axis).
+
+In the background, the same variable are plotted (in gray) for a
+stratified random sample of packages: within each 5% interval of rank
+percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of
+5% of packages is selected and tracked over time. This sample
+approximates the “typical” pattern of package downloads for that time
+period.
+
+As above, you can pass a vector of
+packages:
+
+``` r
+plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"), when = "last-month"))
+```
+
+Note that for this function, only two time frames are currently
+available: “last-week” and “last-month”. Also, a version for
+[Bioconductor](https://bioconductor.org/) packages is not currently
+available.
+
+### computing download counts
+
+To compute or plot package download counts, ‘packageRank’ offers a
+couple of choices. If you want to use ‘cranlogs’ style syntax, use
+‘cran\_downloads2()’.
+
+``` r
+cranlogs::cran_downloads(packages = "HistData", when = "last-week")
+
+cran_downloads2(packages = "HistData", when = "last-week")
+```
+
+The only difference between ‘cran\_downloads2()’ and
+‘cranlogs::cran\_downloads()’ is that ‘cran\_downloads2()’ has a
+generic S3 plot method.
+
+``` r
+plot(cran_downloads2(packages = "HistData", when = "last-week"))
+```
+
+![](man/figures/README-cran_downloads2-1.png)<!-- -->
+
+Otherwise, I recommend using `cranDownloads()`. Not only does it have a
+plot method, but it has a more flexible interface, especially for the
+‘for’ and ‘to’ arguments. With ‘cranlogs::cran\_downloads’, you have
+to write out the entire 10 character date. With ‘cranDownloads()’, you
+can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
+
+``` r
+# Downloads from January through June 2019
+plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"), points = FALSE, 
+  smooth = TRUE)
+```
+
+![](man/figures/README-cranDownloads-1.png)<!-- -->
+
+``` r
+
+# Downloads from June 2015 through June 2019
+plot(cranDownloads(packages = "HistData", from = "2015-06", to = "2019-06"), points = FALSE)
+```
+
+![](man/figures/README-cranDownloads-2.png)<!-- -->
+
+``` r
+
+# Year-to-date 
+plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth = TRUE)
+```
+
+![](man/figures/README-cranDownloads-3.png)<!-- -->
+
+For Bioconductor packages, use ‘bioconductorDownloads()’. Note that logs
+are aggreated to the month or to the calendar year; so dates must either
+be yyyy-mm or yyyy.
+
+``` r
+# Downloads from June 2015 through June 2019
+plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06"), aadd.points = FALSE)
+```
+
+![](man/figures/README-bioconductorDownloads-1.png)<!-- -->
+
+``` r
+
+# Year-to-date 
+plot(bioconductorDownloads(packages = "monocle", from = "2019"))
+```
+
+![](man/figures/README-bioconductorDownloads-2.png)<!-- -->
+
+Note that the red square indicates an in-progress observation.
+
+### graphics: base R and ‘ggplot2’
+
+All plot are available as both base R and ‘ggplot2’ graphs. By default,
+plot with single frame/panels (one package or one day) use base graphics
+while those with multiple frames/panels use ‘ggplot2’. You can override
+these defaults by using the “graphics” argument in the plot() method.
+
+### memoization
+
+To avoid the bottleneck of downloading multiple log files,
+`packageRank()` is limited to individual days. However, to reduce the
+need to re-download logs for a given day, ‘packageRank’ makes use of
+memoization via the ‘memoise’ package.
+
+Here’s relevant code:
+
+``` r
+fetchLog <- function(x) data.table::fread(x)
+
+mfetchLog <- memoise::memoise(fetchLog)
+
+if (RCurl::url.exists(url)) {
+  cran_log <- mfetchLog(url)
+}
+```
+
+If you use `fetchLog()`, the log file, which can sometimes be as large
+as 50 MB, will be downloaded every time you call the function. If you
+use `mfetchLog()`, logs are intelligently cached; those that have
+already been downloaded, in your current R session, will not be
+downloaded again.
+
+### computing rank percentiles
 
 ``` r
 pkg.rank <- packageRank(packages = "HistData", date = "2019-01-01")
@@ -125,175 +290,4 @@ downloads[downloads == 51]
 >              51              51
 ```
 
-With this release, ‘packageRank’ offers a version of this function for
-Bioconductor:
-
-``` r
-bioconductorRank(packages = "monocle", date = "2019-01")
->      date packages downloads percentile        rank
-> 1 2019-01  monocle      3528       95.5 86 of 1,896
-```
-
-Note the difference in date format: the logs on Bioconductor are
-aggreagated either to the month or to the year.
-
-### visualization (cross-sectional)
-
-To visualize a package’s relative position using ranks, use the S3
-generic plot
-method:
-
-``` r
-plot(packageRank(packages = "HistData", date = "2019-01-01"))
-```
-
-<img src="man/figures/README-plot1a-1.png" style="display: block; margin: auto auto auto 0;" />
-
-``` r
-plot(bioconductorRank(packages = "cicero", date = "2019-01"))
-```
-
-<img src="man/figures/README-plot1b-1.png" style="display: block; margin: auto auto auto 0;" />
-
-This cross-sectional view plots a package’s rank (x-axis) against the
-base 10 logarithm of its downloads (y-axis) and highlights its position
-in the overall distribution of downloads. In addition, the plot
-illustrates 1) a package’s rank percentile and raw count of downloads
-(in red); 2) the location of the 75th, 50th and 25th percentiles (dotted
-gray vertical lines); 3) the package with the most downloads, in this
-case ‘WGCNA’ for CRAN and ‘BiocInstaller’ for Bioconductor (in blue, top
-left); and 4) the total number of downloads (2,982,767 for CRAN;
-1,854,793 for Bioconductor) (in blue, top right).
-
-You can even pass a vector of
-packages:
-
-``` r
-plot(packageRank(packages = c("cholera", "HistData", "regtools"), date = "2019-01-01"))
-```
-
-<img src="man/figures/README-plot2a-1.png" style="display: block; margin: auto auto auto 0;" />
-
-### visualization (longitudinal)
-
-To visualize a package’s relative position over time, use
-`packageRankTime()`:
-
-``` r
-plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg = "base")
-```
-
-<img src="man/figures/README-plot_ts-1.png" style="display: block; margin: auto auto auto 0;" />
-
-This longitudinal view plots the date (x-axis) against the logarithm of
-a package’s downloads (y-axis).
-
-In the background, the same variable are plotted (in gray) for a
-stratified random sample of packages.\[2\] This sample approximates the
-“typical” pattern of package downloads for that time period.
-
-As above, you can pass a vector of
-packages:
-
-``` r
-plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"), when = "last-month"))
-```
-
-Note that only two time frames are available: “last-week” and
-“last-month”. Also, this function is not currently available for
-Bioconductor: the CRAN version has server side support via the
-‘cranlogs’ package.
-
-### computing download counts
-
-To compute or plot package download counts, ‘packageRank’ offers a
-couple of choices. If you want to use ‘cranlogs’ style syntax, use
-‘cran\_downloads2()’.
-
-``` r
-cranlogs::cran_downloads(packages = "HistData", when = "last-week")
-
-cran_downloads2(packages = "HistData", when = "last-week")
-```
-
-The only difference between this function and
-‘cranlogs::cran\_downloads()’ is that ‘cran\_downloads2()’ has an
-generic S3 plot method.
-
-``` r
-plot(cran_downloads2(packages = "HistData", when = "last-week"))
-```
-
-![](man/figures/README-cran_downloads2-1.png)<!-- -->
-
-Otherwise, I recommend using `cranDownloads()`. Not only does it have a
-plot method, but it has a more flexible interface, especially for the
-‘for’ and ‘to’ arguments. With ‘cranlogs::cran\_downloads’, you have
-to write out the entire 10 character date. With ‘cranDownloads()’, you
-can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
-
-``` r
-# Downloads from January through June 2019
-plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"), points = FALSE, 
-  smooth = TRUE)
-```
-
-![](man/figures/README-cranDownloads-1.png)<!-- -->
-
-``` r
-
-# Downloads from January through June 2019
-plot(cranDownloads(packages = "HistData", from = "2019-01", to = "2019-06"), points = FALSE, 
-  smooth = TRUE)
-```
-
-![](man/figures/README-cranDownloads-2.png)<!-- -->
-
-``` r
-
-# Year-to-date 
-plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth = TRUE)
-```
-
-![](man/figures/README-cranDownloads-3.png)<!-- -->
-
-### graphics: base R and ‘ggplot2’
-
-All plot are available as both base R and ‘ggplot2’ graphs. By default,
-plot with single frame/panels (one package or one day) use base graphics
-while those with multiple frames/panels use ‘ggplot2’. You can override
-these defaults by using the “graphics” argument in the plot() method.
-
-### memoization
-
-To avoid the bottleneck of downloading multiple log files,
-`packageRank()` is limited to individual days. However, to reduce the
-need to re-download logs for a given day, ‘packageRank’ makes use of
-memoization via the ‘memoise’ package.
-
-Here’s relevant code:
-
-``` r
-fetchLog <- function(x) data.table::fread(x)
-
-mfetchLog <- memoise::memoise(fetchLog)
-
-if (RCurl::url.exists(url)) {
-  cran_log <- mfetchLog(url)
-}
-```
-
-If you use `fetchLog()`, the log file, which can sometimes be as large
-as 50 MB, will be downloaded every time you call the function. If you
-use `mfetchLog()`, logs are intelligently cached; those that have
-already been downloaded, in your current R session, will not be
-downloaded again.
-
 ### Notes
-
-1.  Note that because packages with zero downloads are not recorded in
-    the log, there is a censoring problem.
-
-2.  Within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10,
-    95 to 100, etc.), a random sample of 5% of packages is selected and
-    tracked over time.
