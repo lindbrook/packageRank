@@ -39,8 +39,8 @@ bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
 # from 2015 to current year
 bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 
-# 2015 through 2018
-bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015)
+# 2015 through 2018 (yearly)
+bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, observation = "year")
 
 # selected year (yearly)
 bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)

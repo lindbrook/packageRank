@@ -24,8 +24,8 @@
 #' # from 2015 to current year
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 #'
-#' # 2015 through 2018
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015)
+#' # 2015 through 2018 (yearly)
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, observation = "year")
 #'
 #' # selected year (yearly)
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
@@ -88,7 +88,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' \donttest{
 #' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(packages = "graph"))
-# #' plot(bioconductorDownloads(packages = "graph", from = 2019))
+#' plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
 #' plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
 #' }
 
@@ -213,15 +213,33 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
       } else stop('"observation must be "month" or "year"')
 
     } else if (all(c(from, to) %in% 2009:current.yr)) {
-      log.data <- bioc.data[bioc.data$Month == "all", ]
-      if (!is.null(from) & is.null(to)) {
-        dat <- log.data[log.data$Year >= from, ]
-      } else if (is.null(from) & !is.null(to)) {
-        dat <- log.data[log.data$Year <= to, ]
-      } else if (!is.null(from) & !is.null(to)) {
-        dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
-      } else dat <- log.data
-      dat$date <- as.Date(paste0(dat$Year, "-01-01"))
+
+      if (observation == "month") {
+        log.data <- bioc.data[bioc.data$Month != "all", ]
+        month.num <- vapply(log.data$Month, function(x) {
+          which(x == month.abb)
+        }, integer(1L))
+        month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
+        log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
+        dat <- log.data
+        if (!is.null(from) & is.null(to)) {
+          dat <- log.data[log.data$Year >= from, ]
+        } else if (is.null(from) & !is.null(to)) {
+          dat <- log.data[log.data$Year <= to, ]
+        } else if (!is.null(from) & !is.null(to)) {
+          dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
+        } else dat <- log.data
+      } else if (observation == "year") {
+        log.data <- bioc.data[bioc.data$Month == "all", ]
+        if (!is.null(from) & is.null(to)) {
+          dat <- log.data[log.data$Year >= from, ]
+        } else if (is.null(from) & !is.null(to)) {
+          dat <- log.data[log.data$Year <= to, ]
+        } else if (!is.null(from) & !is.null(to)) {
+          dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
+        } else dat <- log.data
+        dat$date <- as.Date(paste0(dat$Year, "-01-01"))
+      }
 
     } else if (
       all(vapply(c(from, to), is.character, logical(1L))) &
