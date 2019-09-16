@@ -198,4 +198,3 @@ downloads <- pkg.rank$crosstab
 downloads[downloads == 51]
 ```
 
-### Notes
