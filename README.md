@@ -161,8 +161,8 @@ to write out the entire 10 character date. With ‘cranDownloads()’, you
 can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ``` r
-# Downloads from January through June 2019
-plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"), points = FALSE, 
+# Downloads from December 31, 2018 throught June 25, 2019
+plot(cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25"), points = FALSE, 
   smooth = TRUE)
 ```
 
