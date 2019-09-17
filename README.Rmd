@@ -83,7 +83,7 @@ plot(packageRank(packages = c("cholera", "HistData", "regtools"), date = "2019-0
 
 You can also look up [Bioconductor](https://bioconductor.org/) packages:
 
-```{r plot2b, fig.width = 6, fig.height = 6, fig.align = "left"}
+```{r plot2b, fig.width = 5, fig.height = 5, fig.align = "left"}
 plot(bioconductorRank(packages = "cicero", date = "2019-01"))
 ```
 
@@ -97,19 +97,11 @@ plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg =
 
 This longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis).
 
-In the background, the same variable are plotted (in gray) for a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked over time. This sample approximates the "typical" pattern of package downloads for that time period.
-
-As above, you can pass a vector of packages:
-
-```{r plot_ts2, fig.width = 6, fig.height = 6, fig.align = "left", eval = FALSE}
-plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"), when = "last-month"))
-```
-
-Note that for this function, only two time frames are currently available: "last-week" and "last-month". Also, a version for [Bioconductor](https://bioconductor.org/) packages is not currently available.
+In the background, the same variable are plotted (in gray) for a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked over time. This sample approximates the "typical" pattern of package downloads for that time period. Note that for this function, only two time frames are currently available: "last-week" and "last-month". Also, a version for [Bioconductor](https://bioconductor.org/) packages is not currently available.
 
 ### computing download counts
 
-To compute or plot package download counts, 'packageRank' offers a couple of choices. If you want to use 'cranlogs' style syntax, use 'cran_downloads2()'. 
+To compute or plot package download counts, 'packageRank' offers a couple of choices. If you want to use 'cranlogs' style syntax, use 'cran_downloads2()'.
 
 ```{r cran_downloads, eval = FALSE}
 cranlogs::cran_downloads(packages = "HistData", when = "last-week")
@@ -133,7 +125,7 @@ plot(cranDownloads(packages = "HistData", from = "2019-01-15", to = "2019-06-25"
 # Downloads from June 2015 through June 2019
 plot(cranDownloads(packages = "HistData", from = "2015-06", to = "2019-06"), points = FALSE)
 
-# Year-to-date 
+# Year-to-date
 plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth = TRUE)
 ```
 
@@ -141,9 +133,9 @@ For Bioconductor packages, use 'bioconductorDownloads()'. Note that logs are agg
 
 ```{r bioconductorDownloads}
 # Downloads from June 2015 through June 2019
-plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06"), aadd.points = FALSE)
+plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06"), points = FALSE)
 
-# Year-to-date 
+# Year-to-date
 plot(bioconductorDownloads(packages = "monocle", from = "2019"))
 ```
 
@@ -197,4 +189,3 @@ downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
 ```
-

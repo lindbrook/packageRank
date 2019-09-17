@@ -77,7 +77,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
-#' @param add.points Logical. Add points.
+#' @param points Logical. Add points.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param smooth.f Numeric. smoother span.
 #' @param se Logical. Works only with graphics = "ggplot2".
@@ -93,7 +93,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
-  add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...) {
 
   if (x$observation == "year") {
@@ -112,10 +112,10 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
   }
 
   if (graphics == "base") {
-    bioc_plot(x, graphics, count, add.points, smooth, smooth.f, log_count,
+    bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
       obs.in.progress)
   } else if (graphics == "ggplot2") {
-    gg_bioc_plot(x, graphics, count, add.points, smooth, smooth.f, se,
+    gg_bioc_plot(x, graphics, count, points, smooth, smooth.f, se,
       log_count, obs.in.progress)
   }
 }
@@ -273,7 +273,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   dat[dat$date <= current.date, ]
 }
 
-bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
+bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
   log_count, obs.in.progress) {
 
   obs <- x$observation
@@ -302,7 +302,7 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
           ylab = y.lab)
       }
 
-      if (add.points) {
+      if (points) {
         if (obs.in.progress) {
           points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
             pch = 1)
@@ -323,7 +323,7 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
          plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
        }
 
-       if (add.points) {
+       if (points) {
          if (obs.in.progress) {
            points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
              pch = 1)
@@ -341,7 +341,7 @@ bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f,
   }))
 }
 
-gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
+gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
   log_count, obs.in.progress) {
 
   obs <- x$observation
@@ -362,19 +362,19 @@ gg_bioc_plot <- function(x, graphics, count, add.points, smooth, smooth.f, se,
   p <- p + geom_line(size = 0.5) + facet_wrap(~ packages, ncol = 2) +
     xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
 
-  if (add.points & log_count & smooth) {
+  if (points & log_count & smooth) {
     p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
-  } else if (add.points & log_count & !smooth) {
+  } else if (points & log_count & !smooth) {
     p + geom_point() + scale_y_log10()
-  } else if (add.points & !log_count & smooth) {
+  } else if (points & !log_count & smooth) {
     p +  geom_point() + geom_smooth(method = "loess", se = se)
-  } else if (!add.points & log_count & smooth) {
+  } else if (!points & log_count & smooth) {
     p + scale_y_log10() + geom_smooth(method = "loess", se = se)
-  } else if (!add.points & !log_count & smooth) {
+  } else if (!points & !log_count & smooth) {
     p + geom_smooth(method = "loess", se = se)
-  } else if (add.points & !log_count & !smooth) {
+  } else if (points & !log_count & !smooth) {
     p + geom_point()
-  } else if (!add.points & log_count & !smooth) {
+  } else if (!points & log_count & !smooth) {
     p + scale_y_log10()
   } else p
 }

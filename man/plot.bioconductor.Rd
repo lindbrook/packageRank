@@ -5,7 +5,7 @@
 \title{Plot method for bioconductor_downloads().}
 \usage{
 \method{plot}{bioconductor}(x, graphics = NULL, count = "download",
-  add.points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@
 
 \item{count}{Character. "download" or "ip".}
 
-\item{add.points}{Logical. Add points.}
+\item{points}{Logical. Add points.}
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
@@ -34,6 +34,7 @@ Plot method for bioconductor_downloads().
 \donttest{
 plot(bioconductorDownloads())
 plot(bioconductorDownloads(packages = "graph"))
+plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
 plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
 }
 }

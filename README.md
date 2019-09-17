@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9041-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9042-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and percentiles
 
 ### features
@@ -127,16 +127,7 @@ stratified random sample of packages: within each 5% interval of rank
 percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of
 5% of packages is selected and tracked over time. This sample
 approximates the “typical” pattern of package downloads for that time
-period.
-
-As above, you can pass a vector of
-packages:
-
-``` r
-plot(packageRankTime(packages = c("Rcpp", "HistData", "rlang"), when = "last-month"))
-```
-
-Note that for this function, only two time frames are currently
+period. Note that for this function, only two time frames are currently
 available: “last-week” and “last-month”. Also, a version for
 [Bioconductor](https://bioconductor.org/) packages is not currently
 available.
@@ -187,7 +178,7 @@ plot(cranDownloads(packages = "HistData", from = "2015-06", to = "2019-06"), poi
 
 ``` r
 
-# Year-to-date 
+# Year-to-date
 plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth = TRUE)
 ```
 
@@ -199,14 +190,14 @@ be yyyy-mm or yyyy.
 
 ``` r
 # Downloads from June 2015 through June 2019
-plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06"), aadd.points = FALSE)
+plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06"), points = FALSE)
 ```
 
 ![](man/figures/README-bioconductorDownloads-1.png)<!-- -->
 
 ``` r
 
-# Year-to-date 
+# Year-to-date
 plot(bioconductorDownloads(packages = "monocle", from = "2019"))
 ```
 
