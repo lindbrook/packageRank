@@ -1,3 +1,9 @@
+packageRank 0.2.0.9043
+==================
+
+- use slashFix() for 'configr', 'gvcm.cat' and 'rchess' in availablePackages().
+
+
 packageRank 0.2.0.9042
 ==================
 
