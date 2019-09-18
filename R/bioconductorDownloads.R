@@ -105,8 +105,13 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
                        x$current.mo == data.table::month(stop.obs)
   }
 
-  if (is.null(graphics)) graphics <- "base"
-  else {
+  if (is.null(graphics)) {
+    if (is.null(x$packages)) {
+      graphics <- "base"
+    } else if (length(x$packages) == 1) {
+      graphics <- "base"
+    } else graphics <- "ggplot2"
+  } else {
     if (all(graphics %in% c("base", "ggplot2") == FALSE))
     stop('graphics must be "base" or "ggplot2"')
   }

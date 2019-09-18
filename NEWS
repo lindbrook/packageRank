@@ -2,6 +2,7 @@ packageRank 0.2.0.9042
 ==================
 
 - "add.points" to "points" in plot.bioconductor().
+- use 'ggplot2' for multiple packages with plot.bioconductor().
 
 
 packageRank 0.2.0.9041
