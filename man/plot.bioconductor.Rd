@@ -36,5 +36,6 @@ plot(bioconductorDownloads())
 plot(bioconductorDownloads(packages = "graph"))
 plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
 plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
+plot(bioconductorDownloads(packages = c("graph", "IRanges", "S4Vectors"), from = 2018))
 }
 }

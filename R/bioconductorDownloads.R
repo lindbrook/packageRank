@@ -90,6 +90,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' plot(bioconductorDownloads(packages = "graph"))
 #' plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
 #' plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
+#' plot(bioconductorDownloads(packages = c("graph", "IRanges", "S4Vectors"), from = 2018))
 #' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
