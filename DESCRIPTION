@@ -23,7 +23,8 @@ Imports:
     igraph,
     memoise,
     miniCRAN,
-    RCurl
+    RCurl,
+    tools
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
