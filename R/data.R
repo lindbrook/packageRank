@@ -1,4 +1,4 @@
-#' CRAN package dependencies.
+#' CRAN package dependencies (Imports).
 #' @docType data
 "cran.dependencies"
 

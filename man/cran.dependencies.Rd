@@ -3,12 +3,12 @@
 \docType{data}
 \name{cran.dependencies}
 \alias{cran.dependencies}
-\title{CRAN package dependencies.}
-\format{An object of class \code{list} of length 10.}
+\title{CRAN package dependencies (Imports).}
+\format{An object of class \code{list} of length 14945.}
 \usage{
 cran.dependencies
 }
 \description{
-CRAN package dependencies.
+CRAN package dependencies (Imports).
 }
 \keyword{datasets}
