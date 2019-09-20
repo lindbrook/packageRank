@@ -26,3 +26,28 @@ packageImports <- function(package = "cholera") {
     pkgs
   } else NA
 }
+
+#' Extract package Imports from CRAN.
+#'
+#' @export
+
+packageImports2 <- function() {
+  cran_db <- tools::CRAN_package_db()
+  imp <- lapply(cran_db$Imports, function(x) {
+    if (is.na(x)) {
+      pkgs <- x
+    } else {
+      # remove specified package version e.g., DT(>= 0.4)
+      if (grepl("\\(", x)) {
+        first.pass <- gsub(" *\\(.*?\\) *", "", x)
+        carriage.returns <- grepl("\n", first.pass)
+        if (any(carriage.returns)) {
+          second.pass <- unlist(strsplit(first.pass, ",\\n"))
+          pkgs <- unlist(strsplit(second.pass, ", "))
+        } else pkgs <- unlist(strsplit(first.pass, ", "))
+      } else pkgs <- unlist(strsplit(x, ", "))
+    }
+    pkgs
+  })
+  stats::setNames(imp, cran_db$Package)
+}
