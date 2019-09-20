@@ -13,3 +13,5 @@ cranDependenciesNetwork <- function(multi.core = TRUE) {
   edge.list <- do.call(rbind, edges)
   igraph::graph_from_data_frame(edge.list, directed = TRUE)
 }
+
+# plot(cranDependenciesNetwork(), vertex.label = NA, vertex.size = 2)
