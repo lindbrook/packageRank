@@ -2,7 +2,8 @@ packageRank 0.2.0.9045
 ==================
 
 - add packageImports2().
-
+- amend cran.dependencies.
+- remove cranDependencies().
 
 packageRank 0.2.0.9044
 ==================

@@ -9,3 +9,6 @@ packageImports2()
 \description{
 Extract package Imports from CRAN.
 }
+\note{
+Documents cran.dependencies.
+}

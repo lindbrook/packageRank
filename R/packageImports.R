@@ -29,6 +29,7 @@ packageImports <- function(package = "cholera") {
 
 #' Extract package Imports from CRAN.
 #'
+#' @note Documents cran.dependencies.
 #' @export
 
 packageImports2 <- function() {
@@ -51,3 +52,12 @@ packageImports2 <- function() {
   })
   stats::setNames(imp, cran_db$Package)
 }
+
+# 20 September 2019 : 14,960 (14,945)
+# cran.dependencies <- packageImports2()
+# # names(cran.dependencies)[duplicated(names(cran.dependencies))]
+# priority.recommended <- vapply(cran_db$Depends, function(x) {
+#   grepl("R \\(>= 3.7\\)", x)
+# }, logical(1L))
+# cran.dependencies <- cran.dependencies[-which(priority.recommended)]
+# usethis::use_data(cran.dependencies, overwrite = TRUE)
