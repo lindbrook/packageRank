@@ -26,38 +26,3 @@ packageImports <- function(package = "cholera") {
     pkgs
   } else NA
 }
-
-#' Extract package Imports from CRAN.
-#'
-#' @note Documents cran.dependencies.
-#' @export
-
-packageImports2 <- function() {
-  cran_db <- tools::CRAN_package_db()
-  imp <- lapply(cran_db$Imports, function(x) {
-    if (is.na(x)) {
-      pkgs <- x
-    } else {
-      # remove specified package version e.g., DT(>= 0.4)
-      if (grepl("\\(", x)) {
-        first.pass <- gsub(" *\\(.*?\\) *", "", x)
-        carriage.returns <- grepl("\n", first.pass)
-        if (any(carriage.returns)) {
-          second.pass <- unlist(strsplit(first.pass, ",\\n"))
-          pkgs <- unlist(strsplit(second.pass, ", "))
-        } else pkgs <- unlist(strsplit(first.pass, ", "))
-      } else pkgs <- unlist(strsplit(x, ", "))
-    }
-    pkgs
-  })
-  stats::setNames(imp, cran_db$Package)
-}
-
-# 20 September 2019 : 14,960 (14,945)
-# cran.dependencies <- packageImports2()
-# # names(cran.dependencies)[duplicated(names(cran.dependencies))]
-# priority.recommended <- vapply(cran_db$Depends, function(x) {
-#   grepl("R \\(>= 3.7\\)", x)
-# }, logical(1L))
-# cran.dependencies <- cran.dependencies[-which(priority.recommended)]
-# usethis::use_data(cran.dependencies, overwrite = TRUE)
