@@ -20,9 +20,9 @@ packageImports2 <- function(cran_db) {
     if (is.na(x)) {
       pkgs <- x
     } else {
-      # specified package version & carraige returns)
+      # specified package version & carriage returns)
       if (grepl("\\(", x) & grepl("\n", x)) {
-        version.rm <- gsub("*\\(.*?\\) *", "", x)
+        version.rm <- gsub("* \\(.*?\\) *", "", x)
         cr.rm <- unlist(strsplit(version.rm, ",\\n"))
         pkgs <- cr.rm
 
@@ -32,8 +32,8 @@ packageImports2 <- function(cran_db) {
         pkgs <- cr.rm
 
       # just specified package version
-      } else if (grepl("\\(", x) ) {
-        version.rm <- gsub("*\\(.*?\\) *", "", x)
+      } else if (grepl("\\(", x)) {
+        version.rm <- gsub("* \\(.*?\\) *", "", x)
         pkgs <- version.rm
       
       } else pkgs <- x
