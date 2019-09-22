@@ -35,7 +35,9 @@ packageImports2 <- function(cran_db) {
       } else if (grepl("\\(", x) ) {
         version.rm <- gsub("*\\(.*?\\) *", "", x)
         pkgs <- version.rm
-      }
+      
+      } else pkgs <- x
+      
     }  
     unlist(strsplit(pkgs, ", "))
   })
