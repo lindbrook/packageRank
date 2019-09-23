@@ -22,7 +22,7 @@ packageImports2 <- function(cran_db) {
     } else {
       # specified package version & carriage returns)
       if (grepl("\\(", x) & grepl("\n", x)) {
-        version.rm <- gsub("* \\(.*?\\) *", "", x)
+        version.rm <- gsub(" *\\(.*?\\) *", "", x)
         cr.rm <- unlist(strsplit(version.rm, ",\\n"))
         pkgs <- cr.rm
 
@@ -33,13 +33,13 @@ packageImports2 <- function(cran_db) {
 
       # just specified package version
       } else if (grepl("\\(", x)) {
-        version.rm <- gsub("* \\(.*?\\) *", "", x)
+        version.rm <- gsub(" *\\(.*?\\) *", "", x)
         pkgs <- version.rm
-      
+
       } else pkgs <- x
-      
-    }  
-    unlist(strsplit(pkgs, ", "))
+    }
+
+    unlist(strsplit(gsub("\\s", "", pkgs), ","))
   })
   stats::setNames(out, cran_db$Package)
 }
