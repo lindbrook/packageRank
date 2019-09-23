@@ -2,7 +2,7 @@
 #'
 #' Documents cran.dependencies.
 #' @export
-#' @note 20 September 2019 : 14,960 (14,945)
+#' @note 2019-09-20 14,960 (14,945); 2019-09-23 14976 (14,961)
 
 cranDependencies <- function() {
   cran_db <- tools::CRAN_package_db()

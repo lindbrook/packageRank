@@ -4,7 +4,7 @@
 \name{cran.dependencies}
 \alias{cran.dependencies}
 \title{CRAN package dependencies (Imports).}
-\format{An object of class \code{list} of length 14945.}
+\format{An object of class \code{list} of length 14961.}
 \usage{
 cran.dependencies
 }
