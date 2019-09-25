@@ -1,3 +1,10 @@
+packageRank 0.2.0.9047
+==================
+
+- add cranPackages().
+- audit CRAN v. RStudio logs in packageRank().
+
+
 packageRank 0.2.0.9046
 ==================
 
