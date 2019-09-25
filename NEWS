@@ -1,3 +1,10 @@
+packageRank 0.2.0.9048
+==================
+
+- add archivePackages().
+- add archiveZeroDownloads().
+
+
 packageRank 0.2.0.9047
 ==================
 
