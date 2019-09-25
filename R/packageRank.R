@@ -30,33 +30,20 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     stop("Log for ", date, " not (yet) available. ", msg)
   }
 
-  # NA for both R and Package
+  # NA for Package or R
   cran_log <- cran_log[-which(is.na(cran_log$package)), ]
 
   if (any(packages %in% unique(cran_log$package) == FALSE)) {
     stop("Package not found in log.")
   }
 
-  # package audit
-  cran.pkgs <- cranPackages()
-  rstudio.log.pkgs <- unique(cran_log$package)
-
-  # Available on CRAN but not in RStudio log = zero downloads (few?)
-  zero.downloads <- setdiff(cran.pkgs, rstudio.log.pkgs) # "spate"
-
-  # In RStudio log but not available on CRAN = archived
-  # 224 @ "2019-09-23"
-  archive.downloads <- sort(setdiff(rstudio.log.pkgs, cran.pkgs))
-  # any(archive.downloads %in% cran.pkgs)
-  # any(vapply(archive.audit, packageInArchive, logical(1L)))
-
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
 
-  if (length(zero.downloads) > 0) {
-    crosstab <- c(crosstab, rep(0, length(zero.downloads)))
-    sel <- (length(crosstab) - length(zero.downloads) + 1):length(crosstab)
-    names(crosstab)[sel] <- sort(zero.downloads)
-  }
+  # if (length(zero.downloads) > 0) {
+  #   crosstab <- c(crosstab, rep(0, length(zero.downloads)))
+  #   sel <- (length(crosstab) - length(zero.downloads) + 1):length(crosstab)
+  #   names(crosstab)[sel] <- sort(zero.downloads)
+  # }
 
   # packages in bin
   pkg.bin <- lapply(packages, function(nm) {
