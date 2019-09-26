@@ -2,10 +2,10 @@
 % Please edit documentation in R/archivePackages.R
 \name{archivePackages}
 \alias{archivePackages}
-\title{Vector of all packages in archive.}
+\title{Vector of all packages in CRAN archive.}
 \usage{
 archivePackages()
 }
 \description{
-Vector of all packages in archive.
+Vector of all packages in CRAN archive.
 }

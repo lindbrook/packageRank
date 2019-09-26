@@ -1,4 +1,4 @@
-#' Vector of all packages in archive.
+#' Vector of all packages in CRAN archive.
 #'
 #' @export
 
