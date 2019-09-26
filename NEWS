@@ -2,6 +2,7 @@ packageRank 0.2.0.9049
 ==================
 
 - fix print.bioconductor().
+- add packageLog().
 
 
 packageRank 0.2.0.9048
