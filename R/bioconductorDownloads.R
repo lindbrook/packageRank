@@ -137,7 +137,7 @@ print.bioconductor <- function(x, ...) {
     out <- do.call(rbind, x$data)
     row.names(out) <- NULL
     out$date <- NULL
-    out
+    print(out)
   }
 }
 
