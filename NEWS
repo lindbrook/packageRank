@@ -1,3 +1,10 @@
+packageRank 0.2.0.9050
+==================
+
+- remove archiveZeroDownloads().
+- add cranStatistics().
+
+
 packageRank 0.2.0.9049
 ==================
 
