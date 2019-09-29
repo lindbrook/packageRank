@@ -24,7 +24,7 @@ packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
     stop("Log for ", date, " not (yet) available. ", msg)
   }
 
-  cran_log <- cran_log[-which(is.na(cran_log$package)), ]
+  cran_log <- cran_log[!is.na(cran_log$package), ]
   pkg_log <- cran_log[cran_log$package %in% packages, ]
   pkg_log[order(pkg_log$package), ]
 }
