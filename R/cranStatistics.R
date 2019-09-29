@@ -49,10 +49,18 @@ cranStatistics <- function(date = Sys.Date() - 1,
     # any(archive.downloads %in% cran.pkgs)
     # any(vapply(archive.audit, packageInArchive, logical(1L)))
 
+    cran.zero.archive <- cran.zero_downloads[cran.zero_downloads %in%
+      cran.archive]
+    cran.zero.no_archive <- cran.zero_downloads[cran.zero_downloads %in%
+      cran.no_archive]
+
+
     out <- list(cran.no_archive = cran.no_archive,
-                archive.no_cran = archive.no_cran,
                 cran.archive = cran.archive,
-                cran.zero_downloads = cran.zero_downloads,
+                archive.no_cran = archive.no_cran,
+                # cran.zero_downloads = cran.zero_downloads,
+                cran.zero.archive = cran.zero.archive,
+                cran.zero.no_archive = cran.zero.no_archive,
                 archive.zero_downloads = archive.zero_downloads)
     class(out) <- "cran_statistics"
     out
