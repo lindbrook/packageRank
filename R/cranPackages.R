@@ -8,6 +8,6 @@ cranPackages <- function() {
   priority.recommended <- vapply(cran_db$Depends, function(x) {
     grepl("R \\(>= 3.7\\)", x)
   }, logical(1L))
-  cran_db[-which(priority.recommended), "Package"]
+  cran_db[!priority.recommended, "Package"]
 }
 
