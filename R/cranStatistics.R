@@ -1,8 +1,9 @@
-#' CRAN statistics
+#' CRAN statistics (prototype)
 #'
 #' @param date Character. Date YYYY-MM-DD.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @export
+#' @note sync logs and website.
 
 cranStatistics <- function(date = Sys.Date() - 1,
   memoization = TRUE) {
@@ -20,12 +21,8 @@ cranStatistics <- function(date = Sys.Date() - 1,
       stop("Log for ", date, " not (yet) available. ", msg)
     }
 
-    # NA for Package or R
+    # remove observations with NAs for Package or R
     cran_log <- cran_log[!is.na(cran_log$package), ]
-
-    # package audit
-    # system.time(cran.pkgs0 <- cranPackages()) # 13.635
-    # system.time(cran.pkgs1 <- availablePackages()) # 8.849
 
     cran.pkgs <- cranPackages()
     archive.pkgs <- archivePackages()
@@ -46,22 +43,20 @@ cranStatistics <- function(date = Sys.Date() - 1,
     # 409 @ "2019-09-24"
     # 2186 @ "2019-09-26"
     archive.zero_downloads <- sort(setdiff(rstudio.log.pkgs, cran.pkgs))
-    # any(archive.downloads %in% cran.pkgs)
-    # any(vapply(archive.audit, packageInArchive, logical(1L)))
 
-    cran.zero.archive <- cran.zero_downloads[cran.zero_downloads %in%
-      cran.archive]
-    cran.zero.no_archive <- cran.zero_downloads[cran.zero_downloads %in%
-      cran.no_archive]
+    sel <- cran.zero_downloads %in% cran.archive
+    cran.zero.archive <- cran.zero_downloads[sel]
 
+    sel <- cran.zero_downloads %in% cran.no_archive
+    cran.zero.no_archive <- cran.zero_downloads[sel]
 
     out <- list(cran.no_archive = cran.no_archive,
                 cran.archive = cran.archive,
                 archive.no_cran = archive.no_cran,
-                # cran.zero_downloads = cran.zero_downloads,
                 cran.zero.archive = cran.zero.archive,
                 cran.zero.no_archive = cran.zero.no_archive,
                 archive.zero_downloads = archive.zero_downloads)
+
     class(out) <- "cran_statistics"
     out
 }

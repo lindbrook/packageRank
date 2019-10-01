@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranStatistics.R
 \name{cranStatistics}
 \alias{cranStatistics}
-\title{CRAN statistics}
+\title{CRAN statistics (prototype)}
 \usage{
 cranStatistics(date = Sys.Date() - 1, memoization = TRUE)
 }
@@ -12,5 +12,8 @@ cranStatistics(date = Sys.Date() - 1, memoization = TRUE)
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \description{
-CRAN statistics
+CRAN statistics (prototype)
+}
+\note{
+sync logs and website.
 }
