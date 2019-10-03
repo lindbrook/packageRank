@@ -4,7 +4,7 @@
 \alias{packagesPublishedOnDate}
 \title{Packages published on given date (prototype).}
 \usage{
-packagesPublishedOnDate(date = "2019-10-01")
+packagesPublishedOnDate(date = Sys.Date())
 }
 \arguments{
 \item{date}{\code{yyyy-mm-dd}.}

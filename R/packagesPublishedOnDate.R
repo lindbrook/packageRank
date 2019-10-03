@@ -5,9 +5,11 @@
 #' @export
 #' @note check "2019-01-01"
 
-packagesPublishedOnDate <- function(date = "2019-10-01") {
-  if (is.na(as.Date(date, optional = TRUE))){
-    stop("Invalid date.")
+packagesPublishedOnDate <- function(date = Sys.Date()) {
+  if (is.na(as.Date(date, optional = TRUE))) {
+    stop("Invalid date/format (yyyy-mm-dd).")
+  } else if (date > Sys.Date()) {
+    stop("Date in future.")
   } else {
     cran_db <- tools::CRAN_package_db()
     priority.recommended <- vapply(cran_db$Depends, function(x) {
