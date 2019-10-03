@@ -4,7 +4,10 @@
 \alias{archivePackages}
 \title{Vector of all packages in CRAN archive.}
 \usage{
-archivePackages()
+archivePackages(include.date = FALSE)
+}
+\arguments{
+\item{include.date}{Logical. Retrun data frame with package name and last publication date.}
 }
 \description{
 Vector of all packages in CRAN archive.
