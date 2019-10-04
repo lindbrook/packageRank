@@ -46,7 +46,7 @@ packageCountryPlot <- function(packages = "HistData", date = Sys.Date() - 1,
   # world[world$iso_a2 %in% names(download.countries), ]
 
   ggplot(data = world) +
-    geom_sf(aes(fill = aes_string("Downloads"))) +
+    geom_sf(aes(fill = Downloads)) +
     scale_fill_viridis_c(option = "plasma", na.value = "white") +
     theme_bw() +
     ggtitle(paste(packages, "@", date)) +
