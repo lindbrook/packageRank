@@ -2,13 +2,13 @@
 % Please edit documentation in R/archivePackages.R
 \name{archivePackages}
 \alias{archivePackages}
-\title{Vector of all packages in CRAN archive.}
+\title{Packages in CRAN archive.}
 \usage{
 archivePackages(include.date = FALSE)
 }
 \arguments{
-\item{include.date}{Logical. Retrun data frame with package name and last publication date.}
+\item{include.date}{Logical. Return data frame with package name and last publication date.}
 }
 \description{
-Vector of all packages in CRAN archive.
+Packages in CRAN archive.
 }

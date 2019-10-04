@@ -1,6 +1,6 @@
-#' Vector of all packages in CRAN archive.
+#' Packages in CRAN archive.
 #'
-#' @param include.date Logical. Retrun data frame with package name and last publication date.
+#' @param include.date Logical. Return data frame with package name and last publication date.
 #' @export
 
 archivePackages <- function(include.date = FALSE) {
@@ -27,7 +27,6 @@ archivePackages <- function(include.date = FALSE) {
       pkg.data <- gsub("<.*?>", "", web_page[i])
       parsed.data <- unlist(strsplit(pkg.data, "/"))
       pkg.name <- parsed.data[1]
-      if (pkg.name == "RDota") pkg.name <- "RDota2"
       date.data <- parsed.data[2]
       date <- unlist(strsplit(date.data, " "))[1]
       data.frame(package = pkg.name, date = date, stringsAsFactors = FALSE)
