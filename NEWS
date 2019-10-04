@@ -1,3 +1,10 @@
+packageRank 0.2.0.9054
+==================
+
+- fix "RDota" v. "RDota2".
+- add packageCountry() and packageCountryPlot() prototypes.
+
+
 packageRank 0.2.0.9053
 ==================
 
