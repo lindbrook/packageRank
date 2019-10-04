@@ -44,6 +44,7 @@ packageCountryPlot <- function(packages = "HistData", date = Sys.Date() - 1,
   }
 
   # world[world$iso_a2 %in% names(download.countries), ]
+  # Error in is.finite(x) : default method not implemented for type 'list'
 
   ggplot(data = world) +
     geom_sf(aes(fill = Downloads)) +
