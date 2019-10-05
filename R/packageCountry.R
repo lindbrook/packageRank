@@ -47,7 +47,7 @@ packageCountryPlot <- function(packages = "HistData", date = Sys.Date() - 1,
   # Error in is.finite(x) : default method not implemented for type 'list'
 
   ggplot(data = world) +
-    geom_sf(aes(fill = Downloads)) +
+    geom_sf(aes(fill = Downloads), lwd = 0.125) +
     scale_fill_viridis_c(option = "plasma", na.value = "white") +
     theme_bw() +
     ggtitle(paste(packages, "@", date)) +
