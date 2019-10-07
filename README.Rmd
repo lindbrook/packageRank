@@ -115,7 +115,7 @@ The only difference between 'cran_downloads2()' and 'cranlogs::cran_downloads()'
 plot(cran_downloads2(packages = "HistData", when = "last-week"))
 ```
 
-Otherwise, I recommend using `cranDownloads()`. Not only does it have a plot method, but it has a more flexible interface, especially for the 'for' and 'to' arguments. With 'cranlogs::cran_downloads', you have to write out the entire 10 character date. With 'cranDownloads()', you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
+Otherwise, I recommend using `cranDownloads()`. Not only does it have a plot method, but as of version newer than 0.2.0, it aslo has a more flexible interface for the 'for' and 'to' arguments. With 'cranlogs::cran_downloads', you have to write out the entire 10 character date. With 'cranDownloads()', you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ```{r cranDownloads}
 # Downloads from December 31, 2018 throught June 25, 2019

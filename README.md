@@ -57,6 +57,9 @@ One way to do so is to compute the rank percentile and nominal rank of a
 package’s downloads (See the section “computing rank percentiles” below
 for details on computation):
 
+    >         date packages downloads percentile          rank
+    > 1 2019-01-01 HistData        51       93.4 920 of 14,020
+
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
 >         date packages downloads percentile          rank
@@ -71,8 +74,7 @@ is a censoring problem.).
 
 ### visualization (cross-sectional)
 
-We can also visualize the rank percentile using packageRank()’s generic
-S3 plot
+We can also visualize the rank percentile using packageRank()’s generic S3 plot
 method:
 
 ``` r
@@ -155,10 +157,11 @@ plot(cran_downloads2(packages = "HistData", when = "last-week"))
 ![](man/figures/README-cran_downloads2-1.png)<!-- -->
 
 Otherwise, I recommend using `cranDownloads()`. Not only does it have a
-plot method, but it has a more flexible interface, especially for the
-‘for’ and ‘to’ arguments. With ‘cranlogs::cran\_downloads’, you have
-to write out the entire 10 character date. With ‘cranDownloads()’, you
-can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
+plot method, but as of version newer than 0.2.0, it aslo has a more
+flexible interface for the ‘for’ and ‘to’ arguments. With
+‘cranlogs::cran\_downloads’, you have to write out the entire 10
+character date. With ‘cranDownloads()’, you can provide dates as:
+yyyy-mm-dd, yyyy-mm or yyyy:
 
 ``` r
 # Downloads from December 31, 2018 throught June 25, 2019
