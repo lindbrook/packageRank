@@ -48,7 +48,7 @@ packageCountryPlot <- function(packages = "HistData", date = Sys.Date() - 1,
 
   ggplot(data = world) +
     geom_sf(aes(fill = Downloads), lwd = 0.125) +
-    scale_fill_viridis_c(option = "plasma", na.value = "white") +
+    scale_fill_viridis_c(option = "plasma", na.value = "white", trans = "sqrt") +
     theme_bw() +
     ggtitle(paste(packages, "@", date)) +
     theme(panel.grid.major = element_blank(),
