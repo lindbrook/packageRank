@@ -22,10 +22,9 @@ Imports:
     ggplot2,
     igraph,
     memoise,
-    miniCRAN,
     RCurl,
-    rnaturalearth,
-    tools
+    rversions,
+    stats
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
