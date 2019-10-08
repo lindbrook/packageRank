@@ -129,6 +129,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
+#' @param r.version Logical. Add R release dates.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -140,8 +141,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' plot(cranDownloads(packages = "R", from = 2019))
 #' }
 
-plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
-  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, ...) {
+plot.cran_downloads <- function(x, graphics = NULL, points = FALSE,
+  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, r.version = FALSE,
+  ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
@@ -150,6 +152,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
 
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
+  r_v <- rversions::r_versions()
 
   if (is.null(graphics)) {
     if (is.null(x$packages)) {
@@ -165,7 +168,6 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
   if (graphics == "base") {
     if (is.null(x$packages)) {
       rDownloadsPlot(x, graphics, points, log_count, smooth, se, f)
-
     } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
         if (log_count) {
@@ -180,25 +182,33 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
           pkg.dat <- dat[dat$package == pkg, ]
           if (log_count) {
             if (points) {
-              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
+              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
                 ylab = "log10(Count)", log = "y")
             } else {
-              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Rank",
+              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
                 ylab = "log10(Count)", log = "y")
             }
           } else {
             if (points) {
-              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Rank",
+              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
                 ylab = "Count")
             } else {
-              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Rank",
+              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
                 ylab = "Count")
             }
           }
+
+          if (r.version) {
+            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3)
+            abline(v = as.Date(r_v$date), lty = "dotted")
+          }
+
           if (smooth) {
             lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
               col = "blue")
           }
+
           title(main = pkg)
         }))
       }
@@ -245,39 +255,79 @@ plot.cran_downloads <- function(x, graphics = NULL, points = TRUE,
           })
 
           daily <- as.data.frame(do.call(rbind, daily))
-          plot(unique(dat$date), daily$win, type = "o", ylim = range(daily))
-          lines(unique(dat$date), daily$osx, type = "o", pch = 0, col = "red")
-          lines(unique(dat$date), daily$src, type = "o", pch = 2, col = "blue")
-          lines(unique(dat$date), daily$`NA`, type = "o", pch = 3,
-            col = "green")
-          legend(x = "topleft",
-                 legend = c("win", "mac", "src", "NA"),
-                 col = c("black", "red", "blue", "green"),
-                 pch = c(1, 0, 2, 3),
-                 bg = "white",
-                 cex = 2/3,
-                 title = "Platform",
-                 lwd = 1)
+
+          if (points) {
+            plot(unique(dat$date), daily$win, type = "o", ylim = range(daily),
+              xlab = "Date", ylab = "Count")
+            lines(unique(dat$date), daily$osx, type = "o", pch = 0, col = "red")
+            lines(unique(dat$date), daily$src, type = "o", pch = 2,
+              col = "blue")
+            lines(unique(dat$date), daily$`NA`, type = "o", pch = 3,
+              col = "green")
+            legend(x = "topleft",
+                   legend = c("win", "mac", "src", "NA"),
+                   col = c("black", "red", "blue", "green"),
+                   pch = c(1, 0, 2, 3),
+                   bg = "white",
+                   cex = 2/3,
+                   title = "Platform",
+                   lwd = 1)
+          } else {
+            plot(unique(dat$date), daily$win, type = "l", ylim = range(daily),
+              xlab = "Date", ylab = "Count")
+            lines(unique(dat$date), daily$osx, col = "red")
+            lines(unique(dat$date), daily$src, col = "blue")
+            lines(unique(dat$date), daily$`NA`, col = "green")
+            legend(x = "topleft",
+                   legend = c("win", "mac", "src", "NA"),
+                   col = c("black", "red", "blue", "green"),
+                   bg = "white",
+                   cex = 2/3,
+                   title = "Platform",
+                   lwd = 1)
+          }
+
+          if (smooth) {
+            lines(stats::lowess(unique(dat$date), daily$win))
+            lines(stats::lowess(unique(dat$date), daily$osx), col = "red")
+            lines(stats::lowess(unique(dat$date), daily$src), col = "blue")
+            lines(stats::lowess(unique(dat$date), daily$`NA`), col = "green")
+          }
+
+          if (r.version) {
+            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3)
+            abline(v = as.Date(r_v$date), lty = "dotted")
+          }
+
         } else {
           if (log_count) {
             if (points) {
-              plot(dat$date, dat$count, type = "o", xlab = "Rank",
+              plot(dat$date, dat$count, type = "o", xlab = "Date",
                 ylab = "log10(Count)", log = "y")
             } else {
-              plot(dat$date, dat$count, type = "l", xlab = "Rank",
+              plot(dat$date, dat$count, type = "l", xlab = "Date",
                 ylab = "log10(Count)", log = "y")
             }
           } else {
             if (points) {
-              plot(dat$date, dat$count, type = "o", xlab = "Rank",
+              plot(dat$date, dat$count, type = "o", xlab = "Date",
                 ylab = "Count")
             } else {
-              plot(dat$date, dat$count, type = "l", xlab = "Rank",
+              plot(dat$date, dat$count, type = "l", xlab = "Date",
                 ylab = "Count")
             }
           }
-          if (smooth) lines(stats::lowess(dat$date, dat$count, f = f),
-            col = "blue")
+
+          if (smooth) {
+            lines(stats::lowess(dat$date, dat$count, f = f), col = "blue")
+          }
+          if (r.version) {
+            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3)
+            abline(v = as.Date(r_v$date), lty = "dotted")
+          }
+
           title(main = x$package)
         }
       }

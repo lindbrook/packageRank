@@ -2,6 +2,8 @@ packageRank 0.2.0.9056
 ==================
 
 - prepare for CRAN release.
+- add plot.cran_downloads(r.version).
+- fix plot.cran_downloads() xlab.
 
 
 packageRank 0.2.0.9055
