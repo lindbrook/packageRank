@@ -4,7 +4,7 @@
 \alias{plot.cran_downloads}
 \title{Plot method for cranDownloads().}
 \usage{
-\method{plot}{cran_downloads}(x, graphics = NULL, points = FALSE,
+\method{plot}{cran_downloads}(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   r.version = FALSE, ...)
 }
@@ -13,7 +13,7 @@
 
 \item{graphics}{Character. NULL, "base" or "ggplot2".}
 
-\item{points}{Logical. Plot points.}
+\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE.}
 
 \item{log_count}{Logical. Logarithm of package downloads.}
 

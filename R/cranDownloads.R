@@ -124,7 +124,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #'
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
-#' @param points Logical. Plot points.
+#' @param points Character of Logical. Plot points. "auto", TRUE, FALSE.
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. Works only with graphics = "ggplot2".
@@ -141,7 +141,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' plot(cranDownloads(packages = "R", from = 2019))
 #' }
 
-plot.cran_downloads <- function(x, graphics = NULL, points = FALSE,
+plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, r.version = FALSE,
   ...) {
 
@@ -151,8 +151,14 @@ plot.cran_downloads <- function(x, graphics = NULL, points = FALSE,
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
 
   dat <- x$cranlogs.data
-  days.observed <- unique(dat$date)
   r_v <- rversions::r_versions()
+  days.observed <- unique(dat$date)
+
+  if (points == "auto") {
+    if (length(days.observed) <= 31) points <- TRUE else points <- FALSE
+  } else if (is.logical(points) == FALSE) {
+    stop('points must be "auto", TRUE, or FALSE.')
+  }
 
   if (is.null(graphics)) {
     if (is.null(x$packages)) {
