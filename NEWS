@@ -1,3 +1,10 @@
+packageRank 0.2.0.9057
+==================
+
+- add plot.cran_downloads(points = "auto").
+- fix plot.cran_downloads(graphics = "ggplot2") for R downloads.
+
+
 packageRank 0.2.0.9056
 ==================
 
