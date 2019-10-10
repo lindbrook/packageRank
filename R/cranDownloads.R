@@ -300,6 +300,8 @@ plot.cran_downloads <- function(x, graphics = NULL, points = FALSE,
             abline(v = as.Date(r_v$date), lty = "dotted")
           }
 
+          title(main = "R Downloads")
+
         } else {
           if (log_count) {
             if (points) {
