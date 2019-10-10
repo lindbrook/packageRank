@@ -345,21 +345,49 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
       rDownloadsPlot(x, graphics, points, log_count, smooth, se, f)
 
     } else if (length(days.observed) == 1) {
-      p <- ggplot(dat) +
-           geom_point(aes_string("count", "package")) +
-           theme_bw() +
-           theme(panel.grid.major.x = element_blank(),
-                 panel.grid.minor = element_blank()) +
-           facet_wrap(~ date, ncol = 2)
+
+      if ("R" %in% x$packages == FALSE) {
+        p <- ggplot(data = dat) +
+             geom_point(aes_string("count", "package")) +
+             theme_bw() +
+             theme(panel.grid.major.x = element_blank(),
+                   panel.grid.minor = element_blank()) +
+             facet_wrap(~ date, ncol = 2)
+      } else {
+        dat2 <- as.data.frame(stats::xtabs(count ~ date + os, data = dat),
+          stringsAsFactors = FALSE)
+        names(dat2)[3] <- "count"
+        dat2$date <- as.Date(dat2$date)
+        p <- ggplot(data = dat2) +
+             geom_point(aes_string("count", "os")) +
+             theme_bw() +
+             theme(panel.grid.major.x = element_blank(),
+                   panel.grid.minor = element_blank()) +
+             facet_wrap(~ date, ncol = 2)
+      }
 
       if (log_count) p + scale_x_log10() + xlab("log10(count)") else p
 
     } else {
-      p <- ggplot(data = dat, aes_string("date", "count")) +
-        geom_line(size = 0.5) +
-        facet_wrap(~ package, ncol = 2) +
-        theme_bw() +
-        theme(panel.grid.minor = element_blank())
+      if ("R" %in% x$packages == FALSE) {
+        p <- ggplot(data = dat, aes_string("date", "count")) +
+          geom_line(size = 0.5) +
+          facet_wrap(~ package, ncol = 2) +
+          theme_bw() +
+          theme(panel.grid.minor = element_blank())
+      } else {
+        dat2 <- as.data.frame(stats::xtabs(count ~ date + os, data = dat),
+          stringsAsFactors = FALSE)
+        names(dat2)[3] <- "count"
+        dat2$date <- as.Date(dat2$date)
+        p <- ggplot(data = dat2, aes_string("date", "count")) +
+          geom_line(size = 0.5) +
+          facet_wrap(~ os, ncol = 2) +
+          theme_bw() +
+          theme(panel.grid.minor = element_blank(),
+                plot.title = element_text(hjust = 0.5)) +
+          ggtitle("R Downloads")
+      }
 
       if (points & log_count & smooth) {
         p + geom_point() +
