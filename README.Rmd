@@ -21,7 +21,6 @@ library(packageRank)
 ### features
 
 * compute and visualize the counts and ranks (nominal and percentile) of downloads from RStudio's [CRAN mirror](http://cran-logs.rstudio.com) or from [Bioconductor](https://bioconductor.org/).
-* provide S3 plot methods for `cranlogs::cran_downloads()`.
 
 NOTE: 'packageRank' relies on an active internet connection.
 
@@ -101,25 +100,11 @@ In the background, the same variable are plotted (in gray) for a stratified rand
 
 ### computing download counts
 
-To compute or plot package download counts, 'packageRank' offers a couple of choices. If you want to use 'cranlogs' style syntax, use 'cran_downloads2()'.
-
-```{r cran_downloads, eval = FALSE}
-cranlogs::cran_downloads(packages = "HistData", when = "last-week")
-
-cran_downloads2(packages = "HistData", when = "last-week")
-```
-
-The only difference between 'cran_downloads2()' and 'cranlogs::cran_downloads()' is that 'cran_downloads2()' has a generic S3 plot method.
-
-```{r cran_downloads2, fig.width = 5, fig.height = 5}
-plot(cran_downloads2(packages = "HistData", when = "last-week"))
-```
-
-Otherwise, I recommend using `cranDownloads()`. Not only does it have a plot method, but as of version newer than 0.2.0, it aslo has a more flexible interface for the 'for' and 'to' arguments. With 'cranlogs::cran_downloads', you have to write out the entire 10 character date. With 'cranDownloads()', you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
+To compute or plot package download counts, 'packageRank' offers `cranDownloads()`. It not only has a convenient generic plot method, it also has a more flexible interface: for the 'for' and 'to' arguments, you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ```{r cranDownloads}
 # Downloads from December 31, 2018 throught June 25, 2019
-plot(cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25"), points = FALSE, 
+plot(cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25"), points = FALSE,
   smooth = TRUE)
 
 # Downloads from June 2015 through June 2019
@@ -129,7 +114,7 @@ plot(cranDownloads(packages = "HistData", from = "2015-06", to = "2019-06"), poi
 plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth = TRUE)
 ```
 
-For Bioconductor packages, use 'bioconductorDownloads()'. Note that logs are aggreated to the month or to the calendar year; so dates must either be yyyy-mm or yyyy.
+For Bioconductor packages, use 'bioconductorDownloads()'. Note that logs are aggreated to the month or calendar year; so dates must either be yyyy-mm or yyyy.
 
 ```{r bioconductorDownloads}
 # Downloads from June 2015 through June 2019

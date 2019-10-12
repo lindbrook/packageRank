@@ -10,7 +10,6 @@
     of downloads from RStudio’s [CRAN
     mirror](http://cran-logs.rstudio.com) or from
     [Bioconductor](https://bioconductor.org/).
-  - provide S3 plot methods for `cranlogs::cran_downloads()`.
 
 NOTE: ‘packageRank’ relies on an active internet connection.
 
@@ -57,9 +56,6 @@ One way to do so is to compute the rank percentile and nominal rank of a
 package’s downloads (See the section “computing rank percentiles” below
 for details on computation):
 
-    >         date packages downloads percentile          rank
-    > 1 2019-01-01 HistData        51       93.4 920 of 14,020
-
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
 >         date packages downloads percentile          rank
@@ -74,7 +70,8 @@ is a censoring problem.).
 
 ### visualization (cross-sectional)
 
-We can also visualize the rank percentile using packageRank()’s generic S3 plot
+We can also visualize the rank percentile using packageRank()’s generic
+S3 plot
 method:
 
 ``` r
@@ -136,36 +133,14 @@ available.
 
 ### computing download counts
 
-To compute or plot package download counts, ‘packageRank’ offers a
-couple of choices. If you want to use ‘cranlogs’ style syntax, use
-‘cran\_downloads2()’.
-
-``` r
-cranlogs::cran_downloads(packages = "HistData", when = "last-week")
-
-cran_downloads2(packages = "HistData", when = "last-week")
-```
-
-The only difference between ‘cran\_downloads2()’ and
-‘cranlogs::cran\_downloads()’ is that ‘cran\_downloads2()’ has a
-generic S3 plot method.
-
-``` r
-plot(cran_downloads2(packages = "HistData", when = "last-week"))
-```
-
-![](man/figures/README-cran_downloads2-1.png)<!-- -->
-
-Otherwise, I recommend using `cranDownloads()`. Not only does it have a
-plot method, but as of version newer than 0.2.0, it aslo has a more
-flexible interface for the ‘for’ and ‘to’ arguments. With
-‘cranlogs::cran\_downloads’, you have to write out the entire 10
-character date. With ‘cranDownloads()’, you can provide dates as:
-yyyy-mm-dd, yyyy-mm or yyyy:
+To compute or plot package download counts, ‘packageRank’ offers
+`cranDownloads()`. It not only has a convenient generic plot method, it
+also has a more flexible interface: for the ‘for’ and ‘to’ arguments,
+you can provide dates as: yyyy-mm-dd, yyyy-mm or yyyy:
 
 ``` r
 # Downloads from December 31, 2018 throught June 25, 2019
-plot(cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25"), points = FALSE, 
+plot(cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25"), points = FALSE,
   smooth = TRUE)
 ```
 
@@ -188,8 +163,8 @@ plot(cranDownloads(packages = "HistData", from = "2019"), points = FALSE, smooth
 ![](man/figures/README-cranDownloads-3.png)<!-- -->
 
 For Bioconductor packages, use ‘bioconductorDownloads()’. Note that logs
-are aggreated to the month or to the calendar year; so dates must either
-be yyyy-mm or yyyy.
+are aggreated to the month or calendar year; so dates must either be
+yyyy-mm or yyyy.
 
 ``` r
 # Downloads from June 2015 through June 2019
