@@ -13,16 +13,16 @@
 #' @examples
 #' \donttest{
 #' cranDownloads(packages = "HistData")
-#' cranDownloads(packages = "HistData", "last-week")
-#' cranDownloads(packages = "HistData", "last-month")
+#' cranDownloads(packages = "HistData", when = "last-week")
+#' cranDownloads(packages = "HistData", when = "last-month")
 #'
-#' # first two weeks of January 2019
-#' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-14")
+#' # January 7 - 31, 2019
+#' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-31")
 #'
 #' # February to March 2019
 #' cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
 #'
-#' # year-to-date
+#' # 2019 year-to-date
 #' cranDownloads(packages = "HistData", from = 2019)
 #' }
 

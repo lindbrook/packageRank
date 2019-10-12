@@ -10,7 +10,7 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date.}
+\item{date}{Character. Date. yyyy-mm-dd}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }

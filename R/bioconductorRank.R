@@ -2,11 +2,15 @@
 #'
 #' From bioconductor
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date.
+#' @param date Character. Date. yyyy-mm
 #' @param count Character. "ip" or "download".
 #' @return An R data frame.
 #' @import data.table
 #' @export
+#' @examples 
+#' \donttest{
+#' bioconductorRank(packages = "cicero", date = "2019-09")
+#' }
 
 bioconductorRank <- function(packages = "monocle", date = "2019-01",
   count = "download") {

@@ -10,7 +10,7 @@ bioconductorRank(packages = "monocle", date = "2019-01",
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date.}
+\item{date}{Character. Date. yyyy-mm}
 
 \item{count}{Character. "ip" or "download".}
 }
@@ -19,4 +19,9 @@ An R data frame.
 }
 \description{
 From bioconductor
+}
+\examples{
+\donttest{
+bioconductorRank(packages = "cicero", date = "2019-09")
+}
 }
