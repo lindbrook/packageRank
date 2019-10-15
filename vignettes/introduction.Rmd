@@ -19,10 +19,9 @@ knitr::opts_chunk$set(
 ### features
 
 * compute the rank percentile and nominal rank of a package's downloads from [RStudio's CRAN mirror](http://cran-logs.rstudio.com).
-* visualize a package's position in the  distribution of package download counts for a given day (cross-sectionally) or over time (longitudinally).
-* provide S3 plot methods for 'cranlogs' output.
+* visualize a package's position in the distribution of package download counts for a given day (cross-sectionally) or over time (longitudinally).
 
-NOTE: 'packageRank' relies on an active internet connection.
+NOTE: 'packageRank' relies on an active internet connection. CRAN logs are generally updated at 17:00 UTC and 'cranlogs' functions are updated soon after.
 
 ### documentation
 

@@ -10,9 +10,12 @@
     of downloads from RStudio’s [CRAN
     mirror](http://cran-logs.rstudio.com) and
     [Bioconductor](https://bioconductor.org/).
+  - visualize a package’s position in the distribution of package
+    download counts for a given day (cross-sectionally) or over time
+    (longitudinally).
 
 NOTE: ‘packageRank’ relies on an active internet connection. CRAN logs
-are generally updated at 17:00 UTC and ‘cranlogs’ functions are updated
+are generally updated at 17:00 UTC; ‘cranlogs’ functions are updated
 soon after.
 
 ### Getting started
