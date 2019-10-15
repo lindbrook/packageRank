@@ -1,3 +1,10 @@
+packageRank 0.2.0.9060
+==================
+
+- copyedit README.
+- fix cranDownloads(from, to).
+
+
 packageRank 0.2.0.9059
 ==================
 

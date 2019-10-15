@@ -41,77 +41,44 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
   } else if (!is.null(from)) {
-    if (all(vapply(c(from, to), nchar, integer(1L)) == 10) &
-      all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+    date.err.msg <- 'Invalid date or format: "yyyy-mm-dd", "yyyy-mm" or "yyyy".'
 
-      start.date <- as.Date(from, optional = TRUE)
+    if (!is.null(from)) {
+      if (nchar(from) == 10L & grepl("-", from)) {
+        start.date <- as.Date(from, optional = TRUE)
+      } else if (nchar(from) == 7L & grepl("-", from)) {
+        start.date <- dayOfMonth(from, first.log)
+      } else if (nchar(from) == 4L) {
+        start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
+      } else stop(date.err.msg)
+      if (is.na(start.date)) stop(date.err.msg)
+    }
 
-      if (is.null(to)) {
-        end.date <- cal.date
-      } else end.date <- as.Date(to, optional = TRUE)
+    if (!is.null(to)) {
+      if (nchar(to) == 10L & grepl("-", to)) {
+        end.date <- as.Date(to, optional = TRUE)
+      } else if (nchar(to) == 7L & grepl("-", to)) {
+        end.date <- dayOfMonth(to, first.log, end.date = TRUE)
+      } else if (nchar(to) == 4L) {
+        end.date <- as.Date(paste0(to, "-12-31"), optional = TRUE)
+        if (end.date > cal.date) end.date <- cal.date
+      } else stop(date.err.msg)
+      if (is.na(end.date)) stop(date.err.msg)
+    } else end.date <- cal.date
 
-      if (!is.na(start.date) & !is.na(end.date)) {
-        args <- list(packages, from = start.date, to = end.date)
-      } else if (is.na(start.date) & !is.na(end.date)) {
-        stop("No such start date.")
-      } else if (!is.na(start.date) & is.na(end.date)) {
-        stop("No such end date.")
-      } else {
-        stop("No such start and end dates.")
-      }
+    if (start.date > end.date) stop ('"from" must be <= "to".')
 
-      if (start.date > end.date) stop ('"from" must be <= "to".')
-      if (start.date < as.Date(first.log)) {
-        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-        start.date <- first.log
-      }
+    if (start.date < as.Date(first.log)) {
+      warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+      start.date <- first.log
+    }
 
-    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 7) &
-        all(vapply(c(from, to), function(x) grepl("-", x), logical(1L)))) {
+    if (end.date > cal.date) {
+      warning("Future dates truncated.")
+      end.date <- cal.date
+    }
 
-      start.date <- dayOfMonth(from, first.log)
-
-      if (is.null(to)) {
-        end.date <- cal.date
-      } else end.date <- dayOfMonth(to, first.log, end.date = TRUE)
-
-      if (!is.na(start.date) & !is.na(end.date)) {
-        args <- list(packages, from = start.date, to = end.date)
-      } else if (is.na(start.date) & !is.na(end.date)) {
-        stop("No such start date.")
-      } else if (!is.na(start.date) & is.na(end.date)) {
-        stop("No such end date.")
-      } else {
-        stop("No such start and end dates.")
-      }
-
-      if (start.date > end.date) stop ('"from" must be <= "to".')
-      if (start.date < as.Date(first.log)) {
-        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-        start.date <- first.log
-      }
-
-    } else if (all(vapply(c(from, to), nchar, integer(1L)) == 4)) {
-      start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
-
-      if (is.na(start.date)) {
-        msg1 <- "No such start date. "
-        msg2 <- 'Check year: must be "yyyy" (character) or yyyy (numeric).'
-        stop(msg1, msg2)
-      } else if (start.date < as.Date(first.log)) {
-        warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-        start.date <- first.log
-      }
-
-      if (is.null(to)) end.date <- cal.date
-      else end.date <- as.Date(paste0(to,  "-12-31"), optional = TRUE)
-
-      if (is.na(end.date)) stop("Invalid year")
-      else if (start.date > end.date) stop ('"from" must be <= "to".')
-      else if (end.date > cal.date) end.date <- cal.date
-
-      args <- list(packages, from = start.date, to = end.date)
-    } else stop('Date format needs to be "yyyy-mm-dd", "yyyy-mm" or "yyyy".')
+    args <- list(packages, from = start.date, to = end.date)
   }
 
   cranlogs.data <- do.call(cranlogs::cran_downloads, args)
