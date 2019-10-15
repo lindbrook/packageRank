@@ -157,11 +157,11 @@ plot(cranDownloads(packages = "HistData", from = "2019"), smooth = TRUE, r.versi
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
-With ‘ggplot2’ figures, the ‘se’ argument adds confidence
-intervals.
+With ‘ggplot2’ figures, the ‘se’ argument adds confidence intervals.
 
 ``` r
-plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"), smooth = TRUE, se = TRUE)
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"),
+  when = "last-month"), smooth = TRUE, se = TRUE)
 ```
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
