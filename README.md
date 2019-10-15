@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9059-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9060-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -11,7 +11,9 @@
     mirror](http://cran-logs.rstudio.com) and
     [Bioconductor](https://bioconductor.org/).
 
-NOTE: ‘packageRank’ relies on an active internet connection.
+NOTE: ‘packageRank’ relies on an active internet connection. CRAN logs
+are generally updated at 17:00 UTC and ‘cranlogs’ functions are updated
+soon after.
 
 ### Getting started
 
@@ -81,7 +83,7 @@ cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25")
 cranDownloads(packages = "HistData", from = "2015-06", to = "2016-01")
 
 # 2016 to 2019
-cranDownloads(packages = "HistData", from = "2015", to = 2019)
+cranDownloads(packages = "HistData", from = "2015", to = "2019")
 
 # Year-to-date
 cranDownloads(packages = "HistData", from = "2019")
@@ -157,11 +159,12 @@ plot(cranDownloads(packages = "HistData", from = "2019"), smooth = TRUE, r.versi
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
-With ‘ggplot2’ figures, the ‘se’ argument adds confidence intervals.
+With ‘ggplot2’ figures, the ‘se’ argument adds confidence
+intervals.
 
 ``` r
-plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"),
-  when = "last-month"), smooth = TRUE, se = TRUE)
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"), smooth = TRUE,
+  se = TRUE)
 ```
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
@@ -208,9 +211,11 @@ standardized test, tell us that 93% of packages had fewer downloads than
 ‘HistData’.
 
 Because packages with zero downloads are not recorded in the log, there
-is a censoring problem. However, my analysis indicates that the number
-of CRAN packages (not in the archive) with zero downloads on any given
-day is actually pretty small.
+is a potential censoring problem. However, my analysis indicates that
+the number of CRAN packages (not in the archive) without any downloads
+on a given day is actually pretty small. In fact, a signficant number of
+packages (50% not unusual) in the archive (not on CRAN) are regularly
+downloaded.
 
 #### computing rank percentile
 

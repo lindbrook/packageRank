@@ -22,7 +22,7 @@ library(packageRank)
 
 * compute and visualize the counts and ranks (nominal and percentile) of downloads from RStudio's [CRAN mirror](http://cran-logs.rstudio.com) and [Bioconductor](https://bioconductor.org/).
 
-NOTE: 'packageRank' relies on an active internet connection.
+NOTE: 'packageRank' relies on an active internet connection. CRAN logs are generally updated at 17:00 UTC and 'cranlogs' functions are updated soon after.
 
 ### Getting started
 
@@ -68,7 +68,7 @@ cranDownloads(packages = "HistData", from = "2018-12-31", to = "2019-06-25")
 cranDownloads(packages = "HistData", from = "2015-06", to = "2016-01")
 
 # 2016 to 2019
-cranDownloads(packages = "HistData", from = "2015", to = 2019)
+cranDownloads(packages = "HistData", from = "2015", to = "2019")
 
 # Year-to-date
 cranDownloads(packages = "HistData", from = "2019")
@@ -125,8 +125,8 @@ plot(cranDownloads(packages = "HistData", from = "2019"), smooth = TRUE, r.versi
 With 'ggplot2' figures, the 'se' argument adds confidence intervals.
 
 ```{r}
-plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"),
-  when = "last-month"), smooth = TRUE, se = TRUE)
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"), smooth = TRUE,
+  se = TRUE)
 ```
 
 #### Bioconductor
@@ -157,7 +157,7 @@ packageRank(packages = "HistData", date = "2019-01-01")
 
 Here, we see that 51 downloads on January 1, 2019 put 'HistData' in the 93rd percentile. This statistic, familiar to anyone who's taken a standardized test, tell us that 93% of packages had fewer downloads than 'HistData'.
 
- Because packages with zero downloads are not recorded in the log, there is a censoring problem. However, my analysis indicates that the number of CRAN packages (not in the archive) with zero downloads on any given day is actually pretty small.
+Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of CRAN packages (not in the archive) without any downloads on a given day is actually pretty small. In fact, a signficant number of packages (50% not unusual) in the archive (not on CRAN) are regularly downloaded.
 
 #### computing rank percentile
 
