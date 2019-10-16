@@ -13,7 +13,7 @@
 
 ### R win-builder check results
 
-R-devel: R Under development (unstable) (2019-07-05 r76784): x86_64-w64-mingw32 (64-bit)
+R-devel: R Under development (unstable) (2019-10-14 r77290): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 note
 
 R-oldrelease: 3.5.3 (2019-03-11): x86_64-w64-mingw32 (64-bit)
