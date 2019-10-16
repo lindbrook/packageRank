@@ -1,7 +1,7 @@
 packageRank 0.2.5
 ==================
 
-- add cranDownloads()
+- add cranDownloads().
   - enable "yyyy-mm-dd", "yyyy-mm" or "yyyy" in cranDownloads(from, to).
   - add plot.cran_downloads(points = "auto").
   - add plot.cran_downloads(r.version).

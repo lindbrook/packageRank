@@ -37,7 +37,7 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ### I - Background
 
 The ‘[cranlogs](https://cran.r-project.org/package=cranlogs)’ package
-computes the number of downloads, be it packages or the R appliction
+computes the number of downloads, be it packages or the R application
 itself, from RStudio’s [CRAN mirror](http://cran-logs.rstudio.com).
 
 For example, we can see that on the first day of 2019 the
@@ -175,8 +175,8 @@ plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-mon
 #### Bioconductor
 
 For Bioconductor packages, use `bioconductorDownloads()`. Note that logs
-are aggreated to the month or the calendar year, so dates must either be
-“yyyy-mm” or “yyyy”.
+are aggregated to the month or the calendar year, so dates must either
+be “yyyy-mm” or “yyyy”.
 
 ``` r
 # Downloads from June 2015 through June 2019
@@ -216,8 +216,8 @@ standardized test, tell us that 93% of packages had fewer downloads than
 Because packages with zero downloads are not recorded in the log, there
 is a potential censoring problem. However, my analysis indicates that
 the number of CRAN packages (not in the archive) without any downloads
-on a given day is actually pretty small. In fact, a signficant number of
-packages (50% not unusual) in the archive (not on CRAN) are regularly
+on a given day is actually pretty small. In fact, a significant number
+of packages (50% not unusual) in the archive (not on CRAN) are regularly
 downloaded.
 
 #### computing rank percentile
@@ -255,12 +255,12 @@ pkg.rank <- packageRank(packages = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
->
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools
->              51              51              51              51
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls
->              51              51              51              51
->        webutils            zoom
+> 
+>  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
+>              51              51              51              51 
+>   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
+>              51              51              51              51 
+>        webutils            zoom 
 >              51              51
 ```
 

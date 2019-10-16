@@ -42,7 +42,7 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 
 ### I - Background
 
-The '[cranlogs](https://cran.r-project.org/package=cranlogs)' package computes the number of downloads, be it packages or the R appliction itself, from RStudio's [CRAN mirror](http://cran-logs.rstudio.com).
+The '[cranlogs](https://cran.r-project.org/package=cranlogs)' package computes the number of downloads, be it packages or the R application itself, from RStudio's [CRAN mirror](http://cran-logs.rstudio.com).
 
 For example, we can see that on the first day of 2019 the '[HistData](https://cran.r-project.org/package=HistData)' package was downloaded 51 times:
 
@@ -132,7 +132,7 @@ plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-mon
 
 #### Bioconductor
 
-For Bioconductor packages, use `bioconductorDownloads()`. Note that logs are aggreated to the month or the calendar year, so dates must either be "yyyy-mm" or "yyyy".
+For Bioconductor packages, use `bioconductorDownloads()`. Note that logs are aggregated to the month or the calendar year, so dates must either be "yyyy-mm" or "yyyy".
 
 ```{r bioconductorDownloads}
 # Downloads from June 2015 through June 2019
@@ -158,7 +158,7 @@ packageRank(packages = "HistData", date = "2019-01-01")
 
 Here, we see that 51 downloads on January 1, 2019 put 'HistData' in the 93rd percentile. This statistic, familiar to anyone who's taken a standardized test, tell us that 93% of packages had fewer downloads than 'HistData'.
 
-Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of CRAN packages (not in the archive) without any downloads on a given day is actually pretty small. In fact, a signficant number of packages (50% not unusual) in the archive (not on CRAN) are regularly downloaded.
+Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of CRAN packages (not in the archive) without any downloads on a given day is actually pretty small. In fact, a significant number of packages (50% not unusual) in the archive (not on CRAN) are regularly downloaded.
 
 #### computing rank percentile
 
