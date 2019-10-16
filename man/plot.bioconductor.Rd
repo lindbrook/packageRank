@@ -5,7 +5,7 @@
 \title{Plot method for bioconductor_downloads().}
 \usage{
 \method{plot}{bioconductor}(x, graphics = NULL, count = "download",
-  points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  points = "auto", smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@
 
 \item{count}{Character. "download" or "ip".}
 
-\item{points}{Logical. Add points.}
+\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.}
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 

@@ -77,7 +77,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
-#' @param points Logical. Add points.
+#' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param smooth.f Numeric. smoother span.
 #' @param se Logical. Works only with graphics = "ggplot2".
@@ -94,8 +94,20 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' }
 
 plot.bioconductor <- function(x, graphics = NULL, count = "download",
-  points = TRUE, smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  points = "auto", smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...) {
+
+  if( x$observation == "month") {
+    if (points == "auto") {
+      if (length(unique(do.call(rbind, x$data)$date)) <= 24) {
+        points <- TRUE
+      } else {
+        points <- FALSE
+      }
+    } else if (is.logical(points) == FALSE) {
+      stop('points must be "auto", TRUE, or FALSE.')
+    }
+  } else if (observation == "year") points <- TRUE
 
   if (x$observation == "year") {
     obs.in.progress <- x$current.yr == max(x$data[[1]]$Year)
@@ -219,7 +231,6 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
       } else stop('"observation must be "month" or "year"')
 
     } else if (all(c(from, to) %in% 2009:current.yr)) {
-
       if (observation == "month") {
         log.data <- bioc.data[bioc.data$Month != "all", ]
         month.num <- vapply(log.data$Month, function(x) {
