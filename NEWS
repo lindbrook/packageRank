@@ -36,7 +36,7 @@ packageRank 0.2.0.9056
 packageRank 0.2.0.9055
 ==================
 
-- use sqrt tranformation with packageCountryPlot().
+- use sqrt transformation with packageCountryPlot().
 - amend README.
 
 
@@ -393,7 +393,7 @@ packageRank 0.2.0.9002
 packageRank 0.2.0.9001
 ==================
 
-- implelment points = FALSE for plot.cranlogs() base graphics.
+- implement points = FALSE for plot.cranlogs() base graphics.
 
 
 packageRank 0.2.0.9000
