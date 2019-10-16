@@ -12,7 +12,7 @@ bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
 
 \item{from}{Start date as \code{yyyy-mm} or \code{yyyy}.}
 
-\item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
+\item{to}{End date as \code{yyyy-mm} or \code{yyyy}.}
 
 \item{when}{\code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.}
 

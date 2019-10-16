@@ -3,7 +3,7 @@
 #' @param packages Character. Vector of package names.
 #' @param when \code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.
 #' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
-#' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
+#' @param to End date as \code{yyyy-mm} or \code{yyyy}.
 #' @param observation "year" or "month".
 #' @export
 #' @examples
