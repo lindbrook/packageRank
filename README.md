@@ -1,6 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -209,12 +210,6 @@ in-progress observations.
 One way to put download counts into context is to compute the rank
 percentile of a package’s downloads. Such a statistic give us an idea of
 a package’s place in the overall distribution of downloads.
-
-    > Registered S3 method overwritten by 'R.oo':
-    >   method        from       
-    >   throw.default R.methodsS3
-    >         date packages downloads percentile          rank
-    > 1 2019-01-01 HistData        51       93.4 920 of 14,020
 
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
