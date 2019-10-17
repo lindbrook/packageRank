@@ -107,7 +107,7 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
     } else if (is.logical(points) == FALSE) {
       stop('points must be "auto", TRUE, or FALSE.')
     }
-  } else if (observation == "year") points <- TRUE
+  } else if (x$observation == "year") points <- TRUE
 
   if (x$observation == "year") {
     obs.in.progress <- x$current.yr == max(x$data[[1]]$Year)
