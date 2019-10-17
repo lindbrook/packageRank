@@ -323,15 +323,18 @@ bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
         if (obs.in.progress) {
           points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
             pch = 1)
-          points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
-            col = "red")
         } else points(dat$date, dat[, y.var])
       }
 
-       if (smooth) {
-         lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f),
-           col = "blue")
-       }
+      if (obs.in.progress) {
+        points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
+          col = "red")
+      }
+
+      if (smooth) {
+        lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
+      }
+
      } else if (obs == "year") {
        if (log_count) {
          plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
@@ -344,9 +347,12 @@ bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
          if (obs.in.progress) {
            points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
              pch = 1)
-           points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
-             col = "red")
          } else points(dat$Year, dat[, y.var])
+       }
+
+       if (obs.in.progress) {
+         points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
+           col = "red")
        }
      }
 
@@ -364,6 +370,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
   obs <- x$observation
   date <- x$date
   dat <- summary(x)
+  oip <- rev(unique(dat$date))[1]
 
   mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
   dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
@@ -380,19 +387,25 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
     xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
 
   if (points & log_count & smooth) {
-    p + geom_point() + scale_y_log10() + geom_smooth(method = "loess", se = se)
+    p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10() +
+      geom_smooth(method = "loess", se = se)
   } else if (points & log_count & !smooth) {
-    p + geom_point() + scale_y_log10()
+    p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10()
   } else if (points & !log_count & smooth) {
-    p +  geom_point() + geom_smooth(method = "loess", se = se)
+    p <- p +  geom_point(data = dat[!dat$date %in% oip, ]) +
+      geom_smooth(method = "loess", se = se)
   } else if (!points & log_count & smooth) {
-    p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+    p <- p + scale_y_log10() + geom_smooth(method = "loess", se = se)
   } else if (!points & !log_count & smooth) {
-    p + geom_smooth(method = "loess", se = se)
+    p <- p + geom_smooth(method = "loess", se = se)
   } else if (points & !log_count & !smooth) {
-    p + geom_point()
+    p <- p + geom_point(data = dat[!dat$date %in% oip, ])
   } else if (!points & log_count & !smooth) {
     p + scale_y_log10()
+  }
+
+  if (obs.in.progress) {
+    p + geom_point(data = dat[dat$date %in% oip, ], color = "red", shape = 15)
   } else p
 }
 
