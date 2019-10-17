@@ -142,7 +142,7 @@ plot(bioconductorDownloads(packages = "monocle", from = "2015-06", to = "2019-06
 plot(bioconductorDownloads(packages = "monocle", from = "2019"))
 ```
 
-The red square indicates an in-progress observation.
+Because Bioconductor aggregates its data, a red square is used to indicate an in-progress observation.
 
 ### IV - Computing percentiles and ranks
 

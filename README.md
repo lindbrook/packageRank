@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.5-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -193,7 +193,8 @@ plot(bioconductorDownloads(packages = "monocle", from = "2019"))
 
 ![](man/figures/README-bioconductorDownloads-2.png)<!-- -->
 
-The red square indicates an in-progress observation.
+Because Bioconductor aggregates its data, a red square is used to
+indicate an in-progress observation.
 
 ### IV - Computing percentiles and ranks
 
