@@ -130,7 +130,7 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
   }
 
   if (graphics == "base") {
-    if (length(x$packages) == 1) {
+    if (is.null(x$packages) | length(x$packages) == 1) {
       bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
         obs.in.progress)
     } else if (length(x$packages) > 1) {
