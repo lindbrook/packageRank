@@ -130,8 +130,15 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
   }
 
   if (graphics == "base") {
-    bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
-      obs.in.progress)
+    if (length(x$packages) == 1) {
+      bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
+        obs.in.progress)
+    } else if (length(x$packages) > 1) {
+      grDevices::devAskNewPage(ask = TRUE)
+      bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
+        obs.in.progress)
+      grDevices::devAskNewPage(ask = FALSE)
+    }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, smooth.f, se,
       log_count, obs.in.progress)

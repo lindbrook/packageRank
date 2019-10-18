@@ -151,6 +151,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
             main = days.observed)
         }
       } else {
+        grDevices::devAskNewPage(ask = TRUE)
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
           if (log_count) {
@@ -170,20 +171,18 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
                 ylab = "Count")
             }
           }
-
           if (r.version) {
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, tick = FALSE, line = -2/3)
             abline(v = as.Date(r_v$date), lty = "dotted")
           }
-
           if (smooth) {
             lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
               col = "blue")
           }
-
           title(main = pkg)
         }))
+        grDevices::devAskNewPage(ask = FALSE)
       }
 
     } else {

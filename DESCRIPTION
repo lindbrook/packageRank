@@ -1,7 +1,7 @@
 Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
-Version: 0.3.0
+Version: 0.2.0.9061
 Date: 2019-10-17
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
@@ -20,6 +20,7 @@ Imports:
     cranlogs,
     data.table (>= 1.12.2),
     ggplot2,
+    grDevices,
     memoise,
     RCurl,
     rversions,
