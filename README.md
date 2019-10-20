@@ -291,9 +291,9 @@ you run either ‘packageRank()’ or ‘bioconductorRank()’:
       throw.default R.methodsS3
 
 This is a consequence of an upstream, higher-order package dependency.
-For more information, see [R.methodsS3,
+For more information, see [R.methodsS3:
 Issue 15](https://github.com/HenrikBengtsson/R.methodsS3/issues/15) and
-[R.utils,
+[R.utils:
 Issue 95](https://github.com/HenrikBengtsson/R.utils/issues/95) on
 Henrik Bengtsson’s GitHub pages for details.
 
