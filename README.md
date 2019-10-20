@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9062-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9063-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -278,22 +278,24 @@ For Bioconductor packages, use bioconductorRank():
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.3 434 of 1,912
+> 1 2019-09   cicero       171       77.3 434 of 1,913
 ```
 
 #### warning message
 
-With both of these functions and R \>= 3.6, you’re likely to see this
-warning message the first time the functions are run:
+With R \>= 3.6, you’re likely to see a warning message the first time
+you run either ‘packageRank()’ or ‘bioconductorRank()’:
 
     Registered S3 method overwritten by 'R.oo':
       method        from
       throw.default R.methodsS3
 
 This is a consequence of an upstream, higher-order package dependency.
-See [here](https://github.com/HenrikBengtsson/R.utils/issues/95) and
-[here](https://github.com/HenrikBengtsson/R.methodsS3/issues/15) for
-details.
+For more information, see [R.methodsS3,
+Issue 15](https://github.com/HenrikBengtsson/R.methodsS3/issues/15) and
+[R.utils,
+Issue 95](https://github.com/HenrikBengtsson/R.utils/issues/95) on
+Henrik Bengtsson’s GitHub pages for details.
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
 
