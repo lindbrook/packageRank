@@ -246,7 +246,7 @@ Note: only two time frames are currently available: "last-week" and "last-month"
 
 ### VII Graphics: base R and 'ggplot2'
 
-Plots are available as both base R and 'ggplot2' graphs. By default, plots for one package or day use base graphics while those with multiple packages or days use 'ggplot2'. You can override these defaults by using the "graphics" argument in the plot() method.
+Plots are available as both base R and 'ggplot2' graphs. By default, plots for one package or day use base graphics while those with multiple packages or days use 'ggplot2'. You can override these defaults by using the "graphics" argument in the 'plot()' method.
 
 ### VIII - Memoization
 
