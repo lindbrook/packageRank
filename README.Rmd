@@ -158,7 +158,7 @@ packageRank(packages = "HistData", date = "2019-01-01")
 
 Here, we see that 51 downloads on January 1, 2019 put 'HistData' in the 93rd percentile: 93% of packages had fewer downloads than 'HistData'.
 
-Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages available on CRAN, but not in its archive, without any downloads on a given day is actually pretty small (more about this in future releases). In fact, the number of archived packages that are downloaded is often pretty high (e.g., upwards of 50%).
+Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages on CRAN without any downloads on a given day is actually pretty small. In fact, the number of archived packages, not on CRAN, that are downloaded is often pretty high. (More about these numbers in future releases.)
 
 #### computing rank percentile
 

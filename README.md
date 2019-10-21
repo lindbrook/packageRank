@@ -1,7 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9064-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -210,10 +209,10 @@ Here, we see that 51 downloads on January 1, 2019 put ‘HistData’ in the
 
 Because packages with zero downloads are not recorded in the log, there
 is a potential censoring problem. However, my analysis indicates that
-the number of packages available on CRAN, but not in its archive,
-without any downloads on a given day is actually pretty small (more
-about this in future releases). In fact, the number of archived packages
-that are downloaded is often pretty high (e.g., upwards of 50%).
+the number of packages on CRAN without any downloads on a given day is
+actually pretty small. In fact, the number of archived packages, not on
+CRAN, that are downloaded is often pretty high. (More about these
+numbers in future releases.)
 
 #### computing rank percentile
 
