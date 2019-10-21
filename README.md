@@ -1,6 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.0.9064-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -196,7 +197,7 @@ percentile. This statistic, familiar to those who’ve taken a
 standardized test, tell us the packages had fewer downloads. In this
 way, the rank percentile give us an idea of a package’s place in the
 overall distribution of downloads. To compute this statistic, use
-‘packageRank()’:
+`packageRank()`:
 
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
@@ -264,7 +265,7 @@ downloads[downloads == 51]
 #### warning message
 
 With R \>= 3.6, you’re likely to see a warning message the first time
-you run either ‘packageRank()’ or ‘bioconductorRank()’:
+you run either `packageRank()` or `bioconductorRank()`:
 
     Registered S3 method overwritten by 'R.oo':
       method        from
@@ -279,7 +280,7 @@ Henrik Bengtsson’s GitHub pages for details.
 
 #### Bioconductor
 
-For Bioconductor packages, use bioconductorRank():
+For Bioconductor packages, use `bioconductorRank()`:
 
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
@@ -309,7 +310,7 @@ left); and 4) the total number of downloads (2,982,767 for CRAN) (in
 blue, top right).
 
 You can also do this with
-bioconductorRank():
+`bioconductorRank()`:
 
 ``` r
 plot(bioconductorRank(packages = "cicero", date = "2019-01"))
@@ -356,7 +357,7 @@ available.
 Plots are available as both base R and ‘ggplot2’ graphs. By default,
 plots for one package or day use base graphics while those with multiple
 packages or days use ‘ggplot2’. You can override these defaults by using
-the “graphics” argument in the plot() method.
+the “graphics” argument in the `plot()` method.
 
 ### VIII - Memoization
 

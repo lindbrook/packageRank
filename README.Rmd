@@ -146,7 +146,7 @@ Because of the aggregation, red squares are used to indicate in-progress observa
 
 ### IV - Computing percentiles and ranks
 
-One way to put download counts into context is to compute its rank percentile. This statistic, familiar to those who've taken a standardized test, tell us the packages had fewer downloads. In this way, the rank percentile give us an idea of a package's place in the overall distribution of downloads. To compute this statistic, use 'packageRank()':
+One way to put download counts into context is to compute its rank percentile. This statistic, familiar to those who've taken a standardized test, tell us the packages had fewer downloads. In this way, the rank percentile give us an idea of a package's place in the overall distribution of downloads. To compute this statistic, use `packageRank()`:
 
 ```{r packageRank0, echo = FALSE}
 packageRank(packages = "HistData", date = "2019-01-01")
@@ -190,7 +190,7 @@ downloads[downloads == 51]
 
 #### warning message
 
-With R >= 3.6, you're likely to see a warning message the first time you run either 'packageRank()' or 'bioconductorRank()':
+With R >= 3.6, you're likely to see a warning message the first time you run either `packageRank()` or `bioconductorRank()`:
 
 ```
 Registered S3 method overwritten by 'R.oo':
@@ -202,7 +202,7 @@ This is a consequence of an upstream, higher-order package dependency. For more 
 
 #### Bioconductor
 
-For Bioconductor packages, use bioconductorRank():
+For Bioconductor packages, use `bioconductorRank()`:
 
 ```{r bioconductorRank1}
 bioconductorRank(packages = "cicero", date = "2019-09")
@@ -218,7 +218,7 @@ plot(packageRank(packages = "HistData", date = "2019-01-01"))
 
 This provides a cross-sectional view that plots a package's rank (x-axis) against the base 10 logarithm of its downloads (y-axis), and highlights the package's position in the overall distribution of downloads. In addition, the plot illustrates 1) a package's rank percentile and raw count of downloads (in red); 2) the location of the 75th, 50th and 25th percentiles (dotted gray vertical lines); 3) the package with the most downloads, in this case 'WGCNA' (in blue, top left); and 4) the total number of downloads (2,982,767 for CRAN) (in blue, top right).
 
-You can also do this with bioconductorRank():
+You can also do this with `bioconductorRank()`:
 
 ```{r plot2b, fig.width = 5, fig.height = 5, fig.align = "left"}
 plot(bioconductorRank(packages = "cicero", date = "2019-01"))
@@ -246,7 +246,7 @@ Note: only two time frames are currently available: "last-week" and "last-month"
 
 ### VII Graphics: base R and 'ggplot2'
 
-Plots are available as both base R and 'ggplot2' graphs. By default, plots for one package or day use base graphics while those with multiple packages or days use 'ggplot2'. You can override these defaults by using the "graphics" argument in the 'plot()' method.
+Plots are available as both base R and 'ggplot2' graphs. By default, plots for one package or day use base graphics while those with multiple packages or days use 'ggplot2'. You can override these defaults by using the "graphics" argument in the `plot()` method.
 
 ### VIII - Memoization
 
