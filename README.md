@@ -1,8 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
-
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -286,7 +285,7 @@ For Bioconductor packages, use `bioconductorRank()`:
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.3 434 of 1,913
+> 1 2019-09   cicero       171       77.5 434 of 1,932
 ```
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
