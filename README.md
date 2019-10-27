@@ -105,7 +105,7 @@ plot(cranDownloads(packages = "HistData", from = "2015-06", to = "2016-01"))
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
-# 2016 to 2019  (either character or numeric are OK)
+# 2015 to 2019  (either character or numeric are OK)
 plot(cranDownloads(packages = "HistData", from = "2015", to = "2019"))
 ```
 
