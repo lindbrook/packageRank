@@ -6,6 +6,7 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @import data.table RCurl
+#' @importFrom R.utils decompressFile
 #' @export
 #' @examples
 #' \donttest{
