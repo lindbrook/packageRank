@@ -2,7 +2,8 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date. yyyy-mm-dd
+#' @param date Character. Date. yyyy-mm-dd.
+#' @param filter Logical or Numeric. If Logical, 1000 bytes, If Numeric, set minimum package size in bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @import data.table RCurl
@@ -14,7 +15,7 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  memoization = TRUE) {
+  filter = TRUE, memoization = TRUE) {
 
   ymd <- as.Date(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
@@ -33,17 +34,19 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   # NA for Package or R
   cran_log <- cran_log[-which(is.na(cran_log$package)), ]
 
+  if (filter) {
+    if (is.numeric(filter)) {
+      cran_log <- cran_log[cran_log$size >= filter, ]
+    } else if (is.logical(filter)) {
+      cran_log <- cran_log[cran_log$size >= 1000, ]
+    } else stop ("'filter' must be Logical or Numeric.")
+  }
+
   if (any(packages %in% unique(cran_log$package) == FALSE)) {
     stop("Package not found in log.")
   }
 
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
-
-  # if (length(zero.downloads) > 0) {
-  #   crosstab <- c(crosstab, rep(0, length(zero.downloads)))
-  #   sel <- (length(crosstab) - length(zero.downloads) + 1):length(crosstab)
-  #   names(crosstab)[sel] <- sort(zero.downloads)
-  # }
 
   # packages in bin
   pkg.bin <- lapply(packages, function(nm) {
