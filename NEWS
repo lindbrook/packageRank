@@ -1,7 +1,7 @@
 packageRank 0.3.0.9002
 ==================
 
-- filter out package downloads < 1000 bytes in packageRank().
+- filter out package downloads < 1000 bytes via packageRank(filter = TRUE).
 
 
 packageRank 0.3.0.9001
