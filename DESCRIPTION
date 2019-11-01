@@ -23,6 +23,7 @@ Imports:
     grDevices,
     memoise,
     RCurl,
+    R.utils,
     rversions,
     stats
 Suggests: knitr,
