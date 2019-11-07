@@ -160,8 +160,8 @@ With ‘ggplot2’ figures, the ‘se’ argument adds confidence
 intervals:
 
 ``` r
-plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"), when = "last-month"), smooth = TRUE,
-  se = TRUE)
+plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"), when = "last-month"),
+  smooth = TRUE, se = TRUE)
 ```
 
 ![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->

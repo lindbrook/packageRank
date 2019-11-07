@@ -126,8 +126,8 @@ plot(cranDownloads(packages = "rstan", from = "2019"), smooth = TRUE, r.version 
 With 'ggplot2' figures, the 'se' argument adds confidence intervals:
 
 ```{r}
-plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"), when = "last-month"), smooth = TRUE,
-  se = TRUE)
+plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"), when = "last-month"),
+  smooth = TRUE, se = TRUE)
 ```
 
 #### Bioconductor
@@ -154,7 +154,7 @@ packageRank(packages = "HistData", date = "2019-01-01")
 
 Here, we see that 51 downloads on January 1, 2019 put 'HistData' in the 93rd percentile: 93% of packages had fewer downloads than 'HistData'.
 
-Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages on CRAN without any downloads on a given day is actually pretty small. In fact, the number of archived packages, not on CRAN, that are downloaded is often pretty high. 
+Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages on CRAN without any downloads on a given day is actually pretty small. In fact, the number of archived packages, not on CRAN, that are downloaded is often pretty high.
 
 #### Filter downloads by size
 
@@ -164,7 +164,7 @@ Note that with 'packageRank' (> 0.3.0.9002), packageRank() has an additional arg
 packageRank(packages = "HistData", date = "2019-10-30", filter = FALSE)
 ```
 
-Below is a filtered count. 
+Below is a filtered count.
 
 ```{r filter2}
 packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
