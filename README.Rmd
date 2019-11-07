@@ -148,17 +148,29 @@ Because of the aggregation, red squares are used to indicate in-progress observa
 
 One way to put download counts into context is to compute its rank percentile. This statistic, familiar to those who've taken a standardized test, tell us the packages had fewer downloads. In this way, the rank percentile give us an idea of a package's place in the overall distribution of downloads. To compute this statistic, use `packageRank()`:
 
-```{r packageRank0, echo = FALSE}
-packageRank(packages = "HistData", date = "2019-01-01")
-```
-
 ```{r packageRank1}
 packageRank(packages = "HistData", date = "2019-01-01")
 ```
 
 Here, we see that 51 downloads on January 1, 2019 put 'HistData' in the 93rd percentile: 93% of packages had fewer downloads than 'HistData'.
 
-Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages on CRAN without any downloads on a given day is actually pretty small. In fact, the number of archived packages, not on CRAN, that are downloaded is often pretty high. (More about these numbers in future releases.)
+Because packages with zero downloads are not recorded in the log, there is a potential censoring problem. However, my analysis indicates that the number of packages on CRAN without any downloads on a given day is actually pretty small. In fact, the number of archived packages, not on CRAN, that are downloaded is often pretty high. 
+
+#### Filter downloads by size
+
+Note that with 'packageRank' (> 0.3.0.9002), packageRank() has an additional argument, 'filter', that by default removes downloads < 1000 bytes. Depending on the day of the week and the number of versions a package has, this can provide a more accurate count of pacakge downloads (details forthcoming). For example, here is a raw download count:
+
+```{r filter1}
+packageRank(packages = "HistData", date = "2019-10-30", filter = FALSE)
+```
+
+Below is a filtered count. 
+
+```{r filter2}
+packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
+```
+
+Besides a difference of 21 downloads, notice that the number of packages downloaded falls from 17,396 to 15,330.
 
 #### computing rank percentile
 
