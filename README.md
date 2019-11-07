@@ -17,8 +17,8 @@
 
 NOTE: ‘packageRank’ relies on the ‘cranlogs’ package and an active
 internet connection. RStudio CRAN logs for the previous day are
-generally posted at 17:00 UTC (GMT+2); results for functions that rely
-on ‘cranlogs’ are available soon after.
+generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2); results for
+functions that rely on ‘cranlogs’ are available soon after.
 
 ### Getting started
 
@@ -202,7 +202,7 @@ overall distribution of downloads. To compute this statistic, use
 ``` r
 packageRank(packages = "HistData", date = "2019-01-01")
 >         date packages downloads percentile          rank
-> 1 2019-01-01 HistData        51       93.4 920 of 14,020
+> 1 2019-01-01 HistData        51       93.4 915 of 14,020
 ```
 
 Here, we see that 51 downloads on January 1, 2019 put ‘HistData’ in the
@@ -212,8 +212,32 @@ Because packages with zero downloads are not recorded in the log, there
 is a potential censoring problem. However, my analysis indicates that
 the number of packages on CRAN without any downloads on a given day is
 actually pretty small. In fact, the number of archived packages, not on
-CRAN, that are downloaded is often pretty high. (More about these
-numbers in future releases.)
+CRAN, that are downloaded is often pretty high.
+
+#### Filter downloads by size
+
+Note that with ‘packageRank’ (\> 0.3.0.9002), packageRank() has an
+additional argument, ‘filter’, that by default removes downloads \< 1000
+bytes. Depending on the day of the week and the number of versions a
+package has, this can provide a more accurate count of pacakge downloads
+(details forthcoming). For example, here is a raw download count:
+
+``` r
+packageRank(packages = "HistData", date = "2019-10-30", filter = FALSE)
+>         date packages downloads percentile          rank
+> 1 2019-10-30 HistData       403       95.4 794 of 17,396
+```
+
+Below is a filtered count.
+
+``` r
+packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
+>         date packages downloads percentile          rank
+> 1 2019-10-30 HistData       382       94.8 796 of 15,330
+```
+
+Besides a difference of 21 downloads, notice that the number of packages
+downloaded falls from 17,396 to 15,330.
 
 #### computing rank percentile
 
@@ -231,7 +255,7 @@ round(100 * mean(downloads < downloads["HistData"]), 1)
 # OR
 
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["HistData"]))
-> [1] 13092
+> [1] 13097
 
 (tot.pkgs <- length(downloads))
 > [1] 14020
@@ -254,29 +278,13 @@ downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
 > 
->  dynamicTreeCut        HistData          kimisc  NeuralNetTools 
+>  dynamicTreeCut        HistData         modeest  NeuralNetTools 
 >              51              51              51              51 
->   OpenStreetMap       pkgKitten plotlyGeoAssets            spls 
+>   OpenStreetMap       pkgKitten plotlyGeoAssets         superpc 
 >              51              51              51              51 
->        webutils            zoom 
+>           sweep        webutils 
 >              51              51
 ```
-
-#### warning message
-
-With R \>= 3.6, you’re likely to see a warning message the first time
-you run either `packageRank()` or `bioconductorRank()`:
-
-    Registered S3 method overwritten by 'R.oo':
-      method        from
-      throw.default R.methodsS3
-
-This is a consequence of an upstream, higher-order package dependency.
-For more information, see [R.methodsS3:
-Issue 15](https://github.com/HenrikBengtsson/R.methodsS3/issues/15) and
-[R.utils:
-Issue 95](https://github.com/HenrikBengtsson/R.utils/issues/95) on
-Henrik Bengtsson’s GitHub pages for details.
 
 #### Bioconductor
 
@@ -285,7 +293,7 @@ For Bioconductor packages, use `bioconductorRank()`:
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.5 434 of 1,932
+> 1 2019-09   cicero       171       77.7 434 of 1,949
 ```
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
