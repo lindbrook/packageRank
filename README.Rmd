@@ -24,7 +24,7 @@ library(packageRank)
 * compute and visualize a package's position in the overall distribution of download counts for a given day (cross-sectionally) or over time (longitudinally).
 * compute and visualize the downloads of the R application.
 
-NOTE: 'packageRank' relies on the 'cranlogs' package and an active internet connection. RStudio CRAN logs for the previous day are generally posted at 17:00 UTC (GMT+2); results for functions that rely on 'cranlogs' are available soon after.
+NOTE: 'packageRank' relies on the 'cranlogs' package and an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2); results for functions that rely on 'cranlogs' are available soon after.
 
 ### Getting started
 
