@@ -5,12 +5,14 @@
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
 packageLog(packages = "HistData", date = Sys.Date() - 1,
-  memoization = TRUE)
+  filter = FALSE, memoization = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date.}
+
+\item{filter}{Logical or Numeric. If Logical, 1000 bytes, If Numeric, set minimum package size in bytes.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
