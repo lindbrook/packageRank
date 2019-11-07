@@ -6,8 +6,6 @@
 #' @param filter Logical or Numeric. If Logical, 1000 bytes, If Numeric, set minimum package size in bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
-#' @import data.table RCurl
-#' @importFrom R.utils decompressFile
 #' @export
 #' @examples
 #' \donttest{
@@ -92,7 +90,6 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
-#' @import graphics ggplot2
 #' @export
 #' @examples
 #' \donttest{
