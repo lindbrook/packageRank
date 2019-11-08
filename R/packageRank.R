@@ -6,6 +6,7 @@
 #' @param filter Logical or Numeric. If Logical, 1000 bytes, If Numeric, set minimum package size in bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
+#' @importFrom R.utils decompressFile
 #' @export
 #' @examples
 #' \donttest{
