@@ -3,14 +3,14 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
-#' @param filter Logical or Numeric. If Logical, 1000 bytes, If Numeric, set minimum package size in bytes.
+#' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
   filter = FALSE, memoization = TRUE) {
-    
+
   ymd <- as.Date(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
   year <- as.POSIXlt(ymd)$year + 1900
@@ -24,12 +24,16 @@ packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
     msg <- "Check your internet connection or try the previous day."
     stop("Log for ", date, " not (yet) available. ", msg)
   }
- 
+
   cran_log <- as.data.frame(cran_log[!is.na(cran_log$package), ])
-   
+
   if (filter) {
     if (is.numeric(filter)) {
-      cran_log <- cran_log[cran_log$size >= filter, ]
+      if (filter >= 0) {
+          cran_log <- cran_log[cran_log$size >= filter, ]
+        } else if (filter < 0) {
+          cran_log <- cran_log[cran_log$size < -filter, ]
+        }
     } else if (is.logical(filter)) {
       cran_log <- cran_log[cran_log$size >= 1000, ]
     } else stop ("'filter' must be Logical or Numeric.")

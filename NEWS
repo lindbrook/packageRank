@@ -1,3 +1,9 @@
+packageRank 0.3.0.9004
+==================
+
+- enable negative filter values in packageLog() and  packageRank().
+
+
 packageRank 0.3.0.9003
 ==================
 
