@@ -4,8 +4,15 @@
 \alias{plot.package_rank_time}
 \title{Plot method for timeSeriesRank().}
 \usage{
-\method{plot}{package_rank_time}(x, graphics = NULL, log_count = TRUE,
-  smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...)
+\method{plot}{package_rank_time}(
+  x,
+  graphics = NULL,
+  log_count = TRUE,
+  smooth = TRUE,
+  sample_smooth = TRUE,
+  f = 1/3,
+  ...
+)
 }
 \arguments{
 \item{x}{Object. An object of class "time_series" created by \code{packageRankTime()}.}

@@ -4,8 +4,12 @@
 \alias{packageRank}
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
-packageRank(packages = "HistData", date = Sys.Date() - 1,
-  filter = TRUE, memoization = TRUE)
+packageRank(
+  packages = "HistData",
+  date = Sys.Date() - 1,
+  filter = TRUE,
+  memoization = TRUE
+)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}

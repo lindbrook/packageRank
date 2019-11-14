@@ -4,8 +4,7 @@
 \alias{plot.bioconductor_rank}
 \title{Plot method for bioconductorRank().}
 \usage{
-\method{plot}{bioconductor_rank}(x, graphics = "base",
-  log_count = TRUE, ...)
+\method{plot}{bioconductor_rank}(x, graphics = "base", log_count = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class "bioconductor_rank" created by \code{bioconductorRank()}.}

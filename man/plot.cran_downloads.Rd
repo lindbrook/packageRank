@@ -4,9 +4,17 @@
 \alias{plot.cran_downloads}
 \title{Plot method for cranDownloads().}
 \usage{
-\method{plot}{cran_downloads}(x, graphics = NULL, points = "auto",
-  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  r.version = FALSE, ...)
+\method{plot}{cran_downloads}(
+  x,
+  graphics = NULL,
+  points = "auto",
+  log_count = FALSE,
+  smooth = FALSE,
+  se = FALSE,
+  f = 1/3,
+  r.version = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{object.}
