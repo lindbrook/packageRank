@@ -13,6 +13,7 @@
   se = FALSE,
   f = 1/3,
   r.version = FALSE,
+  pkg.version,
   ...
 )
 }
@@ -32,6 +33,8 @@
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics = "base" only.}
 
 \item{r.version}{Logical. Add R release dates.}
+
+\item{pkg.version}{Logical. Add package release dates.}
 
 \item{...}{Additional plotting parameters.}
 }
