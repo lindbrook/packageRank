@@ -1,3 +1,10 @@
+packageRank 0.3.0.9005
+==================
+
+- add package version annotation to plot.cran_downloads() prototype.
+- add packageVersions(), packageCRAN() and packageArchive() prototypes.
+
+
 packageRank 0.3.0.9004
 ==================
 
