@@ -2,7 +2,7 @@ Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
 Version: 0.3.0.9005
-Date: 2019-11-21
+Date: 2019-11-22
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
@@ -15,7 +15,7 @@ License: GPL (>= 2)
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.1
 Imports:
     cranlogs,
     data.table (>= 1.12.2),
