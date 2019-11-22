@@ -4,12 +4,8 @@
 \alias{packageLog}
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
-packageLog(
-  packages = "HistData",
-  date = Sys.Date() - 1,
-  filter = FALSE,
-  memoization = TRUE
-)
+packageLog(packages = "HistData", date = Sys.Date() - 1, filter = FALSE,
+  memoization = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}

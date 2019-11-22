@@ -4,17 +4,9 @@
 \alias{plot.bioconductor}
 \title{Plot method for bioconductor_downloads().}
 \usage{
-\method{plot}{bioconductor}(
-  x,
-  graphics = NULL,
-  count = "download",
-  points = "auto",
-  smooth = FALSE,
-  smooth.f = 2/3,
-  se = FALSE,
-  log_count = FALSE,
-  ...
-)
+\method{plot}{bioconductor}(x, graphics = NULL, count = "download",
+  points = "auto", smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  log_count = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}

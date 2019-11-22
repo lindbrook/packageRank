@@ -16,6 +16,7 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.0.1
+Roxygen: list(old_usage = TRUE)
 Imports:
     cranlogs,
     data.table (>= 1.12.2),

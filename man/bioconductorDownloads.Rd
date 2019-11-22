@@ -4,13 +4,8 @@
 \alias{bioconductorDownloads}
 \title{Annual/monthly package downloads from Bioconductor (beta).}
 \usage{
-bioconductorDownloads(
-  packages = NULL,
-  from = NULL,
-  to = NULL,
-  when = NULL,
-  observation = "month"
-)
+bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
+  when = NULL, observation = "month")
 }
 \arguments{
 \item{packages}{Character. Vector of package names.}

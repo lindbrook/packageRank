@@ -4,12 +4,8 @@
 \alias{packageRankTime}
 \title{Package download counts and rank percentiles (longitudinal).}
 \usage{
-packageRankTime(
-  packages = "HistData",
-  when = "last-month",
-  sample.pct = 5,
-  multi.core = TRUE
-)
+packageRankTime(packages = "HistData", when = "last-month",
+  sample.pct = 5, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
