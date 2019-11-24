@@ -111,7 +111,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
 plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, r.version = FALSE,
-  pkg.version, ...) {
+  pkg.version = FALSE, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")

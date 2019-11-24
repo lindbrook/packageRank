@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{cran_downloads}(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  r.version = FALSE, pkg.version, ...)
+  r.version = FALSE, pkg.version = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
