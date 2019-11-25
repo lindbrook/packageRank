@@ -2,6 +2,7 @@ packageRank 0.3.0.9006
 ==================
 
 - set plot.cran_downloads(pkg.version = FALSE).
+- use abline(col = "red") for 'pkg.version'.
 
 
 packageRank 0.3.0.9005

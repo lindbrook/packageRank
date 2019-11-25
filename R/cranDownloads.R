@@ -182,7 +182,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
             p_v <- packageVersions(x$packages)
             axis(3, at = as.Date(p_v$date), labels = p_v$version,
               cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = p_v$date, lty = "dotted")
+            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           if (smooth) {
@@ -285,7 +285,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
             p_v <- packageVersions(x$packages)
             axis(3, at = as.Date(p_v$date), labels = p_v$version,
               cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = p_v$date, lty = "dotted")
+            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           title(main = "R Downloads")
@@ -322,7 +322,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
             p_v <- packageVersions(x$packages)
             axis(3, at = as.Date(p_v$date), labels = p_v$version,
               cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = as.Date(p_v$date), lty = "dotted")
+            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           title(main = x$package)
