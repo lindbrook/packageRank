@@ -39,7 +39,7 @@ packageCRAN <- function(package = "cholera") {
 
     if (!removed) {
       published.check <- grepString("Published:", web_page)
-      version.check <- grepString("Version:", web_page)
+      version.check <- grepString("<td>Version:</td>", web_page)
 
       if (any(published.check)) {
         line.id <- which(published.check) + 1
