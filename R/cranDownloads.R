@@ -41,43 +41,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
   } else if (!is.null(from)) {
-    date.err.msg <- 'Invalid date or format: "yyyy-mm-dd", "yyyy-mm" or "yyyy".'
-
-    if (!is.null(from)) {
-      if (nchar(from) == 10L & grepl("-", from)) {
-        start.date <- as.Date(from, optional = TRUE)
-      } else if (nchar(from) == 7L & grepl("-", from)) {
-        start.date <- dayOfMonth(from, first.log)
-      } else if (nchar(from) == 4L) {
-        start.date <- as.Date(paste0(from, "-01-01"), optional = TRUE)
-      } else stop(date.err.msg)
-      if (is.na(start.date)) stop(date.err.msg)
-    }
-
-    if (!is.null(to)) {
-      if (nchar(to) == 10L & grepl("-", to)) {
-        end.date <- as.Date(to, optional = TRUE)
-      } else if (nchar(to) == 7L & grepl("-", to)) {
-        end.date <- dayOfMonth(to, first.log, end.date = TRUE)
-      } else if (nchar(to) == 4L) {
-        end.date <- as.Date(paste0(to, "-12-31"), optional = TRUE)
-        if (end.date > cal.date) end.date <- cal.date
-      } else stop(date.err.msg)
-      if (is.na(end.date)) stop(date.err.msg)
-    } else end.date <- cal.date
-
+    start.date <- resolveFromDate(from)
+    if (!is.null(to)) end.date <- resolveToDate(to)
+    else end.date <- cal.date
     if (start.date > end.date) stop ('"from" must be <= "to".')
-
-    if (start.date < as.Date(first.log)) {
-      warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-      start.date <- first.log
-    }
-
-    if (end.date > cal.date) {
-      warning("Future dates truncated.")
-      end.date <- cal.date
-    }
-
     args <- list(packages, from = start.date, to = end.date)
   }
 
