@@ -277,13 +277,11 @@ pkg.rank <- packageRank(packages = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
->
->  dynamicTreeCut        HistData         modeest  NeuralNetTools
->              51              51              51              51
->   OpenStreetMap       pkgKitten plotlyGeoAssets         superpc
->              51              51              51              51
->           sweep        webutils
->              51              51
+> 
+>  dynamicTreeCut        HistData         modeest  NeuralNetTools   OpenStreetMap 
+>              51              51              51              51              51 
+>       pkgKitten plotlyGeoAssets         superpc           sweep        webutils 
+>              51              51              51              51              51
 ```
 
 #### Bioconductor
@@ -293,7 +291,7 @@ For Bioconductor packages, use `bioconductorRank()`:
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.7 434 of 1,949
+> 1 2019-09   cicero       171       77.7 434 of 1,950
 ```
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
@@ -341,7 +339,7 @@ To visualize a package’s relative position over time, use
 `packageRankTime()`:
 
 ``` r
-plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg = "base")
+plot(packageRankTime(packages = "HistData", when = "last-month"))
 ```
 
 <img src="man/figures/README-plot_ts-1.png" style="display: block; margin: auto auto auto 0;" />

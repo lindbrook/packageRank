@@ -236,7 +236,7 @@ plot(packageRank(packages = c("cholera", "HistData", "regtools"), date = "2019-0
 To visualize a package's relative position over time, use `packageRankTime()`:
 
 ```{r plot_ts, fig.width = 5, fig.height = 5, fig.align = "left", eval = TRUE}
-plot(packageRankTime(packages = "HistData", when = "last-month"), graphics_pkg = "base")
+plot(packageRankTime(packages = "HistData", when = "last-month"))
 ```
 
 This longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis).
