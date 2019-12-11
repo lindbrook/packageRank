@@ -170,7 +170,7 @@ Below is a filtered count.
 packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
 ```
 
-Besides a difference of 21 downloads, notice that the number of packages downloaded falls from 17,396 to 15,330.
+Besides a difference of 21 downloads, notice that the number of unique packages downloaded falls from 17,396 to 15,330.
 
 #### computing rank percentile
 
@@ -188,7 +188,7 @@ round(100 * mean(downloads < downloads["HistData"]), 1)
 
 (tot.pkgs <- length(downloads))
 
-round(100 * pkgs.with.fewer.downloads / tot.pkgs , 1)
+round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 ```
 
 For the example above, 51 downloads puts 'HistData' in 920th place among the 14,020 packages downloaded. This rank is "nominal" because multiple packages can have the same number of downloads. As a result, a package's nominal rank (but not its rank percentile) can be affected by its name: packages with the same number of downloads are sorted in alphabetical order. Thus, 'HistData' benefits from the fact that it is second in the list of packages with 51 downloads:

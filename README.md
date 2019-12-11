@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9009-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9010-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -236,8 +236,8 @@ packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
 > 1 2019-10-30 HistData       382       94.8 796 of 15,330
 ```
 
-Besides a difference of 21 downloads, notice that the number of packages
-downloaded falls from 17,396 to 15,330.
+Besides a difference of 21 downloads, notice that the number of unique
+packages downloaded falls from 17,396 to 15,330.
 
 #### computing rank percentile
 
@@ -260,7 +260,7 @@ round(100 * mean(downloads < downloads["HistData"]), 1)
 (tot.pkgs <- length(downloads))
 > [1] 14020
 
-round(100 * pkgs.with.fewer.downloads / tot.pkgs , 1)
+round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 93.4
 ```
 
@@ -291,7 +291,7 @@ For Bioconductor packages, use `bioconductorRank()`:
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.7 434 of 1,950
+> 1 2019-09   cicero       171       77.8 434 of 1,953
 ```
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
