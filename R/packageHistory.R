@@ -4,7 +4,7 @@
 #' @param package Character. Package name.
 #' @export
 
-packageVersions <- function(package = "cholera") {
+packageHistory <- function(package = "cholera") {
   # "2008-02-16" first package
   if (any(is.na(packageCRAN(package)))) {
     cran <- NULL

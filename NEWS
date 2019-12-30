@@ -1,3 +1,10 @@
+packageRank 0.3.0.9012
+==================
+
+- rename packageVersions() to packageHistory().
+- packageRank(filter.size, filter.version) to packageRank(size.filter, version.filter).
+
+
 packageRank 0.3.0.9011
 ==================
 
