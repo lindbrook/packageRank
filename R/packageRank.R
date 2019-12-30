@@ -3,8 +3,8 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. yyyy-mm-dd.
-#' @param filter.size Logical or Numeric. If Logical, TRUE filter.sizes out downloads less than 1000 bytes. If Numeric, a postive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.
-#' @param filter.version Logical.
+#' @param size.filter Logical or Numeric. If Logical, TRUE size.filters out downloads less than 1000 bytes. If Numeric, a postive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.
+#' @param version.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @importFrom R.utils decompressFile
@@ -16,7 +16,7 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  filter.size = TRUE, filter.version = FALSE, memoization = TRUE) {
+  size.filter = TRUE, version.filter = FALSE, memoization = TRUE) {
 
   ymd <- as.Date(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
@@ -35,21 +35,21 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   # NA for Package or R
   cran_log <- cran_log[-which(is.na(cran_log$package)), ]
 
-  if (filter.size) {
-    if (is.numeric(filter.size)) {
-      if (filter.size >= 0) {
-          cran_log <- cran_log[cran_log$size >= filter.size, ]
-        } else if (filter.size < 0) {
-          cran_log <- cran_log[cran_log$size < -filter.size, ]
+  if (size.filter) {
+    if (is.numeric(size.filter)) {
+      if (size.filter >= 0) {
+          cran_log <- cran_log[cran_log$size >= size.filter, ]
+        } else if (size.filter < 0) {
+          cran_log <- cran_log[cran_log$size < -size.filter, ]
         }
-    } else if (is.logical(filter.size)) {
+    } else if (is.logical(size.filter)) {
       cran_log <- cran_log[cran_log$size >= 1000, ]
-    } else stop ("'filter.size' must be Logical or Numeric.")
+    } else stop ("'size.filter' must be Logical or Numeric.")
   }
 
-  if (filter.version) {
+  if (version.filter) {
     alters <- cran_log[cran_log$package %in% packages == FALSE, ]
-    version.data <- lapply(packages, packageVersions)
+    version.data <- lapply(packages, packageHistory)
     names(version.data) <- packages
 
     ver <- vapply(version.data, function(x) {
