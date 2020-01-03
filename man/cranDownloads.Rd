@@ -34,7 +34,10 @@ cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-31")
 # February to March 2019
 cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
 
-# 2019 year-to-date
-cranDownloads(packages = "HistData", from = 2019)
+# 2019 total package downloads
+cranDownloads(from = 2019, to = 2019)
+
+# year-to-date
+cranDownloads(packages = "HistData", from = 2020)
 }
 }

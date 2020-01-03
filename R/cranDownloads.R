@@ -22,8 +22,11 @@
 #' # February to March 2019
 #' cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
 #'
-#' # 2019 year-to-date
-#' cranDownloads(packages = "HistData", from = 2019)
+#' # 2019 total package downloads
+#' cranDownloads(from = 2019, to = 2019)
+#'
+#' # year-to-date
+#' cranDownloads(packages = "HistData", from = 2020)
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
@@ -73,7 +76,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
-#' plot(cranDownloads(packages = "R", from = 2019))
+#' plot(cranDownloads(packages = "R", from = 2020))
 #' }
 
 plot.cran_downloads <- function(x, graphics = NULL, points = "auto",

@@ -1,3 +1,9 @@
+packageRank 0.3.0.9013
+==================
+
+- add cranDownloads(packages = NULL) and cranDownloads(packages = "R") examples to README.
+
+
 packageRank 0.3.0.9012
 ==================
 

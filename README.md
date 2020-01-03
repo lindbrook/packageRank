@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9012-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9013-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 ### Features
@@ -125,7 +125,7 @@ a single date and a ‘ggplot2’ figure with multiple facets for multiple
 dates:
 
 ``` r
-plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
+plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), from = "2019-01-01", to = "2019-01-01"))
 ```
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
@@ -144,6 +144,28 @@ to
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"), graphics = "base")
 ```
 
+#### no packages
+
+When you don’t pass any packages (i.e., packages = NULL), you’ll get a
+count of the total package downloads from CRAN.
+
+``` r
+plot(cranDownloads(from = 2019, to = 2019))
+```
+
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+
+#### R as a “package”
+
+When you pass “R”, you’ll get a count of total downloads of the R
+application.
+
+``` r
+plot(cranDownloads(packages = "R", from = 2019, to = 2019))
+```
+
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+
 #### smoothers, confidence intervals, and R release dates
 
 You can also plot a smoother with the ‘smooth’ argument and release
@@ -154,7 +176,7 @@ argument:
 plot(cranDownloads(packages = "rstan", from = "2019"), smooth = TRUE, r.version = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
 
 With ‘ggplot2’ figures, the ‘se’ argument adds confidence
 intervals:
@@ -164,7 +186,7 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"), when = "l
   smooth = TRUE, se = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
 
 #### Bioconductor
 
@@ -220,18 +242,20 @@ Note that with ‘packageRank’ (\> 0.3.0.9002), packageRank() has an
 additional argument, ‘filter’, that by default removes downloads \< 1000
 bytes. Depending on the day of the week and the number of versions a
 package has, this can provide a more accurate count of pacakge downloads
-(details forthcoming). For example, here is a raw download count:
+(details forthcoming). For example, here is a raw download
+count:
 
 ``` r
-packageRank(packages = "HistData", date = "2019-10-30", filter = FALSE)
+packageRank(packages = "HistData", date = "2019-10-30", size.filter = FALSE)
 >         date packages downloads percentile          rank
 > 1 2019-10-30 HistData       403       95.4 794 of 17,396
 ```
 
-Below is a filtered count.
+Below is a filtered
+count.
 
 ``` r
-packageRank(packages = "HistData", date = "2019-10-30", filter = TRUE)
+packageRank(packages = "HistData", date = "2019-10-30", size.filter = TRUE)
 >         date packages downloads percentile          rank
 > 1 2019-10-30 HistData       382       94.8 796 of 15,330
 ```
@@ -277,10 +301,10 @@ pkg.rank <- packageRank(packages = "HistData", date = "2019-01-01")
 downloads <- pkg.rank$crosstab
 
 downloads[downloads == 51]
-> 
->  dynamicTreeCut        HistData         modeest  NeuralNetTools   OpenStreetMap 
->              51              51              51              51              51 
->       pkgKitten plotlyGeoAssets         superpc           sweep        webutils 
+>
+>  dynamicTreeCut        HistData         modeest  NeuralNetTools   OpenStreetMap
+>              51              51              51              51              51
+>       pkgKitten plotlyGeoAssets         superpc           sweep        webutils
 >              51              51              51              51              51
 ```
 
@@ -291,7 +315,7 @@ For Bioconductor packages, use `bioconductorRank()`:
 ``` r
 bioconductorRank(packages = "cicero", date = "2019-09")
 >      date packages downloads percentile         rank
-> 1 2019-09   cicero       171       77.8 434 of 1,953
+> 1 2019-09   cicero       171       77.8 434 of 1,954
 ```
 
 ### V - Visualizing percentiles and ranks (cross-sectional)
