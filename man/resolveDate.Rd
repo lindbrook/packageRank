@@ -2,7 +2,7 @@
 % Please edit documentation in R/resolveDate.R
 \name{resolveDate}
 \alias{resolveDate}
-\title{Resolve date}
+\title{Resolve date.}
 \usage{
 resolveDate(date, type = "from")
 }
@@ -12,5 +12,5 @@ resolveDate(date, type = "from")
 \item{type}{Character. Type of date "to" or "from".}
 }
 \description{
-Check format and validate date.
+Check date format and validate date.
 }
