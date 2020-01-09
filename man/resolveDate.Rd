@@ -2,15 +2,15 @@
 % Please edit documentation in R/resolveDate.R
 \name{resolveDate}
 \alias{resolveDate}
-\title{Check and resolve date (prototype).}
+\title{Resolve date}
 \usage{
 resolveDate(date, type = "from")
 }
 \arguments{
-\item{date}{Date \code{yyyy-mm-dd}.}
+\item{date}{Character. \code{"yyyy-mm-dd"}, \code{"yyyy-mm"}, \code{"yyyy"} or \code{yyyy} (numeric).}
 
-\item{type}{Character. type of data "to" or "from".}
+\item{type}{Character. Type of date "to" or "from".}
 }
 \description{
-Check and resolve date (prototype).
+Check format and validate date.
 }

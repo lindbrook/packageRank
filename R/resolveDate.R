@@ -1,57 +1,69 @@
-#' Check and resolve date (prototype).
+#' Resolve date
 #'
-#' @param date Date \code{yyyy-mm-dd}.
-#' @param type Character. type of data "to" or "from".
+#' Check format and validate date.
+#' @param date Character. \code{"yyyy-mm-dd"}, \code{"yyyy-mm"}, \code{"yyyy"} or \code{yyyy} (numeric).
+#' @param type Character. Type of date "to" or "from".
 #' @export
 
 resolveDate <- function(date, type = "from") {
-  if (type %in% c("to", "from") == FALSE) stop('type must be "to" or "from".')
   first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1
+  mm <- c(paste0(0, 1:9), paste(10:12))
+
+  if (type %in% c("to", "from") == FALSE) {
+    stop('type must be "to" or "from".')
+  }
 
   if (nchar(date) == 10L & grepl("-", date)) {
-    x.date <- as.Date(date, optional = TRUE)
+    err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
+    date.check <- unlist(strsplit(date, "-"))
+    if (!length(date.check) == 3) {
+      stop(err.format)
+    } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2, 2))) {
+      stop(err.format)
+    } else if (date.check[2] %in% mm == FALSE) {
+      stop("Month must be between 01 and 12.")
+    } else {
+      x.date <- as.Date(date, optional = TRUE)
+    }
   } else if (nchar(date) == 7L & grepl("-", date)) {
-    if (type == "from") {
+    err.format <- 'Invalid format. Must be "yyyy-mm".'
+    date.check <- unlist(strsplit(date, "-"))
+    if (!length(date.check) == 2) {
+      stop(err.format)
+    } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2))) {
+      stop(err.format)
+    } else if (date.check[2] %in% mm == FALSE) {
+      stop("Month must be between 01 and 12.")
+    } else if (type == "from") {
       x.date <- dayOfMonth(date, first.log)
     } else if (type == "to") {
       x.date <- dayOfMonth(date, first.log, end.of.month = TRUE)
     }
   } else if (nchar(date) == 4L) {
-    if (type == "from") {
+    if (is.na(suppressWarnings(as.numeric(date)))) {
+      msg1 <- 'yyyy must either be a 4 digit number'
+      msg2 <- 'or string of 4 numbers ("yyyy").'
+      stop(msg1, msg2)
+    } else if (type == "from") {
       x.date <- as.Date(paste0(date, "-01-01"), optional = TRUE)
     } else if (type == "to") {
       x.date <- as.Date(paste0(date, "-12-31"), optional = TRUE)
       if (x.date > cal.date) x.date <- cal.date
     }
-  }
+  } else stop('Format must be "yyyy-mm-dd", "yyyy-mm", "yyyy", or yyyy.')
 
-  date.err.msg <- 'Invalid date or format: "yyyy-mm-dd", "yyyy-mm" or "yyyy".'
-  if (is.na(x.date)) stop(date.err.msg)
-
-  if (x.date < as.Date(first.log)) {
+  if (is.na(x.date)) {
+    stop('Not a valid date.')
+  } else if (x.date < as.Date(first.log)) {
     warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
     x.date <- first.log
   } else if (x.date > cal.date) {
-    stop("Date in future.")
+    stop("Date in future!")
   } else x.date
 }
 
 dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
-  if (is.character(string) == FALSE) stop("string must a text string.")
-
-  if (nchar(string) != 7 | (grepl("-", string) == FALSE)) {
-    stop('Format must be "yyyy-mm".')
-  } else {
-    date.parts <- unlist(strsplit(string, "-"))
-    if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
-      stop("Month must be between 01 and 12.")
-    }
-    if (date.parts[1] < data.table::year(first.log)) {
-      warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-    }
-  }
-
   if (end.of.month) {
     end.candidates <- lapply(28:31, function(day) {
       as.Date(paste0(string , "-", day), optional = TRUE)
@@ -62,6 +74,5 @@ dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
   } else {
     out <- as.Date(paste0(string , "-01"), optional = TRUE)
   }
-
   out
 }
