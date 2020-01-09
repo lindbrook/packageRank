@@ -103,12 +103,12 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   out <- list(packages = packages, date = ymd, package.data = dat,
     crosstab = crosstab)
 
-  class(out) <- "package_rank"
+  class(out) <- "packageRank"
   out
 }
 
 #' Plot method for packageRank().
-#' @param x An object of class "package_rank" created by \code{packageRank()}.
+#' @param x An object of class "packageRank" created by \code{packageRank()}.
 #' @param graphics Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
@@ -120,7 +120,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 #' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01"))
 #' }
 
-plot.package_rank <- function(x, graphics = NULL, log_count = TRUE, ...) {
+plot.packageRank <- function(x, graphics = NULL, log_count = TRUE, ...) {
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
 
   crosstab <- x$crosstab
@@ -314,11 +314,11 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
 }
 
 #' Print method for packageRank().
-#' @param x An object of class "package_rank" created by \code{packageRank()}
+#' @param x An object of class "packageRank" created by \code{packageRank()}
 #' @param ... Additional parameters.
 #' @export
 
-print.package_rank <- function(x, ...) {
+print.packageRank <- function(x, ...) {
   dat <- x$package.data
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
@@ -328,11 +328,11 @@ print.package_rank <- function(x, ...) {
 }
 
 #' Summary method for packageRank().
-#' @param object Object. An object of class "package_rank" created by \code{packageRank()}
+#' @param object Object. An object of class "packageRank" created by \code{packageRank()}
 #' @param ... Additional parameters.
 #' @export
 #' @note This is useful for directly accessing the data frame.
 
-summary.package_rank <- function(object, ...) {
+summary.packageRank <- function(object, ...) {
   object$package.data
 }

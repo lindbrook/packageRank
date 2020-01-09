@@ -20,7 +20,7 @@ If this is given, then \code{from} and \code{to} are ignored.}
 \item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 }
 \description{
-S3 implementation of cranlogs::cran_downloads().
+Enhanced S3 implementation of cranlogs::cran_downloads().
 }
 \examples{
 \donttest{

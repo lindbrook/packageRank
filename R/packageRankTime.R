@@ -76,12 +76,12 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
               when = when,
               y.max =  max(unlist(top10.max)))
 
-  class(out) <- "package_rank_time"
+  class(out) <- "packageRankTime"
   out
 }
 
-#' Plot method for timeSeriesRank().
-#' @param x Object. An object of class "time_series" created by \code{packageRankTime()}.
+#' Plot method for packageRankTime().
+#' @param x Object. An object of class "packageRankTime" created by \code{packageRankTime()}.
 #' @param graphics Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother for selected package.
@@ -98,7 +98,7 @@ packageRankTime <- function(packages = "HistData", when = "last-month",
 #' plot(packageRankTime(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' }
 
-plot.package_rank_time <- function(x, graphics = NULL, log_count = TRUE,
+plot.packageRankTime <- function(x, graphics = NULL, log_count = TRUE,
   smooth = TRUE, sample_smooth = TRUE, f = 1/3, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
@@ -176,22 +176,22 @@ plot.package_rank_time <- function(x, graphics = NULL, log_count = TRUE,
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-#' Print method for timeSeriesRank().
-#' @param x An object of class "time_series" created by \code{packageRankTime()}.
+#' Print method for packageRankTime().
+#' @param x An object of class "packageRankTime" created by \code{packageRankTime()}.
 #' @param ... Additional parameters.
 #' @export
 
-print.package_rank_time <- function(x, ...) {
+print.packageRankTime <- function(x, ...) {
   print(x[c("packages", "when")])
 }
 
-#' Summary method for timeSeriesRank().
-#' @param object Object. An object of class "time_series" created by \code{packageRankTime()}.
+#' Summary method for packageRankTime().
+#' @param object Object. An object of class "packageRankTime" created by \code{packageRankTime()}.
 #' @param ... Additional parameters.
 #' @export
 #' @note This is useful for directly accessing the data frame.
 
-summary.package_rank_time <- function(object, ...) {
+summary.packageRankTime <- function(object, ...) {
   object$pkg.data
 }
 

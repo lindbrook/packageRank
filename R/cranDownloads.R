@@ -1,6 +1,6 @@
 #' Daily package downloads from the RStudio CRAN mirror.
 #'
-#' S3 implementation of cranlogs::cran_downloads().
+#' Enhanced S3 implementation of cranlogs::cran_downloads().
 #' @param packages A character vector, the packages to query,
 #'   or \code{NULL} for a sum of downloads for all packages.
 #'   Alternatively, it can also be \code{"R"}, to query downloads
@@ -53,7 +53,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   cranlogs.data <- do.call(cranlogs::cran_downloads, args)
   out <- list(packages = packages, cranlogs.data = cranlogs.data)
-  class(out) <- "cran_downloads"
+  class(out) <- "cranDownloads"
   out
 }
 
@@ -79,7 +79,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' plot(cranDownloads(packages = "R", from = 2020))
 #' }
 
-plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
+plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, r.version = FALSE,
   pkg.version = FALSE, ...) {
 
@@ -374,7 +374,7 @@ plot.cran_downloads <- function(x, graphics = NULL, points = "auto",
 #' @param ... Additional parameters.
 #' @export
 
-print.cran_downloads <- function(x, ...) {
+print.cranDownloads <- function(x, ...) {
   print(x$cranlogs.data)
 }
 
@@ -384,7 +384,7 @@ print.cran_downloads <- function(x, ...) {
 #' @export
 #' @note This is useful for directly accessing the data frame.
 
-summary.cran_downloads <- function(object, ...) {
+summary.cranDownloads <- function(object, ...) {
   object$cranlogs.data
 }
 

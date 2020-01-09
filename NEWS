@@ -2,6 +2,7 @@ packageRank 0.3.0.9014
 ==================
 
 - amend resolveDate().
+- change/clean S3 function classes.
 
 
 packageRank 0.3.0.9013
