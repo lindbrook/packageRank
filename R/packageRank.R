@@ -33,7 +33,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   }
 
   # NA for Package or R
-  cran_log <- cran_log[-which(is.na(cran_log$package)), ]
+  cran_log <- cran_log[!is.na(cran_log$package), ]
 
   if (size.filter) {
     if (is.numeric(size.filter)) {
