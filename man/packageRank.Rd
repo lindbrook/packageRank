@@ -10,9 +10,9 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd".}
 
-\item{size.filter}{Logical or Numeric. If Logical, TRUE size.filters out downloads less than 1000 bytes. If Numeric, a postive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.}
+\item{size.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
 
 \item{version.filter}{Logical.}
 
