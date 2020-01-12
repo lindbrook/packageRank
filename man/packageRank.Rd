@@ -5,7 +5,7 @@
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, version.filter = FALSE, memoization = TRUE)
+  size.filter = TRUE, memoization = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -13,8 +13,6 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 \item{date}{Character. Date. "yyyy-mm-dd".}
 
 \item{size.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
-
-\item{version.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }

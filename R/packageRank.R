@@ -4,7 +4,6 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
-#' @param version.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @importFrom R.utils decompressFile
@@ -16,7 +15,7 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, version.filter = FALSE, memoization = TRUE) {
+  size.filter = TRUE, memoization = TRUE) {
 
   ymd <- as.Date(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
@@ -45,23 +44,6 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     } else if (is.logical(size.filter)) {
       cran_log <- cran_log[cran_log$size >= 1000, ]
     } else stop ("'size.filter' must be Logical or Numeric.")
-  }
-
-  if (version.filter) {
-    alters <- cran_log[cran_log$package %in% packages == FALSE, ]
-    version.data <- lapply(packages, packageHistory)
-    names(version.data) <- packages
-
-    ver <- vapply(version.data, function(x) {
-       x[nrow(x), "version"]
-    }, character(1L))
-
-    egos <- lapply(seq_along(packages), function(i) {
-      cran_log[cran_log$package == packages[i] & cran_log$version == ver[i],  ]
-    })
-
-    egos <- do.call(rbind, egos)
-    cran_log <- rbind(egos, alters)
   }
 
   if (any(packages %in% unique(cran_log$package) == FALSE)) {
