@@ -9,6 +9,7 @@
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
+#' @param include.archive Logical. Check if package is in archive.
 #' @export
 #' @examples
 #' \donttest{
@@ -30,7 +31,37 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL) {
+  to = NULL, include.archive = FALSE) {
+
+  if (include.archive) {
+    pkgs <- archivePackages()
+  } else {
+    # platform specific packages
+    # non-applicable package are excluded by utils::available.packages()
+    cran <- as.data.frame(utils::available.packages(), stringsAsFactors = FALSE)
+
+    if (.Platform$OS.type == "windows") {
+      unix.package <- c("bigGP", "bigReg", "CommT", "corrcoverage", "cronR",
+        "doMC","exif", "gcbd", "ieeeround", "kmcudaR", "littler", "nice",
+        "PACVr", "permGPU", "qtbase", "R4dfp", "RAppArmor", "RcppGetconf",
+        "Rdsm", "Rip46", "Rpoppler", "rPython", "rrd", "RSvgDevice", "rsyslog",
+        "RVowpalWabbit", "snpStatsWriter", "solarius", "spp", "ssh.utils",
+        "uaparserjs", "unix")
+      pkgs <- c(cran$Package, unix.package)
+    } else {
+      windows.package <- c("BiplotGUI", "blatr", "excel.link", "installr",
+        "KeyboardSimulator", "MDSGUI", "R2PPT", "R2wd", "RInno", "RWinEdt",
+        "spectrino", "taskscheduleR")
+      pkgs <- c(cran$Package, windows.package)
+    }
+  }
+
+  if (!is.null(packages)) {
+    if (all(packages %in% pkgs) == FALSE) {
+      packages <- packages[packages %in% pkgs]
+      warning("Excluded package are misspelled or not on CRAN/Archive.")
+    }
+  }
 
   first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1

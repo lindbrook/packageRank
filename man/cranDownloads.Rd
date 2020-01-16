@@ -4,7 +4,8 @@
 \alias{cranDownloads}
 \title{Daily package downloads from the RStudio CRAN mirror.}
 \usage{
-cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL)
+cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL,
+  include.archive = FALSE)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,
@@ -18,6 +19,8 @@ If this is given, then \code{from} and \code{to} are ignored.}
 \item{from}{Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
 \item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
+
+\item{include.archive}{Logical. Check if package is in archive.}
 }
 \description{
 Enhanced S3 implementation of cranlogs::cran_downloads().
