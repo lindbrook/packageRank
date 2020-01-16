@@ -66,8 +66,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
-#' @param r.version Logical. Add R release dates.
 #' @param pkg.version Logical. Add package release dates.
+#' @param r.version Logical. Add R release dates.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -80,8 +80,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' }
 
 plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
-  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, r.version = FALSE,
-  pkg.version = FALSE, ...) {
+  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3, pkg.version = TRUE,
+  r.version = FALSE, ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
@@ -89,7 +89,10 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
 
   dat <- x$cranlogs.data
-  r_v <- rversions::r_versions()
+
+  if (pkg.version) p_v <- packageHistory(x$packages)
+  if (r.version) r_v <- rversions::r_versions()
+
   days.observed <- unique(dat$date)
 
   if (points == "auto") {
@@ -142,17 +145,17 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
                 ylab = "Count")
             }
           }
+
+          if (pkg.version) {
+            axis(3, at = as.Date(p_v$date), labels = paste(p_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
+            abline(v = as.Date(p_v$date), lty = "dotted", col = "red")
+          }
+
           if (r.version) {
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, tick = FALSE, line = -2/3)
             abline(v = as.Date(r_v$date), lty = "dotted")
-          }
-
-          if (pkg.version) {
-            p_v <- packageHistory(x$packages)
-            axis(3, at = as.Date(p_v$date), labels = p_v$version,
-              cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           if (smooth) {
@@ -245,17 +248,16 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
             lines(stats::lowess(unique(dat$date), daily$`NA`), col = "green")
           }
 
+          if (pkg.version) {
+            axis(3, at = as.Date(p_v$date), labels = paste(p_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
+            abline(v = as.Date(p_v$date), lty = "dotted", col = "red")
+          }
+
           if (r.version) {
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, tick = FALSE, line = -2/3)
             abline(v = as.Date(r_v$date), lty = "dotted")
-          }
-
-          if (pkg.version) {
-            p_v <- packageHistory(x$packages)
-            axis(3, at = as.Date(p_v$date), labels = p_v$version,
-              cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           title(main = "R Downloads")
@@ -282,17 +284,17 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
           if (smooth) {
             lines(stats::lowess(dat$date, dat$count, f = f), col = "blue")
           }
+
+          if (pkg.version) {
+            axis(3, at = as.Date(p_v$date), labels = paste(p_v$version),
+              cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
+            abline(v = as.Date(p_v$date), lty = "dotted", col = "red")
+          }
+
           if (r.version) {
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, tick = FALSE, line = -2/3)
             abline(v = as.Date(r_v$date), lty = "dotted")
-          }
-
-          if (pkg.version) {
-            p_v <- packageHistory(x$packages)
-            axis(3, at = as.Date(p_v$date), labels = p_v$version,
-              cex.axis = 2/3, tick = FALSE, line = -2/3)
-            abline(v = p_v$date, lty = "dotted", col = "red")
           }
 
           title(main = x$package)

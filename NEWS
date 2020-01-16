@@ -1,3 +1,9 @@
+packageRank 0.3.0.9016
+==================
+
+- amend/set plot.cranDownloads(pkg.version = TRUE).
+
+
 packageRank 0.3.0.9015
 ==================
 

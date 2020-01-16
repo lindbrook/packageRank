@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{cranDownloads}(x, graphics = NULL, points = "auto",
   log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  r.version = FALSE, pkg.version = FALSE, ...)
+  pkg.version = TRUE, r.version = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -23,9 +23,9 @@
 
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics = "base" only.}
 
-\item{r.version}{Logical. Add R release dates.}
-
 \item{pkg.version}{Logical. Add package release dates.}
+
+\item{r.version}{Logical. Add R release dates.}
 
 \item{...}{Additional plotting parameters.}
 }
