@@ -55,7 +55,7 @@ packageCRAN <- function(package = "cholera") {
         date = as.Date(published), repository = "CRAN",
         stringsAsFactors = FALSE)
     } # else warning("Package removed from CRAN.")
-  } else warning("Package not on CRAN. Check spelling.")
+  } # else warning("Package not on CRAN. Check spelling.")
 }
 
 #' Extract package archives from CRAN (prototype).
