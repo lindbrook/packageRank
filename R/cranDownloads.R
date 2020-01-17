@@ -9,7 +9,8 @@
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
-#' @param include.archive Logical. Check if package is in archive.
+#' @param validate.packages Logical. Check if package exists. Computationally costly.
+#' @param include.archive Logical. Include archive when validating package.
 #' @export
 #' @examples
 #' \donttest{
@@ -31,14 +32,13 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, include.archive = FALSE) {
+  to = NULL, validate.packages = FALSE, include.archive = TRUE) {
 
-  if (include.archive) {
-    pkgs <- archivePackages()
-  } else {
-    # platform specific packages
-    # non-applicable package are excluded by utils::available.packages()
+  if (validate.packages) {
     cran <- as.data.frame(utils::available.packages(), stringsAsFactors = FALSE)
+
+    # Platform specific packages
+    # By default, utils::available.packages() excludes non-applicable packages.
 
     if (.Platform$OS.type == "windows") {
       unix.package <- c("bigGP", "bigReg", "CommT", "corrcoverage", "cronR",
@@ -54,16 +54,22 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         "spectrino", "taskscheduleR")
       pkgs <- c(cran$Package, windows.package)
     }
-  }
 
-  if (!is.null(packages)) {
-    if (all(packages %in% pkgs) == FALSE) {
-      packages <- packages[packages %in% pkgs]
-      warning("Excluded package are misspelled or not on CRAN/Archive.")
+    if (include.archive) {
+      archive <- setdiff(archivePackages(), pkgs) # 10 secs.
+      pkgs <- c(pkgs, archive)
+    }
+
+    if (!is.null(packages)) {
+      if (any(packages %in% pkgs == FALSE)) {
+        na <- packages[packages %in% pkgs == FALSE]
+        warning(paste(na, collapse = ", "), ": misspelled or not on CRAN.")
+        packages <- packages[packages %in% pkgs]
+      }
     }
   }
 
-  first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
+  # first.log <- as.Date("2012-10-01") # resolveDate() checks this.
   cal.date <- Sys.Date() - 1
 
   if (is.null(when) & is.null(from) & is.null(to)) {
@@ -76,9 +82,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   } else if (!is.null(from)) {
     start.date <- resolveDate(from, type = "from")
+
     if (!is.null(to)) end.date <- resolveDate(to, type = "to")
     else end.date <- cal.date
+
     if (start.date > end.date) stop ('"from" must be <= "to".')
+
     args <- list(packages, from = start.date, to = end.date)
   }
 
