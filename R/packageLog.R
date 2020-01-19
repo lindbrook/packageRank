@@ -36,7 +36,7 @@ packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
         }
     } else if (is.logical(filter)) {
       cran_log <- cran_log[cran_log$size >= 1000, ]
-    } else stop ("'filter' must be Logical or Numeric.")
+    } else stop("'filter' must be Logical or Numeric.")
   }
 
   pkg_log <- cran_log[cran_log$package %in% packages, ]

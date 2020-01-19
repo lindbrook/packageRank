@@ -43,7 +43,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
         }
     } else if (is.logical(size.filter)) {
       cran_log <- cran_log[cran_log$size >= 1000, ]
-    } else stop ("'size.filter' must be Logical or Numeric.")
+    } else stop("'size.filter' must be Logical or Numeric.")
   }
 
   if (any(packages %in% unique(cran_log$package) == FALSE)) {

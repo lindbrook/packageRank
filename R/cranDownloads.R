@@ -83,10 +83,13 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   } else if (!is.null(from)) {
     start.date <- resolveDate(from, type = "from")
 
-    if (!is.null(to)) end.date <- resolveDate(to, type = "to")
-    else end.date <- cal.date
+    if (!is.null(to)) {
+      end.date <- resolveDate(to, type = "to")
+    } else {
+      end.date <- cal.date
+    }
 
-    if (start.date > end.date) stop ('"from" must be <= "to".')
+    if (start.date > end.date) stop('"from" must be <= "to".')
 
     args <- list(packages, from = start.date, to = end.date)
   }
@@ -148,8 +151,9 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
       graphics <- "base"
     } else graphics <- "ggplot2"
   } else {
-    if (all(graphics %in% c("base", "ggplot2") == FALSE))
-    stop('graphics must be "base" or "ggplot2"')
+    if (all(graphics %in% c("base", "ggplot2") == FALSE)) {
+      stop('graphics must be "base" or "ggplot2"')
+    }
   }
 
   if (graphics == "base") {
