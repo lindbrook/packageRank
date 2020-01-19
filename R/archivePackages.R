@@ -93,9 +93,9 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
     }, mc.cores = cores))
   }
 
-  ## Empty folders: CRAN fixed on 2019-10-05 ##
+  ## Empty folders
 
-  # 2019-03-02 13:09 time stamp
+  # 2019-03-02 13:09 time stamp: CRAN fixed on 2019-10-05
   empty.folder1 <- c( "Archived", "as", "check", "corrected", "despite",
     "issues", "on", "reminder.", "X-CRAN-Comment:", "were")
 
@@ -103,10 +103,14 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   empty.folder2 <- "app"
 
   empty <- c(empty.folder1, empty.folder2)
-  empty_folder.test <- c(empty.folder1, empty.folder2) %in% pkgs
+  empty_folder.test <- empty %in% pkgs
+
+  # 2020-01-11 14:37 time stamp
+  # empties_2020.01.11 <- c("Archived", "as", "check", "corrected", "despite",
+  #   "on", "were")
 
   if (any(empty_folder.test)) {
-    pkgs <- pkgs[pkgs %in% c(empty.folder1, empty.folder2) == FALSE]
+    pkgs <- pkgs[pkgs %in% empty == FALSE]
     pkg.parsed.lst <- pkg.parsed.lst[pkgs %in% empty == FALSE]
   }
 
