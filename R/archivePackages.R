@@ -27,10 +27,6 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
       grepl("colspan=", x)
     })
 
-    README.test <- unlist(parallel::parLapply(cl, web_page, function(x) {
-      grepl(paste0("\\<", "README", "\\>"), x)
-    }))
-
     parallel::stopCluster(cl)
 
   } else {
@@ -41,10 +37,6 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
     archive.stop <- parallel::mclapply(web_page, function(x) {
       grepl("colspan=", x)
     }, mc.cores = cores)
-
-    README.test <- unlist(parallel::mclapply(web_page, function(x) {
-      grepl(paste0("\\<", "README", "\\>"), x)
-    }, mc.cores = cores))
   }
 
   archive.start <- unlist(archive.start)
@@ -55,6 +47,21 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   web_page <- web_page[start:stop]
 
   # README file at directory root #
+
+  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    cl <- parallel::makeCluster(cores)
+
+    README.test <- unlist(parallel::parLapply(cl, web_page, function(x) {
+      grepl(paste0("\\<", "README", "\\>"), x)
+    }))
+
+    parallel::stopCluster(cl)
+  } else {
+    README.test <- unlist(parallel::mclapply(web_page, function(x) {
+      grepl(paste0("\\<", "README", "\\>"), x)
+    }, mc.cores = cores))
+  }
+
   if (sum(README.test) == 1) web_page <- web_page[!README.test]
   else stop("README.test error.")
 
