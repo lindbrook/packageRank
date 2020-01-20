@@ -51,19 +51,26 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
 
+    parallel::clusterExport(cl = cl, envir = environment(),
+      varlist = "web_page")
+
     README.test <- unlist(parallel::parLapply(cl, web_page, function(x) {
       grepl(paste0("\\<", "README", "\\>"), x)
     }))
 
     parallel::stopCluster(cl)
+
   } else {
     README.test <- unlist(parallel::mclapply(web_page, function(x) {
       grepl(paste0("\\<", "README", "\\>"), x)
     }, mc.cores = cores))
   }
 
-  if (sum(README.test) == 1) web_page <- web_page[!README.test]
-  else stop("README.test error.")
+  if (sum(README.test) == 1) {
+    web_page <- web_page[!README.test]
+  } else {
+    stop("README.test error.")
+  }
 
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
@@ -71,14 +78,14 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = "web_page")
 
-    pkg.parsed.lst <- parallel::parLapply(web_page, function(x) {
+    pkg.parsed.lst <- parallel::parLapply(cl, web_page, function(x) {
       pkg.data <- gsub("<.*?>", "", x)
       unlist(strsplit(pkg.data, "/"))
-    }, mc.cores = cores)
+    })
 
-    pkgs <- unlist(parallel::parLapply(pkg.parsed.lst, function(x) {
+    pkgs <- unlist(parallel::parLapply(cl, pkg.parsed.lst, function(x) {
       unlist(strsplit(x, "/"))[1]
-    }, mc.cores = cores))
+    }))
 
     parallel::stopCluster(cl)
 

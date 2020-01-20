@@ -1,3 +1,9 @@
+packageRank 0.3.0.9020
+==================
+
+- fix archivePackages() parLapply() code.
+
+
 packageRank 0.3.0.9019
 ==================
 
