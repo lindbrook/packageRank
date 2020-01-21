@@ -109,14 +109,16 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   # 2019-03-12 18:23 time stamp
   empty.folder2 <- "app"
 
-  empty <- c(empty.folder1, empty.folder2)
-  empty_folder.test <- empty %in% pkgs
+  # 2020-01-11 14:37 time stamp
+  empty.folder3 <- c("problems", "reminders.")
+
+  empty <- c(empty.folder1, empty.folder2, empty.folder3)
 
   # 2020-01-11 14:37 time stamp
   # empties_2020.01.11 <- c("Archived", "as", "check", "corrected", "despite",
   #   "on", "were")
 
-  if (any(empty_folder.test)) {
+  if (any(empty %in% pkgs)) {
     pkgs <- pkgs[pkgs %in% empty == FALSE]
     pkg.parsed.lst <- pkg.parsed.lst[pkgs %in% empty == FALSE]
   }
