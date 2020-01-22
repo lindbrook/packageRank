@@ -32,40 +32,15 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, validate.packages = FALSE, include.archive = TRUE) {
+  to = NULL, validate.packages = TRUE, include.archive = FALSE) {
 
   if (validate.packages) {
-    cran <- as.data.frame(utils::available.packages(), stringsAsFactors = FALSE)
-
-    # Platform specific packages
-    # By default, utils::available.packages() excludes non-applicable packages.
-
-    if (.Platform$OS.type == "windows") {
-      unix.package <- c("bigGP", "bigReg", "CommT", "corrcoverage", "cronR",
-        "doMC","exif", "gcbd", "ieeeround", "kmcudaR", "littler", "nice",
-        "PACVr", "permGPU", "qtbase", "R4dfp", "RAppArmor", "RcppGetconf",
-        "Rdsm", "Rip46", "Rpoppler", "rPython", "rrd", "RSvgDevice", "rsyslog",
-        "RVowpalWabbit", "snpStatsWriter", "solarius", "spp", "ssh.utils",
-        "uaparserjs", "unix")
-      pkgs <- c(cran$Package, unix.package)
-    } else {
-      windows.package <- c("BiplotGUI", "blatr", "excel.link", "installr",
-        "KeyboardSimulator", "MDSGUI", "R2PPT", "R2wd", "RInno", "RWinEdt",
-        "spectrino", "taskscheduleR")
-      pkgs <- c(cran$Package, windows.package)
-    }
-
-    if (include.archive) {
-      archive <- setdiff(archivePackages(), pkgs) # 10 secs.
-      pkgs <- c(pkgs, archive)
-    }
-
-    if (!is.null(packages)) {
-      if (any(packages %in% pkgs == FALSE)) {
-        na <- packages[packages %in% pkgs == FALSE]
-        warning(paste(na, collapse = ", "), ": misspelled or not on CRAN.")
-        packages <- packages[packages %in% pkgs]
-      }
+    pkg.chk <- validatePackage(packages, include.archive = include.archive)
+    
+    if (is.list(pkg.chk)) {
+      error <- paste(pkg.chk$invalid, collapse = ", ")
+      warning(error, ": misspelled or not on CRAN.")
+      packages <- pkg.chk$valid
     }
   }
 

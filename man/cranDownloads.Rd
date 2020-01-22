@@ -5,7 +5,7 @@
 \title{Daily package downloads from the RStudio CRAN mirror.}
 \usage{
 cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL,
-  validate.packages = FALSE, include.archive = TRUE)
+  validate.packages = TRUE, include.archive = FALSE)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,

@@ -5,6 +5,8 @@
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param validate.packages Logical. Check if package exists.
+#' @param include.archive Logical. Include archive when validating packages.
 #' @return An R data frame.
 #' @importFrom R.utils decompressFile
 #' @export
@@ -15,7 +17,18 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE) {
+  size.filter = TRUE, memoization = TRUE, validate.packages = TRUE,
+  include.archive = FALSE) {
+
+  if (validate.packages) {
+    pkg.chk <- validatePackage(packages, include.archive = include.archive)
+
+    if (is.list(pkg.chk)) {
+      error <- paste(pkg.chk$invalid, collapse = ", ")
+      warning(error, ": misspelled or not on CRAN.")
+      packages <- pkg.chk$valid
+    }
+  }
 
   ymd <- as.Date(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
