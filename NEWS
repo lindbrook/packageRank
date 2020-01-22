@@ -1,3 +1,10 @@
+packageRank 0.3.0.9023
+==================
+
+- add validatePackage().
+- cranDownloads() and packageRank(): validate packages.
+
+
 packageRank 0.3.0.9022
 ==================
 
