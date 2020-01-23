@@ -5,7 +5,9 @@
 #' @export
 
 validatePackage <- function(packages, include.archive = TRUE) {
-  cran <- as.data.frame(utils::available.packages(), stringsAsFactors = FALSE)
+  url <- "https://cloud.r-project.org/"
+  cran <- as.data.frame(utils::available.packages(repos = url),
+    stringsAsFactors = FALSE)
 
   # Platform specific packages
   # By default, utils::available.packages() excludes non-applicable packages.
