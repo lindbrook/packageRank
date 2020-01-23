@@ -1,10 +1,10 @@
 #' Check for valid package names.
 #'
 #' @param packages Character. Vector of package name(s).
-#' @param include.archive Logical. Include archive when validating package. This is computationally expensive becuase it scrapes https://cran.r-project.org/src/contrib/Archive/.
+#' @param check.archive Logical. Include archive when validating package. This is computationally expensive becuase it scrapes https://cran.r-project.org/src/contrib/Archive/.
 #' @export
 
-validatePackage <- function(packages, include.archive = TRUE) {
+validatePackage <- function(packages, check.archive = TRUE) {
   url <- "https://cloud.r-project.org/"
   cran <- as.data.frame(utils::available.packages(repos = url),
     stringsAsFactors = FALSE)
@@ -27,7 +27,7 @@ validatePackage <- function(packages, include.archive = TRUE) {
     pkgs <- c(cran$Package, windows.package)
   }
 
-  if (include.archive) {
+  if (check.archive) {
     archive <- setdiff(archivePackages(), pkgs)
     pkgs <- c(pkgs, archive)
   }

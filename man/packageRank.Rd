@@ -5,8 +5,8 @@
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, validate.packages = TRUE,
-  include.archive = FALSE)
+  size.filter = TRUE, memoization = TRUE, check.cran = TRUE,
+  check.archive = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -17,9 +17,9 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
-\item{validate.packages}{Logical. Check if package exists.}
+\item{check.cran}{Logical. Check if package exists.}
 
-\item{include.archive}{Logical. Include archive when validating packages.}
+\item{check.archive}{Logical. Include archive when validating packages.}
 }
 \value{
 An R data frame.

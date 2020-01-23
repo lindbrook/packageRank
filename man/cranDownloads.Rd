@@ -5,7 +5,7 @@
 \title{Daily package downloads from the RStudio CRAN mirror.}
 \usage{
 cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL,
-  validate.packages = TRUE, include.archive = FALSE)
+  check.cran = TRUE, check.archive = FALSE)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,
@@ -20,9 +20,9 @@ If this is given, then \code{from} and \code{to} are ignored.}
 
 \item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
-\item{validate.packages}{Logical. Check if package exists. Computationally costly.}
+\item{check.cran}{Logical. Check if package exists. Computationally costly.}
 
-\item{include.archive}{Logical. Include archive when validating package.}
+\item{check.archive}{Logical. Include archive when validating package.}
 }
 \description{
 Enhanced S3 implementation of cranlogs::cran_downloads().

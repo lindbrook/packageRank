@@ -9,8 +9,8 @@
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
-#' @param validate.packages Logical. Check if package exists. Computationally costly.
-#' @param include.archive Logical. Include archive when validating package.
+#' @param check.cran Logical. Check if package exists. Computationally costly.
+#' @param check.archive Logical. Include archive when validating package.
 #' @export
 #' @examples
 #' \donttest{
@@ -32,15 +32,22 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, validate.packages = TRUE, include.archive = FALSE) {
+  to = NULL, check.cran = TRUE, check.archive = FALSE) {
 
-  if (validate.packages) {
-    pkg.chk <- validatePackage(packages, include.archive = include.archive)
-    
+  if (check.cran) {
+    pkg.chk <- validatePackage(packages, check.archive = check.archive)
     if (is.list(pkg.chk)) {
       error <- paste(pkg.chk$invalid, collapse = ", ")
-      warning(error, ": misspelled or not on CRAN.")
-      packages <- pkg.chk$valid
+      if (length(pkg.chk$valid) == 0) {
+        if (check.archive) {
+          stop(error, ": misspelled or not on CRAN/Archive.")
+        } else stop(error, ": misspelled or not on CRAN")
+      } else {
+        if (check.archive) {
+          warning(error, ": misspelled or not on CRAN/Archive.")
+        } else warning(error, ": misspelled or not on CRAN.")
+        packages <- pkg.chk$valid
+      }
     }
   }
 
