@@ -125,6 +125,8 @@ packageArchive <- function(package = "cholera") {
 
       out <- data.frame(package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
+
+      out <- out[order(out$date), ]
     }
 
     if (any(ancestry.check)) {
