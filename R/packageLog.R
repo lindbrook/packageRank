@@ -40,5 +40,5 @@ packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
   }
 
   pkg_log <- cran_log[cran_log$package %in% packages, ]
-  pkg_log[order(pkg_log$package), ]
+  pkg_log[order(pkg_log$package, pkg_log$time), ]
 }

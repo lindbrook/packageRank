@@ -1,3 +1,9 @@
+packageRank 0.3.0.9026
+==================
+
+- ensure packageLog() sorts by time.
+
+
 packageRank 0.3.0.9025
 ==================
 
