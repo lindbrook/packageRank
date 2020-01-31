@@ -8,7 +8,7 @@
 #' @return An R data frame.
 #' @export
 
-packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
+packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   filter = FALSE, memoization = TRUE) {
 
   ymd <- as.Date(date)
@@ -39,6 +39,8 @@ packageLog <- function(packages = "HistData", date = Sys.Date() - 1,
     } else stop("'filter' must be Logical or Numeric.")
   }
 
-  pkg_log <- cran_log[cran_log$package %in% packages, ]
-  pkg_log[order(pkg_log$package, pkg_log$time), ]
+  if (!is.null(packages)) {
+    cran_log <- cran_log[cran_log$package %in% packages, ]
+    cran_log[order(cran_log$package, cran_log$time), ]
+  } else cran_log[order(cran_log$time), ]
 }

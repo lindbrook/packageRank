@@ -4,7 +4,7 @@
 \alias{packageLog}
 \title{Package download counts and rank percentiles (cross-sectional).}
 \usage{
-packageLog(packages = "HistData", date = Sys.Date() - 1, filter = FALSE,
+packageLog(packages = NULL, date = Sys.Date() - 1, filter = FALSE,
   memoization = TRUE)
 }
 \arguments{

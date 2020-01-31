@@ -2,6 +2,7 @@ packageRank 0.3.0.9026
 ==================
 
 - ensure packageLog() sorts by time.
+- use packageLog(packages = NULL) to view day's log.
 
 
 packageRank 0.3.0.9025
