@@ -1,3 +1,8 @@
+packageRank 0.3.0.9027
+==================
+- packageHistory(): clean output row.names. 
+
+
 packageRank 0.3.0.9026
 ==================
 

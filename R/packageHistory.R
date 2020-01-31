@@ -11,7 +11,9 @@ packageHistory <- function(package = "cholera") {
   } else {
     cran <- packageCRAN(package)
   }
-  rbind(packageArchive(package), cran)
+  out <- rbind(packageArchive(package), cran)
+  row.names(out) <- NULL
+  out
 }
 
 #' Extract package Published and Version from CRAN (prototype).
