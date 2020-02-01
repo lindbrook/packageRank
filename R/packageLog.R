@@ -41,6 +41,11 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
 
   if (!is.null(packages)) {
     cran_log <- cran_log[cran_log$package %in% packages, ]
-    cran_log[order(cran_log$package, cran_log$time), ]
-  } else cran_log[order(cran_log$time), ]
+    cran_log <- cran_log[order(cran_log$package, cran_log$time), ]
+  } else {
+    cran_log <- cran_log[order(cran_log$time), ]
+  }
+
+  row.names(cran_log) <- NULL
+  cran_log
 }
