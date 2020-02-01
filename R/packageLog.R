@@ -11,7 +11,7 @@
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   filter = FALSE, memoization = TRUE) {
 
-  ymd <- as.Date(date)
+  ymd <- fixDate_2012(date)
   if (ymd > Sys.Date()) stop("Can't see into the future!")
   year <- as.POSIXlt(ymd)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
