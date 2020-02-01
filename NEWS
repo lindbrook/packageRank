@@ -1,3 +1,10 @@
+packageRank 0.3.0.9028
+==================
+
+- add fixDate_2012().
+- use fixDate_2012() in packageLog() and packageRank().
+
+
 packageRank 0.3.0.9027
 ==================
 - packageHistory(): clean output row.names. 
