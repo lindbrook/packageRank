@@ -1,3 +1,9 @@
+packageRank 0.3.0.9029
+==================
+
+- fix packageRank(): put stop() before warning().
+
+
 packageRank 0.3.0.9028
 ==================
 

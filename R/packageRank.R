@@ -66,12 +66,12 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     } else stop("'size.filter' must be Logical or Numeric.")
   }
 
-  if (any(packages %in% unique(cran_log$package) == FALSE)) {
+  if (all(packages %in% unique(cran_log$package) == FALSE)) {
+    stop(packages, ": not in log (not downloaded).")
+  } else if (any(packages %in% unique(cran_log$package) == FALSE)) {
     err <- packages[packages %in% unique(cran_log$package) == FALSE]
     warning(err, ": not in log (not downloaded).")
     packages <- packages[packages %in% unique(cran_log$package)]
-  } else if (all(packages %in% unique(cran_log$package) == FALSE)) {
-    stop(packages, ": not in log (not downloaded).")
   }
 
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
