@@ -20,9 +20,9 @@ If this is given, then \code{from} and \code{to} are ignored.}
 
 \item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
-\item{check.cran}{Logical. Check if package exists. Computationally costly.}
+\item{check.cran}{Logical. Check if package exists.}
 
-\item{check.archive}{Logical. Include archive when validating package.}
+\item{check.archive}{Logical. Validate archived packages.}
 }
 \description{
 Enhanced S3 implementation of cranlogs::cran_downloads().
@@ -36,13 +36,10 @@ cranDownloads(packages = "HistData", when = "last-month")
 # January 7 - 31, 2019
 cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-31")
 
-# February to March 2019
+# February through March 2019
 cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
 
-# 2019 total package downloads
-cranDownloads(from = 2019, to = 2019)
-
-# year-to-date
+# 2020 year-to-date
 cranDownloads(packages = "HistData", from = 2020)
 }
 }

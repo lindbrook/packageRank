@@ -5,8 +5,9 @@
 \title{Plot method for cranDownloads().}
 \usage{
 \method{plot}{cranDownloads}(x, graphics = NULL, points = "auto",
-  log_count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  r.version = FALSE, ...)
+  log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
+  package.version = FALSE, r.version = FALSE, population.plot = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{object.}
@@ -15,7 +16,7 @@
 
 \item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE.}
 
-\item{log_count}{Logical. Logarithm of package downloads.}
+\item{log.count}{Logical. Logarithm of package downloads.}
 
 \item{smooth}{Logical. Add smoother.}
 
@@ -23,7 +24,11 @@
 
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics = "base" only.}
 
+\item{package.version}{Logical. Add latest package release dates.}
+
 \item{r.version}{Logical. Add R release dates.}
+
+\item{population.plot}{Logical. Add R release dates.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -37,7 +42,7 @@ Plot method for cranDownloads().
 \donttest{
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
-plot(cranDownloads(packages = "R", from = "2019-05-01", to = "2019-05-01"))
+plot(cranDownloads(packages = "R", from = "2020-01-01", to = "2020-01-01"))
 plot(cranDownloads(packages = "R", from = 2020))
 }
 }
