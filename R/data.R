@@ -22,3 +22,5 @@
 #                   dl.ct2 = dl.ct2,
 #                   pkg.ct = pkg.ct,
 #                   pkg.ct2 = pkg.ct2)
+
+# usethis::use_data(blog.data, overwrite = TRUE)
