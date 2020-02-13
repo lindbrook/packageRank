@@ -2,6 +2,7 @@ packageRank 0.3.0.9031
 ==================
 
 - add blog.post data.
+- set plot.cranDownloads(points = "auto") for <= 62 days.
 
 
 packageRank 0.3.0.9030
