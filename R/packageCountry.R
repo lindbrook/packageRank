@@ -9,13 +9,13 @@
 #' @export
 
 packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
-  memoization = TRUE, sort = FALSE, na.rm = FALSE) {
+  memoization = TRUE, sort = TRUE, na.rm = FALSE) {
 
   dat <- packageLog(packages = packages, date = date, memoization = memoization)
   if (na.rm) {
     crosstab <- table(dat$country)
   } else {
-    crosstab <- table(dat$country, useNA = "always")
+    crosstab <- table(dat$country, useNA = "ifany")
   }
   if (sort) {
     sort(crosstab, decreasing = TRUE)
