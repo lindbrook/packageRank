@@ -326,6 +326,7 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
 
 print.packageRank <- function(x, ...) {
   dat <- x$package.data
+  dat$downloads <- format(dat$downloads, big.mark = ",")
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
   out <- data.frame(dat[, c("date", "packages", "downloads", "percentile")],
