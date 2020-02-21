@@ -13,7 +13,7 @@ fixDate_2012(date = "2012-12-31")
 A one unit R date or character vector.
 }
 \description{
-Correct mis-labelled filenames for 2012 logs at RStudio's CRAN Mirror http://cran-logs.rstudio.com/.
+Correct for mis-labelled filenames for 2012 logs at RStudio's CRAN Mirror http://cran-logs.rstudio.com/.
 }
 \note{
 This date problem does not affect \code{cranDownlaods()}.
