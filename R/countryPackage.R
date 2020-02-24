@@ -1,0 +1,23 @@
+#' Tabulate a country's package downloads (prototype).
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param country Character. country addreviation.
+#' @param date Character. Date. yyyy-mm-dd.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param sort Logical. Sort by download count.
+#' @export
+
+countryPackage <- function(country = "US", date = Sys.Date() - 1,
+  memoization = TRUE, sort = TRUE) {
+
+  cran_log <- fetchLog2(date = date, memoization = memoization)
+  sel <- !is.na(cran_log$package) | !is.na(cran_log$country)
+  cran_log <- cran_log[sel, ]
+  crosstab <- table(cran_log[cran_log$country == country, "package"])
+
+  if (sort) {
+    sort(crosstab, decreasing = TRUE)
+  } else {
+    crosstab
+  }
+}
