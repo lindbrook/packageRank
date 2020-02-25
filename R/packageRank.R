@@ -37,7 +37,8 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     }
   }
 
-  cran_log <- fetchLog2(date = date, memoization = memoization)
+  ymd <- fixDate_2012(date)
+  cran_log <- fetchLog2(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
 
   if (size.filter) {

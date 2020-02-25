@@ -5,11 +5,10 @@
 #' @export
 
 fetchLog2 <- function(date, memoization) {
-  ymd <- fixDate_2012(date)
-  if (ymd > Sys.Date()) stop("Can't see into the future!")
-  year <- as.POSIXlt(ymd)$year + 1900
+  if (date > Sys.Date()) stop("Can't see into the future!")
+  year <- as.POSIXlt(date)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
-  url <- paste0(rstudio.url, year, '/', ymd, ".csv.gz")
+  url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
 
   if (RCurl::url.exists(url)) {
     if (memoization) cran_log <- mfetchLog(url)
