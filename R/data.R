@@ -9,6 +9,7 @@
 #'    \item{\code{dl.ct2}}{}
 #'    \item{\code{pkg.ct}}{}
 #'    \item{\code{pkg.ct2}}{}
+#'    \item{\code{oct.data}}{}
 #' }
 #' @format A list with 8 elements.
 #' @docType data
@@ -22,5 +23,7 @@
 #                   dl.ct2 = dl.ct2,
 #                   pkg.ct = pkg.ct,
 #                   pkg.ct2 = pkg.ct2)
+
+# blog.data$oct.data <- oct.data
 
 # usethis::use_data(blog.data, overwrite = TRUE)
