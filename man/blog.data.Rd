@@ -4,7 +4,7 @@
 \name{blog.data}
 \alias{blog.data}
 \title{blog post data.}
-\format{A list with 8 elements.}
+\format{A list with 11 elements.}
 \usage{
 blog.data
 }
@@ -19,6 +19,9 @@ blog.data
    \item{\code{pkg.ct}}{}
    \item{\code{pkg.ct2}}{}
    \item{\code{oct.data}}{}
+   \item{\code{cholera.data}}{}
+   \item{\code{ggplot2.data}}{}
+   \item{\code{VR.data}}{}
 }
 }
 \keyword{datasets}

@@ -2,6 +2,7 @@ packageRank 0.3.0.9037
 ==================
 
 - add oct.data to blog.data.
+- add cholera.data, ggplot2.data, and VR.data to blog.data.
 
 
 packageRank 0.3.0.9036

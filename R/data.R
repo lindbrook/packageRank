@@ -10,8 +10,11 @@
 #'    \item{\code{pkg.ct}}{}
 #'    \item{\code{pkg.ct2}}{}
 #'    \item{\code{oct.data}}{}
+#'    \item{\code{cholera.data}}{}
+#'    \item{\code{ggplot2.data}}{}
+#'    \item{\code{VR.data}}{}
 #' }
-#' @format A list with 8 elements.
+#' @format A list with 11 elements.
 #' @docType data
 "blog.data"
 
@@ -25,5 +28,8 @@
 #                   pkg.ct2 = pkg.ct2)
 
 # blog.data$oct.data <- oct.data
+# blog.data$cholera.data <- cholera.data
+# blog.data$ggplot2.data <- ggplot2.data
+# blog.data$VR.data <- VR.data
 
 # usethis::use_data(blog.data, overwrite = TRUE)
