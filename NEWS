@@ -1,3 +1,10 @@
+packageRank 0.3.0.9038
+==================
+
+- add smpl, smpl.histories, smpl.archive and smpl.archive.histories to
+  blog.data.
+
+
 packageRank 0.3.0.9037
 ==================
 
@@ -66,7 +73,7 @@ packageRank 0.3.0.9028
 
 packageRank 0.3.0.9027
 ==================
-- packageHistory(): clean output row.names. 
+- packageHistory(): clean output row.names.
 
 
 packageRank 0.3.0.9026

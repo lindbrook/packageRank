@@ -13,8 +13,12 @@
 #'    \item{\code{cholera.data}}{}
 #'    \item{\code{ggplot2.data}}{}
 #'    \item{\code{VR.data}}{}
+#'    \item{\code{smpl}}{}
+#'    \item{\code{smpl.histories}}{}
+#'    \item{\code{smpl.archive}}{}
+#'    \item{\code{smpl.archive.histories}}{}
 #' }
-#' @format A list with 11 elements.
+#' @format A list with 15 elements.
 #' @docType data
 "blog.data"
 
@@ -31,5 +35,9 @@
 # blog.data$cholera.data <- cholera.data
 # blog.data$ggplot2.data <- ggplot2.data
 # blog.data$VR.data <- VR.data
+# blog.data$smpl <- smpl
+# blog.data$smpl.histories <- smpl.histories
+# blog.data$smpl <- smpl.archive
+# blog.data$smpl.archive.histories <- smpl.archive.histories
 
 # usethis::use_data(blog.data, overwrite = TRUE)

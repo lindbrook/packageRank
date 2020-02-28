@@ -4,7 +4,7 @@
 \name{blog.data}
 \alias{blog.data}
 \title{blog post data.}
-\format{A list with 11 elements.}
+\format{A list with 15 elements.}
 \usage{
 blog.data
 }
@@ -22,6 +22,10 @@ blog.data
    \item{\code{cholera.data}}{}
    \item{\code{ggplot2.data}}{}
    \item{\code{VR.data}}{}
+   \item{\code{smpl}}{}
+   \item{\code{smpl.histories}}{}
+   \item{\code{smpl.archive}}{}
+   \item{\code{smpl.archive.histories}}{}
 }
 }
 \keyword{datasets}
