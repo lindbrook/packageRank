@@ -37,7 +37,7 @@
 # blog.data$VR.data <- VR.data
 # blog.data$smpl <- smpl
 # blog.data$smpl.histories <- smpl.histories
-# blog.data$smpl <- smpl.archive
+# blog.data$smpl.archive <- smpl.archive
 # blog.data$smpl.archive.histories <- smpl.archive.histories
 
 # usethis::use_data(blog.data, overwrite = TRUE)
