@@ -126,7 +126,7 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
     days.observed <- unique(dat$date)
 
     if (points == "auto") {
-    if (length(days.observed) <= 62) points <- TRUE else points <- FALSE
+    if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
     } else if (is.logical(points) == FALSE) {
       stop('points must be "auto", TRUE, or FALSE.')
     }

@@ -2,6 +2,7 @@ packageRank 0.3.0.9040
 ==================
 
 - fix blog.data$smpl.
+- set plot.cranDownloads(points = "auto") for <= 45 days.
 
 
 packageRank 0.3.0.9039
