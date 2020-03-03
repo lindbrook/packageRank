@@ -80,10 +80,6 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
               when = x$when,
               y.max =  max(unlist(top10.max)))
 
-  # if (log.count != TRUE) log.count <- TRUE
-  # if (smooth == TRUE) smooth <- TRUE
-  # if (sample.smooth != TRUE) sample.smooth <- TRUE
-
   cran.smpl <- out$data
   pkg.data <- out$pkg.data
   packages <- out$packages
