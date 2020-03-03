@@ -4,7 +4,7 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @export
 
-fetchLog2 <- function(date, memoization) {
+fetchCranLog <- function(date, memoization) {
   if (date > Sys.Date()) stop("Can't see into the future!")
   year <- as.POSIXlt(date)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"

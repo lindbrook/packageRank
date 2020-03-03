@@ -12,7 +12,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   filter = FALSE, memoization = TRUE) {
 
   ymd <- fixDate_2012(date)
-  cran_log <- fetchLog2(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- as.data.frame(cran_log[!is.na(cran_log$package), ])
 
   if (filter) {

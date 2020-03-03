@@ -1,3 +1,10 @@
+packageRank 0.3.0.9041
+==================
+
+- remove emptyFolderAudit() and versionsObserved().
+- rename fetchLog2() to fetchCranLog().
+
+
 packageRank 0.3.0.9040
 ==================
 

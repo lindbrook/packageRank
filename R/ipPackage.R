@@ -10,7 +10,7 @@
 ipPackage <- function(ip = 1, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE) {
 
-  cran_log <- fetchLog2(date = date, memoization = memoization)
+  cran_log <- fetchCranLog(date = date, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package) , ]
   crosstab <- table(cran_log[cran_log$ip_id == ip, "package"])
 

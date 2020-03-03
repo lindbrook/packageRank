@@ -10,7 +10,7 @@
 countryPackage <- function(country = "US", date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE) {
 
-  cran_log <- fetchLog2(date = date, memoization = memoization)
+  cran_log <- fetchCranLog(date = date, memoization = memoization)
   sel <- !is.na(cran_log$package) | !is.na(cran_log$country)
   cran_log <- cran_log[sel, ]
   crosstab <- table(cran_log[cran_log$country == country, "package"])
