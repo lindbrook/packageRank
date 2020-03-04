@@ -11,8 +11,11 @@ fetchCranLog <- function(date, memoization) {
   url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
 
   if (RCurl::url.exists(url)) {
-    if (memoization) cran_log <- mfetchLog(url)
-    else cran_log <- fetchLog(url)
+    if (memoization) {
+      cran_log <- mfetchLog(url)
+    } else {
+      cran_log <- fetchLog(url)
+    }
   } else {
     msg <- "Check your internet connection or try the previous day."
     stop("Log for ", date, " not (yet) available. ", msg)
