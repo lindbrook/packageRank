@@ -29,7 +29,7 @@ From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 }
 \examples{
 \donttest{
-packageRank(packages = "HistData", date = "2019-01-01")
-packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2019-01-01")
+packageRank(packages = "HistData", date = "2020-01-01")
+packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 }
 }
