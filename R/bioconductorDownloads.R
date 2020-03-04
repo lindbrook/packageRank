@@ -24,7 +24,7 @@
 #' # from 2015 to current year
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 #'
-#' # 2015 through 2018 (yearly)
+#' # 2010 through 2015 (yearly)
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, observation = "year")
 #'
 #' # selected year (yearly)
@@ -33,7 +33,7 @@
 #' # selected year (monthly)
 #' bioconductorDownloads(packages = "clusterProfiler", from = "2015-01", to = "2015-12")
 #'
-#' # June 2014 through March 2018
+#' # June 2014 through March 2015
 #' bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
 #' }
 
