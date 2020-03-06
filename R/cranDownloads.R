@@ -398,7 +398,7 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
           p + scale_y_log10() + geom_smooth(method = "loess",
             formula = "y ~ x", se = se)
         } else if (!points & !log.count & smooth) {
-          p + geom_smooth(method = "loess", formula = "y ~ x",se = se)
+          p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
         } else if (points & !log.count & !smooth) {
           p + geom_point()
         } else if (!points & log.count & !smooth) {
