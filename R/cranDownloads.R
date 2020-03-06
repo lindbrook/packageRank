@@ -388,15 +388,15 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
         if (points & log.count & smooth) {
           p + geom_point() +
               scale_y_log10() +
-              geom_smooth(method = "loess", se = se)
+              geom_smooth(method = "loess", formula = "y ~ x",se = se)
         } else if (points & log.count & !smooth) {
           p + geom_point() + scale_y_log10()
         } else if (points & !log.count & smooth) {
-          p +  geom_point() + geom_smooth(method = "loess", se = se)
+          p +  geom_point() + geom_smooth(method = "loess", formula = "y ~ x",se = se)
         } else if (!points & log.count & smooth) {
-          p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+          p + scale_y_log10() + geom_smooth(method = "loess", formula = "y ~ x",se = se)
         } else if (!points & !log.count & smooth) {
-          p + geom_smooth(method = "loess", se = se)
+          p + geom_smooth(method = "loess", formula = "y ~ x",se = se)
         } else if (points & !log.count & !smooth) {
           p + geom_point()
         } else if (!points & log.count & !smooth) {
@@ -463,15 +463,17 @@ rDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f) {
     if (points & log.count & smooth) {
       p + geom_point() +
           scale_y_log10() +
-          geom_smooth(method = "loess", se = se)
+          geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & log.count & !smooth) {
       p + geom_point() + scale_y_log10()
     } else if (points & !log.count & smooth) {
-      p +  geom_point() + geom_smooth(method = "loess", se = se)
+      p +  geom_point() +
+       geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (!points & log.count & smooth) {
-      p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+      p + scale_y_log10() + geom_smooth(method = "loess", formula = "y ~ x",
+        se = se)
     } else if (!points & !log.count & smooth) {
-      p + geom_smooth(method = "loess", se = se)
+      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & !log.count & !smooth) {
       p + geom_point()
     } else if (!points & log.count & !smooth) {

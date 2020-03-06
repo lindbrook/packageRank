@@ -1,3 +1,9 @@
+packageRank 0.3.0.9043
+==================
+
+- fix "`geom_smooth()` using formula 'y ~ x'" warning for 'ggplot2' v3.3.0.
+
+
 packageRank 0.3.0.9042
 ==================
 
