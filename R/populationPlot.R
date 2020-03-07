@@ -1,6 +1,6 @@
 #' Package download counts and rank percentiles (longitudinal).
 #'
-#' Stratified random sample of dowloaded packages.
+#' With a stratified random sample cohort of packages plus top ten.
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param log.count Logical. Logarithm of package downloads.
@@ -9,9 +9,6 @@
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
 #' @param sample.pct Numeric. Percent of packages to sample.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
-# #' @param validate.packages Logical. Check if package exists.
-# #' @param validate.archive.packages Logical. Validate archived packages.
-# #' @import cranlogs
 #' @export
 
 populationPlot <- function(x, graphics = NULL, log.count = TRUE,
@@ -66,8 +63,11 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
 
   # cohort + top 10
   cohort <- pct[unlist(sample.id), "pkg"]
-  cohort <- unique(c(cohort, top10))
-  cohort <- cohort[cohort %in% x$packages == FALSE]
+  if (any(top10 %in% cohort)) cohort <- unique(c(cohort, top10))
+  if (any(x$packages %in% cohort)) {
+    cohort <- cohort[cohort %in% x$packages == FALSE]
+  }
+
   cohort.data <- cranlogs::cran_downloads(cohort, from = start.date,
     to = end.date)
 

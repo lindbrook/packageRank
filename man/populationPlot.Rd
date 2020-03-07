@@ -25,5 +25,5 @@ populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.}
 }
 \description{
-Stratified random sample of dowloaded packages.
+With a stratified random sample cohort of packages plus top ten.
 }
