@@ -395,16 +395,17 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
 
   if (points & log_count & smooth) {
     p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10() +
-      geom_smooth(method = "loess", se = se)
+      geom_smooth(method = "loess", formula = "y ~ x", se = se)
   } else if (points & log_count & !smooth) {
     p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10()
   } else if (points & !log_count & smooth) {
     p <- p +  geom_point(data = dat[!dat$date %in% oip, ]) +
-      geom_smooth(method = "loess", se = se)
+      geom_smooth(method = "loess", formula = "y ~ x", se = se)
   } else if (!points & log_count & smooth) {
-    p <- p + scale_y_log10() + geom_smooth(method = "loess", se = se)
+    p <- p + scale_y_log10() + geom_smooth(method = "loess", formula = "y ~ x",
+      se = se)
   } else if (!points & !log_count & smooth) {
-    p <- p + geom_smooth(method = "loess", se = se)
+    p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
   } else if (points & !log_count & !smooth) {
     p <- p + geom_point(data = dat[!dat$date %in% oip, ])
   } else if (!points & log_count & !smooth) {
