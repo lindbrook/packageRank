@@ -28,7 +28,7 @@
 
 \item{r.version}{Logical. Add R release dates.}
 
-\item{population.plot}{Logical. Add R release dates.}
+\item{population.plot}{Logical. Plot population plot.}
 
 \item{...}{Additional plotting parameters.}
 }

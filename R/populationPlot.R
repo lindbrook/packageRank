@@ -1,8 +1,6 @@
 #' Package download counts and rank percentiles (longitudinal).
 #'
 #' Stratified random sample of dowloaded packages.
-# #' @param packages Character. Vector of package name(s).
-# #' @param when Character. "last-month" or "last-week".
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param log.count Logical. Logarithm of package downloads.
@@ -20,20 +18,9 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
   smooth = TRUE, sample.smooth = TRUE, f = 1/3, sample.pct = 5,
   multi.core = TRUE) {
 
-  if (is.null(x$when) == FALSE) {
-    if (x$when %in% c("last-month", "last-week") == FALSE) {
-      stop('when can only be "last-month" or "last-week".')
-    }
-  } else stop("Population estimate plot only available with 'when' argument.")
-
   pkg.data <- x$cranlogs.data
   start.date <- pkg.data$date[1]
   end.date <- pkg.data$date[nrow(pkg.data)]
-
-  top10 <- cranlogs::cran_top_downloads(when = x$when)
-  top10.max <- lapply(1:5, function(i) {
-    cranlogs::cran_downloads(packages = top10$package[i], when = x$when)$count
-  })
 
   year <- as.POSIXlt(start.date)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
@@ -73,20 +60,32 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
 
   names(sample.id) <- paste(round(breaks[-1], 2))
 
+  top10 <- pct[1:10, "pkg"]
+  y.max <- max(cranlogs::cran_downloads(top10, from = start.date,
+    to = end.date)$count)
+
+  # cohort + top 10
   cohort <- pct[unlist(sample.id), "pkg"]
-  out <- list(data = cranlogs::cran_downloads(cohort, when = x$when),
+  cohort <- unique(c(cohort, top10))
+  cohort <- cohort[cohort %in% x$packages == FALSE]
+  cohort.data <- cranlogs::cran_downloads(cohort, from = start.date,
+    to = end.date)
+
+  out <- list(data = cohort.data,
               pkg.data = pkg.data,
               packages = x$packages,
-              when = x$when,
-              y.max =  max(unlist(top10.max)))
+              y.max =  y.max)
 
   cran.smpl <- out$data
   pkg.data <- out$pkg.data
   packages <- out$packages
 
   if (log.count) {
-    if (any(cran.smpl$count == 0)) cran.smpl$count <- cran.smpl$count + 1
-    if (any(pkg.data$count == 0)) pkg.data$count <- pkg.data$count + 1
+    zero.test <- any(cran.smpl$count == 0) | any(pkg.data$count == 0)
+    if (zero.test) {
+      cran.smpl$count <- cran.smpl$count + 1
+      pkg.data$count <- pkg.data$count + 1
+    }
   }
 
   if (is.null(graphics)) {
@@ -127,6 +126,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
         if (sample.smooth) {
           p <- p + geom_smooth(data = cran.smpl.data[sel, c("date", "count")],
                                method = "loess",
+                               formula = "y ~ x",
                                se = FALSE,
                                size = 0.25,
                                colour = "lightgray")
@@ -142,6 +142,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
 
     if (smooth) p <- p + geom_smooth(colour = "blue",
                                      method = "loess",
+                                     formula = "y ~ x",
                                      se = FALSE)
 
     if (log.count) p + scale_y_log10() else p

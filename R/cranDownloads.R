@@ -88,7 +88,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
 #' @param package.version Logical. Add latest package release dates.
 #' @param r.version Logical. Add R release dates.
-#' @param population.plot Logical. Add R release dates.
+#' @param population.plot Logical. Plot population plot.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -110,13 +110,7 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
 
   if (population.plot) {
-    if (!is.null(x$when)) {
-      if (x$when %in% c("last-month", "last-week", "last-day") == FALSE) {
-        stop('when can only be "last-month", "last-week" or "last-day".')
-      } else populationPlot(x, graphics = graphics, f = f)
-    } else {
-      stop("Population estimate plot only available with 'when' argument.")
-    }
+     populationPlot(x, graphics = graphics, f = f)
   } else {
     dat <- x$cranlogs.data
 
