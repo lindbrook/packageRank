@@ -31,22 +31,32 @@
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   to = NULL, check.cran = TRUE, check.archive = FALSE) {
 
-  if (check.cran) {
-    pkg.chk <- validatePackage(packages, check.archive = check.archive)
-    if (is.list(pkg.chk)) {
-      error <- paste(pkg.chk$invalid, collapse = ", ")
-      if (length(pkg.chk$valid) == 0) {
-        if (check.archive) {
-          stop(error, ": misspelled or not on CRAN/Archive.")
-        } else stop(error, ": misspelled or not on CRAN.")
-      } else {
-        if (check.archive) {
-          warning(error, ": misspelled or not on CRAN/Archive.")
-        } else warning(error, ": misspelled or not on CRAN.")
-        packages <- pkg.chk$valid
+    if (length(packages) > 1) {
+      if ("R" %in% packages) {
+        stop("R downloads cannot be mixed with package downloads.")
       }
     }
-  }
+
+    if (!is.null(packages)) {
+      if ("R" %in% packages) {
+        if (check.cran) {
+          pkg.chk <- validatePackage(packages, check.archive = check.archive)
+          if (is.list(pkg.chk)) {
+            error <- paste(pkg.chk$invalid, collapse = ", ")
+            if (length(pkg.chk$valid) == 0) {
+              if (check.archive) {
+                stop(error, ": misspelled or not on CRAN/Archive.")
+              } else stop(error, ": misspelled or not on CRAN.")
+            } else {
+              if (check.archive) {
+                warning(error, ": misspelled or not on CRAN/Archive.")
+              } else warning(error, ": misspelled or not on CRAN.")
+              packages <- pkg.chk$valid
+            }
+          }
+        }
+      }
+    }
 
   # first.log <- as.Date("2012-10-01") # resolveDate() checks this.
   cal.date <- Sys.Date() - 1
