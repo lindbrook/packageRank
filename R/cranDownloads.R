@@ -120,7 +120,7 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
     days.observed <- unique(dat$date)
 
     if (points == "auto") {
-    if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
+      if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
     } else if (is.logical(points) == FALSE) {
       stop('points must be "auto", TRUE, or FALSE.')
     }
@@ -386,11 +386,11 @@ plot.cranDownloads <- function(x, graphics = NULL, points = "auto",
         } else if (points & log.count & !smooth) {
           p + geom_point() + scale_y_log10()
         } else if (points & !log.count & smooth) {
-          p +  geom_point() + geom_smooth(method = "loess", formula = "y ~ x",
-            se = se)
+          p + geom_point() +
+            geom_smooth(method = "loess", formula = "y ~ x", se = se)
         } else if (!points & log.count & smooth) {
-          p + scale_y_log10() + geom_smooth(method = "loess",
-            formula = "y ~ x", se = se)
+          p + scale_y_log10() +
+            geom_smooth(method = "loess", formula = "y ~ x", se = se)
         } else if (!points & !log.count & smooth) {
           p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
         } else if (points & !log.count & !smooth) {
@@ -466,8 +466,8 @@ rDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f) {
       p +  geom_point() +
        geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (!points & log.count & smooth) {
-      p + scale_y_log10() + geom_smooth(method = "loess", formula = "y ~ x",
-        se = se)
+      p + scale_y_log10() +
+        geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (!points & !log.count & smooth) {
       p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & !log.count & !smooth) {
