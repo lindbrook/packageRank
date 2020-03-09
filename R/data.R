@@ -17,8 +17,9 @@
 #'    \item{\code{smpl.histories}}{}
 #'    \item{\code{smpl.archive}}{}
 #'    \item{\code{smpl.archive.histories}}{}
+#'    \item{\code{ccode.ct}}{}
 #' }
-#' @format A list with 15 elements.
+#' @format A list with 17 elements.
 #' @docType data
 "blog.data"
 
@@ -39,5 +40,6 @@
 # blog.data$smpl.histories <- smpl.histories
 # blog.data$smpl.archive <- smpl.archive
 # blog.data$smpl.archive.histories <- smpl.archive.histories
+# blog.data$ccode.ct <- ccode.ct
 
 # usethis::use_data(blog.data, overwrite = TRUE)
