@@ -38,7 +38,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
 
     if (!is.null(packages)) {
-      if ("R" %in% packages) {
+      if (!"R" %in% packages) {
         if (check.cran) {
           pkg.chk <- validatePackage(packages, check.archive = check.archive)
           if (is.list(pkg.chk)) {

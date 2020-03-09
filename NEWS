@@ -2,6 +2,7 @@ packageRank 0.3.0.9046
 ==================
 
 - add blog.data$ccode.ct.
+- fix cranDownload(packages = "R").
 
 
 packageRank 0.3.0.9045
