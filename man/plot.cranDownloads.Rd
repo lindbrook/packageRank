@@ -4,7 +4,7 @@
 \alias{plot.cranDownloads}
 \title{Plot method for cranDownloads().}
 \usage{
-\method{plot}{cranDownloads}(x, graphics = "base", points = "auto",
+\method{plot}{cranDownloads}(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
   multi.plot = FALSE, legend.loc = "topleft", ...)
@@ -12,7 +12,7 @@
 \arguments{
 \item{x}{object.}
 
-\item{graphics}{Character. NULL, "base" or "ggplot2".}
+\item{graphics}{Character. "auto", "base" or "ggplot2".}
 
 \item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE.}
 
