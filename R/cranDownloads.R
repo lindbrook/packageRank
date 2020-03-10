@@ -139,18 +139,15 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
 
   if (points == "auto") {
     if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
-
   } else if (is.logical(points) == FALSE) {
     stop('points must be "auto", TRUE, or FALSE.')
   }
 
   if (population.plot) {
      populationPlot(x, graphics = graphics, f = f)
-
   } else if ("R" %in% x$packages) {
     rPlot(dat, graphics, days.observed, log.count, legend.loc, points, smooth,
       r.version, r_v)
-
   } else {
     if (multi.plot) {
       multiPlot(dat, x, graphics, days.observed, log.count, legend.loc)
@@ -326,7 +323,9 @@ multiPlot <- function(dat, x, graphics, days.observed, log.count, legend.loc) {
   }
 }
 
-cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f) {
+cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
+  r.version, r_v) {
+
   dat <- x$cranlogs.data
 
   if (graphics == "base") {
@@ -346,6 +345,13 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f) {
         plot(dat$date, dat$count, type = "l", xlab = "Date",
           ylab = "Count")
       }
+    }
+
+    if (r.version) {
+      axis(3, at = as.Date(r_v$date),
+        labels = paste("R", r_v$version), cex.axis = 2/3,
+        tick = FALSE, line = -2/3)
+      abline(v = as.Date(r_v$date), lty = "dotted")
     }
 
     if (smooth) {
@@ -390,7 +396,8 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
 
   if (graphics == "base") {
     if (is.null(x$packages)) {
-      cranDownloadsPlot(x, graphics, points, log.count, smooth, se, f)
+      cranDownloadsPlot(x, graphics, points, log.count, smooth, se, f,
+        r.version, r_v)
 
     } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
