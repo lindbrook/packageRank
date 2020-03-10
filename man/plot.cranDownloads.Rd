@@ -4,10 +4,10 @@
 \alias{plot.cranDownloads}
 \title{Plot method for cranDownloads().}
 \usage{
-\method{plot}{cranDownloads}(x, graphics = NULL, points = "auto",
+\method{plot}{cranDownloads}(x, graphics = "base", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  ...)
+  multi.plot = FALSE, legend.loc = "topleft", ...)
 }
 \arguments{
 \item{x}{object.}
@@ -29,6 +29,10 @@
 \item{r.version}{Logical. Add R release dates.}
 
 \item{population.plot}{Logical. Plot population plot.}
+
+\item{multi.plot}{Logical.}
+
+\item{legend.loc}{Character.}
 
 \item{...}{Additional plotting parameters.}
 }
