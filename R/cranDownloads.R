@@ -302,17 +302,13 @@ multiPlot <- function(dat, x, graphics, days.observed, log.count, legend.loc) {
       }
       p <- p + geom_point(size = 2) +
         geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-        # theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank())
+        theme(panel.grid.minor = element_blank())
     } else if (length(days.observed) > 1) {
       p <- ggplot(data = dat,
         aes_string("date", "count", colour = "package")) +
         geom_line() +
         geom_point() +
-        # theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
+        theme(panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5)) +
         ggtitle("Package Downloads")
     }
