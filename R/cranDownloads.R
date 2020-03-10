@@ -385,6 +385,7 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
   if (graphics == "base") {
     if (is.null(x$packages)) {
       cranDownloadsPlot(x, graphics, points, log.count, smooth, se, f)
+
     } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
         if (log.count) {
@@ -394,7 +395,7 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
           dotchart(dat$count, labels = dat$package, xlab = "count",
             main = days.observed)
         }
-      } else {
+      } else if (length(days.observed) > 1) {
         grDevices::devAskNewPage(ask = TRUE)
 
         invisible(lapply(x$package, function(pkg) {
@@ -441,6 +442,43 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
 
         grDevices::devAskNewPage(ask = FALSE)
       }
+
+    } else if (length(x$packages) == 1) {
+      if (log.count) {
+        if (points) {
+          plot(dat$date, dat$count, type = "o", xlab = "Date",
+            ylab = "log10(Count)", log = "y")
+        } else {
+          plot(dat$date, dat$count, type = "l", xlab = "Date",
+            ylab = "log10(Count)", log = "y")
+        }
+      } else {
+        if (points) {
+          plot(dat$date, dat$count, type = "o", xlab = "Date",
+            ylab = "Count")
+        } else {
+          plot(dat$date, dat$count, type = "l", xlab = "Date",
+            ylab = "Count")
+        }
+      }
+
+      if (package.version) {
+        axis(3, at = as.Date(dat$date), labels = paste(dat$version),
+          cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
+        abline(v = as.Date(dat$date), lty = "dotted", col = "red")
+      }
+
+      if (r.version) {
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, tick = FALSE, line = -2/3)
+        abline(v = as.Date(r_v$date), lty = "dotted")
+      }
+
+      if (smooth) {
+        lines(stats::lowess(dat$date, dat$count, f = f), col = "blue")
+      }
+
+      title(main = x$packages)
     }
 
   } else if (graphics == "ggplot2") {
