@@ -4,8 +4,8 @@
 \alias{packageCountry}
 \title{Package download counts by country (prototype).}
 \usage{
-packageCountry(packages = NULL, date = Sys.Date() - 1, memoization = TRUE,
-  sort = TRUE, na.rm = FALSE)
+packageCountry(packages = NULL, date = Sys.Date() - 1,
+  memoization = TRUE, sort = TRUE, na.rm = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
