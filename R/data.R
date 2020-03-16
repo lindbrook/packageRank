@@ -18,8 +18,9 @@
 #'    \item{\code{smpl.archive}}{}
 #'    \item{\code{smpl.archive.histories}}{}
 #'    \item{\code{ccode.ct}}{}
+#'    \item{\ccode{crosstab_2019_10_01}}{}
 #' }
-#' @format A list with 17 elements.
+#' @format A list with 18 elements.
 #' @docType data
 "blog.data"
 
@@ -41,5 +42,6 @@
 # blog.data$smpl.archive <- smpl.archive
 # blog.data$smpl.archive.histories <- smpl.archive.histories
 # blog.data$ccode.ct <- ccode.ct
+# blog.data$crosstab_2019_10_01 <- crosstab_2019_10_01
 
 # usethis::use_data(blog.data, overwrite = TRUE)
