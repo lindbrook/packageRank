@@ -1,3 +1,10 @@
+packageRank 0.3.0.9051
+==================
+
+- add packageDistribution() prototype.
+- move "@importFrom R.utils decompressFile" to fetchLog().
+
+
 packageRank 0.3.0.9050
 ==================
 
