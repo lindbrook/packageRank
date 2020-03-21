@@ -18,7 +18,7 @@
 #'    \item{\code{smpl.archive}}{}
 #'    \item{\code{smpl.archive.histories}}{}
 #'    \item{\code{ccode.ct}}{}
-#'    \item{\ccode{crosstab_2019_10_01}}{}
+#'    \item{\code{crosstab_2019_10_01}}{}
 #' }
 #' @format A list with 18 elements.
 #' @docType data
