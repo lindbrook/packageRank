@@ -8,7 +8,6 @@
 #' @param check.cran Logical. Check if package exists.
 #' @param check.archive Logical. Include archive when validating packages.
 #' @return An R data frame.
-#' @importFrom R.utils decompressFile
 #' @export
 #' @examples
 #' \donttest{
