@@ -5,7 +5,7 @@
 \alias{blog.data}
 \title{blog post data.}
 \format{
-A list with 17 elements.
+A list with 18 elements.
 }
 \usage{
 blog.data
@@ -29,6 +29,7 @@ blog.data
    \item{\code{smpl.archive}}{}
    \item{\code{smpl.archive.histories}}{}
    \item{\code{ccode.ct}}{}
+   \item{\ccode{crosstab_2019_10_01}}{}
 }
 }
 \keyword{datasets}
