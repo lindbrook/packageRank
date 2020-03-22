@@ -2,13 +2,15 @@
 #'
 #' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
+#' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.cran Logical. Check if package exists.
 #' @param check.archive Logical. Include archive when validating package.
 #' @export
 
 packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
-  memoization = TRUE, check.cran = FALSE, check.archive = FALSE) {
+  size.filter = FALSE, memoization = TRUE, check.cran = FALSE,
+  check.archive = FALSE) {
 
   if (check.cran) {
     pkg.chk <- validatePackage(package, check.archive = check.archive)
@@ -31,12 +33,25 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
 
+  if (size.filter) {
+    if (is.numeric(size.filter)) {
+      if (size.filter >= 0) {
+          cran_log <- cran_log[cran_log$size >= size.filter, ]
+        } else if (size.filter < 0) {
+          cran_log <- cran_log[cran_log$size < -size.filter, ]
+        }
+    } else if (is.logical(size.filter)) {
+      cran_log <- cran_log[cran_log$size >= 1000, ]
+    } else stop("'size.filter' must be Logical or Numeric.")
+  }
+
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(crosstab))
   freq <- vapply(cts, function(x) sum(crosstab == x), integer(1L))
   freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
 
-  out <- list(package = package, freq.dist = freq.dist, crosstab = crosstab)
+  out <- list(package = package, freq.dist = freq.dist, crosstab = crosstab,
+    date = date)
   class(out) <- "packageDistribution"
   out
 }

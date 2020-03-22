@@ -1,3 +1,10 @@
+packageRank 0.3.0.9052
+==================
+
+- add size.filter to packageDistribution().
+- amend plot.packageDistribution().
+
+
 packageRank 0.3.0.9051
 ==================
 

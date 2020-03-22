@@ -5,12 +5,15 @@
 \title{Package Download Distribution Plot.}
 \usage{
 packageDistribution(package = "HistData", date = Sys.Date() - 1,
-  memoization = TRUE, check.cran = FALSE, check.archive = FALSE)
+  size.filter = FALSE, memoization = TRUE, check.cran = FALSE,
+  check.archive = FALSE)
 }
 \arguments{
 \item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd".}
+
+\item{size.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
