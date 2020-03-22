@@ -64,30 +64,29 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 plot.packageDistribution <- function(x, ...) {
   freq.dist <- x$freq.dist
   crosstab <- x$crosstab
-  pkg.ct <- crosstab[names(crosstab) == x$package]
-  pkg.bin <- crosstab[crosstab == pkg.ct]
 
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
-    xlab = "log10(Downloads)", ylab = "Frequency",
-    main = paste(x$package, "+ Frequency Distribution of Package Downloads"))
-  text(crosstab[1] * 0.75, mean(freq.dist$frequency) * 4,
-    labels = names(crosstab[1]), col = "red")
+    xlab = "Downloads", ylab = "Frequency")
   points(crosstab[1], 1, col = "red")
   points(1, length(crosstab[crosstab == 1]), col = "red")
-  points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == x$package),
-    col = "red", pch = 16)
-  arrows(crosstab[1] * 0.75, mean(freq.dist$frequency) * 3,
-    crosstab[1] * 0.9, mean(freq.dist$frequency) * 0.75, length = 0.05,
-    col = "red")
-  axis(3, at =  max(crosstab), labels = format( max(crosstab),
-    big.mark = ","), cex.axis = 0.8, padj = 0.9, col.axis = "red",
-    col.ticks = "red")
+  axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "red",
+    col.ticks = "red", labels = paste(names(crosstab[1]), "=",
+    format(crosstab[1], big.mark = ",")))
   axis(2, at = length(crosstab[crosstab == 1]),
     labels = length(crosstab[crosstab == 1]), las = 2, cex.axis = 0.8,
     col.axis = "red", col.ticks = "red")
-  abline(v = pkg.ct, col = "red", lwd = 0.5)
-  axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
-    cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
+  abline(v = crosstab[1], col = "red", lty = "dotted")
+
+  if (!is.null(x$package)) {
+    pkg.ct <- crosstab[names(crosstab) == x$package]
+    pkg.bin <- crosstab[crosstab == pkg.ct]
+    points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == x$package),
+      col = "red", pch = 16)
+    abline(v = pkg.ct, col = "red", lwd = 0.5)
+    axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
+      cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
+    title(paste(x$package, "@", x$date))
+  } else title(paste("Distribution of Package Download Counts:", x$date))
 }
 
 #' Print method for packageDistribution().
