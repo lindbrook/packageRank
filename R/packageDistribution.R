@@ -51,7 +51,7 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
 
   out <- list(package = package, freq.dist = freq.dist, crosstab = crosstab,
-    date = date)
+    date = ymd)
   class(out) <- "packageDistribution"
   out
 }
