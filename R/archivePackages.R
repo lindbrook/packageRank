@@ -112,7 +112,10 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   # 2020-01-11 14:37 time stamp
   empty.folder3 <- c("problems", "reminders.")
 
-  empty <- c(empty.folder1, empty.folder2, empty.folder3)
+  # 2020-02-19 10:40 	time stamp
+  empty.folder4 <- c("2020-02-18", "in", "time.", "2015-09-01")
+
+  empty <- c(empty.folder1, empty.folder2, empty.folder3, empty.folder4)
 
   # 2020-01-11 14:37 time stamp
   # empties_2020.01.11 <- c("Archived", "as", "check", "corrected", "despite",
