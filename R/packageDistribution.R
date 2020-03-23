@@ -64,18 +64,20 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 plot.packageDistribution <- function(x, ...) {
   freq.dist <- x$freq.dist
   crosstab <- x$crosstab
+  ones <- length(crosstab[crosstab == 1])
+  max.freq <- max(freq.dist$frequency)
 
-  plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
+  plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x", yaxt = "n",
     xlab = "Downloads", ylab = "Frequency")
-  points(crosstab[1], 1, col = "red")
-  points(1, length(crosstab[crosstab == 1]), col = "red")
-  axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "red",
-    col.ticks = "red", labels = paste(names(crosstab[1]), "=",
+  points(1, ones, col = "dodgerblue")
+  points(crosstab[1], 1, col = "dodgerblue")
+  axis(2, at = ones, labels = ones, col.axis = "dodgerblue",
+    col.ticks = "dodgerblue")
+  axis(2, at = max.freq, labels = format(max.freq, big.mark = ","))
+  axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
+    col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
     format(crosstab[1], big.mark = ",")))
-  axis(2, at = length(crosstab[crosstab == 1]),
-    labels = length(crosstab[crosstab == 1]), las = 2, cex.axis = 0.8,
-    col.axis = "red", col.ticks = "red")
-  abline(v = crosstab[1], col = "red", lty = "dotted")
+  abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
 
   if (!is.null(x$package)) {
     pkg.ct <- crosstab[names(crosstab) == x$package]
@@ -85,7 +87,8 @@ plot.packageDistribution <- function(x, ...) {
     abline(v = pkg.ct, col = "red", lwd = 0.5)
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-    title(paste(x$package, "@", x$date))
+    day <- weekdays(as.Date(x$date), abbreviate = TRUE)
+    title(paste0(x$package, " @ ", x$date, " (", day, ")"))
   } else title(paste("Distribution of Package Download Counts:", x$date))
 }
 
