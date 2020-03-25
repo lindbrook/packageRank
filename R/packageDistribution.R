@@ -78,7 +78,6 @@ plot.packageDistribution <- function(x, ...) {
     pkg.bin <- crosstab[crosstab == pkg.ct]
     points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == x$package),
       col = "red", pch = 16)
-    abline(v = pkg.ct, col = "red", lwd = 0.5)
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     day <- weekdays(as.Date(x$date), abbreviate = TRUE)
