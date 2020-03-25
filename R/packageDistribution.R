@@ -64,16 +64,10 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 plot.packageDistribution <- function(x, ...) {
   freq.dist <- x$freq.dist
   crosstab <- x$crosstab
-  ones <- length(crosstab[crosstab == 1])
-  max.freq <- max(freq.dist$frequency)
 
-  plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x", yaxt = "n",
+  plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
     xlab = "Downloads", ylab = "Frequency")
-  points(1, ones, col = "dodgerblue")
   points(crosstab[1], 1, col = "dodgerblue")
-  axis(2, at = ones, labels = ones, col.axis = "dodgerblue",
-    col.ticks = "dodgerblue")
-  axis(2, at = max.freq, labels = format(max.freq, big.mark = ","))
   axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
     col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
     format(crosstab[1], big.mark = ",")))
