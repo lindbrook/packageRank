@@ -5,8 +5,7 @@
 \title{Package Download Distribution Plot.}
 \usage{
 packageDistribution(package = "HistData", date = Sys.Date() - 1,
-  size.filter = FALSE, memoization = TRUE, check.cran = FALSE,
-  check.archive = FALSE)
+  size.filter = FALSE, memoization = TRUE, check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Vector of package name(s).}
@@ -17,9 +16,7 @@ packageDistribution(package = "HistData", date = Sys.Date() - 1,
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
-\item{check.cran}{Logical. Check if package exists.}
-
-\item{check.archive}{Logical. Include archive when validating package.}
+\item{check.package}{Logical. Check if package exists.}
 }
 \description{
 Package Download Distribution Plot.
