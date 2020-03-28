@@ -23,6 +23,23 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
     }
   }
 
+  if (length(date) > 1) {
+    out <- lapply(date, function(x) {
+      package_distribution(package, x, size.filter, memoization, check.package)
+    })
+  } else if (length(date) == 1) {
+    dat <- package_distribution(package, date, size.filter, memoization,
+      check.package)
+    out <- list(dat)
+  }
+
+  class(out) <- "packageDistribution"
+  out
+}
+
+package_distribution <- function(package, date, size.filter, memoization,
+  check.package) {
+
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
@@ -46,8 +63,6 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 
   out <- list(package = package, freq.dist = freq.dist, crosstab = crosstab,
     date = ymd)
-  class(out) <- "packageDistribution"
-  out
 }
 
 #' Plot method for packageDistribution().
@@ -56,27 +71,35 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 #' @export
 
 plot.packageDistribution <- function(x, ...) {
-  freq.dist <- x$freq.dist
-  crosstab <- x$crosstab
+  xlim <- range(lapply(x, function(z) z$freq.dist$count))
+  ylim <- range(lapply(x, function(z) z$freq.dist$frequency))
+  invisible(lapply(x, function(dat) {
+    plot_package_distribution(dat, xlim, ylim)
+  }))
+}
+
+plot_package_distribution <- function(dat, xlim = NULL, ylim = NULL) {
+  freq.dist <- dat$freq.dist
+  crosstab <- dat$crosstab
 
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
-    xlab = "Downloads", ylab = "Frequency")
+    xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
   points(crosstab[1], 1, col = "dodgerblue")
   axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
     col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
     format(crosstab[1], big.mark = ",")))
   abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
 
-  if (!is.null(x$package)) {
-    pkg.ct <- crosstab[names(crosstab) == x$package]
+  if (!is.null(dat$package)) {
+    pkg.ct <- crosstab[names(crosstab) == dat$package]
     pkg.bin <- crosstab[crosstab == pkg.ct]
-    points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == x$package),
+    points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == dat$package),
       col = "red", pch = 16)
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-    day <- weekdays(as.Date(x$date), abbreviate = TRUE)
-    title(paste0(x$package, " @ ", x$date, " (", day, ")"))
-  } else title(paste("Distribution of Package Download Counts:", x$date))
+    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
+    title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
+  } else title(paste("Distribution of Package Download Counts:", dat$date))
 }
 
 #' Print method for packageDistribution().
@@ -85,5 +108,5 @@ plot.packageDistribution <- function(x, ...) {
 #' @export
 
 print.packageDistribution <- function(x, ...) {
-  print(x$freq.dist)
+  invisible(lapply(x, function(dat) print(dat[c("package", "date")])))
 }
