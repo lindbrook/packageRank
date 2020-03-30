@@ -84,7 +84,6 @@ plot_package_distribution <- function(dat, xlim = NULL, ylim = NULL) {
 
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
     xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
-  points(crosstab[1], 1, col = "dodgerblue")
   axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
     col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
     format(crosstab[1], big.mark = ",")))
@@ -93,10 +92,9 @@ plot_package_distribution <- function(dat, xlim = NULL, ylim = NULL) {
   if (!is.null(dat$package)) {
     pkg.ct <- crosstab[names(crosstab) == dat$package]
     pkg.bin <- crosstab[crosstab == pkg.ct]
-    points(pkg.ct, length(pkg.bin) - which(names(pkg.bin) == dat$package),
-      col = "red", pch = 16)
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
+    abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
     day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
     title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
   } else title(paste("Distribution of Package Download Counts:", dat$date))
