@@ -1,3 +1,10 @@
+packageRank 0.3.0.9058
+==================
+
+- rename packageHistory() to packageHistory0().
+- rename packageHistory2() to packageHistory().
+
+
 packageRank 0.3.0.9057
 ==================
 

@@ -4,11 +4,13 @@
 \alias{packageHistory}
 \title{Extract package version history CRAN and Archive (prototype).}
 \usage{
-packageHistory(package = "cholera")
+packageHistory(package = "cholera", short.date = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
+
+\item{short.date}{Logical}
 }
 \description{
-Date and version of most recent publication.
+Date and version of all publications.
 }
