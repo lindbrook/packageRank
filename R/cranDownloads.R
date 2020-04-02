@@ -126,7 +126,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
   if (is.logical(se) == FALSE) stop("se must be TRUE or FALSE.")
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
-  if (package.version) p_v <- lapply(x$packages, packageCRAN)
+  if (package.version) p_v <- lapply(x$packages, packageHistory)
   if (r.version) r_v <- rversions::r_versions()
 
   dat <- x$cranlogs.data
@@ -230,7 +230,7 @@ rPlot <- function(dat, graphics, days.observed, log.count, legend.loc, points,
 
     if (r.version) {
       axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-        cex.axis = 2/3, tick = FALSE, line = -2/3)
+        cex.axis = 2/3, padj = 0.9)
       abline(v = as.Date(r_v$date), lty = "dotted")
     }
 
@@ -343,9 +343,8 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
     }
 
     if (r.version) {
-      axis(3, at = as.Date(r_v$date),
-        labels = paste("R", r_v$version), cex.axis = 2/3,
-        tick = FALSE, line = -2/3)
+      axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+        cex.axis = 2/3, padj = 0.9)
       abline(v = as.Date(r_v$date), lty = "dotted")
     }
 
@@ -428,16 +427,15 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
 
           if (package.version) {
             invisible(lapply(p_v, function(dat) {
-              axis(3, at = as.Date(dat$date), labels = paste(dat$version),
-                cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
-              abline(v = as.Date(dat$date), lty = "dotted", col = "red")
+              axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
+                padj = 0.9, col.axis = "red", col.ticks = "red")
+              abline(v = dat$Date, lty = "dotted", col = "red")
             }))
           }
 
           if (r.version) {
             axis(3, at = as.Date(r_v$date),
-              labels = paste("R", r_v$version), cex.axis = 2/3,
-              tick = FALSE, line = -2/3)
+              labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
             abline(v = as.Date(r_v$date), lty = "dotted")
           }
 
@@ -471,14 +469,16 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
       }
 
       if (package.version) {
-        axis(3, at = as.Date(dat$date), labels = paste(dat$version),
-          cex.axis = 2/3, tick = FALSE, line = -2/3, col.axis = "red")
-        abline(v = as.Date(dat$date), lty = "dotted", col = "red")
+        invisible(lapply(p_v, function(dat) {
+          axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
+            padj = 0.9, col.axis = "red", col.ticks = "red")
+          abline(v = dat$Date, lty = "dotted", col = "red")
+        }))
       }
 
       if (r.version) {
         axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, tick = FALSE, line = -2/3)
+          cex.axis = 2/3, padj = 0.9)
         abline(v = as.Date(r_v$date), lty = "dotted")
       }
 
