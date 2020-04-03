@@ -78,7 +78,7 @@ plot.packageDistribution <- function(x, ...) {
   }))
 }
 
-plot_package_distribution <- function(dat, xlim = NULL, ylim = NULL) {
+plot_package_distribution <- function(dat, xlim, ylim) {
   freq.dist <- dat$freq.dist
   crosstab <- dat$crosstab
 
