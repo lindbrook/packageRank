@@ -95,6 +95,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param r.version Logical. Add R release dates.
 #' @param population.plot Logical. Plot population plot.
 #' @param multi.plot Logical.
+#' @param y.same.scale Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
@@ -110,7 +111,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  multi.plot = FALSE, legend.loc = "topleft", ...) {
+  multi.plot = FALSE, y.same.scale = TRUE, legend.loc = "topleft", ...) {
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
@@ -148,7 +149,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
       multiPlot(dat, x, graphics, days.observed, log.count, legend.loc)
     } else {
       singlePlot(dat, x, graphics, days.observed, points, smooth, se, f,
-        log.count, package.version, p_v, r.version, r_v)
+        log.count, package.version, p_v, r.version, r_v, y.same.scale)
     }
   }
 }
@@ -386,7 +387,7 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
 }
 
 singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
-  log.count, package.version, p_v, r.version, r_v) {
+  log.count, package.version, p_v, r.version, r_v, y.same.scale) {
 
   if (graphics == "base") {
     if (is.null(x$packages)) {
@@ -403,50 +404,97 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
             main = days.observed)
         }
       } else if (length(days.observed) > 1) {
-        grDevices::devAskNewPage(ask = TRUE)
 
-        invisible(lapply(x$package, function(pkg) {
-          pkg.dat <- dat[dat$package == pkg, ]
-          if (log.count) {
-            if (points) {
-              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                ylab = "log10(Count)", log = "y")
+        if (y.same.scale) {
+          ylim <- range(x$cranlogs.data$count)
+          grDevices::devAskNewPage(ask = TRUE)
+
+          invisible(lapply(x$package, function(pkg) {
+            pkg.dat <- dat[dat$package == pkg, ]
+            if (log.count) {
+              if (points) {
+                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
+                  ylab = "log10(Count)", log = "y", ylim = ylim)
+              } else {
+                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
+                  ylab = "log10(Count)", log = "y", ylim = ylim)
+              }
             } else {
-              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                ylab = "log10(Count)", log = "y")
+              if (points) {
+                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
+                  ylab = "Count", ylim = ylim)
+              } else {
+                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
+                  ylab = "Count", ylim = ylim)
+              }
             }
-          } else {
-            if (points) {
-              plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                ylab = "Count")
+
+            if (package.version) {
+              invisible(lapply(p_v, function(dat) {
+                axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = dat$Date, lty = "dotted", col = "red")
+              }))
+            }
+
+            if (r.version) {
+              axis(3, at = as.Date(r_v$date),
+                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+              abline(v = as.Date(r_v$date), lty = "dotted")
+            }
+
+            if (smooth) {
+              lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
+                col = "blue")
+            }
+            title(main = pkg)
+          }))
+          grDevices::devAskNewPage(ask = FALSE)
+
+        } else {
+          grDevices::devAskNewPage(ask = TRUE)
+          invisible(lapply(x$package, function(pkg) {
+            pkg.dat <- dat[dat$package == pkg, ]
+            if (log.count) {
+              if (points) {
+                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
+                  ylab = "log10(Count)", log = "y")
+              } else {
+                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
+                  ylab = "log10(Count)", log = "y")
+              }
             } else {
-              plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                ylab = "Count")
+              if (points) {
+                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
+                  ylab = "Count")
+              } else {
+                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
+                  ylab = "Count")
+              }
             }
-          }
 
-          if (package.version) {
-            invisible(lapply(p_v, function(dat) {
-              axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
-                padj = 0.9, col.axis = "red", col.ticks = "red")
-              abline(v = dat$Date, lty = "dotted", col = "red")
-            }))
-          }
+            if (package.version) {
+              invisible(lapply(p_v, function(dat) {
+                axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = dat$Date, lty = "dotted", col = "red")
+              }))
+            }
 
-          if (r.version) {
-            axis(3, at = as.Date(r_v$date),
-              labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
-            abline(v = as.Date(r_v$date), lty = "dotted")
-          }
+            if (r.version) {
+              axis(3, at = as.Date(r_v$date),
+                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+              abline(v = as.Date(r_v$date), lty = "dotted")
+            }
 
-          if (smooth) {
-            lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
-              col = "blue")
-          }
-          title(main = pkg)
-        }))
-
-        grDevices::devAskNewPage(ask = FALSE)
+            if (smooth) {
+              lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
+                col = "blue")
+            }
+            title(main = pkg)
+          }))
+          grDevices::devAskNewPage(ask = FALSE)
+        }
       }
 
     } else if (length(x$packages) == 1) {
