@@ -97,6 +97,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param multi.plot Logical.
 #' @param y.same.scale Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
+#' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -111,7 +112,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  multi.plot = FALSE, y.same.scale = TRUE, legend.loc = "topleft", ...) {
+  multi.plot = FALSE, y.same.scale = TRUE, legend.loc = "topleft",
+  dev.mode = FALSE, ...) {
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
@@ -127,7 +129,13 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
   if (is.logical(se) == FALSE) stop("se must be TRUE or FALSE.")
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
-  if (package.version) p_v <- lapply(x$packages, packageHistory)
+  if (package.version) {
+    if (dev.mode) {
+      p_v <- lapply(x$packages, packageHistory0)
+    } else {
+      p_v <- lapply(x$packages, packageHistory)
+    }
+  }
   if (r.version) r_v <- rversions::r_versions()
 
   dat <- x$cranlogs.data
