@@ -27,13 +27,9 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     if (is.list(pkg.chk)) {
       error <- paste(pkg.chk$invalid, collapse = ", ")
       if (length(pkg.chk$valid) == 0) {
-        # if (check.archive) {
-          stop(error, ": misspelled or not on CRAN/Archive.")
-        # } else stop(error, ": misspelled or not on CRAN.")
+        stop(error, ": misspelled or not on CRAN/Archive.")
       } else {
-        # if (check.archive) {
-          warning(error, ": misspelled or not on CRAN/Archive.")
-        # } else warning(error, ": misspelled or not on CRAN.")
+        warning(error, ": misspelled or not on CRAN/Archive.")
         packages <- pkg.chk$valid
       }
     }
