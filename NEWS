@@ -1,3 +1,13 @@
+packageRank 0.3.0.9061
+==================
+
+- rename validatePackage() to validatePackage0().
+- rename validatePackage2() to validatePackage().
+- add dev.mode to plot.cranDownloads() for packageHistory0().
+- add dev.mode to cranDownloads(), packageDistribution()
+  and packageRank() for validatePackage0().
+
+
 packageRank 0.3.0.9060
 ==================
 
