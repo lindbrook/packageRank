@@ -4,12 +4,10 @@
 \alias{validatePackage}
 \title{Check for valid package names.}
 \usage{
-validatePackage(packages, check.archive = TRUE)
+validatePackage(packages)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
-
-\item{check.archive}{Logical. Include archive when validating package. This is computationally expensive becuase it scrapes https://cran.r-project.org/src/contrib/Archive/.}
 }
 \description{
 Check for valid package names.
