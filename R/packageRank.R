@@ -6,7 +6,7 @@
 #' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.cran Logical. Check if package exists.
-#' @param check.archive Logical. Include archive when validating packages.
+#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @return An R data frame.
 #' @export
 #' @examples
@@ -16,21 +16,24 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, check.cran = TRUE,
-  check.archive = FALSE) {
+  size.filter = TRUE, memoization = TRUE, check.cran = TRUE, dev.mode = FALSE) {
 
   if (check.cran) {
-    pkg.chk <- validatePackage(packages, check.archive = check.archive)
+    if (dev.mode) {
+      pkg.chk <- validatePackage0(packages)
+    } else {
+      pkg.chk <- validatePackage(packages)
+    }
     if (is.list(pkg.chk)) {
       error <- paste(pkg.chk$invalid, collapse = ", ")
       if (length(pkg.chk$valid) == 0) {
-        if (check.archive) {
+        # if (check.archive) {
           stop(error, ": misspelled or not on CRAN/Archive.")
-        } else stop(error, ": misspelled or not on CRAN.")
+        # } else stop(error, ": misspelled or not on CRAN.")
       } else {
-        if (check.archive) {
+        # if (check.archive) {
           warning(error, ": misspelled or not on CRAN/Archive.")
-        } else warning(error, ": misspelled or not on CRAN.")
+        # } else warning(error, ": misspelled or not on CRAN.")
         packages <- pkg.chk$valid
       }
     }

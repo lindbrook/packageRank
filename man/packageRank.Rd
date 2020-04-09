@@ -6,7 +6,7 @@
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
   size.filter = TRUE, memoization = TRUE, check.cran = TRUE,
-  check.archive = FALSE)
+  dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -19,7 +19,7 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 
 \item{check.cran}{Logical. Check if package exists.}
 
-\item{check.archive}{Logical. Include archive when validating packages.}
+\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \value{
 An R data frame.

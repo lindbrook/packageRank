@@ -10,6 +10,7 @@
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param check.package Logical. Check if package exists.
+#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 #' @examples
 #' \donttest{
@@ -28,7 +29,7 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, check.package = TRUE) {
+  to = NULL, check.package = TRUE, dev.mode = FALSE) {
 
   if (length(packages) > 1) {
     if ("R" %in% packages) {
@@ -39,7 +40,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
       if (check.package) {
-        pkg.chk <- validatePackage2(packages)
+        if (dev.mode) {
+          pkg.chk <- validatePackage0(packages)
+        } else {
+          pkg.chk <- validatePackage(packages)
+        }
         if (is.list(pkg.chk)) {
           error <- paste(pkg.chk$invalid, collapse = ", ")
           if (length(pkg.chk$valid) == 0) {

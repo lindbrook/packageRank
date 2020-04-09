@@ -5,13 +5,19 @@
 #' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Check if package exists.
+#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
-  size.filter = FALSE, memoization = TRUE, check.package = TRUE) {
+  size.filter = FALSE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE) {
 
   if (check.package) {
-    pkg.chk <- validatePackage2(package)
+    if (dev.mode) {
+      pkg.chk <- validatePackage0(package)
+    } else {
+      pkg.chk <- validatePackage(package)
+    }
     if (is.list(pkg.chk)) {
       error <- paste(pkg.chk$invalid, collapse = ", ")
       if (length(pkg.chk$valid) == 0) {
