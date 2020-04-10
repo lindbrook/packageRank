@@ -1,3 +1,10 @@
+packageRank 0.3.0.9062
+==================
+
+- rearrange output of plot.packageRank().
+- add countsRanks() prototype.
+
+
 packageRank 0.3.0.9061
 ==================
 
