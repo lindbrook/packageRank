@@ -314,8 +314,9 @@ print.packageRank <- function(x, ...) {
   dat$downloads <- format(dat$downloads, big.mark = ",")
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
-  out <- data.frame(dat[, c("date", "packages", "downloads", "percentile")],
-    rank, stringsAsFactors = FALSE, row.names = NULL)
+  out <- data.frame(dat[, c("date", "packages", "downloads")], rank,
+    percentile = dat[, "percentile"], stringsAsFactors = FALSE,
+    row.names = NULL)
   print(out)
 }
 
