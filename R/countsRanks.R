@@ -43,6 +43,7 @@ plot.countsRanks <- function(x, ...) {
   title_a <- "Counts v. Rank Percentiles: '"
   title_b <- "' March 1-7, 2020"
   title(main = paste0(title_a, x$package, title_b))
+  title(sub = paste("r =", round(stats::cor(Downloads, percentiles), 3)))
   legend(x = "topleft",
          legend = c("Percentile", "Count"),
          col = c("red", "gray"),

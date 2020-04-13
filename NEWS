@@ -1,3 +1,9 @@
+packageRank 0.3.0.9063
+==================
+
+- add Pearson's r to subtitle of plot.countsRanks().
+
+
 packageRank 0.3.0.9062
 ==================
 
