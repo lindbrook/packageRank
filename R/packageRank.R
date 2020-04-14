@@ -78,7 +78,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   tot.pkgs <- length(crosstab)
 
   pkg.percentile <- vapply(packages, function(x) {
-    round(100 * mean(crosstab < crosstab[x]), 1)
+    100 * mean(crosstab < crosstab[x])
   }, numeric(1L))
 
   dat <- data.frame(date = ymd,
@@ -315,7 +315,7 @@ print.packageRank <- function(x, ...) {
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
   out <- data.frame(dat[, c("date", "packages", "downloads")], rank,
-    percentile = dat[, "percentile"], stringsAsFactors = FALSE,
+    percentile = round(dat[, "percentile"], 1), stringsAsFactors = FALSE,
     row.names = NULL)
   print(out)
 }
