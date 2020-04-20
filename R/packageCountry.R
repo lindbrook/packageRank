@@ -12,14 +12,34 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, na.rm = FALSE) {
 
   dat <- packageLog(packages = packages, date = date, memoization = memoization)
-  if (na.rm) {
-    crosstab <- table(dat$country)
-  } else {
-    crosstab <- table(dat$country, useNA = "ifany")
+
+  if (length(packages) == 1) {
+    if (na.rm) {
+      out <- table(dat$country)
+    } else {
+      out <- table(dat$country, useNA = "ifany")
+    }
+    if (sort) {
+      sort(out, decreasing = TRUE)
+    } else {
+      out
+    }
+  } else if (length(packages) > 1) {
+    if (na.rm) {
+      out <- lapply(packages, function(pkg) {
+         table(dat[dat$package == pkg, "country"])
+      })
+    } else {
+      out <- lapply(packages, function(pkg) {
+         table(dat[dat$package == pkg, "country"], useNA = "ifany")
+      })
+    }
+    if (sort) {
+      out <- lapply(out, function(x) sort(x, decreasing = TRUE))
+    } else {
+      out
+    }
+    names(out) <- packages
   }
-  if (sort) {
-    sort(crosstab, decreasing = TRUE)
-  } else {
-    crosstab
-  }
+  out
 }
