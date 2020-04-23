@@ -64,12 +64,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   if (is.null(when) & is.null(from) & is.null(to)) {
     args <- list(packages = packages, from = cal.date, to = cal.date)
 
-  } else if (!is.null(when)) {
+  } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
       args <- list(packages = packages, when = when)
     } else stop('"when" must be "last-day", "last-week" or "last-month".')
 
-  } else if (!is.null(from)) {
+  } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
 
     if (!is.null(to)) {
@@ -78,11 +78,31 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
     if (start.date > end.date) stop('"from" must be <= "to".')
     args <- list(packages, from = start.date, to = end.date)
+
+  } else if (is.null(when) & !is.null(to)) {
+    end.date <- resolveDate(to, type = "to")
+
+    first.published <- lapply(packages, function(pkg) {
+      packageHistory(pkg)[1, "Date"]
+    })
+
+    to.data <- lapply(seq_along(packages), function(i) {
+      cranlogs::cran_downloads(packages[i], from = first.published[[i]],
+        to = end.date)
+    })
   }
 
-  cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-  out <- list(packages = packages, cranlogs.data = cranlogs.data,
-    when = args$when, from = args$from, to = args$to)
+  if ("args" %in% ls()) {
+    cranlogs.data <- do.call(cranlogs::cran_downloads, args)
+    out <- list(packages = packages, cranlogs.data = cranlogs.data,
+      when = args$when, from = args$from, to = args$to)
+  } else {
+    cranlogs.data <- do.call(rbind, to.data)
+    id <- which.min(unlist(first.published))
+    out <- list(packages = packages, cranlogs.data = cranlogs.data,
+      when = NULL, from = first.published[[id]], to = end.date)
+  }
+
   class(out) <- "cranDownloads"
   out
 }
