@@ -7,7 +7,7 @@
 \method{plot}{cranDownloads}(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  multi.plot = FALSE, y.same.scale = TRUE, legend.loc = "topleft",
+  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
   dev.mode = FALSE, ...)
 }
 \arguments{
@@ -33,7 +33,7 @@
 
 \item{multi.plot}{Logical.}
 
-\item{y.same.scale}{Logical. Use same scale for multiple packages when graphics = "base".}
+\item{same.xy}{Logical. Use same scale for multiple packages when graphics = "base".}
 
 \item{legend.loc}{Character.}
 

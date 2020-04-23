@@ -120,7 +120,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param r.version Logical. Add R release dates.
 #' @param population.plot Logical. Plot population plot.
 #' @param multi.plot Logical.
-#' @param y.same.scale Logical. Use same scale for multiple packages when graphics = "base".
+#' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param ... Additional plotting parameters.
@@ -137,7 +137,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  multi.plot = FALSE, y.same.scale = TRUE, legend.loc = "topleft",
+  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
   dev.mode = FALSE, ...) {
 
   if (graphics == "auto") {
@@ -182,7 +182,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
       multiPlot(dat, x, graphics, days.observed, log.count, legend.loc)
     } else {
       singlePlot(dat, x, graphics, days.observed, points, smooth, se, f,
-        log.count, package.version, p_v, r.version, r_v, y.same.scale)
+        log.count, package.version, p_v, r.version, r_v, same.xy)
     }
   }
 }
@@ -420,7 +420,7 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
 }
 
 singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
-  log.count, package.version, p_v, r.version, r_v, y.same.scale) {
+  log.count, package.version, p_v, r.version, r_v, same.xy) {
 
   if (graphics == "base") {
     if (is.null(x$packages)) {
@@ -438,7 +438,8 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
         }
       } else if (length(days.observed) > 1) {
 
-        if (y.same.scale) {
+        if (same.xy) {
+          xlim <- range(x$cranlogs.data$date)
           ylim <- range(x$cranlogs.data$count)
           grDevices::devAskNewPage(ask = TRUE)
 
@@ -447,18 +448,18 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
             if (log.count) {
               if (points) {
                 plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "log10(Count)", log = "y", ylim = ylim)
+                  ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
               } else {
                 plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "log10(Count)", log = "y", ylim = ylim)
+                  ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
               }
             } else {
               if (points) {
                 plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "Count", ylim = ylim)
+                  ylab = "Count", xlim = xlim, ylim = ylim)
               } else {
                 plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "Count", ylim = ylim)
+                  ylab = "Count", xlim = xlim, ylim = ylim)
               }
             }
 

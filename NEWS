@@ -1,3 +1,10 @@
+packageRank 0.3.0.9068
+==================
+
+- enable cranDownloads(from = NULL, to = !is.null(to)).
+- change y.same.scale to same.xy in plot.cranDownloads().
+
+
 packageRank 0.3.0.9067
 ==================
 
