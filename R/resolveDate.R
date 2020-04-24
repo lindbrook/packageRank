@@ -85,6 +85,7 @@ dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
 check10CharDate <- function(date) {
   first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1
+  mm <- c(paste0(0, 1:9), paste(10:12))
 
   if (nchar(date) == 10L & grepl("-", date)) {
     err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
