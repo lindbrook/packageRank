@@ -1,3 +1,13 @@
+packageRank 0.3.0.9069
+==================
+
+- add and use check10CharDate().
+- use check10CharDate() and fixDate_2012() in countryPackage().
+- move fetchCranLog() to fetchLog.R.
+- move packageHistory0() functions to packageHistory.R.
+- move validatePackage0() to validatePackage.R.
+  
+
 packageRank 0.3.0.9068
 ==================
 

@@ -76,3 +76,36 @@ dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
   }
   out
 }
+
+#' Check and validate "yyyy-mm-dd" date.
+#'
+#' @param date Character. \code{"yyyy-mm-dd"}.
+#' @noRd
+
+check10CharDate <- function(date) {
+  first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
+  cal.date <- Sys.Date() - 1
+
+  if (nchar(date) == 10L & grepl("-", date)) {
+    err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
+    date.check <- unlist(strsplit(date, "-"))
+    if (!length(date.check) == 3) {
+      stop(err.format)
+    } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2, 2))) {
+      stop(err.format)
+    } else if (date.check[2] %in% mm == FALSE) {
+      stop("Month must be between 01 and 12.")
+    } else {
+      x.date <- as.Date(date, optional = TRUE)
+    }
+  } else stop('Format must be "yyyy-mm-dd".')
+
+  if (is.na(x.date)) {
+    stop('Not a valid date.')
+  } else if (x.date < as.Date(first.log)) {
+    warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+    x.date <- first.log
+  } else if (x.date > cal.date) {
+    stop("Date in future!")
+  } else x.date
+}
