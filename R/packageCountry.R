@@ -20,7 +20,7 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
       out <- table(dat$country, useNA = "ifany")
     }
     if (sort) {
-      sort(out, decreasing = TRUE)
+      out <- sort(out, decreasing = TRUE)
     } else {
       out
     }
