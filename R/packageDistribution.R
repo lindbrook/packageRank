@@ -91,20 +91,33 @@ plot_package_distribution <- function(dat, xlim, ylim) {
 
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
     xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
-  axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
-    col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
-    format(crosstab[1], big.mark = ",")))
-  abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
-
   if (!is.null(dat$package)) {
     pkg.ct <- crosstab[names(crosstab) == dat$package]
-    pkg.bin <- crosstab[crosstab == pkg.ct]
+    if (pkg.ct > 10000) {
+      axis(1, at = crosstab[1], cex.axis = 0.8, col.axis = "dodgerblue",
+        col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
+        format(crosstab[1], big.mark = ",")))
+    } else {
+      axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9,
+        col.axis = "dodgerblue", col.ticks = "dodgerblue",
+        labels = paste(names(crosstab[1]), "=",
+        format(crosstab[1], big.mark = ",")))
+    }
+    abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
     day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
     title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
-  } else title(paste("Distribution of Package Download Counts:", dat$date))
+  } else {
+    abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
+    axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9,
+      col.axis = "dodgerblue", col.ticks = "dodgerblue",
+      labels = paste(names(crosstab[1]), "=",
+      format(crosstab[1], big.mark = ",")))
+    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
+    title(paste0("Package Download Counts", " @ ", dat$date, " (", day, ")"))
+  }
 }
 
 #' Print method for packageDistribution().
