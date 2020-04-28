@@ -58,5 +58,13 @@ packageInfo <- function(multi.core = TRUE, dev.mode = FALSE) {
     }, mc.cores = cores)
   }
 
-  do.call(rbind, dat)
+  pkg.info <- do.call(rbind, dat)
+  kB.id <- grep("K", pkg.info$size)
+  MB.id <- grep("M", pkg.info$size)
+  kB <- as.numeric(unlist(strsplit(pkg.info[kB.id, "size"], "K"))) * 10^3
+  MB <- as.numeric(unlist(strsplit(pkg.info[MB.id, "size"], "M"))) * 10^6
+  pkg.info$byte <- NA
+  pkg.info[kB.id, "byte"] <- kB
+  pkg.info[MB.id, "byte"] <- MB
+  pkg.info
 }
