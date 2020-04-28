@@ -33,10 +33,10 @@ plot.countsRanks <- function(x, ...) {
   Date <- x$Date
   percentiles <- x$percentiles
   par(mar = c(5, 4, 4, 4))
-  plot(Date, Downloads, type = "o", pch = 0, bty = "n", col = "gray")
+  plot(Date, Downloads, type = "o", pch = 0, bty = "n")
   par(new = TRUE)
   plot(Date, percentiles, axes = FALSE, bty = "n", type = "o", pch = 16,
-    col= "red", xlab = NA, ylab = NA, lwd = 1.5)
+    col= "red", xlab = NA, ylab = NA, lwd = 2)
   axis(4, at = pretty(range(percentiles)), col.axis = "red", col = "red")
   mtext("Rank Percentiles", side = 4, line = 3, col = "red")
   abline(h = 50, lty = "dotted", col = "red")
@@ -46,7 +46,7 @@ plot.countsRanks <- function(x, ...) {
   title(sub = paste("r =", round(stats::cor(Downloads, percentiles), 3)))
   legend(x = "topleft",
          legend = c("Percentile", "Count"),
-         col = c("red", "gray"),
+         col = c("red", "black"),
          pch = c(15, 0),
          bg = "white",
          cex = 2/3,
