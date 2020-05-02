@@ -7,7 +7,7 @@
 packageInfo(multi.core = TRUE)
 }
 \arguments{
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 Extract packge source file information from CRAN.
