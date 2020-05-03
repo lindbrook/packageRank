@@ -4,10 +4,17 @@
 \alias{packageInfo}
 \title{Extract packge source file information from CRAN.}
 \usage{
-packageInfo(multi.core = TRUE)
+packageInfo(multi.core = TRUE, platform = "win", r.ver = "release",
+  source = TRUE)
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{platform}{Character.}
+
+\item{r.ver}{Character.}
+
+\item{source}{Logical.}
 }
 \description{
 Extract packge source file information from CRAN.

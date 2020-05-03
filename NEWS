@@ -2,6 +2,7 @@ packageRank 0.3.0.9075
 ==================
 
 - amend README.
+- add platform, r.ver and source arguments to packageInfo().
 
 
 packageRank 0.3.0.9074
