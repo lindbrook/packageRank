@@ -1,3 +1,9 @@
+packageRank 0.3.0.9075
+==================
+
+- amend README.
+
+
 packageRank 0.3.0.9074
 ==================
 
@@ -36,7 +42,7 @@ packageRank 0.3.0.9069
 - move fetchCranLog() to fetchLog.R.
 - move packageHistory0() functions to packageHistory.R.
 - move validatePackage0() to validatePackage.R.
-  
+
 
 packageRank 0.3.0.9068
 ==================

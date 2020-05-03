@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9074-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9075-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [`'packageRank'`](https://cran.r-project.org/package=packageRank)’ is an
@@ -43,15 +43,15 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 `cranlogs::cran_downloads()`:
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData")
+cranlogs::cran_downloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
 >         date count  package
-> 1 2020-04-23   394 HistData
+> 1 2020-01-01    90 HistData
 ```
 
 ``` r
-cranDownloads(packages = "HistData")
+cranDownloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
 >         date count  package
-> 1 2020-04-23   394 HistData
+> 1 2020-01-01    90 HistData
 ```
 
 The only difference is that `cranDownloads()` adds three features:
@@ -70,7 +70,7 @@ cranDownloads(packages = "GGplot2")
 ``` r
 cranDownloads(packages = "ggplot2")
 >         date count package
-> 1 2020-04-23 64844 ggplot2
+> 1 2020-05-02     0 ggplot2
 ```
 
 <br/> This also works for inactive or “retired” packages in the
@@ -88,7 +88,7 @@ cranDownloads(packages = "vr")
 ``` r
 cranDownloads(packages = "VR")
 >         date count package
-> 1 2020-04-23     0      VR
+> 1 2020-05-02     0      VR
 ```
 
 <br/>
@@ -160,22 +160,33 @@ plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"))
 
 <img src="man/figures/README-cranDownloads_viz1-1.png" style="display: block; margin: auto;" />
 
-If you pass a vector of package names, `plot()` defaults to using
-`ggplot2` facets:
+If you pass a vector of package names for a single day, `plot()` returns
+a dotchart:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"))
+  from = "2020-03-01", to = "2020-03-01"))
+```
+
+<img src="man/figures/README-cranDownloads_viz2a-1.png" style="display: block; margin: auto;" />
+
+If you pass a vector of package names, `plot()` will use `ggplot2`
+facets:
+
+``` r
+plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+  from = "2020", to = "2020-03-20"))
 ```
 
 <img src="man/figures/README-cranDownloads_viz2-1.png" style="display: block; margin: auto;" />
+<br/>
 
-<br/> If you want all the data in a single plot, use `multi.plot =
+If you want to plot those data in a single frame, use `multi.plot =
 TRUE`:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), multi.plot = TRUE)
+  from = "2020", to = "2020-03-20"), multi.plot = TRUE)
 ```
 
 ![](man/figures/README-cranDownloads_viz3-1.png)<!-- -->
@@ -185,14 +196,14 @@ prompted for each plot):
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), graphics = "base")
+  from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
 If you want separate, independently scaled plots, add `same.xy = FALSE`:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), graphics = "base", same.xy = FALSE)
+  from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
 
 #### `packages = NULL`
@@ -223,7 +234,8 @@ plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 To add a lowess smoother to your data, use `smooth = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = "rstan", from = "2019"), smooth = TRUE)
+plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+  smooth = TRUE)
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -233,7 +245,7 @@ intervals:
 
 ``` r
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
-  when = "last-month"), smooth = TRUE, se = TRUE)
+  from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
 
 ![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
@@ -261,10 +273,11 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 #### population plot
 
 To visualize a package’s downloads relative to that of “all” other
-packages over time:
+packages over
+time:
 
 ``` r
-plot(cranDownloads(packages = "HistData", when = "last-month"),
+plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE)
 ```
 

@@ -45,11 +45,11 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 `cranDownloads()` uses all the same arguments as `cranlogs::cran_downloads()`:
 
 ```{r cran_downloads}
-cranlogs::cran_downloads(packages = "HistData")
+cranlogs::cran_downloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
 ```
 
 ```{r cranDownloads}
-cranDownloads(packages = "HistData")
+cranDownloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
 ```
 
 The only difference is that `cranDownloads()` adds three features:
@@ -143,19 +143,26 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"))
 ```
 
-If you pass a vector of package names, `plot()` defaults to using `ggplot2` facets:
+If you pass a vector of package names for a single day, `plot()` returns a dotchart:
+
+```{r cranDownloads_viz2a, fig.align = "center"}
+plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+  from = "2020-03-01", to = "2020-03-01"))
+```
+
+If you pass a vector of package names, `plot()` will use `ggplot2` facets:
 
 ```{r cranDownloads_viz2, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"))
+  from = "2020", to = "2020-03-20"))
 ```
-
 <br/>
-If you want all the data in a single plot, use `multi.plot = TRUE`:
+
+If you want to plot those data in a single frame, use `multi.plot = TRUE`:
 
 ```{r cranDownloads_viz3}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), multi.plot = TRUE)
+  from = "2020", to = "2020-03-20"), multi.plot = TRUE)
 ```
 
 <br/>
@@ -163,14 +170,14 @@ If you want separate plots, use `graphics = "base"` (you'll be prompted for each
 
 ```{r cranDownloads_viz4, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), graphics = "base")
+  from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
 If you want separate, independently scaled plots, add `same.xy = FALSE`:
 
 ```{r cranDownloads_viz5, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020"), graphics = "base", same.xy = FALSE)
+  from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
 
 #### `packages = NULL`
@@ -194,14 +201,15 @@ plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 To add a lowess smoother to your data, use `smooth = TRUE`:
 
 ```{r}
-plot(cranDownloads(packages = "rstan", from = "2019"), smooth = TRUE)
+plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+  smooth = TRUE)
 ```
 
 With graphs that use 'ggplot2', the `se = TRUE` will add confidence intervals:
 
 ```{r}
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
-  when = "last-month"), smooth = TRUE, se = TRUE)
+  from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
 
 #### package and R release dates
@@ -225,7 +233,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 To visualize a package's downloads relative to that of "all" other packages over time:
 
 ```{r}
-plot(cranDownloads(packages = "HistData", when = "last-month"),
+plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE)
 ```
 
