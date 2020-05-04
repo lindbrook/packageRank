@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9075-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9076-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [`'packageRank'`](https://cran.r-project.org/package=packageRank)’ is an
@@ -18,8 +18,9 @@ compared to all other packages on [CRAN](https://cran.r-project.org/).
 
 NOTE: ‘packageRank’ relies on the ‘cranlogs’ package and requires an
 active internet connection. RStudio CRAN logs for the previous day are
-generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2); results for
-functions that rely on ‘cranlogs’ are available soon after.
+generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving
+time); results for functions that rely on ‘cranlogs’ are available soon
+after.
 
 ### I - getting started
 
@@ -33,7 +34,7 @@ To install the development version from
 GitHub:
 
 ``` r
-# You may need to first install the 'remotes' via install.packages("remotes").
+# You may need to first install 'remotes' via install.packages("remotes").
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
@@ -70,7 +71,7 @@ cranDownloads(packages = "GGplot2")
 ``` r
 cranDownloads(packages = "ggplot2")
 >         date count package
-> 1 2020-05-02     0 ggplot2
+> 1 2020-05-03 52507 ggplot2
 ```
 
 <br/> This also works for inactive or “retired” packages in the
@@ -88,7 +89,7 @@ cranDownloads(packages = "vr")
 ``` r
 cranDownloads(packages = "VR")
 >         date count package
-> 1 2020-05-02     0      VR
+> 1 2020-05-03     5      VR
 ```
 
 <br/>
@@ -519,6 +520,8 @@ mfetchLog <- memoise::memoise(fetchLog)
 if (RCurl::url.exists(url)) {
   cran_log <- mfetchLog(url)
 }
+
+# Note that data.table::fread() depends on R.utils::decompressFile(). 
 ```
 
 If you use `fetchLog()`, the log file, which can be upwards of 50 MB,
