@@ -4,12 +4,14 @@
 \alias{countsRanks}
 \title{Counts v. Rank Percentiles.}
 \usage{
-countsRanks(package = "cholera", size.filter = FALSE)
+countsRanks(package = "cholera", size.filter = FALSE, memoization = FALSE)
 }
 \arguments{
 \item{package}{Character.}
 
 \item{size.filter}{Logical.}
+
+\item{memoization}{Logical.}
 }
 \description{
 First week of March 2020.

@@ -3,18 +3,20 @@
 #' First week of March 2020.
 #' @param package Character.
 #' @param size.filter Logical.
+#' @param memoization Logical.
 #' @export
 
-countsRanks <- function(package = "cholera", size.filter = FALSE) {
+countsRanks <- function(package = "cholera", size.filter = FALSE,
+  memoization = FALSE) {
+
   Downloads <- summary(cranDownloads(packages = package, from = "2020-03-01",
     to = "2020-03-07"))$count
-
   Date <- as.Date(c("2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04",
     "2020-03-05", "2020-03-06", "2020-03-07"))
 
   percentiles <- vapply(Date, function(x) {
     dat <- packageRank(packages = package, date = x, size.filter = size.filter,
-      memoization = FALSE)
+      memoization = memoization)
     summary(dat)$percentile
   }, numeric(1L))
 
