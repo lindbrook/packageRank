@@ -1,7 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9076-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [`'packageRank'`](https://cran.r-project.org/package=packageRank)’ is an
@@ -44,16 +43,18 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 `cranlogs::cran_downloads()`:
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
->         date count  package
-> 1 2020-01-01    90 HistData
+cranlogs::cran_downloads(packages = "HistData")
 ```
 
+    >         date count  package
+    > 1 2020-05-01   338 HistData
+
 ``` r
-cranDownloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
->         date count  package
-> 1 2020-01-01    90 HistData
+cranDownloads(packages = "HistData")
 ```
+
+    >         date count  package
+    > 1 2020-05-01   338 HistData
 
 The only difference is that `cranDownloads()` adds three features:
 
@@ -70,9 +71,10 @@ cranDownloads(packages = "GGplot2")
 
 ``` r
 cranDownloads(packages = "ggplot2")
->         date count package
-> 1 2020-05-03 52507 ggplot2
 ```
+
+    >         date count package
+    > 1 2020-05-01 56357 ggplot2
 
 <br/> This also works for inactive or “retired” packages in the
 [Archive](https://cran.r-project.org/src/contrib/Archive):
@@ -88,9 +90,10 @@ cranDownloads(packages = "vr")
 
 ``` r
 cranDownloads(packages = "VR")
->         date count package
-> 1 2020-05-03     5      VR
 ```
+
+    >         date count package
+    > 1 2020-05-01    11      VR
 
 <br/>
 
@@ -149,6 +152,8 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 
     ## Error in resolveDate(to, type = "to") : Not a valid date.
+
+<br/>
 
 ### III - visualizing package downloads
 
@@ -210,7 +215,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 #### `packages = NULL`
 
 `cranlogs::cran_download(packages = NULL)` computes the total number of
-package downloads from CRAN. You can visualize this by:
+package downloads from CRAN.
 
 ``` r
 plot(cranDownloads(from = 2019, to = 2019))
@@ -222,7 +227,7 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 `cranlogs::cran_download(packages = "R")` computes the total number of
 downloads of the R application (note that you can only use “R” or a
-vector of packages names, not both\!). You can visualize this by:
+vector of packages names, not both\!).
 
 ``` r
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
@@ -241,7 +246,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
-With graphs that use ‘ggplot2’, the `se = TRUE` will add confidence
+With graphs that use ‘ggplot2’, `se = TRUE` will add confidence
 intervals:
 
 ``` r
@@ -253,7 +258,7 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
 
 #### package and R release dates
 
-To annotate a graph with the package release dates:
+To annotate a graph with package release dates:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -262,7 +267,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
-To annotate the graph with the R release dates:
+To annotate a graph with R release dates:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -273,8 +278,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 #### population plot
 
-To visualize a package’s downloads relative to that of “all” other
-packages over
+To visualize a package’s downloads relative to “all” other packages over
 time:
 
 ``` r
@@ -521,7 +525,7 @@ if (RCurl::url.exists(url)) {
   cran_log <- mfetchLog(url)
 }
 
-# Note that data.table::fread() depends on R.utils::decompressFile(). 
+# Note that data.table::fread() relies on R.utils::decompressFile().
 ```
 
 If you use `fetchLog()`, the log file, which can be upwards of 50 MB,

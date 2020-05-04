@@ -1,8 +1,8 @@
 packageRank 0.3.0.9076
 ==================
 
-- set memoization = FALSE in countsRanks().
-
+- add memoization = FALSE in countsRanks().
+- amend README.
 
 packageRank 0.3.0.9075
 ==================

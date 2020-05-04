@@ -23,7 +23,7 @@ library(packageRank)
 
 `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) package by adding a `plot()` method and a more user-friendly interface to the task of counting package downloads. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other packages on [CRAN](https://cran.r-project.org/).
 
-NOTE: 'packageRank' relies on the 'cranlogs' package and requires an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2); results for functions that rely on 'cranlogs' are available soon after.
+NOTE: 'packageRank' relies on the 'cranlogs' package and requires an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time); results for functions that rely on 'cranlogs' are available soon after.
 
 ### I - getting started
 
@@ -36,7 +36,7 @@ install.packages("packageRank")
 To install the development version from GitHub:
 
 ```{r, eval = FALSE}
-# You may need to first install the 'remotes' via install.packages("remotes").
+# You may need to first install 'remotes' via install.packages("remotes").
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
@@ -44,12 +44,19 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 
 `cranDownloads()` uses all the same arguments as `cranlogs::cran_downloads()`:
 
-```{r cran_downloads}
-cranlogs::cran_downloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
+```{r cran_downloads, eval = FALSE}
+cranlogs::cran_downloads(packages = "HistData")
+```
+```{r cran_downloads_code, echo = FALSE}
+cranlogs::cran_downloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
 ```
 
-```{r cranDownloads}
-cranDownloads(packages = "HistData", from = "2020-01-01", to =  "2020-01-01")
+```{r cranDownloads, eval = FALSE}
+cranDownloads(packages = "HistData")
+```
+
+```{r cranDownloads_code, echo = FALSE}
+cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
 ```
 
 The only difference is that `cranDownloads()` adds three features:
@@ -65,8 +72,11 @@ cranDownloads(packages = "GGplot2")
 ```
 
 <br/>
-```{r spell_check_pass, eval = TRUE}
+```{r spell_check_pass, eval = FALSE}
 cranDownloads(packages = "ggplot2")
+```
+```{r spell_check_pass_code, echo = FALSE}
+cranDownloads(packages = "ggplot2", from = "2020-05-01", to = "2020-05-01")
 ```
 
 <br/>
@@ -81,8 +91,11 @@ cranDownloads(packages = "vr")
 ```
 
 <br/>
-```{r check_archive_pass}
+```{r check_archive_pass, eval = FALSE}
 cranDownloads(packages = "VR")
+```
+```{r check_archive_pass_code, echo = FALSE}
+cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 ```
 
 <br/>
@@ -135,6 +148,8 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ## Error in resolveDate(to, type = "to") : Not a valid date.
 ```
 
+<br/>
+
 ### III - visualizing package downloads
 
 `cranDownloads()` makes visualization easy. Just use `plot()`:
@@ -182,7 +197,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 
 #### `packages = NULL`
 
-`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN. You can visualize this by:
+`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN.
 
 ```{r}
 plot(cranDownloads(from = 2019, to = 2019))
@@ -190,7 +205,7 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 #### `packages = "R"`
 
-`cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!). You can visualize this by:
+`cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!).
 
 ```{r}
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
@@ -205,7 +220,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   smooth = TRUE)
 ```
 
-With graphs that use 'ggplot2', the `se = TRUE` will add confidence intervals:
+With graphs that use 'ggplot2', `se = TRUE` will add confidence intervals:
 
 ```{r}
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
@@ -214,14 +229,14 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
 
 #### package and R release dates
 
-To annotate a graph with the package release dates:
+To annotate a graph with package release dates:
 
 ```{r}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   package.version = TRUE)
 ```
 
-To annotate the graph with the R release dates:
+To annotate a graph with R release dates:
 
 ```{r}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -230,7 +245,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 #### population plot
 
-To visualize a package's downloads relative to that of "all" other packages over time:
+To visualize a package's downloads relative to "all" other packages over time:
 
 ```{r}
 plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
@@ -384,7 +399,6 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 ```
 
 For the example above, 38 downloads puts 'HistData' in 5,556th place among the 18,038 packages downloaded.
-
 
 This rank is "nominal" because multiple packages can have the same number of downloads. As a result, a package's nominal rank (but not its rank percentile) can be affected by its name: packages with the same number of downloads are sorted in alphabetical order.
 
@@ -542,6 +556,8 @@ mfetchLog <- memoise::memoise(fetchLog)
 if (RCurl::url.exists(url)) {
   cran_log <- mfetchLog(url)
 }
+
+# Note that data.table::fread() relies on R.utils::decompressFile().
 ```
 
 If you use `fetchLog()`, the log file, which can be upwards of 50 MB, will be downloaded every time you call the function. If you use `mfetchLog()`, logs are intelligently cached; those that have already been downloaded, in your current R session, will not be downloaded again.
