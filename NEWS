@@ -2,6 +2,7 @@ packageRank 0.3.0.9077
 ==================
 
 - disable package validation in countsRanks().
+- compute file size in packageArchive().
 
 
 packageRank 0.3.0.9076

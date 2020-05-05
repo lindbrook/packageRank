@@ -108,7 +108,7 @@ packageArchive <- function(package = "cholera") {
 
   if (RCurl::url.exists(url)) {
     web_page <- readLines(url)
-    ancestry.check <- grepString("Ancestry", web_page)
+    ancestry.check <- grepString("Ancestry", web_page) # 'Rmosek'
 
     if (any(ancestry.check)) {
       ancestry.url <- paste0(url, "/", "Ancestry")
@@ -119,10 +119,12 @@ packageArchive <- function(package = "cholera") {
       ancestry.data <- lapply(line.id, function(i) {
         dat <- gsub("<.*?>", "", ancestry_page[i])
         dat <- unlist(strsplit(dat, '.tar.gz'))
-        parsedA <- unlist(strsplit(dat[1], "_"))
-        data.frame(package = parsedA[1],
-                   version = parsedA[2],
-                   date = as.Date(unlist(strsplit(dat[2], " "))[1]),
+        ptA <- unlist(strsplit(dat[1], "_"))
+        ptB <- unlist(strsplit(dat[2], " "))
+        data.frame(package = ptA[1],
+                   version = ptA[2],
+                   date = as.Date(ptB[1]),
+                   size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
                    repository = "Ancestry",
                    stringsAsFactors = FALSE)
       })
@@ -151,20 +153,24 @@ packageArchive <- function(package = "cholera") {
       }
 
       version.date <-lapply(version.date, function(x) {
+        ptB <- unlist(strsplit(x[2], " "))
         data.frame(version = unlist(strsplit(x[1], "_"))[2],
-                   date = as.Date(unlist(strsplit(x[2], " "))[1]),
+                   date = as.Date(ptB[1]),
+                   size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
                    stringsAsFactors = FALSE)
       })
 
       out <- data.frame(package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
-
-      out <- out[order(out$date), ]
     }
 
     if (any(ancestry.check)) {
-      rbind(ancestry.data, out)
-    } else out
+      out <- rbind(ancestry.data, out)
+    }
+
+    out <- out[order(out$date), ]
+    row.names(out) <- NULL
+    out
   }
 }
 
