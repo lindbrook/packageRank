@@ -3,7 +3,7 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
-#' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a postive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.
+#' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @export

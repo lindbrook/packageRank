@@ -1,7 +1,7 @@
 #' Tabulate a country's package downloads (prototype).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param country Character. country addreviation.
+#' @param country Character. country abbreviation.
 #' @param date Character. Date. yyyy-mm-dd.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.

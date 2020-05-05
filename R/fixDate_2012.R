@@ -1,6 +1,6 @@
 #' Re-map filenames (dates) for 2012 download logs.
 #'
-#' Correct for mis-labelled filenames for 2012 logs at RStudio's CRAN Mirror http://cran-logs.rstudio.com/.
+#' Correct for mis-labeled filenames for 2012 logs at RStudio's CRAN Mirror http://cran-logs.rstudio.com/.
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @note This date problem does not affect \code{cranDownlaods()}.
 #' @return A one unit R date or character vector.

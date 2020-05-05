@@ -8,7 +8,7 @@ countryPackage(country = "US", date = Sys.Date() - 1, memoization = TRUE,
   sort = TRUE)
 }
 \arguments{
-\item{country}{Character. country addreviation.}
+\item{country}{Character. country abbreviation.}
 
 \item{date}{Character. Date. yyyy-mm-dd.}
 
