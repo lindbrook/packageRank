@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 * compute the rank percentile and nominal rank of a package's downloads from [0-Cloud Mirror](https://cloud.r-project.org/).
 * visualize a package's position in the distribution of package download counts for a given day (cross-sectionally) or over time (longitudinally).
 
-NOTE: [`'packageRank'`](https://cran.r-project.org/package=packageRank)' relies on the [`'cranlogs'`](https://cran.r-project.org/package=cranlogs)' package and requires an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time); results for functions that rely on [`'cranlogs'`](https://cran.r-project.org/package=cranlogs)' are available soon after.
+NOTE: [`'packageRank'`](https://CRAN.R-project.org/package=packageRank)' relies on the [`'cranlogs'`](https://CRAN.R-project.org/package=cranlogs)' package and requires an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time); results for functions that rely on [`'cranlogs'`](https://CRAN.R-project.org/package=cranlogs)' are available soon after.
 
 ### documentation
 
-See the README on [CRAN](https://cran.r-project.org/web/packages/packageRank/readme/README.html) or [GitHub](https://github.com/lindbrook/packageRank#packagerank-compute-and-visualize-package-download-counts-and-rank-percentiles).
+See the README on [CRAN](https://CRAN.R-project.org/web/packages/packageRank/readme/README.html) or [GitHub](https://github.com/lindbrook/packageRank#packagerank-compute-and-visualize-package-download-counts-and-rank-percentiles).
