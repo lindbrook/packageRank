@@ -1,8 +1,15 @@
+packageRank 0.3.0.9077
+==================
+
+- disable package validation in countsRanks().
+
+
 packageRank 0.3.0.9076
 ==================
 
-- add memoization = FALSE in countsRanks().
+- add countsRanks(memoization = FALSE).
 - amend README.
+
 
 packageRank 0.3.0.9075
 ==================

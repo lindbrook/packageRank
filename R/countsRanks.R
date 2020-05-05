@@ -10,13 +10,13 @@ countsRanks <- function(package = "cholera", size.filter = FALSE,
   memoization = FALSE) {
 
   Downloads <- summary(cranDownloads(packages = package, from = "2020-03-01",
-    to = "2020-03-07"))$count
+    to = "2020-03-07", check.package = FALSE))$count
   Date <- as.Date(c("2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04",
     "2020-03-05", "2020-03-06", "2020-03-07"))
 
   percentiles <- vapply(Date, function(x) {
     dat <- packageRank(packages = package, date = x, size.filter = size.filter,
-      memoization = memoization)
+      memoization = memoization, check.cran = FALSE)
     summary(dat)$percentile
   }, numeric(1L))
 
