@@ -19,9 +19,9 @@ library(packageRank)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 
-[`'packageRank'`](https://cran.r-project.org/package=packageRank)' is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`.
+[`'packageRank'`](https://CRAN.R-project.org/package=packageRank)' is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`.
 
-`cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) package by adding a `plot()` method and a more user-friendly interface to the task of counting package downloads. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other packages on [CRAN](https://cran.r-project.org/).
+`cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) package by adding a `plot()` method and a more user-friendly interface to the task of counting package downloads. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other packages on [CRAN](https://CRAN.R-project.org/).
 
 NOTE: 'packageRank' relies on the 'cranlogs' package and requires an active internet connection. RStudio CRAN logs for the previous day are generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time); results for functions that rely on 'cranlogs' are available soon after.
 
@@ -80,7 +80,7 @@ cranDownloads(packages = "ggplot2", from = "2020-05-01", to = "2020-05-01")
 ```
 
 <br/>
-This also works for inactive or "retired" packages in the [Archive](https://cran.r-project.org/src/contrib/Archive):
+This also works for inactive or "retired" packages in the [Archive](https://CRAN.R-project.org/src/contrib/Archive):
 
 ```{r check_archive_fail, eval = FALSE}
 cranDownloads(packages = "vr")
@@ -105,7 +105,7 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that dates must use the "yyyy-mm-dd" format. For convenience's sake and to reduce typing, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
 
 ##### "yyyy-mm"
-Let's say you want the download counts for [`'HistData'`](https://cran.r-project.org/package=HistData) from February 2020. With `cranlogs::cran_downloads()`, you have to type out the whole date and remember that 2020 was a leap year:
+Let's say you want the download counts for [`'HistData'`](https://CRAN.R-project.org/package=HistData) from February 2020. With `cranlogs::cran_downloads()`, you have to type out the whole date and remember that 2020 was a leap year:
 
 ```{r yyyy-mm_1, eval = FALSE}
 cranlogs::cran_downloads(packages = "HistData", from = "2020-02-01",
@@ -120,7 +120,7 @@ cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 ```
 
 ##### "yyyy"
-Let's say you want the year-to-date download counts for [`'rstan'`](https://cran.r-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
+Let's say you want the year-to-date download counts for [`'rstan'`](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
 
 ```{r yyyy_1, eval = FALSE}
 cranlogs::cran_downloads(packages = "rstan", from = "2020-01-01",
@@ -270,9 +270,9 @@ plot(cranDownloads(packages = "cholera", from = "2020-03-01",
 par(mar = c(5, 4, 4, 2))
 ```
 
-Do Wednesday and Saturday reflect surges of interest in the package or surges of traffic to [CRAN](https://cran.r-project.org/)? To put it differently, how can we know if a given download count is typical or unusual?
+Do Wednesday and Saturday reflect surges of interest in the package or surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it differently, how can we know if a given download count is typical or unusual?
 
-One way to answer these questions is to locate your package in the frequency distribution of download counts. Below are the distributions for Wednesday and Saturday with the location of [`'cholera'`](https://cran.r-project.org/package=cholera) highlighted:
+One way to answer these questions is to locate your package in the frequency distribution of download counts. Below are the distributions for Wednesday and Saturday with the location of [`'cholera'`](https://CRAN.R-project.org/package=cholera) highlighted:
 
 ```{r skew_wed, fig.align = "center", echo = FALSE}
 
@@ -355,7 +355,7 @@ plot(packageDistribution(package = "cholera", date = "2020-03-07"))
 plot_package_distribution(distn.data[[2]], xlim, ylim)
 ```
 
-While these plots give us a better picture of where [`'cholera'`](https://cran.r-project.org/package=cholera) is located, comparisons between Wednesday and Saturday are impressionistic at best: all we can confidently say is that the download counts for both days were greater than the mode.
+While these plots give us a better picture of where [`'cholera'`](https://CRAN.R-project.org/package=cholera) is located, comparisons between Wednesday and Saturday are impressionistic at best: all we can confidently say is that the download counts for both days were greater than the mode.
 
 To facilitate interpretation and comparison, I use the _rank percentile_ of download counts in place of nominal download counts. This nonparametric statistic tells you the percentage of packages with fewer downloads. In other words, it gives you the location of your package relative to the locations of all other packages. More importantly, by rescaling download counts to lie on the bounded interval between 0 and 100, rank percentiles make it easier to compare packages within and across distributions.
 
@@ -365,19 +365,19 @@ For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 packageRank(package = "cholera", date = "2020-03-04", size.filter = FALSE)
 ```
 
-On Wednesday, we can see that [`'cholera'`](https://cran.r-project.org/package=cholera) had 38 downloads, came in 5,556th place out of 18,038 unique packages downloaded, and earned a spot in the 68th percentile.
+On Wednesday, we can see that [`'cholera'`](https://CRAN.R-project.org/package=cholera) had 38 downloads, came in 5,556th place out of 18,038 unique packages downloaded, and earned a spot in the 68th percentile.
 
 ```{r packageRank2}
 packageRank(package = "cholera", date = "2020-03-07", size.filter = FALSE)
 ```
 
-On Saturday, we can see that [`'cholera'`](https://cran.r-project.org/package=cholera) had 29 downloads, came in 3,061st place out of 15,950 unique packages downloaded, earned a spot in the 80th percentile.
+On Saturday, we can see that [`'cholera'`](https://CRAN.R-project.org/package=cholera) had 29 downloads, came in 3,061st place out of 15,950 unique packages downloaded, earned a spot in the 80th percentile.
 
-So contrary to what the nominal counts tell us, one could say that the interest in [`'cholera'`](https://cran.r-project.org/package=cholera) was actually greater on Saturday than on Wednesday.
+So contrary to what the nominal counts tell us, one could say that the interest in [`'cholera'`](https://CRAN.R-project.org/package=cholera) was actually greater on Saturday than on Wednesday.
 
 #### computing rank percentile
 
-To compute rank percentiles, I do the following. For each package, I tabulate the number of downloads and then compute the percentage of packages with fewer downloads. Here are the details using [`'cholera'`](https://cran.r-project.org/package=cholera) from Wednesday as an example:
+To compute rank percentiles, I do the following. For each package, I tabulate the number of downloads and then compute the percentage of packages with fewer downloads. Here are the details using [`'cholera'`](https://CRAN.R-project.org/package=cholera) from Wednesday as an example:
 
 ```{r percentile}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
@@ -522,7 +522,7 @@ day <- weekdays(as.Date(date), abbreviate = TRUE)
 title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 ```
 
-These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines; the package with the most downloads, which in both cases is [`'magrittr'`](https://cran.r-project.org/package=magrittr) (in blue, top left); and the total number of downloads, 5,561,681 and 3,403,969 respectively (in blue, top right).
+These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines; the package with the most downloads, which in both cases is [`'magrittr'`](https://CRAN.R-project.org/package=magrittr) (in blue, top left); and the total number of downloads, 5,561,681 and 3,403,969 respectively (in blue, top right).
 
 ### VI - filter "small" downloads
 
