@@ -2,17 +2,15 @@
 % Please edit documentation in R/countsRanks.R
 \name{countsRanks}
 \alias{countsRanks}
-\title{Counts v. Rank Percentiles.}
+\title{Counts v. Rank Percentiles for 'cholera' for First Week of March 2020.}
 \usage{
-countsRanks(package = "cholera", size.filter = FALSE, memoization = FALSE)
+countsRanks(package = "cholera", size.filter = FALSE)
 }
 \arguments{
 \item{package}{Character.}
 
 \item{size.filter}{Logical.}
-
-\item{memoization}{Logical.}
 }
 \description{
-First week of March 2020.
+Document code for blog graph.
 }

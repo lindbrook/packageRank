@@ -1,29 +1,20 @@
-#' Counts v. Rank Percentiles.
+#' Counts v. Rank Percentiles for 'cholera' for First Week of March 2020.
 #'
-#' First week of March 2020.
+#' Document code for blog graph.
 #' @param package Character.
 #' @param size.filter Logical.
-#' @param memoization Logical.
 #' @export
 
-countsRanks <- function(package = "cholera", size.filter = FALSE,
-  memoization = FALSE) {
-
+countsRanks <- function(package = "cholera", size.filter = FALSE) {
   Downloads <- summary(cranDownloads(packages = package, from = "2020-03-01",
     to = "2020-03-07", check.package = FALSE))$count
   Date <- as.Date(c("2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04",
     "2020-03-05", "2020-03-06", "2020-03-07"))
 
-  percentiles <- vapply(Date, function(x) {
-    dat <- packageRank(packages = package, date = x, size.filter = size.filter,
-      memoization = memoization, check.cran = FALSE)
-    summary(dat)$percentile
-  }, numeric(1L))
-
   out <- list(package = package,
               Downloads = Downloads,
               Date = Date,
-              percentiles = percentiles)
+              percentiles = packageRank::blog.data$percentiles)
 
   class(out) <- "countsRanks"
   out

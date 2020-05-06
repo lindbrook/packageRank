@@ -1,3 +1,9 @@
+packageRank 0.3.0.9078
+==================
+
+- add/use percentiles to blog.data for countsRanks().
+
+
 packageRank 0.3.0.9077
 ==================
 

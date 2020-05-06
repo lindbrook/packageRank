@@ -19,8 +19,9 @@
 #'    \item{\code{smpl.archive.histories}}{}
 #'    \item{\code{ccode.ct}}{}
 #'    \item{\code{crosstab_2019_10_01}}{}
+#'    \item{\code{percentiles}}{}
 #' }
-#' @format A list with 18 elements.
+#' @format A list with 19 elements.
 #' @docType data
 "blog.data"
 
@@ -43,5 +44,6 @@
 # blog.data$smpl.archive.histories <- smpl.archive.histories
 # blog.data$ccode.ct <- ccode.ct
 # blog.data$crosstab_2019_10_01 <- crosstab_2019_10_01
+# blog.data$percentiles <- percentiles
 
 # usethis::use_data(blog.data, overwrite = TRUE)
