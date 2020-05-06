@@ -1,13 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9077-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9078-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-[`'packageRank'`](https://CRAN.R-project.org/package=packageRank)’ is an
-R package that helps put package download counts into context. It does
-so via two functions, `cranDownloads()` and `packageRank()`.
-
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
+package that helps put package download counts into context. It does so
+via two functions, `cranDownloads()` and `packageRank()`.
 `cranDownloads()` extends
 [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) package
 by adding a `plot()` method and a more user-friendly interface to the
@@ -16,11 +15,16 @@ percentiles, a nonparametric statistic that tells you the percentage of
 packages with fewer downloads, to help you see how your package is doing
 compared to all other packages on [CRAN](https://CRAN.R-project.org/).
 
-NOTE: ‘packageRank’ relies on the ‘cranlogs’ package and requires an
-active internet connection. RStudio CRAN logs for the previous day are
-generally posted at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving
-time); results for functions that rely on ‘cranlogs’ are available soon
-after.
+NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs)
+package and requires an active internet connection.
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) uses the
+[logs](http://cran-logs.rstudio.com/) from what was previously
+[RStudio’s CRAN mirror](https://cran.rstudio.com) and is currently the
+“0-Cloud” mirror, “sponsored by RStudio”, to compute package downloads.
+The logs for the previous day are generally posted at 18:00 (GMT+1) or
+17:00 UTC (GMT+2) (daylight saving time); results for functions that
+rely on ‘cranlogs’ are available soon after.
 
 ### I - getting started
 
@@ -109,7 +113,7 @@ works).
 ##### “yyyy-mm”
 
 Let’s say you want the download counts for
-[`'HistData'`](https://CRAN.R-project.org/package=HistData) from
+[‘HistData’](https://CRAN.R-project.org/package=HistData) from
 February 2020. With `cranlogs::cran_downloads()`, you have to type out
 the whole date and remember that 2020 was a leap year:
 
@@ -127,7 +131,7 @@ cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 ##### “yyyy”
 
 Let’s say you want the year-to-date download counts for
-[`'rstan'`](https://CRAN.R-project.org/package=rstan). With
+[‘rstan’](https://CRAN.R-project.org/package=rstan). With
 `cranlogs::cran_downloads()`, you’d type something like:
 
 ``` r
@@ -318,7 +322,7 @@ unusual?
 One way to answer these questions is to locate your package in the
 frequency distribution of download counts. Below are the distributions
 for Wednesday and Saturday with the location of
-[`'cholera'`](https://CRAN.R-project.org/package=cholera)
+[‘cholera’](https://CRAN.R-project.org/package=cholera)
 highlighted:
 
 <img src="man/figures/README-skew_wed-1.png" style="display: block; margin: auto;" />
@@ -351,7 +355,7 @@ plot(packageDistribution(package = "cholera", date = "2020-03-07"))
 <img src="man/figures/README-packageDistribution_sat_code-1.png" style="display: block; margin: auto;" />
 
 While these plots give us a better picture of where
-[`'cholera'`](https://CRAN.R-project.org/package=cholera) is located,
+[‘cholera’](https://CRAN.R-project.org/package=cholera) is located,
 comparisons between Wednesday and Saturday are impressionistic at best:
 all we can confidently say is that the download counts for both days
 were greater than the mode.
@@ -375,7 +379,7 @@ packageRank(package = "cholera", date = "2020-03-04", size.filter = FALSE)
 ```
 
 On Wednesday, we can see that
-[`'cholera'`](https://CRAN.R-project.org/package=cholera) had 38
+[‘cholera’](https://CRAN.R-project.org/package=cholera) had 38
 downloads, came in 5,556th place out of 18,038 unique packages
 downloaded, and earned a spot in the 68th
 percentile.
@@ -387,21 +391,21 @@ packageRank(package = "cholera", date = "2020-03-07", size.filter = FALSE)
 ```
 
 On Saturday, we can see that
-[`'cholera'`](https://CRAN.R-project.org/package=cholera) had 29
+[‘cholera’](https://CRAN.R-project.org/package=cholera) had 29
 downloads, came in 3,061st place out of 15,950 unique packages
 downloaded, earned a spot in the 80th percentile.
 
 So contrary to what the nominal counts tell us, one could say that the
-interest in [`'cholera'`](https://CRAN.R-project.org/package=cholera)
-was actually greater on Saturday than on Wednesday.
+interest in [‘cholera’](https://CRAN.R-project.org/package=cholera) was
+actually greater on Saturday than on Wednesday.
 
 #### computing rank percentile
 
 To compute rank percentiles, I do the following. For each package, I
 tabulate the number of downloads and then compute the percentage of
 packages with fewer downloads. Here are the details using
-[`'cholera'`](https://CRAN.R-project.org/package=cholera) from Wednesday
-as an example:
+[‘cholera’](https://CRAN.R-project.org/package=cholera) from
+Wednesday as an example:
 
 ``` r
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
@@ -473,10 +477,9 @@ counts (y-axis). It then highlights a package’s position in the
 distribution along with its rank percentile and download count (in red).
 In the background, the 75th, 50th and 25th percentiles are plotted as
 dotted vertical lines; the package with the most downloads, which in
-both cases is
-[`'magrittr'`](https://CRAN.R-project.org/package=magrittr) (in blue,
-top left); and the total number of downloads, 5,561,681 and 3,403,969
-respectively (in blue, top right).
+both cases is [‘magrittr’](https://CRAN.R-project.org/package=magrittr)
+(in blue, top left); and the total number of downloads, 5,561,681 and
+3,403,969 respectively (in blue, top right).
 
 ### VI - filter “small” downloads
 
