@@ -30,4 +30,3 @@ Imports:
     stats
 Suggests: knitr,
           rmarkdown
-VignetteBuilder: knitr
