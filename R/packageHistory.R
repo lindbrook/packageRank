@@ -29,7 +29,7 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
   }
 }
 
-#' Extract package version history CRAN and Archive (prototype).
+#' Extract package version history CRAN and Archive (scrape CRAN).
 #'
 #' Date and version of most recent publication.
 #' @param package Character. Package name.
@@ -47,7 +47,7 @@ packageHistory0 <- function(package = "cholera") {
   out
 }
 
-#' Extract package Published and Version from CRAN (prototype).
+#' Extract package version history from CRAN.
 #'
 #' Date and version of most recent publication.
 #' @param package Character. Package name.
@@ -92,7 +92,7 @@ packageCRAN <- function(package = "cholera") {
   } # else warning("Package not on CRAN. Check spelling.")
 }
 
-#' Extract package archives from CRAN (prototype).
+#' Extract version history from Archive.
 #'
 #' @param package Character. Package name.
 #' @return An R data frame or NULL.

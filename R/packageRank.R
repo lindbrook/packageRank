@@ -147,7 +147,7 @@ plot.packageRank <- function(x, graphics = NULL, log_count = TRUE, ...) {
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-#' Base R Graphics Plot (Cross-sectional).
+#' Base R Graphics Plot.
 #' @param pkg Object.
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param crosstab Object.

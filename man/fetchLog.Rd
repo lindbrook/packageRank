@@ -2,7 +2,7 @@
 % Please edit documentation in R/fetchLog.R
 \name{fetchLog}
 \alias{fetchLog}
-\title{Fetch Package Logs.}
+\title{fread() to data.frame.}
 \usage{
 fetchLog(x)
 }
@@ -10,7 +10,7 @@ fetchLog(x)
 \item{x}{Character. URL}
 }
 \description{
-Fetch Package Logs.
+fread() to data.frame.
 }
 \note{
 mFetchLog() is memoized version.

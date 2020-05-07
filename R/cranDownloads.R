@@ -187,7 +187,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   }
 }
 
-#' Print method for packageRank().
+#' Print method for cranDownloads().
 #' @param x object.
 #' @param ... Additional parameters.
 #' @export
@@ -196,7 +196,7 @@ print.cranDownloads <- function(x, ...) {
   print(x$cranlogs.data)
 }
 
-#' Summary method for packageRank().
+#' Summary method for cranDownloads().
 #' @param object Object.
 #' @param ... Additional parameters.
 #' @export

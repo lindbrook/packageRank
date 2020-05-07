@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageHistory.R
 \name{packageArchive}
 \alias{packageArchive}
-\title{Extract package archives from CRAN (prototype).}
+\title{Extract version history from Archive.}
 \usage{
 packageArchive(package = "cholera")
 }
@@ -13,7 +13,7 @@ packageArchive(package = "cholera")
 An R data frame or NULL.
 }
 \description{
-Extract package archives from CRAN (prototype).
+Extract version history from Archive.
 }
 \examples{
 \donttest{

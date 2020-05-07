@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDownloads.R
 \name{summary.cranDownloads}
 \alias{summary.cranDownloads}
-\title{Summary method for packageRank().}
+\title{Summary method for cranDownloads().}
 \usage{
 \method{summary}{cranDownloads}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{Additional parameters.}
 }
 \description{
-Summary method for packageRank().
+Summary method for cranDownloads().
 }
 \note{
 This is useful for directly accessing the data frame.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fetchLog.R
 \name{fetchCranLog}
 \alias{fetchCranLog}
-\title{Fetch Package Logs.}
+\title{Fetch CRAN Logs.}
 \usage{
 fetchCranLog(date, memoization)
 }
@@ -12,5 +12,5 @@ fetchCranLog(date, memoization)
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \description{
-Fetch Package Logs.
+Fetch CRAN Logs.
 }

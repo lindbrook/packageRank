@@ -2,7 +2,7 @@
 % Please edit documentation in R/validatePackage.R
 \name{validatePackage0}
 \alias{validatePackage0}
-\title{Check for valid package names.}
+\title{Check for valid package names (scrape CRAN).}
 \usage{
 validatePackage0(packages, check.archive = TRUE)
 }
@@ -12,5 +12,5 @@ validatePackage0(packages, check.archive = TRUE)
 \item{check.archive}{Logical. Include archive when validating package. This is computationally expensive because it scrapes https://cran.r-project.org/src/contrib/Archive/.}
 }
 \description{
-Check for valid package names.
+Check for valid package names (scrape CRAN).
 }

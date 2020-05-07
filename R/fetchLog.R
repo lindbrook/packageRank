@@ -1,4 +1,4 @@
-#' Fetch Package Logs.
+#' fread() to data.frame.
 #'
 #' @param x Character. URL
 #' @import data.table memoise
@@ -9,7 +9,7 @@
 fetchLog <- function(x) as.data.frame(data.table::fread(x))
 mfetchLog <- memoise::memoise(fetchLog)
 
-#' Fetch Package Logs.
+#' Fetch CRAN Logs.
 #'
 #' @param date Character. Date. yyyy-mm-dd.
 #' @param memoization Logical. Use memoization when downloading logs.

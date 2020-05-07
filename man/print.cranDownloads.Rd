@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDownloads.R
 \name{print.cranDownloads}
 \alias{print.cranDownloads}
-\title{Print method for packageRank().}
+\title{Print method for cranDownloads().}
 \usage{
 \method{print}{cranDownloads}(x, ...)
 }
@@ -12,5 +12,5 @@
 \item{...}{Additional parameters.}
 }
 \description{
-Print method for packageRank().
+Print method for cranDownloads().
 }

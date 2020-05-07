@@ -14,7 +14,7 @@ validatePackage <- function(packages) {
   } else packages
 }
 
-#' Check for valid package names.
+#' Check for valid package names (scrape CRAN).
 #'
 #' @param packages Character. Vector of package name(s).
 #' @param check.archive Logical. Include archive when validating package. This is computationally expensive because it scrapes https://cran.r-project.org/src/contrib/Archive/.

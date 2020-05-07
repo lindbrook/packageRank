@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageHistory.R
 \name{packageHistory0}
 \alias{packageHistory0}
-\title{Extract package version history CRAN and Archive (prototype).}
+\title{Extract package version history CRAN and Archive (scrape CRAN).}
 \usage{
 packageHistory0(package = "cholera")
 }
