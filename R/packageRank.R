@@ -197,11 +197,16 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
   text(which(names(crosstab) == names(crosstab[length(crosstab)])), y.max,
     labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")), cex = 0.8,
     col = "dodgerblue", pos = 2)
-  day <- weekdays(as.Date(date), abbreviate = TRUE)
-  title(main = paste0(pkg, " @ ", date, " (", day, ")"))
+
+  if (class(date) == "Date" ) {
+    day <- weekdays(as.Date(date), abbreviate = TRUE)
+    title(main = paste0(pkg, " @ ", date, " (", day, ")"))
+  } else {
+    title(main = paste0(pkg, " @ ", date))
+  }
 }
 
-#' ggplot2 Graphics Plot (Cross-sectional).
+#' ggplot2 Graphics Plot.
 #' @param x Object.
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param crosstab Object.
@@ -214,9 +219,14 @@ basePlot <- function(pkg, log_count, crosstab, iqr, package.data, y.max, date) {
 ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
   package.data <- x$package.data
   packages <- x$packages
-  day <- weekdays(as.Date(date), abbreviate = TRUE)
-  id <- paste0(package.data$packages, " @ ", date, " (", day, ")")
 
+  if (class(date) == "Date") {
+    day <- weekdays(as.Date(date), abbreviate = TRUE)
+    id <- paste0(package.data$packages, " @ ", date, " (", day, ")")
+  } else {
+    id <- paste0(package.data$packages, " @ ", date)
+  }
+  
   download.data <- data.frame(x = seq_along(crosstab),
                               y = c(crosstab),
                               packages = names(crosstab),
