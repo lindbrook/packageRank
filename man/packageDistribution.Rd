@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageDistribution.R
 \name{packageDistribution}
 \alias{packageDistribution}
-\title{Package Download Distribution Plot.}
+\title{Package Download Distribution.}
 \usage{
 packageDistribution(package = "HistData", date = Sys.Date() - 1,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
@@ -22,5 +22,5 @@ packageDistribution(package = "HistData", date = Sys.Date() - 1,
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \description{
-Package Download Distribution Plot.
+Package Download Distribution.
 }

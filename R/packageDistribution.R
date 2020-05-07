@@ -1,4 +1,4 @@
-#' Package Download Distribution Plot.
+#' Package Download Distribution.
 #'
 #' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".

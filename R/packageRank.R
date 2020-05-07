@@ -1,11 +1,11 @@
-#' Package download counts and rank percentiles (cross-sectional).
+#' Package download counts and rank percentiles.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param check.cran Logical. Check if package exists.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @return An R data frame.
 #' @export
@@ -16,9 +16,10 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, check.cran = TRUE, dev.mode = FALSE) {
+  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE) {
 
-  if (check.cran) {
+  if (check.package) {
     if (dev.mode) {
       pkg.chk <- validatePackage0(packages)
     } else {

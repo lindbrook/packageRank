@@ -2,7 +2,7 @@
 % Please edit documentation in R/bioconductorDownloads.R
 \name{bioconductorDownloads}
 \alias{bioconductorDownloads}
-\title{Annual/monthly package downloads from Bioconductor (beta).}
+\title{Annual/monthly package downloads from Bioconductor.}
 \usage{
 bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
   when = NULL, observation = "month")
@@ -19,7 +19,7 @@ bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
 \item{observation}{"year" or "month".}
 }
 \description{
-Annual/monthly package downloads from Bioconductor (beta).
+Annual/monthly package downloads from Bioconductor.
 }
 \examples{
 \donttest{

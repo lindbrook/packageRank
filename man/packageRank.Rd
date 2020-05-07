@@ -2,10 +2,10 @@
 % Please edit documentation in R/packageRank.R
 \name{packageRank}
 \alias{packageRank}
-\title{Package download counts and rank percentiles (cross-sectional).}
+\title{Package download counts and rank percentiles.}
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, check.cran = TRUE,
+  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE)
 }
 \arguments{
@@ -17,7 +17,7 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
-\item{check.cran}{Logical. Check if package exists.}
+\item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageLog.R
 \name{packageLog}
 \alias{packageLog}
-\title{Package download counts and rank percentiles (cross-sectional).}
+\title{Get Package Download Logs.}
 \usage{
 packageLog(packages = NULL, date = Sys.Date() - 1, filter = FALSE,
   memoization = TRUE)

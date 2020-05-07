@@ -2,7 +2,7 @@
 % Please edit documentation in R/archivePackages.R
 \name{archivePackages}
 \alias{archivePackages}
-\title{Packages in CRAN archive (prototype).}
+\title{Packages in CRAN archive.}
 \usage{
 archivePackages(include.date = FALSE, multi.core = TRUE, dev.mode = FALSE)
 }

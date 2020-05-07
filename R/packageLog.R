@@ -1,4 +1,4 @@
-#' Package download counts and rank percentiles (cross-sectional).
+#' Get Package Download Logs.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).

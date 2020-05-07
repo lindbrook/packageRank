@@ -1,6 +1,6 @@
-#' Package download counts and rank percentiles (longitudinal).
+#' Visualize a Package's Downloads Relative to "All" CRAN packages over Time.
 #'
-#' With a stratified random sample cohort of packages plus top ten.
+#' Uses a stratified random sample cohort of packages plus top ten packages.
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param log.count Logical. Logarithm of package downloads.

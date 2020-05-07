@@ -1,4 +1,4 @@
-#' Package download counts and rank percentiles (cross-sectional) (prototype).
+#' Package download counts and rank percentiles.
 #'
 #' From bioconductor
 #' @param packages Character. Vector of package name(s).
@@ -7,7 +7,7 @@
 #' @return An R data frame.
 #' @import data.table
 #' @export
-#' @examples 
+#' @examples
 #' \donttest{
 #' bioconductorRank(packages = "cicero", date = "2019-09")
 #' }

@@ -1,6 +1,6 @@
 #' Daily package downloads from the RStudio CRAN mirror.
 #'
-#' Enhanced S3 implementation of cranlogs::cran_downloads().
+#' Enhanced implementation of cranlogs::cran_downloads().
 #' @param packages A character vector, the packages to query,
 #'   or \code{NULL} for a sum of downloads for all packages.
 #'   Alternatively, it can also be \code{"R"}, to query downloads
@@ -9,7 +9,7 @@
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
-#' @param check.package Logical. Check if package exists.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 #' @examples

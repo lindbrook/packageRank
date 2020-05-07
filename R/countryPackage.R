@@ -1,4 +1,4 @@
-#' Tabulate a country's package downloads (prototype).
+#' Tabulate a country's package downloads.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param country Character. country abbreviation.

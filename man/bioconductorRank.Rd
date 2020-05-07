@@ -2,7 +2,7 @@
 % Please edit documentation in R/bioconductorRank.R
 \name{bioconductorRank}
 \alias{bioconductorRank}
-\title{Package download counts and rank percentiles (cross-sectional) (prototype).}
+\title{Package download counts and rank percentiles.}
 \usage{
 bioconductorRank(packages = "monocle", date = "2019-01", count = "download")
 }

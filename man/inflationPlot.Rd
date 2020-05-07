@@ -2,7 +2,7 @@
 % Please edit documentation in R/inflationPlot.R
 \name{inflationPlot}
 \alias{inflationPlot}
-\title{Plot of inflationary effects of "small" downloads and prior versions.}
+\title{Inflation plots of effects of "small" downloads and prior versions for October 2019: 'cholera', 'ggplot2', and 'VR'.}
 \usage{
 inflationPlot(package = "cholera", filter = "size", legend.loc = "topleft")
 }
@@ -14,5 +14,5 @@ inflationPlot(package = "cholera", filter = "size", legend.loc = "topleft")
 \item{legend.loc}{Character. Location of legend.}
 }
 \description{
-October 2019: 'cholera', 'ggplot2', and 'VR'.
+Document code for blog graph.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/countryPackage.R
 \name{countryPackage}
 \alias{countryPackage}
-\title{Tabulate a country's package downloads (prototype).}
+\title{Tabulate a country's package downloads.}
 \usage{
 countryPackage(country = "US", date = Sys.Date() - 1, memoization = TRUE,
   sort = TRUE)

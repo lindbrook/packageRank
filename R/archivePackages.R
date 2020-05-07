@@ -1,4 +1,4 @@
-#' Packages in CRAN archive (prototype).
+#' Packages in CRAN archive.
 #'
 #' Scrape https://cran.r-project.org/src/contrib/Archive/.
 #' @param include.date Logical. Return data frame with package name and last publication date.

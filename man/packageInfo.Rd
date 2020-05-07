@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageInfo.R
 \name{packageInfo}
 \alias{packageInfo}
-\title{Extract package source file information from CRAN.}
+\title{Extract package information from CRAN.}
 \usage{
 packageInfo(multi.core = TRUE, platform = "win", r.ver = "release",
   source = TRUE)
@@ -17,5 +17,5 @@ packageInfo(multi.core = TRUE, platform = "win", r.ver = "release",
 \item{source}{Logical.}
 }
 \description{
-Extract package source file information from CRAN.
+Extract package information from CRAN.
 }

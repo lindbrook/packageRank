@@ -1,4 +1,4 @@
-#' Annual/monthly package downloads from Bioconductor (beta).
+#' Annual/monthly package downloads from Bioconductor.
 #'
 #' @param packages Character. Vector of package names.
 #' @param when \code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.

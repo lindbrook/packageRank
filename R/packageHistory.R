@@ -1,4 +1,4 @@
-#' Extract package version history CRAN and Archive (prototype).
+#' Extract package version history CRAN and Archive.
 #'
 #' Date and version of all publications.
 #' @param package Character. Package name.
@@ -66,6 +66,7 @@ packageCRAN <- function(package = "cholera") {
   if (RCurl::url.exists(url)) {
     web_page <- readLines(url)
 
+    # 'SoilHyP'
     removed <- any(vapply(seq_along(web_page), function(i) {
       grepl("removed from the CRAN repository", web_page[i])
     }, logical(1L)))

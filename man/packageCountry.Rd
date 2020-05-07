@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageCountry.R
 \name{packageCountry}
 \alias{packageCountry}
-\title{Package download counts by country (prototype).}
+\title{Package download counts by country.}
 \usage{
 packageCountry(packages = NULL, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, na.rm = FALSE)

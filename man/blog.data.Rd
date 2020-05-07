@@ -3,7 +3,7 @@
 \docType{data}
 \name{blog.data}
 \alias{blog.data}
-\title{blog post data.}
+\title{Blog post data.}
 \format{
 A list with 19 elements.
 }

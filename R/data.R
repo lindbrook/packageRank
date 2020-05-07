@@ -1,4 +1,4 @@
-#' blog post data.
+#' Blog post data.
 #'
 #' \describe{
 #'    \item{\code{archive.pkg_ver}}{}

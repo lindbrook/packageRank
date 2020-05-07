@@ -2,7 +2,7 @@
 % Please edit documentation in R/populationPlot.R
 \name{populationPlot}
 \alias{populationPlot}
-\title{Package download counts and rank percentiles (longitudinal).}
+\title{Visualize a Package's Downloads Relative to "All" CRAN packages over Time.}
 \usage{
 populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
   sample.smooth = TRUE, f = 1/3, sample.pct = 5, multi.core = TRUE)
@@ -25,5 +25,5 @@ populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.}
 }
 \description{
-With a stratified random sample cohort of packages plus top ten.
+Uses a stratified random sample cohort of packages plus top ten packages.
 }

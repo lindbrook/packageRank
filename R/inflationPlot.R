@@ -1,6 +1,6 @@
-#' Plot of inflationary effects of "small" downloads and prior versions.
+#' Inflation plots of effects of "small" downloads and prior versions for October 2019: 'cholera', 'ggplot2', and 'VR'.
 #'
-#' October 2019: 'cholera', 'ggplot2', and 'VR'.
+#' Document code for blog graph.
 #' @param package Character.
 #' @param filter Character. Size, version, or size and version
 #' @param legend.loc Character. Location of legend.

@@ -1,4 +1,4 @@
-#' Package download counts by country (prototype).
+#' Package download counts by country.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).

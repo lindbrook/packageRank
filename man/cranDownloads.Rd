@@ -20,12 +20,12 @@ If this is given, then \code{from} and \code{to} are ignored.}
 
 \item{to}{End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.}
 
-\item{check.package}{Logical. Check if package exists.}
+\item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \description{
-Enhanced S3 implementation of cranlogs::cran_downloads().
+Enhanced implementation of cranlogs::cran_downloads().
 }
 \examples{
 \donttest{
