@@ -99,7 +99,6 @@ plot.bioconductorRank <- function(x, graphics = NULL, log_count = TRUE,
   crosstab <- x$crosstab + 1
   package.data <- x$package.data
   packages <- x$packages
-  # date <- paste0(x$date, "-01")
   date <- x$date
   y.max <- crosstab[1]
   q <- stats::quantile(crosstab)[2:4]
