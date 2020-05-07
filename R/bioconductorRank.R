@@ -77,7 +77,7 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
   out <- list(packages = packages, date = date, package.data = dat,
     crosstab = crosstab)
 
-  class(out) <- "bioconductor_rank"
+  class(out) <- "bioconductorRank"
   out
 }
 
@@ -91,7 +91,7 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
 #' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 
-plot.bioconductor_rank <- function(x, graphics = "base", log_count = TRUE,
+plot.bioconductorRank <- function(x, graphics = NULL, log_count = TRUE,
   ...) {
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
@@ -99,7 +99,8 @@ plot.bioconductor_rank <- function(x, graphics = "base", log_count = TRUE,
   crosstab <- x$crosstab + 1
   package.data <- x$package.data
   packages <- x$packages
-  date <- paste0(x$date, "-01")
+  # date <- paste0(x$date, "-01")
+  date <- x$date
   y.max <- crosstab[1]
   q <- stats::quantile(crosstab)[2:4]
 
@@ -135,12 +136,13 @@ plot.bioconductor_rank <- function(x, graphics = "base", log_count = TRUE,
 #' @param ... Additional parameters.
 #' @export
 
-print.bioconductor_rank <- function(x, ...) {
+print.bioconductorRank <- function(x, ...) {
   dat <- x$package.data
   rank <- paste(format(dat$rank, big.mark = ","), "of",
                 format(dat$total.packages, big.mark = ","))
-  out <- data.frame(dat[, c("date", "packages", "downloads", "percentile")],
-    rank, stringsAsFactors = FALSE, row.names = NULL)
+  out <- data.frame(dat[, c("date", "packages", "downloads")], rank,
+    percentile = dat[, "percentile"], stringsAsFactors = FALSE,
+    row.names = NULL)
   print(out)
 }
 
@@ -150,6 +152,6 @@ print.bioconductor_rank <- function(x, ...) {
 #' @export
 #' @note This is useful for directly accessing the data frame.
 
-summary.bioconductor_rank <- function(object, ...) {
+summary.bioconductorRank <- function(object, ...) {
   object$package.data
 }

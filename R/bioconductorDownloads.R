@@ -68,11 +68,11 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
   out <- list(data = dat, packages = packages, current.date = current.date,
     current.yr = current.yr, current.mo = current.mo, observation = observation)
-  class(out) <- "bioconductor"
+  class(out) <- "bioconductorDownloads"
   out
 }
 
-#' Plot method for bioconductor_downloads().
+#' Plot method for bioconductorDownloads().
 #'
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
@@ -93,7 +93,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' plot(bioconductorDownloads(packages = c("graph", "IRanges", "S4Vectors"), from = 2018))
 #' }
 
-plot.bioconductor <- function(x, graphics = NULL, count = "download",
+plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, smooth.f = 2/3, se = FALSE,
   log_count = FALSE, ...) {
 
@@ -150,7 +150,7 @@ plot.bioconductor <- function(x, graphics = NULL, count = "download",
 #' @param ... Additional parameters.
 #' @export
 
-print.bioconductor <- function(x, ...) {
+print.bioconductorDownloads <- function(x, ...) {
   if (is.data.frame(x$data)) print(x$data)
   else if (is.list(x$data)) {
     out <- do.call(rbind, x$data)
@@ -165,7 +165,7 @@ print.bioconductor <- function(x, ...) {
 #' @param ... Additional parameters.
 #' @export
 
-summary.bioconductor <- function(object, ...) {
+summary.bioconductorDownloads <- function(object, ...) {
   if (is.data.frame(object$data)) object$data
   else if (is.list(object$data)) {
     out <- do.call(rbind, object$data)
