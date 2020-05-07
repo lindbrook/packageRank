@@ -17,7 +17,7 @@ packageDistribution(package = "HistData", date = Sys.Date() - 1,
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
-\item{check.package}{Logical. Check if package exists.}
+\item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
