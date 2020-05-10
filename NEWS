@@ -1,7 +1,7 @@
 packageRank 0.3.5.9000
 ==================
 
-use strsplit(fixed = TRUE).
+- fix packageInfio() using strsplit(fixed = TRUE).
 
 
 packageRank 0.3.5
