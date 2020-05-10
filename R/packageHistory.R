@@ -143,6 +143,13 @@ packageArchive <- function(package = "cholera") {
 
       ancestry.check2 <- grepString("Ancestry", archive.data, TRUE)
 
+      # testthat_2.3.1.tar.gz.save
+      filename.err <- vapply(archive.data, function(x) {
+        grepl(".save", x)
+      }, logical(1L))
+
+      if (any(filename.err)) archive.data <- archive.data[!filename.err]
+        
       if (any(ancestry.check2)) {
         version.date <- lapply(archive.data[!ancestry.check2], function(x) {
           unlist(strsplit(x, '.tar.gz'))
@@ -153,7 +160,7 @@ packageArchive <- function(package = "cholera") {
         })
       }
 
-      version.date <-lapply(version.date, function(x) {
+      version.date <- lapply(version.date, function(x) {
         ptB <- unlist(strsplit(x[2], " "))
         data.frame(version = unlist(strsplit(x[1], "_"))[2],
                    date = as.Date(ptB[1]),
