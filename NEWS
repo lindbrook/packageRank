@@ -2,6 +2,7 @@ packageRank 0.3.5.9000
 ==================
 
 - fix packageInfio() using strsplit(fixed = TRUE).
+- note packageArchive() fix for 'testthat' filename typo/duplicate.
 
 
 packageRank 0.3.5
