@@ -74,7 +74,7 @@ packageInfo <- function(multi.core = TRUE, platform = "win", r.ver = "release",
 
   pkg_info <- function(x, ext) {
     dat <- gsub("<.*?>", " ", web_page[x])
-    dat <- trimws(unlist(strsplit(dat, ext)))
+    dat <- trimws(unlist(strsplit(dat, ext, fixed = TRUE)))
     pkg.ver <- unlist(strsplit(dat[1], "_"))
     stamp <- unlist(strsplit(gsub("\\s+", " ", dat[2]), " "))
     data.frame(package = pkg.ver[1],
