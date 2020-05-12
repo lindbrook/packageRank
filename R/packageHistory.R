@@ -144,11 +144,11 @@ packageArchive <- function(package = "cholera") {
       ancestry.check2 <- grepString("Ancestry", archive.data, TRUE)
 
       # testthat_2.3.1.tar.gz.save
-      filename.err <- vapply(archive.data, function(x) {
-        grepl(".save", x)
-      }, logical(1L))
-
-      if (any(filename.err)) archive.data <- archive.data[!filename.err]
+      # CRAN fixed 10 May 2019
+      # filename.err <- vapply(archive.data, function(x) {
+      #   grepl(".save", x)
+      # }, logical(1L))
+      # if (any(filename.err)) archive.data <- archive.data[!filename.err]
         
       if (any(ancestry.check2)) {
         version.date <- lapply(archive.data[!ancestry.check2], function(x) {
