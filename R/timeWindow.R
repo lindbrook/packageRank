@@ -1,11 +1,11 @@
-#' Define a time window for download log files (prototype).
+#' Create a time window for download log files (prototype).
 #'
 #' @param t Character. Time as "hh:mm:ss".
-#' @param window Numeric. Delat in seconds for time window.
+#' @param window Numeric. Delta in seconds for time window.
 #' @examples
 #' timeWindow("00:02:00")
 #' timeWindow("09:12:53", 2)
-#' @noRd
+#' @export
 
 timeWindow <- function(t, window = 1) {
   if (window > 5) stop("window <= 5.")
