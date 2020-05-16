@@ -1,3 +1,10 @@
+packageRank 0.3.5.9001
+==================
+
+- add sizeFilter() prototype.
+- add timeWindow() prototype.
+
+
 packageRank 0.3.5.9000
 ==================
 
