@@ -57,5 +57,5 @@ timeWindow <- function(t, window = 1) {
     t.below <- paste0(h, ":", m, ":", s)
   }
 
-  c(t.below, t, t.above)
+  c(t.below, t.above)
 }
