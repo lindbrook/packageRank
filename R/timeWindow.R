@@ -5,6 +5,7 @@
 #' @examples
 #' timeWindow("00:02:00")
 #' timeWindow("09:12:53", 2)
+#' timeWindow("23:00:00")
 #' @export
 
 timeWindow <- function(t, window = 1) {
@@ -42,11 +43,12 @@ timeWindow <- function(t, window = 1) {
     if (any(mins.below < 0)) {
       hrs.below <- rep(hms[1], length(mins.below))
       hrs.below <- hrs.below[mins.below < 0] - 1
+      mins.below <- 60 + mins.below
       if (any(hrs.below < 0)) stop("day change.")
     } else {
-      hours.below <- hms[1]
+      hrs.below <- hms[1]
     }
-    h <- ifelse(nchar(hours.below) == 1, paste0("0", hours.below), hours.below)
+    h <- ifelse(nchar(hrs.below) == 1, paste0("0", hrs.below), hrs.below)
     m <- ifelse(nchar(mins.below) == 1, paste0("0", mins.below), mins.below)
     s <- ifelse(nchar(secs.below) == 1, paste0("0", secs.below), secs.below)
     t.below <- paste0(h, ":", m, ":", s)
