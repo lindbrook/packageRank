@@ -13,9 +13,7 @@ anyTriplet <- function(pkg, cran_log) {
                    dat$r_version, "-",
                    dat$r_os, "-",
                    dat$version)
-
   crosstab <- table(dat$id)
-
   triplets <- vapply(names(crosstab[crosstab == 3]), function(x) {
     time.stamp <- dat[dat$id == x, ]
     test_500 <-  any(time.stamp$size < 1000)
