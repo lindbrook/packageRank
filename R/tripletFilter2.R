@@ -34,19 +34,18 @@ tripletFilter2 <- function(dat) {
         tmp <- v.data[v.data$id %in% id, ]
 
         if (any(tmp$size < 1000)) {
-           size.heterogeneity <- length(unique(ceiling(log10(tmp$size)))) == 3
+          size.heterogeneity <- length(unique(ceiling(log10(tmp$size)))) == 3
+          sz <- ceiling(log10(tmp$size))
+          sm.pkg.triA <- any(sz == 6)
+          sm.pkg.triB <- sum(sz == max(sz)) == 2
+          small.package.triplet <- sm.pkg.triA & sm.pkg.triB
 
-           sz <- ceiling(log10(tmp$size))
-           sm.pkg.triA <- any(sz == 6)
-           sm.pkg.triB <- sum(sz == max(sz)) == 2
-           small.package.triplet <- sm.pkg.triA & sm.pkg.triB
-
-           if (size.heterogeneity) {
-             obs <- tmp[tmp$size != max(tmp$size), ]
-             as.numeric(row.names(obs))
-           } else if (small.package.triplet) {
-             as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
-           } else NULL
+          if (size.heterogeneity) {
+            obs <- tmp[tmp$size != max(tmp$size), ]
+            as.numeric(row.names(obs))
+          } else if (small.package.triplet) {
+            as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
+          } else NULL
         }
       }))
     }
@@ -104,6 +103,6 @@ tripletFilter2 <- function(dat) {
     v.data[, c("machine", "id")] <- NULL
     v.data
   })
-      
+
   out
 }
