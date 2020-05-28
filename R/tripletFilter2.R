@@ -35,6 +35,7 @@ tripletFilter2 <- function(dat) {
 
         if (any(tmp$size < 1000)) {
            size.heterogeneity <- length(unique(ceiling(log10(tmp$size)))) == 3
+
            sz <- ceiling(log10(tmp$size))
            sm.pkg.triA <- any(sz == 6)
            sm.pkg.triB <- sum(sz == max(sz)) == 2
@@ -103,6 +104,6 @@ tripletFilter2 <- function(dat) {
     v.data[, c("machine", "id")] <- NULL
     v.data
   })
-
+      
   out
 }
