@@ -540,6 +540,9 @@ Besides a difference of 21 downloads, notice that the number of unique packages 
 
 By default, `size.filter = TRUE` for `packageRank()` and `size.filter = FALSE` for `packageLog()`.
 
+[blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/)
+"Inflationary Bias of Download Counts"
+
 ### VII - memoization
 
 To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual days or observations. However, to reduce the need to re-download logs, 'packageRank' makes use of memoization via the 'memoise' package.
