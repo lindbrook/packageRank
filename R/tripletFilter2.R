@@ -5,7 +5,6 @@
 #' @export
 
 tripletFilter2 <- function(dat) {
-  # dat <- ggplot2_0504
   ver <- unique(dat$version)
 
   out <- lapply(ver, function(v) {
@@ -13,15 +12,14 @@ tripletFilter2 <- function(dat) {
 
     if (nrow(v.data) == 3) {
       if (any(v.data$size < 1000)) {
-         size.heterogeneity <- length(unique(ceiling(log10(v.data$size)))) == 3
-         if (size.heterogeneity) {
+        size.heterogeneity <- length(unique(ceiling(log10(v.data$size)))) == 3
+        if (size.heterogeneity) {
            obs <- v.data[v.data$size != max(v.data$size), ]
            tri.delete <- as.numeric(row.names(obs))
          } else {
-           tri.delete <- NULL
-         }
+         tri.delete <- NULL
+        }
       }
-
     } else {
       v.data$machine <- paste0(v.data$ip_id, "-",
                                v.data$r_version, "-",
@@ -30,8 +28,9 @@ tripletFilter2 <- function(dat) {
       v.data$id <- paste0(v.data$time, "-", v.data$machine)
 
       crosstab <- table(v.data$id)
+      triplets <- names(crosstab[crosstab == 3])
 
-      tri.delete <- unlist(lapply(names(crosstab[crosstab == 3]), function(id) {
+      tri.delete <- unlist(lapply(triplets, function(id) {
         tmp <- v.data[v.data$id %in% id, ]
 
         if (any(tmp$size < 1000)) {
@@ -76,11 +75,35 @@ tripletFilter2 <- function(dat) {
     }
 
     if (!is.null(other.triplets)) {
-      stop("need code")
-    } else {
-      v.data <- v.data[v.data$size >= 1000, ]
+      time.shift.select <- vapply(seq_len(nrow(other.triplets)), function(i) {
+        window <- other.triplets[i, ]
+        sum(v.data$id %in% window[, c("fix", "err")]) == 3
+      }, logical(1L))
+
+      candidates <- other.triplets[time.shift.select, ]
+
+      delete <- lapply(seq_len(nrow(candidates)), function(i) {
+        window <- candidates[i, ]
+        window.select <- v.data$id %in% window[, c("fix", "err")]
+        tmp <- v.data[window.select, ]
+        sz <- ceiling(log10(tmp$size))
+        three.different <- length(unique(sz)) == 3
+        two.different <- sum(sz == max(sz)) == 2
+        sm.pkg <- max(floor(log10(tmp$size))) <= 5
+
+        if (three.different | (two.different & sm.pkg)) {
+          as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
+        }
+      })
+
+      delete <- do.call(c, delete)
+      if (!is.null(delete)) v.data[row.names(v.data) %in% delete == FALSE, ]
     }
+
+    v.data <- v.data[v.data$size >= 1000, ]
+    v.data[, c("machine", "id")] <- NULL
+    v.data
   })
-  # out[, c("machine", "id")] <- NULL
+      
   out
 }
