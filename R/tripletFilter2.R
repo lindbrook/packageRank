@@ -55,34 +55,35 @@ tripletFilter2 <- function(dat) {
     possible.triplets <- v.data[v.data$size < 1000, "id"]
 
     if (!is.null(possible.triplets)) {
-      time.shift.triplet <- lapply(possible.triplets, function(x) {
+      time.fix.triplet <- lapply(possible.triplets, function(x) {
         id.components <- unlist(strsplit(x, "-"))
         machine.id <- paste(id.components[-1], collapse = "-")
         before.after <- packageRank::timeWindow(id.components[1])
-        candidate <- paste0(before.after, "-", machine.id)
-        neighbor.test <- lapply(candidate, function(x) v.data$id %in% x)
+        candidates <- paste0(before.after, "-", machine.id)
 
-        if (any(unlist(neighbor.test))) {
-          err <- unlist(lapply(candidate, function(x) {
-            v.data[v.data$id %in% x, "id"]
-          }))
-          data.frame(fix = x, err = unique(err), stringsAsFactors = FALSE)
+        neighbor.test <- vapply(candidates, function(x) {
+          x %in% v.data$id
+        }, logical(1L))
+
+        if (any(neighbor.test)) {
+          data.frame(fix = x, err = names(neighbor.test[neighbor.test]),
+            stringsAsFactors = FALSE)
         }
       })
 
-      other.triplets <- do.call(rbind, time.shift.triplet)
+      time.fix.triplet <- do.call(rbind, time.fix.triplet)
     }
 
-    if (!is.null(other.triplets)) {
-      time.shift.select <- vapply(seq_len(nrow(other.triplets)), function(i) {
-        window <- other.triplets[i, ]
+    if (!is.null(time.fix.triplet)) {
+      time.shift.select <- vapply(seq_len(nrow(time.fix.triplet)), function(i) {
+        window <- time.fix.triplet[i, ]
         sum(v.data$id %in% window[, c("fix", "err")]) == 3
       }, logical(1L))
 
-      candidates <- other.triplets[time.shift.select, ]
+      other.candidates <- time.fix.triplet[time.shift.select, ]
 
-      delete <- lapply(seq_len(nrow(candidates)), function(i) {
-        window <- candidates[i, ]
+      delete <- lapply(seq_len(nrow(other.candidates)), function(i) {
+        window <- other.candidates[i, ]
         window.select <- v.data$id %in% window[, c("fix", "err")]
         tmp <- v.data[window.select, ]
         sz <- ceiling(log10(tmp$size))
