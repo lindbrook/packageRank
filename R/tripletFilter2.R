@@ -96,7 +96,10 @@ tripletFilter2 <- function(dat) {
       })
 
       delete <- do.call(c, delete)
-      if (!is.null(delete)) v.data[row.names(v.data) %in% delete == FALSE, ]
+
+      if (!is.null(delete)) {
+        v.data <- v.data[row.names(v.data) %in% delete == FALSE, ]
+      }
     }
 
     v.data <- v.data[v.data$size >= 1000, ]
