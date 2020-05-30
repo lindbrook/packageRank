@@ -540,7 +540,7 @@ Besides a difference of 21 downloads, notice that the number of unique packages 
 
 By default, `size.filter = TRUE` for `packageRank()` and `size.filter = FALSE` for `packageLog()`.
 
-[blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/)
+[blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
 "Inflationary Bias of Download Counts"
 
 ### VII - memoization
