@@ -472,7 +472,8 @@ distribution along with its rank percentile and download count (in red).
 In the background, the 75th, 50th and 25th percentiles are plotted as
 dotted vertical lines. The package with the most downloads,
 [‘magrittr’](https://CRAN.R-project.org/package=magrittr) in both
-cases, is at top right (in blue).
+cases, is at top left (in blue). The total number of downloads is at the
+top right (in blue).
 
 ### VI - filter “small” downloads
 
