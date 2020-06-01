@@ -23,6 +23,7 @@ anyTriplet <- function(cran_log = cran_log, sample.pct = 5, multi.core = TRUE) {
     dat$id <- paste0(dat$time, "-",
                      dat$ip_id, "-",
                      dat$r_version, "-",
+                     dat$r_arch, "-",
                      dat$r_os, "-",
                      dat$version)
     crosstab <- table(dat$id)
