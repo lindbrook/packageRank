@@ -9,9 +9,15 @@
 anyTriplet <- function(cran_log = cran_log, sample.pct = 5, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   pkg.names <- unique(cran_log$package)
-  sample.size <- ceiling(length(pkg.names) * sample.pct / 100)
-  pkgs <- sample(unique(cran_log$package), sample.size)
-
+  if (sample.pct > 0 & sample.pct < 100) {
+    sample.size <- ceiling(length(pkg.names) * sample.pct / 100)
+    pkgs <- sample(unique(cran_log$package), sample.size)
+  } else if (sample.pct == 100) {
+    pkgs <- unique(cran_log$package)
+  } else if (sample.pct <= 0 | sample.pct > 100) {
+    stop("0 < sample.pct <= 100.")
+  }
+  
   tri.test <- parallel::mclapply(pkgs, function(p) {
     dat <- cran_log[cran_log$package == p, ]
     dat$id <- paste0(dat$time, "-",
