@@ -18,10 +18,10 @@ library(packageRank)
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) package by adding a `plot()` method and a more user-friendly interface to the task of counting package downloads. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other packages on [CRAN](https://CRAN.R-project.org/).
+['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a `plot()` method and a more user-friendly interface. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other [CRAN](https://CRAN.R-project.org/) packages.
 
-NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank)relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and requires an active internet connection. [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) uses the [RStudio logs](http://cran-logs.rstudio.com/) to compute package downloads. These logs record traffic to what was previously RStudio’s CRAN mirror (cran.rstudio.com) and is currently the “0-Cloud” mirror (cloud.r-project.org), which is “sponsored by RStudio”. Note that the logs for the previous day are generally posted the next day at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time); results for functions that
-rely on ‘cranlogs’ are available soon after.
+NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/), which record traffic to what was previously called their [CRAN mirror](http://cran.rstudio.com) and which is called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for the previous day are generally posted the following day at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
+rely on ‘cranlogs’ are generally available soon thereafter.
 
 ### I - getting started
 
@@ -100,10 +100,10 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 
 #### ii) two additional date formats
 
-With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that dates must use the "yyyy-mm-dd" format. For convenience's sake and to reduce typing, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
+With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake and to reduce typing, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
 
 ##### "yyyy-mm"
-Let's say you want the download counts for ['HistData'](https://CRAN.R-project.org/package=HistData) from February 2020. With `cranlogs::cran_downloads()`, you have to type out the whole date and remember that 2020 was a leap year:
+Let's say you want the download counts for ['HistData'](https://CRAN.R-project.org/package=HistData) for the month of February 2020. With `cranlogs::cran_downloads()`, you'd have to type out the whole date and remember that 2020 was a leap year:
 
 ```{r yyyy-mm_1, eval = FALSE}
 cranlogs::cran_downloads(packages = "HistData", from = "2020-02-01",
@@ -136,7 +136,7 @@ cranDownloads(packages = "rstan", from = "2020")
 
 #### iii) check dates
 
-`cranDownloads()` tries to check for valid dates:
+`cranDownloads()` checks for valid dates:
 
 ```{r check_date, eval = FALSE}
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -150,20 +150,20 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 
 ### III - visualizing package downloads
 
-`cranDownloads()` makes visualization easy. Just use `plot()`:
+`cranDownloads()` makes visualizing package downloads easy. Just use `plot()`:
 
 ```{r cranDownloads_viz1, fig.align = "center"}
 plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"))
 ```
 
-If you pass a vector of package names for a single day, `plot()` returns a dotchart:
+If you pass a vector of package names for a single day, `plot()` will return a dotchart:
 
 ```{r cranDownloads_viz2a, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-If you pass a vector of package names, `plot()` will use `ggplot2` facets:
+If you pass a vector of package names for multiple days, `plot()` defaults to using `ggplot2` facets:
 
 ```{r cranDownloads_viz2, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -171,7 +171,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 ```
 <br/>
 
-If you want to plot those data in a single frame, use `multi.plot = TRUE`:
+If you want to plot those data in a single frame, set `multi.plot = TRUE`:
 
 ```{r cranDownloads_viz3}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -179,14 +179,14 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 ```
 
 <br/>
-If you want separate plots, use `graphics = "base"` (you'll be prompted for each plot):
+If you want separate plots, use `graphics = "base"` and you'll be prompted for each plot:
 
 ```{r cranDownloads_viz4, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-If you want separate, independently scaled plots, add `same.xy = FALSE`:
+If you want those plots independently, set `same.xy = FALSE`:
 
 ```{r cranDownloads_viz5, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -195,7 +195,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 
 #### `packages = NULL`
 
-`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN.
+`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN. You can plot these data by using:
 
 ```{r}
 plot(cranDownloads(from = 2019, to = 2019))
@@ -203,7 +203,7 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 #### `packages = "R"`
 
-`cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!).
+`cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!). You can plot these data by using:
 
 ```{r}
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
@@ -211,7 +211,7 @@ plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 
 #### smoothers and confidence intervals
 
-To add a lowess smoother to your data, use `smooth = TRUE`:
+To add a lowess smoother to your plot, use `smooth = TRUE`:
 
 ```{r}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -227,7 +227,7 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
 
 #### package and R release dates
 
-To annotate a graph with package release dates:
+To annotate a graph with a package's release dates:
 
 ```{r}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -250,11 +250,11 @@ plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE)
 ```
 
-This longitudinal view plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, the same variable are plotted (in gray) for a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked over time. This sample approximates the "typical" pattern of downloads for that time period.
+This longitudinal view of package downloads plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, the same variable are plotted (in gray) using a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked. This graphically approximates the "typical" pattern of downloads on CRAN for the selected time period.
 
 ### IV - computing package download rank percentiles
 
-After looking the download count data for a while, the "compared to what?" question will quickly come to mind. For instance, consider the data for the first week of March 2020:
+Looking at nominal download count data leads one to the "compared to what?" question. For instance, consider the data for the first week of March 2020:
 
 ```{r motivation, eval = FALSE}
 plot(cranDownloads(packages = "cholera", from = "2020-03-01",
@@ -308,7 +308,7 @@ title(paste0(x[[2]]$package, " @ ", x[[2]]$date, " (", day, ")"))
 
 As you can see, the frequency distribution of package downloads typically has a heavily skewed, exponential shape. On the Wednesday, the most "popular" package had 177,745 downloads while the least "popular" package(s) had just one. This is why the left side of the distribution, where packages with fewer downloads are located, _looks_ like a vertical line.
 
-To see what's going on, I take the log of download counts (x-axis) and redraw the graph. In these plots, the location of a vertical segment along the x-axis represents a download count and the height of a vertical segment represents the frequency of a download count:
+To see what's going on, I take the log of download counts (x-axis) and redraw the graph. In these plots, the location of a vertical segment along the x-axis represents a download count and its height represents a download count's frequency:
 
 ```{r packageDistribution, echo = FALSE}
 plot_package_distribution <- function(dat, xlim, ylim) {
@@ -355,7 +355,7 @@ plot_package_distribution(distn.data[[2]], xlim, ylim)
 
 While these plots give us a better picture of where ['cholera'](https://CRAN.R-project.org/package=cholera) is located, comparisons between Wednesday and Saturday are impressionistic at best: all we can confidently say is that the download counts for both days were greater than the mode.
 
-To facilitate interpretation and comparison, I use the _rank percentile_ of download counts in place of nominal download counts. This nonparametric statistic tells you the percentage of packages with fewer downloads. In other words, it gives you the location of your package relative to the locations of all other packages. More importantly, by rescaling download counts to lie on the bounded interval between 0 and 100, rank percentiles make it easier to compare packages within and across distributions.
+To facilitate interpretation and comparison, I use the _rank percentile_ of a download count in place of the nominal download count. This nonparametric statistic tells you the percentage of packages with fewer downloads. In other words, it gives you the location of your package relative to the locations of all other packages. More importantly, by rescaling download counts to lie on the bounded interval between 0 and 100, rank percentiles make it easier to compare packages within and across distributions.
 
 For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 
@@ -396,11 +396,9 @@ To put it differently:
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 ```
 
-For the example above, 38 downloads puts 'HistData' in 5,556th place among the 18,038 packages downloaded.
+#### nominal ranks
 
-This rank is "nominal" because multiple packages can have the same number of downloads. As a result, a package's nominal rank (but not its rank percentile) can be affected by its name: packages with the same number of downloads are sorted in alphabetical order.
-
-Thus, 'HistData' benefits from the fact that it is 31st in the list of 263 packages with 38 downloads:
+In the example above, 38 downloads puts 'cholera' in 5,556th place among the 18,038 packages downloaded. This rank is "nominal" because it's possible that multiple packages can have the same number of downloads. As a result, a package's nominal rank (but not its rank percentile) can be affected by its name: packages with the same number of downloads are sorted in alphabetical order. Thus, 'cholera' benefits from the fact that it is 31st in the list of 263 packages with 38 downloads:
 
 ```{r nominal}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
@@ -520,11 +518,11 @@ day <- weekdays(as.Date(date), abbreviate = TRUE)
 title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 ```
 
-These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines; the package with the most downloads, which in both cases is ['magrittr'](https://CRAN.R-project.org/package=magrittr) (in blue, top left); and the total number of downloads, 5,561,681 and 3,403,969 respectively (in blue, top right).
+These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top right (in blue).
 
 ### VI - filter "small" downloads
 
-`packageDistribution()`, `packageRank()` and `packageLog()` have a 'size.filter' argument that removes downloads < 1000 bytes. Depending on the day of the week and the number of versions a package has, this can provide a more accurate count of package downloads. For example, here is a raw download count:
+`packageDistribution()`, `packageRank()` and `packageLog()` have a 'size.filter' argument that removes downloads smaller than 1000 bytes. This can provide a more accurate count of package downloads. For example, here is a raw download count:
 
 ```{r filter1}
 packageRank(packages = "HistData", date = "2019-10-30", size.filter = FALSE)
@@ -538,13 +536,11 @@ packageRank(packages = "HistData", date = "2019-10-30", size.filter = TRUE)
 
 Besides a difference of 21 downloads, notice that the number of unique packages downloaded falls from 17,396 to 15,330.
 
-By default, `size.filter = TRUE` for `packageRank()` and `size.filter = FALSE` for `packageDistribution()` and `packageLog()`.
-
-For details about "small" downloads see the "Inflationary Bias of Download Counts" section of this [blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
+By default, `size.filter = TRUE` for `packageRank()` while `size.filter = FALSE` for `packageDistribution()` and `packageLog()`. For details about "small" downloads see the "Inflationary Bias of Download Counts" section of this [blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
 
 ### VII - memoization
 
-To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual days or observations. However, to reduce the need to re-download logs, 'packageRank' makes use of memoization via the 'memoise' package.
+To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual days. However, to reduce the need to re-download logs, 'packageRank' makes use of memoization via the 'memoise' package.
 
 Here's relevant code:
 
@@ -560,4 +556,4 @@ if (RCurl::url.exists(url)) {
 # Note that data.table::fread() relies on R.utils::decompressFile().
 ```
 
-If you use `fetchLog()`, the log file, which can be upwards of 50 MB, will be downloaded every time you call the function. If you use `mfetchLog()`, logs are intelligently cached; those that have already been downloaded, in your current R session, will not be downloaded again.
+If you use `fetchLog()`, the log file, which can be upwards of 50 MB, will be downloaded each time you call the function. But if you use `mfetchLog()`, the logs are intelligently cached; those that have already been downloaded, in your current R session, will not be downloaded again.
