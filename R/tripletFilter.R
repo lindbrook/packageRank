@@ -5,96 +5,109 @@
 #' @export
 
 tripletFilter <- function(dat) {
-  dat2 <- dat
+  ver <- unique(dat$version)
 
-  ## machine ID and time stamp ID
+  out <- lapply(ver, function(v) {
+    v.data <- dat[dat$version == v, ]
 
-  dat2$machine.id <- paste0(dat2$ip_id, "-",
-                           dat2$r_version, "-",
-                           dat2$r_os, "-",
-                           dat2$version)
-
-  dat2$id <- paste0(dat2$time, "-", dat2$machine.id)
-
-  ## identify ID stamps with a ~500 B entry ##
-
-  id_500 <- dat2$size < 1000
-  crosstab <- table(dat2[id_500, "id"])
-
-  ## test/identity complete triplets ##
-
-  triplet.test <- unlist(lapply(names(crosstab), function(x) {
-    test1 <- sum(dat2$id %in% x) == 3
-    if (test1) {
-      orders.magniutde <- ceiling(log10(dat[dat2$id %in% x, "size"]))
-      # test2 <- sum(orders.magniutde == max(orders.magniutde)) == 1
-      test2 <- length(unique(orders.magniutde)) > 1
-      test1 & test2
-    } else FALSE
-  }))
-
-  if (any(triplet.test)) {
-    complete.triplets <- names(crosstab)[triplet.test]
-  } else {
-    complete.triplets <- NULL
-  }
-
-  ## test/identify potential triplets ##
-
-  sel <- dat2$id %in% names(crosstab)[!triplet.test]
-  triplet.candidate <- dat2[id_500 & sel, "id"]
-
-  candidate.neighbor <- lapply(triplet.candidate, function(x) {
-    id.components <- unlist(strsplit(x, "-"))
-    machine.id <- paste(id.components[-1], collapse = "-")
-    before.after <- packageRank::timeWindow(id.components[1])
-    candidate <- paste0(before.after, "-", machine.id)
-    neighbor.test <- lapply(candidate, function(x) dat2$id %in% x)
-
-    if (any(unlist(neighbor.test))) {
-      err <- unlist(lapply(candidate, function(x) dat2[dat2$id %in% x, "id"]))
-      data.frame(fix = x, err = unique(err), stringsAsFactors = FALSE)
-    }
-  })
-
-  candidate.neighbor <- do.call(rbind, candidate.neighbor)
-
-  dat2$id2 <- dat2$id
-
-  ## fix potential triplet id stamps ##
-
-  if (!is.null(candidate.neighbor)) {
-    for (i in seq_len(nrow(candidate.neighbor))) {
-      sel <- dat2$id2 %in% candidate.neighbor[i, "err"]
-      dat2[sel, "id2"] <- candidate.neighbor[i, "fix"]
-    }
-
-    ## test candidate triplets ##
-
-    candidate.test <- vapply(triplet.candidate, function(x) {
-      tri.data <- dat[dat2$id2 %in% x, ]
-      if (nrow(tri.data) == 3) {
-        size <- ceiling(log10(tri.data$size))
-        any(size != max(size))
-      } else {
-        FALSE
+    if (nrow(v.data) == 3) {
+      if (any(v.data$size < 1000)) {
+        size.heterogeneity <- length(unique(ceiling(log10(v.data$size)))) == 3
+        if (size.heterogeneity) {
+           obs <- v.data[v.data$size != max(v.data$size), ]
+           tri.delete <- as.numeric(row.names(obs))
+         } else {
+         tri.delete <- NULL
+        }
       }
-    }, logical(1L))
+    } else {
+      v.data$machine <- paste0(v.data$ip_id, "-",
+                               v.data$r_version, "-",
+                               dat$r_arch, "-",
+                               v.data$r_os)
 
-    fixed.triplets <- names(candidate.test[candidate.test])
-  } else {
-    fixed.triplets <- NULL
-  }
+      v.data$id <- paste0(v.data$time, "-", v.data$machine)
 
-  ##  ##
+      crosstab <- table(v.data$id)
+      triplets <- names(crosstab[crosstab == 3])
 
-  triplets <- c(complete.triplets, fixed.triplets)
+      tri.delete <- unlist(lapply(triplets, function(id) {
+        tmp <- v.data[v.data$id %in% id, ]
 
-  deletions <- lapply(triplets, function(tri) {
-    size.data <- dat2[dat2$id2 %in% tri, ]
-    out <- size.data[which(size.data$size != max(size.data$size)), ]
-    as.numeric(row.names(out))
+        if (any(tmp$size < 1000)) {
+          size.heterogeneity <- length(unique(ceiling(log10(tmp$size)))) == 3
+          sz <- ceiling(log10(tmp$size))
+          sm.pkg.triA <- any(sz == 6)
+          sm.pkg.triB <- sum(sz == max(sz)) == 2
+          small.package.triplet <- sm.pkg.triA & sm.pkg.triB
+
+          if (size.heterogeneity) {
+            obs <- tmp[tmp$size != max(tmp$size), ]
+            as.numeric(row.names(obs))
+          } else if (small.package.triplet) {
+            as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
+          } else NULL
+        }
+      }))
+    }
+
+    v.data <- v.data[row.names(v.data) %in% tri.delete == FALSE, ]
+
+    possible.triplets <- v.data[v.data$size < 1000, "id"]
+
+    if (!is.null(possible.triplets)) {
+      time.fix.triplet <- lapply(possible.triplets, function(x) {
+        id.components <- unlist(strsplit(x, "-"))
+        machine.id <- paste(id.components[-1], collapse = "-")
+        before.after <- packageRank::timeWindow(id.components[1])
+        candidates <- paste0(before.after, "-", machine.id)
+
+        neighbor.test <- vapply(candidates, function(x) {
+          x %in% v.data$id
+        }, logical(1L))
+
+        if (any(neighbor.test)) {
+          data.frame(fix = x, err = names(neighbor.test[neighbor.test]),
+            stringsAsFactors = FALSE)
+        }
+      })
+
+      time.fix.triplet <- do.call(rbind, time.fix.triplet)
+    }
+
+    if (!is.null(time.fix.triplet)) {
+      time.shift.select <- vapply(seq_len(nrow(time.fix.triplet)), function(i) {
+        window <- time.fix.triplet[i, ]
+        sum(v.data$id %in% window[, c("fix", "err")]) == 3
+      }, logical(1L))
+
+      other.candidates <- time.fix.triplet[time.shift.select, ]
+
+      delete <- lapply(seq_len(nrow(other.candidates)), function(i) {
+        window <- other.candidates[i, ]
+        window.select <- v.data$id %in% window[, c("fix", "err")]
+        tmp <- v.data[window.select, ]
+        sz <- ceiling(log10(tmp$size))
+        three.different <- length(unique(sz)) == 3
+        two.different <- sum(sz == max(sz)) == 2
+        sm.pkg <- max(floor(log10(tmp$size))) <= 5
+
+        if (three.different | (two.different & sm.pkg)) {
+          as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
+        }
+      })
+
+      delete <- do.call(c, delete)
+
+      if (!is.null(delete)) {
+        v.data <- v.data[row.names(v.data) %in% delete == FALSE, ]
+      }
+    }
+
+    v.data <- v.data[v.data$size >= 1000, ]
+    v.data[, c("machine", "id")] <- NULL
+    v.data
   })
 
-  dat[unlist(deletions), ]
+  out
 }
