@@ -6,6 +6,7 @@
 #' timeWindow("00:02:00")
 #' timeWindow("09:12:53", 2)
 #' timeWindow("23:00:00")
+#' timeWindow("21:59:59")
 #' @export
 
 timeWindow <- function(t, window = 1) {
@@ -19,9 +20,10 @@ timeWindow <- function(t, window = 1) {
     mins.above <- mins.above[secs.above >= 60] + 1
     secs.above <- secs.above - 60
     if (any(mins.above >= 60)) {
-      hrs.above <- rep(hms[1], length(mins.above))
-      hrs.above <- hrs.above[mins.above >= 60] + 1
-      if (any(hrs.above > 23)) stop("day change.")
+      hours.above <- rep(hms[1], length(mins.above))
+      hours.above <- hours.above[mins.above >= 60] + 1
+      mins.above <- mins.above - 60
+      if (any(hours.above > 23)) stop("day change.")
     } else {
       hours.above <- hms[1]
     }
