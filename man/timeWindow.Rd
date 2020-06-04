@@ -18,4 +18,5 @@ Create a time window for download log files (prototype).
 timeWindow("00:02:00")
 timeWindow("09:12:53", 2)
 timeWindow("23:00:00")
+timeWindow("21:59:59")
 }

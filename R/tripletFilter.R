@@ -23,7 +23,7 @@ tripletFilter <- function(dat) {
     } else {
       v.data$machine <- paste0(v.data$ip_id, "-",
                                v.data$r_version, "-",
-                               dat$r_arch, "-",
+                               v.data$r_arch, "-",
                                v.data$r_os)
 
       v.data$id <- paste0(v.data$time, "-", v.data$machine)
