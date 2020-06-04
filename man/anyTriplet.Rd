@@ -4,10 +4,10 @@
 \alias{anyTriplet}
 \title{Detect small downloads triplets (prototype).}
 \usage{
-anyTriplet(cran_log = cran_log, sample.pct = 5, multi.core = TRUE)
+anyTriplet(x, sample.pct = 5, multi.core = TRUE)
 }
 \arguments{
-\item{cran_log}{Object. Package log.}
+\item{x}{Object. Package log.}
 
 \item{sample.pct}{Numeric. Percent of packages to sample.}
 
