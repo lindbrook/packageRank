@@ -5,7 +5,8 @@
 \title{Visualize a Package's Downloads Relative to "All" CRAN packages over Time.}
 \usage{
 populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
-  sample.smooth = TRUE, f = 1/3, sample.pct = 5, multi.core = TRUE)
+  sample.smooth = TRUE, f = 1/3, sample.pct = 5,
+  population.seed = as.numeric(Sys.Date()), multi.core = TRUE)
 }
 \arguments{
 \item{x}{object.}
@@ -21,6 +22,8 @@ populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
 \item{f}{Numeric. stats::lowess() smoother window. For use with graphics = "base" only.}
 
 \item{sample.pct}{Numeric. Percent of packages to sample.}
+
+\item{population.seed}{Numeric. Seed for sample.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.}
 }

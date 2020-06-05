@@ -245,9 +245,14 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 To visualize a package's downloads relative to "all" other packages over time:
 
-```{r}
+```{r pop_plot, eval = FALSE}
 plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE)
+```
+
+```{r pop_plot_code, echo = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
+  population.plot = TRUE, population.seed = 1)
 ```
 
 This longitudinal view of package downloads plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, the same variable are plotted (in gray) using a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked. This graphically approximates the "typical" pattern of downloads on CRAN for the selected time period.
