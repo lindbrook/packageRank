@@ -8,12 +8,13 @@
 #' @param sample.smooth Logical. Add smoother.
 #' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
 #' @param sample.pct Numeric. Percent of packages to sample.
+#' @param population.seed Numeric. Seed for sample.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @export
 
 populationPlot <- function(x, graphics = NULL, log.count = TRUE,
   smooth = TRUE, sample.smooth = TRUE, f = 1/3, sample.pct = 5,
-  multi.core = TRUE) {
+  population.seed = as.numeric(Sys.Date()), multi.core = TRUE) {
 
   pkg.data <- x$cranlogs.data
   start.date <- pkg.data$date[1]
@@ -50,7 +51,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE,
   })
 
   # set seed for random sampling
-  set.seed(as.numeric(Sys.Date()))
+  set.seed(population.seed)
   sample.id <- lapply(seq_along(bin.id), function(i) {
      sample(bin.id[[i]], round(sample.pct / 100 * length(bin.id[[i]])))
   })

@@ -119,6 +119,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param package.version Logical. Add latest package release dates.
 #' @param r.version Logical. Add R release dates.
 #' @param population.plot Logical. Plot population plot.
+#' @param population.seed Numeric. Seed for sample in population plot.
 #' @param multi.plot Logical.
 #' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
@@ -137,8 +138,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
-  dev.mode = FALSE, ...) {
+  population.seed = as.numeric(Sys.Date()), multi.plot = FALSE, same.xy = TRUE,
+  legend.loc = "topleft", dev.mode = FALSE, ...) {
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
@@ -173,7 +174,8 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   }
 
   if (population.plot) {
-     populationPlot(x, graphics = graphics, f = f)
+     populationPlot(x, graphics = graphics, f = f,
+       population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     rPlot(dat, graphics, days.observed, log.count, legend.loc, points, smooth,
       r.version, r_v)
