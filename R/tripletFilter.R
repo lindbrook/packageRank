@@ -92,6 +92,8 @@ tripletFilter <- function(dat) {
         }
       })
       time.fix <- do.call(rbind, time.fix)
+    } else {
+      time.fix <- NULL
     }
 
     if (!is.null(time.fix)) {
