@@ -28,29 +28,36 @@ tripletFilter <- function(dat) {
         } else if (small.package.triplet) {
           z <- v.data[v.data$size != max(v.data$size), ]
           tri.delete <- as.numeric(row.names(z))
-        } else tri.delete <- NULL
-      } else tri.delete <- NULL
+        }
+      } else {
+        tri.delete <- NULL
+      }
       triplets <- NULL
     } else {
+      v.data$machine <- paste0(v.data$ip_id, "-",
+                               v.data$r_version, "-",
+                               v.data$r_arch, "-",
+                               v.data$r_os)
+      v.data$id <- paste0(v.data$time, "-", v.data$machine)
+
       crosstab <- table(v.data$id)
       triplets <- names(crosstab[crosstab == 3])
 
       if (!is.null(triplets)) {
         tri.delete <- unlist(lapply(triplets, function(id) {
           tmp <- v.data[v.data$id %in% id, ]
-
           if (any(tmp$size < 1000)) {
             size.heterogeneity <- length(unique(round(log10(tmp$size)))) == 3
             sz <- round(log10(tmp$size))
             sm.pkg.triA <- any(sz <= 6 & sz > 3)
             sm.pkg.triB <- sum(sz == max(sz)) == 2
             small.package.triplet <- sm.pkg.triA & sm.pkg.triB
-
             if (size.heterogeneity) {
               obs <- tmp[tmp$size != max(tmp$size), ]
               as.numeric(row.names(obs))
             } else if (small.package.triplet) {
-              as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
+              sel <- tmp$size != max(tmp$size)
+              as.numeric(row.names(tmp[sel, ]))
             } else NULL
           }
         }))
@@ -85,6 +92,8 @@ tripletFilter <- function(dat) {
         }
       })
       time.fix <- do.call(rbind, time.fix)
+    } else {
+      time.fix <- NULL
     }
 
     if (!is.null(time.fix)) {
