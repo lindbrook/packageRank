@@ -2,17 +2,13 @@
 #'
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
+#' @param small.filter Logical.
 #' @export
 
-tripletFilter <- function(dat) {
+tripletFilter <- function(dat, small.filter = TRUE) {
   ver <- unique(dat$version)
   out <- lapply(ver, function(v) {
     v.data <- dat[dat$version == v, ]
-    v.data$machine <- paste0(v.data$ip_id, "-",
-                             v.data$r_version, "-",
-                             v.data$r_arch, "-",
-                             v.data$r_os)
-    v.data$id <- paste0(v.data$time, "-", v.data$machine)
 
     if (nrow(v.data) == 3) {
       if (any(v.data$size < 1000)) {
@@ -124,6 +120,7 @@ tripletFilter <- function(dat) {
     }
 
     # v.data <- v.data[v.data$size >= 1000, ]
+    if (small.filter) v.data <- smallFilter(v.data)
     v.data[, c("machine", "id")] <- NULL
     v.data
   })

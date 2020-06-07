@@ -1,3 +1,11 @@
+packageRank 0.3.5.9013
+==================
+
+- remove sizeFilter().
+- add smallFitler().
+- amend tripletFilter().
+
+
 packageRank 0.3.5.9012
 ==================
 
