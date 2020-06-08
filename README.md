@@ -502,8 +502,9 @@ packages downloaded falls from 17,396 to 15,330.
 By default, `size.filter = TRUE` for `packageRank()` while `size.filter
 = FALSE` for `packageDistribution()` and `packageLog()`. For details
 about “small” downloads see the “Inflationary Bias of Download Counts”
-section of this [blog
-post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
+section of this
+[post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
+on the [R-hub blog](https://blog.r-hub.io).
 
 ### VII - memoization
 
