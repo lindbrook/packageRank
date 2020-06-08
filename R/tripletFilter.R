@@ -9,8 +9,11 @@ tripletFilter <- function(dat, small.filter = TRUE) {
   ver <- unique(dat$version)
   out <- lapply(ver, function(v) {
     v.data <- dat[dat$version == v, ]
+    v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",
+      v.data$r_arch, "-", v.data$r_os)
+    v.data$id <- paste0(v.data$time, "-", v.data$machine)
 
-    if (nrow(v.data) == 3) {
+    if (nrow(v.data) == 3 & length(unique(v.data$id)) == 1) {
       if (any(v.data$size < 1000)) {
         size.heterogeneity <- length(unique(round(log10(v.data$size)))) == 3
         sz <- round(log10(v.data$size))
@@ -24,18 +27,10 @@ tripletFilter <- function(dat, small.filter = TRUE) {
         } else if (small.package.triplet) {
           z <- v.data[v.data$size != max(v.data$size), ]
           tri.delete <- as.numeric(row.names(z))
-        }
-      } else {
-        tri.delete <- NULL
-      }
+        } else tri.delete <- NULL
+      } else tri.delete <- NULL
       triplets <- NULL
     } else {
-      v.data$machine <- paste0(v.data$ip_id, "-",
-                               v.data$r_version, "-",
-                               v.data$r_arch, "-",
-                               v.data$r_os)
-      v.data$id <- paste0(v.data$time, "-", v.data$machine)
-
       crosstab <- table(v.data$id)
       triplets <- names(crosstab[crosstab == 3])
 
@@ -57,7 +52,7 @@ tripletFilter <- function(dat, small.filter = TRUE) {
             } else NULL
           }
         }))
-      }
+      } else tri.delete <- NULL
     }
 
     if (!is.null(tri.delete)) {
