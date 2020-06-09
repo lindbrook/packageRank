@@ -4,12 +4,14 @@
 \alias{tripletFilter}
 \title{Filter out small downloads triplets (prototype).}
 \usage{
-tripletFilter(dat, small.filter = TRUE)
+tripletFilter(dat, small.filter = TRUE, time.window = 2)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}
 
 \item{small.filter}{Logical.}
+
+\item{time.window}{Numeric.}
 }
 \description{
 Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/

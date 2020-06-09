@@ -1,3 +1,9 @@
+packageRank 0.3.5.9014
+==================
+
+- add time.window argument to tripletFilter() and set default to 2.
+
+
 packageRank 0.3.5.9013
 ==================
 

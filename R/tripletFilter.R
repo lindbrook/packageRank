@@ -3,9 +3,10 @@
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
 #' @param small.filter Logical.
+#' @param time.window Numeric.
 #' @export
 
-tripletFilter <- function(dat, small.filter = TRUE) {
+tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
   ver <- unique(dat$version)
   out <- lapply(ver, function(v) {
     v.data <- dat[dat$version == v, ]
@@ -20,7 +21,6 @@ tripletFilter <- function(dat, small.filter = TRUE) {
         sm.pkg.triA <- any(sz <= 6 & sz > 3)
         sm.pkg.triB <- sum(sz == max(sz)) == 2
         small.package.triplet <- sm.pkg.triA & sm.pkg.triB
-
         if (size.heterogeneity) {
           obs <- v.data[v.data$size != max(v.data$size), ]
           tri.delete <- as.numeric(row.names(obs))
@@ -30,10 +30,10 @@ tripletFilter <- function(dat, small.filter = TRUE) {
         } else tri.delete <- NULL
       } else tri.delete <- NULL
       triplets <- NULL
+
     } else {
       crosstab <- table(v.data$id)
       triplets <- names(crosstab[crosstab == 3])
-
       if (!is.null(triplets)) {
         tri.delete <- unlist(lapply(triplets, function(id) {
           tmp <- v.data[v.data$id %in% id, ]
@@ -59,20 +59,24 @@ tripletFilter <- function(dat, small.filter = TRUE) {
       v.data <- v.data[row.names(v.data) %in% tri.delete == FALSE, ]
     }
 
+    small.id <- unique(v.data[v.data$size < 1000, "id"])
+
     if (!is.null(triplets)) {
-      possible.triplets <- setdiff(unique(v.data[v.data$size < 1000, "id"]),
-        triplets)
+      possible.triplets <- setdiff(small.id, triplets)
     } else {
-      possible.triplets <- unique(v.data[v.data$size < 1000, "id"])
+      possible.triplets <- small.id
     }
 
-    if (!is.null(possible.triplets)) {
+    if (is.null(possible.triplets)) {
+      time.fix <- NULL
+    } else {
       time.fix <- lapply(possible.triplets, function(x) {
         id.components <- unlist(strsplit(x, "-"))
         machine.id <- paste(id.components[-1], collapse = "-")
-        before.after <- packageRank::timeWindow(id.components[1])
+        before.after <- packageRank::timeWindow(t = id.components[1],
+          window = time.window)
         candidates <- paste0(before.after, "-", machine.id)
-
+        
         neighbor.test <- vapply(candidates, function(x) {
           x %in% v.data$id
         }, logical(1L))
@@ -83,8 +87,6 @@ tripletFilter <- function(dat, small.filter = TRUE) {
         }
       })
       time.fix <- do.call(rbind, time.fix)
-    } else {
-      time.fix <- NULL
     }
 
     if (!is.null(time.fix)) {
@@ -101,7 +103,6 @@ tripletFilter <- function(dat, small.filter = TRUE) {
         two.different <- sum(sz == max(sz)) == 2
         max.sz <- max(round(log10(tmp$size)))
         sm.pkg <- max.sz <= 5 & max.sz > 3
-
         if (three.different | (two.different & sm.pkg)) {
           as.numeric(row.names(tmp[tmp$size != max(tmp$size), ]))
         }
@@ -114,7 +115,6 @@ tripletFilter <- function(dat, small.filter = TRUE) {
       }
     }
 
-    # v.data <- v.data[v.data$size >= 1000, ]
     if (small.filter) v.data <- smallFilter(v.data)
     v.data[, c("machine", "id")] <- NULL
     v.data
