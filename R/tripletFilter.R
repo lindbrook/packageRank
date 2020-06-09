@@ -3,9 +3,10 @@
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
 #' @param small.filter Logical.
+#' @param time.window Numeric.
 #' @export
 
-tripletFilter <- function(dat, small.filter = TRUE) {
+tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
   ver <- unique(dat$version)
   out <- lapply(ver, function(v) {
     v.data <- dat[dat$version == v, ]
@@ -70,7 +71,8 @@ tripletFilter <- function(dat, small.filter = TRUE) {
       time.fix <- lapply(possible.triplets, function(x) {
         id.components <- unlist(strsplit(x, "-"))
         machine.id <- paste(id.components[-1], collapse = "-")
-        before.after <- packageRank::timeWindow(id.components[1])
+        before.after <- packageRank::timeWindow(t = id.components[1],
+          window = time.window)
         candidates <- paste0(before.after, "-", machine.id)
 
         neighbor.test <- vapply(candidates, function(x) {
