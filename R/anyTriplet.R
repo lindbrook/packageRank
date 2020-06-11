@@ -28,10 +28,10 @@ anyTriplet <- function(x, sample.pct = 5, multi.core = TRUE) {
                      dat$version)
     crosstab <- table(dat$id)
     if (any(crosstab == 3)) {
-      triplets <- vapply(names(crosstab[crosstab == 3]), function(x) {
-        time.stamp <- dat[dat$id == x, ]
-        test_500 <-  any(time.stamp$size < 1000)
-        size <- ceiling(log10(dat[dat$id == x, "size"]))
+      triplets <- vapply(names(crosstab[crosstab == 3]), function(nm) {
+        time.stamp <- dat[dat$id == nm, ]
+        test_500 <- any(time.stamp$size < 1000)
+        size <- ceiling(log10(dat[dat$id == nm, "size"]))
         test_size <- length(unique(size)) == 3
         test_500 & test_size
       }, logical(1L))
