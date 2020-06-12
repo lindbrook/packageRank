@@ -6,12 +6,16 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
 #' @param na.rm Logical. Remove NAs.
+#' @param small.filter Logical.
+#' @param triplet.filter Logical.
 #' @export
 
 packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE) {
+  memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
+  triplet.filter = TRUE) {
 
-  dat <- packageLog(packages = packages, date = date, memoization = memoization)
+  dat <- packageLog(packages = packages, date = date, memoization = memoization,
+    small.filter = TRUE, triplet.filter = TRUE)
 
   if (length(packages) == 1) {
     if (na.rm) {
