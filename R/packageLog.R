@@ -6,11 +6,22 @@
 #' @param small.filter Logical.
 #' @param triplet.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param check.package Logical. Validate and "spell check" package.
+#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
-  small.filter = TRUE, triplet.filter = TRUE, memoization = TRUE) {
+  small.filter = TRUE, triplet.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE) {
+
+  if (!is.null(packages)) {
+    if (!"R" %in% packages) {
+      if (check.package) {
+        packages <- checkPackage(packages, dev.mode)
+      }
+    } # stop()
+  }
 
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
@@ -33,7 +44,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
       smallFilter(x, filter = small.filter)
     })
   }
-  
+
   cran_log <- lapply(cran_log, function(x) x[order(x$time), ])
   names(cran_log) <- packages
   cran_log
