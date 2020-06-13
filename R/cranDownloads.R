@@ -40,20 +40,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
       if (check.package) {
-        if (dev.mode) {
-          pkg.chk <- validatePackage0(packages)
-        } else {
-          pkg.chk <- validatePackage(packages)
-        }
-        if (is.list(pkg.chk)) {
-          error <- paste(pkg.chk$invalid, collapse = ", ")
-          if (length(pkg.chk$valid) == 0) {
-            stop(error, ": misspelled or not on CRAN/Archive.")
-          } else {
-            warning(error, ": misspelled or not on CRAN/Archive.")
-            packages <- pkg.chk$valid
-          }
-        }
+        packages <- checkPackage(packages, dev.mode)
       }
     }
   }

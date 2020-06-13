@@ -5,7 +5,8 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
-  triplet.filter = TRUE, memoization = TRUE)
+  triplet.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -17,6 +18,10 @@ packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
 \item{triplet.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
+
+\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \value{
 An R data frame.

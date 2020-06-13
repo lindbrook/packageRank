@@ -6,7 +6,7 @@
 \usage{
 packageCountry(packages = NULL, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
-  triplet.filter = TRUE)
+  triplet.filter = TRUE, check.package = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -22,6 +22,10 @@ packageCountry(packages = NULL, date = Sys.Date() - 1,
 \item{small.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
+
+\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
