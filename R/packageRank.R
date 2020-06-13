@@ -20,20 +20,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   dev.mode = FALSE) {
 
   if (check.package) {
-    if (dev.mode) {
-      pkg.chk <- validatePackage0(packages)
-    } else {
-      pkg.chk <- validatePackage(packages)
-    }
-    if (is.list(pkg.chk)) {
-      error <- paste(pkg.chk$invalid, collapse = ", ")
-      if (length(pkg.chk$valid) == 0) {
-        stop(error, ": misspelled or not on CRAN/Archive.")
-      } else {
-        warning(error, ": misspelled or not on CRAN/Archive.")
-        packages <- pkg.chk$valid
-      }
-    }
+    packages <- checkPackage(packages, dev.mode)
   }
 
   date <- check10CharDate(date)
@@ -226,7 +213,7 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
   } else {
     id <- paste0(package.data$packages, " @ ", date)
   }
-  
+
   download.data <- data.frame(x = seq_along(crosstab),
                               y = c(crosstab),
                               packages = names(crosstab),
