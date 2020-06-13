@@ -2,6 +2,7 @@ packageRank 0.3.5.9017
 ==================
 
 - add/use checkPackage().
+- use smallFilter() for packageDistribution(size.filter = TRUE).
 
 
 packageRank 0.3.5.9016
