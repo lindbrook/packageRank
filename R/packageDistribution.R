@@ -2,7 +2,7 @@
 #'
 #' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
-#' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
+#' @param size.filter Logical. If Logical, TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
@@ -13,20 +13,7 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   dev.mode = FALSE) {
 
   if (check.package) {
-    if (dev.mode) {
-      pkg.chk <- validatePackage0(package)
-    } else {
-      pkg.chk <- validatePackage(package)
-    }
-    if (is.list(pkg.chk)) {
-      error <- paste(pkg.chk$invalid, collapse = ", ")
-      if (length(pkg.chk$valid) == 0) {
-        stop(error, ": misspelled or not on CRAN/Archive.")
-      } else {
-        warning(error, ": misspelled or not on CRAN/Archive.")
-        package <- pkg.chk$valid
-      }
-    }
+    packages <- checkPackage(package, dev.mode)
   }
 
   if (length(date) > 1) {
@@ -52,15 +39,7 @@ package_distribution <- function(package, date, size.filter, memoization,
   cran_log <- cran_log[!is.na(cran_log$package), ]
 
   if (size.filter) {
-    if (is.numeric(size.filter)) {
-      if (size.filter >= 0) {
-          cran_log <- cran_log[cran_log$size >= size.filter, ]
-        } else if (size.filter < 0) {
-          cran_log <- cran_log[cran_log$size < -size.filter, ]
-        }
-    } else if (is.logical(size.filter)) {
-      cran_log <- cran_log[cran_log$size >= 1000, ]
-    } else stop("'size.filter' must be Logical or Numeric.")
+    cran_log <- smallFilter(cran_log)
   }
 
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
