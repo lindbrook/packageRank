@@ -13,20 +13,7 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   dev.mode = FALSE) {
 
   if (check.package) {
-    if (dev.mode) {
-      pkg.chk <- validatePackage0(package)
-    } else {
-      pkg.chk <- validatePackage(package)
-    }
-    if (is.list(pkg.chk)) {
-      error <- paste(pkg.chk$invalid, collapse = ", ")
-      if (length(pkg.chk$valid) == 0) {
-        stop(error, ": misspelled or not on CRAN/Archive.")
-      } else {
-        warning(error, ": misspelled or not on CRAN/Archive.")
-        package <- pkg.chk$valid
-      }
-    }
+    packages <- checkPackage(package, dev.mode)
   }
 
   if (length(date) > 1) {
