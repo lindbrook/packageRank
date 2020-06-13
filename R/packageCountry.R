@@ -14,36 +14,19 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
   triplet.filter = TRUE) {
 
-  dat <- packageLog(packages = packages, date = date, memoization = memoization,
-    small.filter = TRUE, triplet.filter = TRUE)
+  lst <- packageLog(packages = packages, date = date, memoization = memoization,
+    small.filter = small.filter, triplet.filter = triplet.filter)
 
-  if (length(packages) == 1) {
-    if (na.rm) {
-      out <- table(dat$country)
-    } else {
-      out <- table(dat$country, useNA = "ifany")
-    }
-    if (sort) {
-      out <- sort(out, decreasing = TRUE)
-    } else {
-      out
-    }
-  } else if (length(packages) > 1) {
-    if (na.rm) {
-      out <- lapply(packages, function(pkg) {
-         table(dat[dat$package == pkg, "country"])
-      })
-    } else {
-      out <- lapply(packages, function(pkg) {
-         table(dat[dat$package == pkg, "country"], useNA = "ifany")
-      })
-    }
-    if (sort) {
-      out <- lapply(out, function(x) sort(x, decreasing = TRUE))
-    } else {
-      out
-    }
-    names(out) <- packages
+  if (na.rm) {
+    out <- lapply(lst, function(x) table(x$country))
+  } else {
+    out <- lapply(lst, function(x) table(x$country, useNA = "ifany"))
   }
+
+  if (sort) {
+    out <- lapply(out, function(x) sort(x, decreasing = TRUE))
+  }
+
+  names(out) <- packages
   out
 }

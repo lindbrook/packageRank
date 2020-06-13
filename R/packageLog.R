@@ -18,23 +18,23 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   cran_log <- as.data.frame(cran_log[!is.na(cran_log$package), ])
 
   if (!is.null(packages)) {
-    cran_log <- cran_log[cran_log$package %in% packages, ]
+    cran_log <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
   }
 
   if (triplet.filter) {
-    cran_log <- tripletFilter(cran_log, small.filter = FALSE)
+    cran_log <- lapply(cran_log, function(x) {
+      filtered.data <- tripletFilter(x, small.filter = FALSE)
+      do.call(rbind, filtered.data)
+    })
   }
 
   if (small.filter) {
-    cran_log <- smallFilter(cran_log, filter = FALSE)
+    cran_log <- lapply(cran_log, function(x) {
+      smallFilter(x, filter = small.filter)
+    })
   }
-
-  if (!is.null(packages)) {
-    cran_log <- cran_log[order(cran_log$package, cran_log$time), ]
-  } else {
-    cran_log <- cran_log[order(cran_log$time), ]
-  }
-
-  # row.names(cran_log) <- NULL
+  
+  cran_log <- lapply(cran_log, function(x) x[order(x$time), ])
+  names(cran_log) <- packages
   cran_log
 }
