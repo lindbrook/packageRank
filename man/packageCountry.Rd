@@ -5,7 +5,8 @@
 \title{Package download counts by country.}
 \usage{
 packageCountry(packages = NULL, date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE)
+  memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
+  triplet.filter = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -17,6 +18,10 @@ packageCountry(packages = NULL, date = Sys.Date() - 1,
 \item{sort}{Logical. Sort by download count.}
 
 \item{na.rm}{Logical. Remove NAs.}
+
+\item{small.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

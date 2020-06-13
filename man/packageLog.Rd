@@ -4,15 +4,17 @@
 \alias{packageLog}
 \title{Get Package Download Logs.}
 \usage{
-packageLog(packages = NULL, date = Sys.Date() - 1, size.filter = FALSE,
-  memoization = TRUE)
+packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
+  triplet.filter = TRUE, memoization = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date.}
 
-\item{size.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value (bytes) sets the minimum download size to consider; a negative value sets the maximum download size to consider.}
+\item{small.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
