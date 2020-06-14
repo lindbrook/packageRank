@@ -4,8 +4,9 @@
 \alias{countryPackage}
 \title{Tabulate a country's package downloads.}
 \usage{
-countryPackage(country = "US", date = Sys.Date() - 1, memoization = TRUE,
-  sort = TRUE)
+countryPackage(country = "CA", date = Sys.Date() - 1, memoization = TRUE,
+  sort = TRUE, small.filter = TRUE, triplet.filter = TRUE,
+  multi.core = TRUE, output = "top.ten")
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -15,6 +16,14 @@ countryPackage(country = "US", date = Sys.Date() - 1, memoization = TRUE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{sort}{Logical. Sort by download count.}
+
+\item{small.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{output}{Character. "top.ten" or "all".}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
