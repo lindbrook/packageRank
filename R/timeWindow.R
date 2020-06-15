@@ -23,7 +23,7 @@ timeWindow <- function(t, window = 1) {
       hours.above <- rep(hms[1], length(mins.above))
       hours.above <- hours.above[mins.above >= 60] + 1
       mins.above <- mins.above - 60
-      if (any(hours.above > 23)) stop("day change.")
+      if (any(hours.above > 23)) warning("day change.")
     } else {
       hours.above <- hms[1]
     }
