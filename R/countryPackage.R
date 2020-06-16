@@ -8,7 +8,7 @@
 #' @param small.filter Logical.
 #' @param triplet.filter Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param output Character. "top.ten" or "all".
+#' @param output Character. "top.ten", "bottom.ten", or "all".
 #' @export
 
 countryPackage <- function(country = "CA", date = Sys.Date() - 1,
@@ -32,7 +32,7 @@ countryPackage <- function(country = "CA", date = Sys.Date() - 1,
       x <- cran_log[cran_log$package == p, ]
       do.call(rbind, tripletFilter(x, small.filter = FALSE))
     }, mc.cores = cores)
-
+    
     cran_log <- do.call(rbind, tri.filtered)
   }
 
@@ -50,9 +50,11 @@ countryPackage <- function(country = "CA", date = Sys.Date() - 1,
 
   if (output == "top.ten") {
     utils::head(out, 10)
+  } else if (output == "bottom.ten") {
+    utils::tail(out, 10)
   } else if (output == "all") {
     out
   } else {
-    stop('output must be "top.ten" or "all".')
+    stop('output must be "top.ten", "bottom.ten", or "all".')
   }
 }

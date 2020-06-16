@@ -1,7 +1,7 @@
 packageRank 0.3.5.9018
 ==================
 
-- add size filters and multi.core to countryPackage() (in progress).
+- add size filters, "top.ten", and multi.core to countryPackage().
 
 
 packageRank 0.3.5.9017
