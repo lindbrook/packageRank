@@ -4,8 +4,8 @@
 \alias{countryPackage}
 \title{Tabulate a country's package downloads.}
 \usage{
-countryPackage(country = "CA", date = Sys.Date() - 1, memoization = TRUE,
-  sort = TRUE, small.filter = TRUE, triplet.filter = TRUE,
+countryPackage(country = "US", date = Sys.Date() - 1, memoization = TRUE,
+  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
   multi.core = TRUE, output = "top.ten")
 }
 \arguments{
@@ -27,4 +27,7 @@ countryPackage(country = "CA", date = Sys.Date() - 1, memoization = TRUE,
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+}
+\note{
+"US" outlier 6-7 min with size filters.
 }

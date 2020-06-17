@@ -9,10 +9,11 @@
 #' @param triplet.filter Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param output Character. "top.ten", "bottom.ten", or "all".
+#' @note "US" outlier 6-7 min with size filters.
 #' @export
 
-countryPackage <- function(country = "CA", date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, small.filter = TRUE, triplet.filter = TRUE,
+countryPackage <- function(country = "US", date = Sys.Date() - 1,
+  memoization = TRUE, sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
   multi.core = TRUE, output = "top.ten") {
 
   cores <- multiCore(multi.core)
