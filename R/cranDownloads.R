@@ -165,7 +165,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     rPlot(dat, graphics, days.observed, log.count, legend.loc, points, smooth,
-      r.version, r_v)
+      r.version, r_v, f)
   } else {
     if (multi.plot) {
       multiPlot(dat, x, graphics, days.observed, log.count, legend.loc)
@@ -196,7 +196,7 @@ summary.cranDownloads <- function(object, ...) {
 }
 
 rPlot <- function(dat, graphics, days.observed, log.count, legend.loc, points,
-  smooth, r.version, r_v) {
+  smooth, r.version, r_v, f) {
 
   if (graphics == "base") {
     daily <- lapply(days.observed, function(day) {
@@ -245,10 +245,13 @@ rPlot <- function(dat, graphics, days.observed, log.count, legend.loc, points,
     }
 
     if (smooth) {
-      lines(stats::lowess(unique(dat$date), daily$win))
-      lines(stats::lowess(unique(dat$date), daily$osx), col = "red")
-      lines(stats::lowess(unique(dat$date), daily$src), col = "blue")
-      lines(stats::lowess(unique(dat$date), daily$`NA`), col = "green")
+      lines(stats::lowess(unique(dat$date), daily$win, f = f), lty = "dotted")
+      lines(stats::lowess(unique(dat$date), daily$osx, f = f), lty = "dotted",
+        col = "red")
+      lines(stats::lowess(unique(dat$date), daily$src, f = f), lty = "dotted",
+        col = "blue")
+      lines(stats::lowess(unique(dat$date), daily$`NA`, f = f), lty = "dotted",
+        col = "green")
     }
 
     if (r.version) {
