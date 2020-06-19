@@ -110,6 +110,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param multi.plot Logical.
 #' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
+#' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
@@ -126,7 +127,7 @@ plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
   log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
   population.seed = as.numeric(Sys.Date()), multi.plot = FALSE, same.xy = TRUE,
-  legend.loc = "topleft", dev.mode = FALSE, ...) {
+  legend.loc = "topleft", r.total = FALSE, dev.mode = FALSE, ...) {
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
