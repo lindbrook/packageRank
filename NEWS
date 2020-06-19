@@ -1,3 +1,11 @@
+packageRank 0.3.5.9019
+==================
+
+- pass f to rPlot().
+- add rTotPlot()
+- amend amend plot.cranDownloads() and associated plot functions.
+
+
 packageRank 0.3.5.9018
 ==================
 
