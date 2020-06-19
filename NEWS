@@ -1,7 +1,9 @@
 packageRank 0.3.5.9019
 ==================
 
-- add cranDownloadsB() prototype.
+- pass f to rPlot().
+- add rTotPlot()
+- amend plot.cranDownloads() and associated plot functions.
 
 
 packageRank 0.3.5.9018
