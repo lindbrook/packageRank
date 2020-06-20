@@ -17,7 +17,15 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
   if (check.package) packages <- checkPackage(packages, dev.mode)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- packageLog(packages = packages, date = ymd,
+
+  cran_log <- packageLog(packages = packages, date = ymd, small.filter = FALSE,
+    triplet.filter = FALSE)
+  ct <- vapply(cran_log, nrow, integer(1L))
+
+  f.cran_log <- packageLog(packages = packages, date = ymd,
     small.filter = small.filter, triplet.filter = triplet.filter)
-  vapply(cran_log, nrow, integer(1L))
+  f.ct <- vapply(f.cran_log, nrow, integer(1L))
+
+  data.frame(date = date, package = packages, downloads = ct,
+    filtered.downloads = f.ct, row.names = NULL)
 }
