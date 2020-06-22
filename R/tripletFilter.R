@@ -76,7 +76,7 @@ tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
         before.after <- packageRank::timeWindow(t = id.components[1],
           window = time.window)
         candidates <- paste0(before.after, "-", machine.id)
-        
+
         neighbor.test <- vapply(candidates, function(x) {
           x %in% v.data$id
         }, logical(1L))
@@ -86,18 +86,17 @@ tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
             stringsAsFactors = FALSE)
         }
       })
-      time.fix <- do.call(rbind, time.fix)
     }
 
     if (!is.null(time.fix)) {
-      sel <- vapply(seq_len(nrow(time.fix)), function(i) {
-        sum(v.data$id %in% time.fix[i, ]) == 3
+      sel <- vapply(time.fix, function(x) {
+        sum(v.data$id %in% x$fix, v.data$id %in% x$err) == 3
       }, logical(1L))
 
-      time.fix <- time.fix[sel, ]
+      time.fix <- time.fix[sel]
 
-      delete <- lapply(seq_len(nrow(time.fix)), function(i) {
-        tmp <- v.data[v.data$id %in% time.fix[i, ], ]
+      delete <- lapply(time.fix, function(x) {
+        tmp <- v.data[v.data$id %in% unique(unlist(x)), ]
         sz <- round(log10(tmp$size))
         three.different <- length(unique(sz)) == 3
         two.different <- sum(sz == max(sz)) == 2
