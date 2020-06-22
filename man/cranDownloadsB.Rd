@@ -24,5 +24,5 @@ cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 }
 \description{
-Filters out small and intermediate downloads.
+Small and triplet filter.
 }
