@@ -26,7 +26,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  cran_log <- as.data.frame(cran_log[!is.na(cran_log$package), ])
+  cran_log <- cran_log[!is.na(cran_log$package), ]
 
   if (!is.null(packages)) {
     cran_log <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
