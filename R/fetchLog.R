@@ -1,6 +1,6 @@
 #' fread() to data.frame.
 #'
-#' @param x Character. URL
+#' @param x Character. URL.
 #' @import data.table memoise
 #' @importFrom R.utils decompressFile
 #' @export

@@ -7,7 +7,7 @@
 fetchLog(x)
 }
 \arguments{
-\item{x}{Character. URL}
+\item{x}{Character. URL.}
 }
 \description{
 fread() to data.frame.
