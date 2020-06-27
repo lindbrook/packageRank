@@ -12,31 +12,21 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE) {
 
-  if (check.package) {
-    packages <- checkPackage(package, dev.mode)
-  }
-
-  if (length(date) > 1) {
-    out <- lapply(date, function(x) {
-      package_distribution(package, x, size.filter, memoization, check.package)
-    })
-  } else if (length(date) == 1) {
-    dat <- package_distribution(package, date, size.filter, memoization,
-      check.package)
-    out <- list(dat)
-  }
-
-  class(out) <- "packageDistribution"
-  out
-}
-
-package_distribution <- function(package, date, size.filter, memoization,
-  check.package) {
+  if (check.package) packages <- checkPackage(package, dev.mode)
 
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
+
+  out <- package_distribution(package, ymd, size.filter, memoization,
+    check.package, cran_log)
+  class(out) <- "packageDistribution"
+  out
+}
+
+package_distribution <- function(package, ymd, size.filter, memoization,
+  check.package, cran_log) {
 
   if (size.filter) {
     cran_log <- smallFilter(cran_log)
@@ -105,5 +95,5 @@ plot_package_distribution <- function(dat, xlim, ylim) {
 #' @export
 
 print.packageDistribution <- function(x, ...) {
-  invisible(lapply(x, function(dat) print(dat[c("package", "date")])))
+  print(x[c("package", "date")])
 }
