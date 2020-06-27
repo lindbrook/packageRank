@@ -47,15 +47,45 @@ package_distribution <- function(package, ymd, size.filter, memoization,
 #' @export
 
 plot.packageDistribution <- function(x, ...) {
-  xlim <- range(lapply(x, function(z) z$freq.dist$count))
-  ylim <- range(lapply(x, function(z) z$freq.dist$frequency))
-  invisible(lapply(x, function(dat) {
-    plot_package_distribution(dat, xlim, ylim)
-  }))
+  if (length(x$package) <= 1) {
+    plot_package_distribution(x)
+  } else if (length(x$package > 1)) {
+    pkg.data <- rep(x$package, each = nrow(x$freq.dist))
+    dat2 <- data.frame(x$freq.dist, package = pkg.data,
+      stringsAsFactors = FALSE)
+    names(dat2)[1:2] <- c("x", "y")
+
+    pkg.ct <- data.frame(package = names(x$crosstab), x = c(x$crosstab),
+      stringsAsFactors = FALSE, row.names = NULL)
+
+    crosstab <- as.data.frame(x$crosstab, stringsAsFactors = FALSE)
+    names(crosstab) <- c("package", "count")
+
+    pkg.ct <- crosstab[crosstab$package %in% x$package, ]
+
+    p <- ggplot(data = dat2, aes_string("x", "y")) +
+      geom_point(size = 0.5) +
+      scale_x_log10() +
+      facet_wrap(~ package, ncol = 2) +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+
+    for (i in seq_along(x$package)) {
+      sel <- pkg.ct$package == x$package[i]
+      p <- p + geom_vline(data = pkg.ct[sel, ], aes_string(xintercept = "count"),
+        colour = "red", size = 0.25)
+    }
+    
+    p
+  }
 }
 
-plot_package_distribution <- function(dat, xlim, ylim) {
+plot_package_distribution <- function(dat) {
   freq.dist <- dat$freq.dist
+  xlim <- range(dat$freq.dist$count)
+  ylim <- range(dat$freq.dist$frequency)
   crosstab <- dat$crosstab
 
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
