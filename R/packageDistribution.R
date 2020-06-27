@@ -74,10 +74,10 @@ plot.packageDistribution <- function(x, ...) {
 
     for (i in seq_along(x$package)) {
       sel <- pkg.ct$package == x$package[i]
-      p <- p + geom_vline(data = pkg.ct[sel, ], aes_string(xintercept = "count"),
-        colour = "red", size = 0.25)
+      p <- p + geom_vline(data = pkg.ct[sel, ],
+        aes_string(xintercept = "count"), colour = "red", size = 0.25)
     }
-    
+
     p
   }
 }
