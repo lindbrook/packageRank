@@ -28,9 +28,7 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
 package_distribution <- function(package, ymd, size.filter, memoization,
   check.package, cran_log) {
 
-  if (size.filter) {
-    cran_log <- smallFilter(cran_log)
-  }
+  if (size.filter) cran_log <- smallFilter(cran_log)
 
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(crosstab))
@@ -50,10 +48,10 @@ plot.packageDistribution <- function(x, ...) {
   if (length(x$package) <= 1) {
     plot_package_distribution(x)
   } else if (length(x$package > 1)) {
-    pkg.data <- rep(x$package, each = nrow(x$freq.dist))
-    dat2 <- data.frame(x$freq.dist, package = pkg.data,
-      stringsAsFactors = FALSE)
-    names(dat2)[1:2] <- c("x", "y")
+    # ggplot doesn't like integers
+    dat2 <- data.frame(x = as.numeric(x$freq.dist$count),
+                       y = as.numeric(x$freq.dist$frequency),
+                       package = rep(x$package, each = nrow(x$freq.dist)))
 
     pkg.ct <- data.frame(package = names(x$crosstab), x = c(x$crosstab),
       stringsAsFactors = FALSE, row.names = NULL)
@@ -64,18 +62,20 @@ plot.packageDistribution <- function(x, ...) {
     pkg.ct <- crosstab[crosstab$package %in% x$package, ]
 
     p <- ggplot(data = dat2, aes_string("x", "y")) +
-      geom_point(size = 0.5) +
+      geom_segment(aes_string(x = "x", xend = "x", y = 0, yend = "y"),
+        size = 1/3) +
       scale_x_log10() +
       facet_wrap(~ package, ncol = 2) +
+      xlab("Downloads") +
+      ylab("Frequency") +
       theme_bw() +
       theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5))
+            panel.grid.minor = element_blank())
 
     for (i in seq_along(x$package)) {
       sel <- pkg.ct$package == x$package[i]
       p <- p + geom_vline(data = pkg.ct[sel, ],
-        aes_string(xintercept = "count"), colour = "red", size = 0.25)
+        aes_string(xintercept = "count"), colour = "red", size = 0.5)
     }
 
     p
