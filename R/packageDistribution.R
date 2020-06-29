@@ -11,14 +11,12 @@
 packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE) {
-
+    
   if (check.package) packages <- checkPackage(package, dev.mode)
-
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
-
   out <- package_distribution(package, ymd, size.filter, memoization,
     check.package, cran_log)
   class(out) <- "packageDistribution"
@@ -29,12 +27,10 @@ package_distribution <- function(package, ymd, size.filter, memoization,
   check.package, cran_log) {
 
   if (size.filter) cran_log <- smallFilter(cran_log)
-
   crosstab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(crosstab))
   freq <- vapply(cts, function(x) sum(crosstab == x), integer(1L))
   freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-
   out <- list(package = package, freq.dist = freq.dist, crosstab = crosstab,
     date = ymd)
 }
