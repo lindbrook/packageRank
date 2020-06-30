@@ -11,7 +11,7 @@
 packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE) {
-    
+
   if (check.package) packages <- checkPackage(package, dev.mode)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
@@ -56,10 +56,19 @@ plot.packageDistribution <- function(x, ...) {
     names(crosstab) <- c("package", "count")
 
     pkg.ct <- crosstab[crosstab$package %in% x$package, ]
+    p.data <- pkg.ct[pkg.ct$package %in% x$package, ]
+    l.data <- data.frame(package = p.data$package, x = p.data$count,
+      y = max(dat2$y))
 
-    p <- ggplot(data = dat2, aes_string("x", "y")) +
+    ggplot(data = dat2, aes_string("x", "y")) +
       geom_segment(aes_string(x = "x", xend = "x", y = 0, yend = "y"),
-        size = 1/3) +
+                   size = 1/3) +
+      geom_vline(data = p.data, aes_string(xintercept = "count"),
+                 colour = grDevices::adjustcolor("red", alpha.f = 2/3),
+                 size = 0.5) +
+      geom_label(data = l.data, aes_string("x", "y"),
+                 fill = grDevices::adjustcolor("red", alpha.f = 2/3),
+                 colour = "white", size = 2.75, label = pkg.ct$count) +
       scale_x_log10() +
       facet_wrap(~ package, ncol = 2) +
       xlab("Downloads") +
@@ -67,14 +76,6 @@ plot.packageDistribution <- function(x, ...) {
       theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank())
-
-    for (i in seq_along(x$package)) {
-      sel <- pkg.ct$package == x$package[i]
-      p <- p + geom_vline(data = pkg.ct[sel, ],
-        aes_string(xintercept = "count"), colour = "red", size = 0.5)
-    }
-
-    p
   }
 }
 
