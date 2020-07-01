@@ -258,6 +258,8 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
     ylabel.nudge <- 0.5
   }
 
+  alpha.col <- grDevices::adjustcolor("red", alpha.f = 2/3)
+
   p <- ggplot(data = download.data, aes_string("x", "y")) +
        geom_line() +
        geom_vline(xintercept = iqr, colour = "gray", linetype = "dotted") +
@@ -285,20 +287,20 @@ ggPlot <- function(x, log_count, crosstab, iqr, package.data, y.max, date) {
 
   for (i in seq_along(packages)) {
     sel <- point.data$package == packages[i] & point.data$id == id[i]
-    p <- p + geom_vline(data = point.data[sel, ],
-                        aes_string(xintercept = "x"), colour = "red") +
-             geom_hline(data = point.data[sel, ],
-                        aes_string(yintercept = "y"), colour = "red")
+    p <- p + geom_vline(data = point.data[sel, ], aes_string(xintercept = "x"),
+                        colour = alpha.col) +
+             geom_hline(data = point.data[sel, ], aes_string(yintercept = "y"),
+                        colour = alpha.col)
   }
 
   p <- p + geom_point(data = point.data, aes_string("x", "y"), shape = 1,
                       colour = "red", size = 2) +
-           geom_label(data = point.data, aes_string("x", "y"), fill = "red",
-                      colour = "white", size = label.size, label = ylabel,
-                      nudge_x = 2000) +
-           geom_label(data = point.data, aes_string("x", "y"), fill = "red",
-                      colour = "white", size = label.size, label = xlabel,
-                      nudge_y = ylabel.nudge)
+           geom_label(data = point.data, aes_string("x", "y"),
+                      fill = alpha.col, colour = "white", size = label.size,
+                      label = ylabel, nudge_x = 2000) +
+           geom_label(data = point.data, aes_string("x", "y"),
+                      fill = alpha.col, colour = "white", size = label.size,
+                      label = xlabel, nudge_y = ylabel.nudge)
 
   if (log_count) p + scale_y_log10() else p
 }
