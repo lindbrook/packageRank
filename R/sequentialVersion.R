@@ -12,7 +12,6 @@ sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
 
   dat <- packageLog(packages = package, date = date)
   ver.tab <- table(dat$ver)
-  dat$ver[dat$ver != names(which.max(ver.tab))]
   rle.data <- rle(dat$ver[dat$ver != names(which.max(ver.tab))])
   rle.data <- rle(dat$ver)
   out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
@@ -29,7 +28,7 @@ sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
       }
     } else {
       if (candidates[i, "values"] == TRUE) {
-        from <-  candidates[i, "id"] - candidates[i, "lengths"] + 1
+        from <- candidates[i, "id"] - candidates[i, "lengths"] + 1
         seq(from = from, to = candidates[i, "id"], by = 1)
       }
     }
