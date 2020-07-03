@@ -2,6 +2,7 @@ packageRank 0.3.5.9023
 ==================
 
 - use alpha transparency in plot.packageRank() labels.
+- use dontrun for examples (R 4.0.0).
 
 
 packageRank 0.3.5.9022

@@ -8,7 +8,7 @@
 #' @import data.table
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' bioconductorRank(packages = "cicero", date = "2019-09")
 #' }
 

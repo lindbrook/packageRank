@@ -28,7 +28,7 @@ An R data frame.
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 }
 \examples{
-\donttest{
+\dontrun{
 packageRank(packages = "HistData", date = "2020-01-01")
 packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 }

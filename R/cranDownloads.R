@@ -13,7 +13,7 @@
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' cranDownloads(packages = "HistData")
 #' cranDownloads(packages = "HistData", when = "last-week")
 #' cranDownloads(packages = "HistData", when = "last-month")
@@ -116,7 +116,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @return A base R or ggplot2 plot.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 #' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 #' plot(cranDownloads(packages = "R", from = "2020-01-01", to = "2020-01-01"))

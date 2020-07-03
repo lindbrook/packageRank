@@ -28,7 +28,7 @@ If this is given, then \code{from} and \code{to} are ignored.}
 Enhanced implementation of cranlogs::cran_downloads().
 }
 \examples{
-\donttest{
+\dontrun{
 cranDownloads(packages = "HistData")
 cranDownloads(packages = "HistData", when = "last-week")
 cranDownloads(packages = "HistData", when = "last-month")

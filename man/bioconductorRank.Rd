@@ -20,7 +20,7 @@ An R data frame.
 From bioconductor
 }
 \examples{
-\donttest{
+\dontrun{
 bioconductorRank(packages = "cicero", date = "2019-09")
 }
 }
