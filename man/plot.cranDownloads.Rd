@@ -53,7 +53,7 @@ A base R or ggplot2 plot.
 Plot method for cranDownloads().
 }
 \examples{
-\donttest{
+\dontrun{
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
 plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
 plot(cranDownloads(packages = "R", from = "2020-01-01", to = "2020-01-01"))

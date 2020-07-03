@@ -22,7 +22,7 @@ bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
 Annual/monthly package downloads from Bioconductor.
 }
 \examples{
-\donttest{
+\dontrun{
 # all packages
 bioconductorDownloads()
 

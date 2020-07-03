@@ -31,7 +31,7 @@
 Plot method for bioconductorDownloads().
 }
 \examples{
-\donttest{
+\dontrun{
 plot(bioconductorDownloads())
 plot(bioconductorDownloads(packages = "graph"))
 plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))

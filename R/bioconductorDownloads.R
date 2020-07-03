@@ -7,7 +7,7 @@
 #' @param observation "year" or "month".
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # all packages
 #' bioconductorDownloads()
 #'
@@ -85,7 +85,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(bioconductorDownloads())
 #' plot(bioconductorDownloads(packages = "graph"))
 #' plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
