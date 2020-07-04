@@ -2,6 +2,7 @@ packageRank 0.3.5.9024
 ==================
 
 - add sequentialVersion() prototype.
+- set sequentialVersion(time.frame = 15 mins.).
 
 
 packageRank 0.3.5.9023

@@ -5,14 +5,19 @@
 \title{Download of sequential versions}
 \usage{
 sequentialVersion(package = "cholera", date = Sys.Date() - 1,
-  time.frame = 60, one.country = FALSE, one.ip = FALSE)
+  small.filter = TRUE, triplet.filter = TRUE, time.frame = 15,
+  one.country = FALSE, one.ip = FALSE)
 }
 \arguments{
 \item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd".}
 
-\item{time.frame}{Numeric. seconds.}
+\item{small.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
+
+\item{time.frame}{Numeric. minutes.}
 
 \item{one.country}{Logical.}
 
@@ -20,4 +25,10 @@ sequentialVersion(package = "cholera", date = Sys.Date() - 1,
 }
 \description{
 Download of sequential versions
+}
+\examples{
+\dontrun{
+packageLog(packages = "cholera", date = "2020-06-27")
+sequentialVersion(package = "cholera", date = "2020-06-27")
+}
 }

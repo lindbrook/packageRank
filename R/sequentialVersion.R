@@ -2,17 +2,25 @@
 #'
 #' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
-#' @param time.frame Numeric. seconds.
+#' @param small.filter Logical.
+#' @param triplet.filter Logical.
+#' @param time.frame Numeric. minutes.
 #' @param one.country Logical.
 #' @param one.ip Logical.
 #' @export
+#' @examples
+#' \dontrun{
+#' packageLog(packages = "cholera", date = "2020-06-27")
+#' sequentialVersion(package = "cholera", date = "2020-06-27")
+#' }
 
 sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
-  time.frame = 60, one.country = FALSE, one.ip = FALSE) {
+  small.filter = TRUE, triplet.filter = TRUE, time.frame = 15,
+  one.country = FALSE, one.ip = FALSE) {
 
-  dat <- packageLog(packages = package, date = date)
-  ver.tab <- table(dat$ver)
-  rle.data <- rle(dat$ver[dat$ver != names(which.max(ver.tab))])
+  dat <- packageLog(packages = package, date = date,
+    small.filter = small.filter, triplet.filter = triplet.filter)[[1]]
+  ver.tab <- table(dat$version)
   rle.data <- rle(dat$ver)
   out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
 
@@ -36,21 +44,21 @@ sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
 
   c.id <- c.id[vapply(c.id, function(x) !is.null(x), logical(1L))]
 
-  sel <- vapply(c.id, function(id) {
+  c.sel <- vapply(c.id, function(id) {
     if (length(id) > 1) {
       vers <- sort(unique(out[id, "values"]))
       identical(sort(out[id, "values"]), vers)
     } else FALSE
   }, logical(1L))
 
-  out <- lapply(c.id[sel], function(x) {
-    seq.data <- dat[x, ]
+  out <- lapply(c.id[c.sel], function(x) {
+    seq.data <- dat[cumsum(out$lengths)[x], ]
     seq.data$stamp <- strptime(paste(seq.data$date, seq.data$time),
       "%Y-%m-%d %T", tz = "GMT")
 
     idx <- as.data.frame(t(utils::combn(length(seq.data$stamp), 2)))
     delta <- difftime(seq.data$stamp[idx$V2], seq.data$stamp[idx$V1],
-      units = "secs")
+      units = "mins")
 
     sel <- unique(unlist(idx[delta < time.frame, ]))
 
