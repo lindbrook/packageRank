@@ -20,7 +20,7 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a `plot()` method and a more user-friendly interface. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other [CRAN](https://CRAN.R-project.org/) packages.
 
-NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/), which record traffic to what was previously called their [CRAN mirror](http://cran.rstudio.com) and which is called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for the previous day are generally posted the following day at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
+NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for the previous day are generally posted the following day at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
 rely on ‘cranlogs’ are generally available soon thereafter.
 
 ### I - getting started
@@ -278,8 +278,8 @@ Do Wednesday and Saturday reflect surges of interest in the package or surges of
 One way to answer these questions is to locate your package in the frequency distribution of download counts. Below are the distributions for Wednesday and Saturday with the location of ['cholera'](https://CRAN.R-project.org/package=cholera) highlighted:
 
 ```{r skew_wed, fig.align = "center", echo = FALSE}
+x <- lapply(c("2020-03-04", "2020-03-07"), function(date) packageDistribution("cholera", date = date))
 
-x <- packageDistribution("cholera", c("2020-03-04", "2020-03-07"))
 freq.dist1 <- x[[1]]$freq.dist
 freq.dist2 <- x[[2]]$freq.dist
 xlim <- range(freq.dist1$count, freq.dist2$count)
@@ -337,8 +337,7 @@ plot_package_distribution <- function(dat, xlim, ylim) {
   } else title(paste("Distribution of Package Download Counts:", dat$date))
 }
 
-distn.data <- packageDistribution(package = "cholera", date = c("2020-03-04",
-  "2020-03-07"))
+distn.data <- lapply(c("2020-03-04", "2020-03-07"), function(date) packageDistribution(package = "cholera", date = date))
 
 xlim <- range(lapply(distn.data, function(x) x$freq.dist$count))
 ylim <- range(lapply(distn.data, function(x) x$freq.dist$frequency))
