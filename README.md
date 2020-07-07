@@ -18,9 +18,9 @@ see how your package is doing compared to all other
 NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
 requires an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package
-and on [RStudio’s logs](http://cran-logs.rstudio.com/), which record
-traffic to what was previously called their [CRAN
-mirror](http://cran.rstudio.com) and which is called the [“0-Cloud”
+and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter
+record traffic to what was previously called RStudio’s [CRAN
+mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud”
 mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for
 the previous day are generally posted the following day at 18:00 (GMT+1)
 or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that

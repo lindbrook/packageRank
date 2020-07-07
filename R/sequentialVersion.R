@@ -22,9 +22,9 @@ sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
     small.filter = small.filter, triplet.filter = triplet.filter)[[1]]
   ver.tab <- table(dat$version)
   rle.data <- rle(dat$ver)
-  out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
+  rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
 
-  candidates <- rle(out$lengths == 1)
+  candidates <- rle(rle.out$lengths == 1)
   candidates <- data.frame(lengths = candidates$lengths,
     values = candidates$values)
   candidates$id <- cumsum(candidates$lengths)
@@ -46,13 +46,13 @@ sequentialVersion <- function(package = "cholera", date = Sys.Date() - 1,
 
   c.sel <- vapply(c.id, function(id) {
     if (length(id) > 1) {
-      vers <- sort(unique(out[id, "values"]))
-      identical(sort(out[id, "values"]), vers)
+      vers <- sort(unique(rle.out[id, "values"]))
+      identical(sort(rle.out[id, "values"]), vers)
     } else FALSE
   }, logical(1L))
 
   out <- lapply(c.id[c.sel], function(x) {
-    seq.data <- dat[cumsum(out$lengths)[x], ]
+    seq.data <- dat[cumsum(rle.out$lengths)[x], ]
     seq.data$stamp <- strptime(paste(seq.data$date, seq.data$time),
       "%Y-%m-%d %T", tz = "GMT")
 
