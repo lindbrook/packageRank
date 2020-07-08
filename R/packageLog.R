@@ -20,7 +20,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
       if (check.package) {
         packages <- checkPackage(packages, dev.mode)
       }
-    } # stop()
+    }
   }
 
   date <- check10CharDate(date)
@@ -48,5 +48,9 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
     names(cran_log) <- packages
   }
 
-  cran_log
+  if (length(packages) == 1) {
+    cran_log[[1]]
+  } else {
+    cran_log
+  }
 }
