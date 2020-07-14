@@ -1,7 +1,14 @@
+packageRank 0.3.5.9027
+==================
+
+- add countryDistribution() prototype.
+
+
 packageRank 0.3.5.9026
 ==================
 
 - add ipPackage() prototype.
+
 
 packageRank 0.3.5.9025
 ==================
