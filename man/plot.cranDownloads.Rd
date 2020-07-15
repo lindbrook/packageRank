@@ -4,15 +4,17 @@
 \alias{plot.cranDownloads}
 \title{Plot method for cranDownloads().}
 \usage{
-\method{plot}{cranDownloads}(x, graphics = "auto", points = "auto",
-  log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  population.seed = as.numeric(Sys.Date()), multi.plot = FALSE,
-  same.xy = TRUE, legend.loc = "topleft", r.total = FALSE,
-  dev.mode = FALSE, ...)
+\method{plot}{cranDownloads}(x, statistic = "count", graphics = "auto",
+  points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE,
+  f = 1/3, package.version = FALSE, r.version = FALSE,
+  population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
+  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
+  r.total = FALSE, dev.mode = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
+
+\item{statistic}{Character. "count" or "cumulative".}
 
 \item{graphics}{Character. "auto", "base" or "ggplot2".}
 

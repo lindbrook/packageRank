@@ -115,6 +115,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' Plot method for cranDownloads().
 #'
 #' @param x object.
+#' @param statistic Character. "count" or "cumulative".
 #' @param graphics Character. "auto", "base" or "ggplot2".
 #' @param points Character of Logical. Plot points. "auto", TRUE, FALSE.
 #' @param log.count Logical. Logarithm of package downloads.
@@ -141,8 +142,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' plot(cranDownloads(packages = "R", from = 2020))
 #' }
 
-plot.cranDownloads <- function(x, graphics = "auto", points = "auto",
-  log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
+plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
+  points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   package.version = FALSE, r.version = FALSE, population.plot = FALSE,
   population.seed = as.numeric(Sys.Date()), multi.plot = FALSE, same.xy = TRUE,
   legend.loc = "topleft", r.total = FALSE, dev.mode = FALSE, ...) {
