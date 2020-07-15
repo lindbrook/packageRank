@@ -81,10 +81,28 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if ("args" %in% ls()) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
+
+    cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
+      cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
+    }))
+
+    cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
+      cranlogs.data$package)
+    names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = args$when, from = args$from, to = args$to)
   } else {
     cranlogs.data <- do.call(rbind, to.data)
+
+    cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
+      cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
+    }))
+
+    cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
+      cranlogs.data$package)
+    names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+
     id <- which.min(unlist(first.published))
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = NULL, from = first.published[[id]], to = end.date)
