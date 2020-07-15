@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDownloadsB.R
 \name{cranDownloadsB}
 \alias{cranDownloadsB}
-\title{Filtered package downloads from the RStudio CRAN mirror. (protoype)}
+\title{Filtered package downloads from the RStudio CRAN mirror (protoype).}
 \usage{
 cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
   check.package = TRUE, small.filter = TRUE, triplet.filter = TRUE,
