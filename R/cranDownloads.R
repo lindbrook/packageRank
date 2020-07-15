@@ -188,8 +188,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       multiPlot(dat, x, graphics, days.observed, log.count, legend.loc, points,
         smooth, se)
     } else {
-      singlePlot(dat, x, graphics, days.observed, points, smooth, se, f,
-        log.count, package.version, dev.mode, r.version, same.xy)
+      singlePlot(x, statistic, graphics, days.observed, points, smooth,
+        se, f, log.count, package.version, dev.mode, r.version, same.xy)
     }
   }
 }
@@ -525,47 +525,63 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
-  log.count, package.version, dev.mode, r.version, same.xy) {
+singlePlot <- function(x, statistic, graphics, days.observed, points,
+  smooth, se, f, log.count, package.version, dev.mode, r.version, same.xy) {
+
+  dat <- x$cranlogs.data
+
+  if (statistic == "count") {
+    y.var <- dat$count
+    y.nm.case <- "Count"
+    y.nm <- tolower(y.nm.case)
+  } else if (statistic == "cumulative") {
+    y.var <- dat$cumulative
+    y.nm.case <- "Cumulative"
+    y.nm <- tolower(y.nm.case)
+  }
 
   if (graphics == "base") {
     if (is.null(x$packages)) {
-      cranDownloadsPlot(x, graphics, points, log.count, smooth, se, f,
-        r.version)
+      cranDownloadsPlot(x, graphics, points, log.count, smooth, se,
+        f, r.version)
 
     } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
         if (log.count) {
-          dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10(Count)", main = days.observed)
+          dotchart(log10(y.var), labels = dat$package,
+            xlab = paste0("log10(", y.nm.case, ")"), main = days.observed)
         } else {
-          dotchart(dat$count, labels = dat$package, xlab = "count",
+          dotchart(y.var, labels = dat$package, xlab = y.nm.case,
             main = days.observed)
         }
       } else if (length(days.observed) > 1) {
 
         if (same.xy) {
-          xlim <- range(x$cranlogs.data$date)
-          ylim <- range(x$cranlogs.data$count)
+          xlim <- range(dat$date)
+          ylim <- range(y.var)
           grDevices::devAskNewPage(ask = TRUE)
 
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
             if (log.count) {
               if (points) {
-                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), log = "y",
+                  xlim = xlim, ylim = ylim)
               } else {
-                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), log = "y",
+                  xlim = xlim, ylim = ylim)
               }
             } else {
               if (points) {
-                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "Count", xlim = xlim, ylim = ylim)
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), xlim = xlim,
+                  ylim = ylim)
               } else {
-                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "Count", xlim = xlim, ylim = ylim)
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), xlim = xlim,
+                  ylim = ylim)
               }
             }
 
@@ -588,7 +604,7 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
             }
 
             if (smooth) {
-              lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
+              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
                 col = "blue")
             }
             title(main = pkg)
@@ -601,19 +617,19 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
             pkg.dat <- dat[dat$package == pkg, ]
             if (log.count) {
               if (points) {
-                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "log10(Count)", log = "y")
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), log = "y")
               } else {
-                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "log10(Count)", log = "y")
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"), log = "y")
               }
             } else {
               if (points) {
-                plot(pkg.dat$date, pkg.dat$count, type = "o", xlab = "Date",
-                  ylab = "Count")
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"))
               } else {
-                plot(pkg.dat$date, pkg.dat$count, type = "l", xlab = "Date",
-                  ylab = "Count")
+                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                  ylab = paste0("log10(", y.nm.case, ")"))
               }
             }
 
@@ -636,7 +652,7 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
             }
 
             if (smooth) {
-              lines(stats::lowess(pkg.dat$date, pkg.dat$count, f = f),
+              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
                 col = "blue")
             }
             title(main = pkg)
@@ -648,19 +664,19 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
     } else if (length(x$packages) == 1) {
       if (log.count) {
         if (points) {
-          plot(dat$date, dat$count, type = "o", xlab = "Date",
-            ylab = "log10(Count)", log = "y")
+          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
+            ylab = paste0("log10(", y.nm.case, ")"), log = "y")
         } else {
-          plot(dat$date, dat$count, type = "l", xlab = "Date",
-            ylab = "log10(Count)", log = "y")
+          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
+            ylab = paste0("log10(", y.nm.case, ")"), log = "y")
         }
       } else {
         if (points) {
-          plot(dat$date, dat$count, type = "o", xlab = "Date",
-            ylab = "Count")
+          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
+            ylab = paste0("log10(", y.nm.case, ")"))
         } else {
-          plot(dat$date, dat$count, type = "l", xlab = "Date",
-            ylab = "Count")
+          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
+            ylab = paste0("log10(", y.nm.case, ")"))
         }
       }
 
@@ -695,17 +711,27 @@ singlePlot <- function(dat, x, graphics, days.observed, points, smooth, se, f,
     } else {
       if (length(days.observed) == 1) {
         p <- ggplot(data = dat) +
-             geom_point(aes_string("count", "package")) +
              theme_bw() +
              theme(panel.grid.major.x = element_blank(),
                    panel.grid.minor = element_blank()) +
              facet_wrap(~ date, ncol = 2)
 
+        if (statistic == "count") {
+          p <- p + geom_point(aes_string("count", "package"))
+        } else if (statistic == "cumulative") {
+          p <- p + geom_point(aes_string("cumulative", "package"))
+        }
+
         if (log.count) p <- p + scale_x_log10() + xlab("log10(count)")
 
       } else if (length(days.observed) > 1) {
-        p <- ggplot(data = dat, aes_string("date", "count")) +
-          geom_line(size = 0.5) +
+        if (statistic == "count") {
+          p <- ggplot(data = dat, aes_string("date", "count"))
+        } else if (statistic == "cumulative") {
+          p <- ggplot(data = dat, aes_string("date", "cumulative"))
+        }
+
+        p <- p + geom_line(size = 0.5) +
           facet_wrap(~ package, ncol = 2) +
           theme_bw() +
           theme(panel.grid.minor = element_blank())
