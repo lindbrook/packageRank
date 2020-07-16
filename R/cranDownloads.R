@@ -163,6 +163,10 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (is.logical(se) == FALSE) stop("se must be TRUE or FALSE.")
   if (is.numeric(f) == FALSE) stop("f must be numeric.")
 
+  if (statistic %in% c("count", "cumulative") == FALSE) {
+    stop('"statistic" must be "count" or "cumulative".')
+  }
+
   dat <- x$cranlogs.data
   days.observed <- unique(dat$date)
 
