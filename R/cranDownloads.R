@@ -548,10 +548,10 @@ singlePlot <- function(x, statistic, graphics, days.observed, points,
     } else if (length(x$packages) > 1) {
       if (length(days.observed) == 1) {
         if (log.count) {
-          dotchart(log10(y.var), labels = dat$package,
-            xlab = paste0("log10(", y.nm.case, ")"), main = days.observed)
+          dotchart(log10(dat$count), labels = dat$package,
+            xlab = "log10(Count)", main = days.observed)
         } else {
-          dotchart(y.var, labels = dat$package, xlab = y.nm.case,
+          dotchart(dat$count, labels = dat$package, xlab = "log10(Count)",
             main = days.observed)
         }
       } else if (length(days.observed) > 1) {
