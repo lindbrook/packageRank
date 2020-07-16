@@ -189,8 +189,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   } else {
     if (multi.plot) {
-      multiPlot(dat, x, graphics, days.observed, log.count, legend.loc, points,
-        smooth, se)
+      multiPlot(x, statistic, graphics, days.observed, log.count, legend.loc,
+        points, smooth, se)
     } else {
       singlePlot(x, statistic, graphics, days.observed, points, smooth,
         se, f, log.count, package.version, dev.mode, r.version, same.xy)
@@ -353,40 +353,45 @@ rTotPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth,
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-multiPlot <- function(dat, x, graphics, days.observed, log.count, legend.loc,
-  points, smooth, se) {
+multiPlot <- function(x, statistic, graphics, days.observed, log.count,
+  legend.loc, points, smooth, se) {
+
+  dat <- x$cranlogs.data
+
+  if (statistic == "count") {
+    ttl <- "Package Download Counts"
+  } else if (statistic == "cumulative") {
+    ttl <- "Cumulative Package Downloads"
+  }
+
   if (graphics == "base") {
     if (length(days.observed) == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
           xlab = "log10(Count)", main = days.observed)
       } else {
-        dotchart(dat$count, labels = dat$package, xlab = "count",
+        dotchart(dat$count, labels = dat$package, xlab = "Count",
           main = days.observed)
       }
     } else if (length(days.observed) > 1) {
       if (length(x$packages) > 8) {
-        stop('Currently, use <= 8 packages when graphics = "base".')
+        stop('Use <= 8 packages when graphics = "base".')
       } else {
         if (log.count) {
           if (points) {
-            plot(dat[dat$package == x$packages[1], c("date", "count")],
-              ylim = range(dat$count), type = "o", log = "y",
-              main = "Package Downloads")
+            plot(dat[dat$package == x$packages[1], c("date", statistic)],
+              ylim = range(dat[, statistic]), type = "o", log = "y", main = ttl)
           } else {
-            plot(dat[dat$package == x$packages[1], c("date", "count")],
-              ylim = range(dat$count), type = "l", log = "y",
-              main = "Package Downloads")
+            plot(dat[dat$package == x$packages[1], c("date", statistic)],
+              ylim = range(dat[, statistic]), type = "l", log = "y", main = ttl)
           }
         } else {
           if (points) {
-            plot(dat[dat$package == x$packages[1], c("date", "count")],
-              ylim = range(dat$count), type = "o",
-              main = "Package Downloads")
+            plot(dat[dat$package == x$packages[1], c("date", statistic)],
+              ylim = range(dat[, statistic]), type = "o", main = ttl)
           } else {
-            plot(dat[dat$package == x$packages[1], c("date", "count")],
-              ylim = range(dat$count), type = "l",
-              main = "Package Downloads")
+            plot(dat[dat$package == x$packages[1], c("date", statistic)],
+              ylim = range(dat[, statistic]), type = "l", main = ttl)
           }
         }
 
@@ -399,7 +404,7 @@ multiPlot <- function(dat, x, graphics, days.observed, log.count, legend.loc,
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
         token <- c(0, 2:7)
         invisible(lapply(seq_along(x$packages)[-1], function(i) {
-          lines(dat[dat$package == x$packages[i], c("date", "count")],
+          lines(dat[dat$package == x$packages[i], c("date", statistic)],
             type = "o", col = cbPalette[i], pch = token[i])
         }))
 
@@ -418,36 +423,46 @@ multiPlot <- function(dat, x, graphics, days.observed, log.count, legend.loc,
   } else if (graphics == "ggplot2") {
     if (length(days.observed) == 1) {
       p <- ggplot(data = dat, aes_string("count", y = "package",
-        colour = "package"))
+                  colour = "package"))
       if (log.count) {
         # p + scale_x_log10() + xlab("log10(count)") doesn't work!
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string("count", "package",
-          colour = "package")) + xlab("log10(count)")
+                    colour = "package")) +
+             xlab("log10(count)")
       }
+
       p <- p + geom_point(size = 2) +
         geom_hline(yintercept = c(1, 2), linetype = "dotted") +
         theme(panel.grid.minor = element_blank())
+
     } else if (length(days.observed) > 1) {
-      p <- ggplot(data = dat,
-        aes_string("date", "count", colour = "package")) +
-        geom_line() +
-        geom_point() +
+      if (statistic == "count") {
+        p <- ggplot(data = dat,
+                    aes_string("date", "count",
+                    colour = "package")) +
+             ggtitle("Package Download Counts")
+      } else if (statistic == "cumulative") {
+        p <- ggplot(data = dat,
+                    aes_string("date", "cumulative",
+                    colour = "package")) +
+             ggtitle("Cumulative Package Downloads")
+      }
+
+      p <- p + geom_line() + geom_point() +
         theme(panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5)) +
-        ggtitle("Package Downloads")
+              plot.title = element_text(hjust = 0.5))
     }
 
     if (points & log.count & smooth) {
-      p + geom_point() +
-          scale_y_log10() +
-          geom_smooth(method = "loess", formula = "y ~ x", se = se)
+      p + geom_point() + scale_y_log10() +
+        geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & log.count & !smooth) {
       p + geom_point() + scale_y_log10()
     } else if (points & !log.count & smooth) {
       p + geom_point() +
-       geom_smooth(method = "loess", formula = "y ~ x", se = se)
+        geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (!points & log.count & smooth) {
       p + scale_y_log10() +
         geom_smooth(method = "loess", formula = "y ~ x", se = se)
@@ -555,7 +570,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points,
           dotchart(log10(dat$count), labels = dat$package,
             xlab = "log10(Count)", main = days.observed)
         } else {
-          dotchart(dat$count, labels = dat$package, xlab = "log10(Count)",
+          dotchart(dat$count, labels = dat$package, xlab = "Count",
             main = days.observed)
         }
       } else if (length(days.observed) > 1) {
@@ -580,12 +595,10 @@ singlePlot <- function(x, statistic, graphics, days.observed, points,
             } else {
               if (points) {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10(", y.nm.case, ")"), xlim = xlim,
-                  ylim = ylim)
+                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
               } else {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10(", y.nm.case, ")"), xlim = xlim,
-                  ylim = ylim)
+                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
               }
             }
 
@@ -630,10 +643,10 @@ singlePlot <- function(x, statistic, graphics, days.observed, points,
             } else {
               if (points) {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10(", y.nm.case, ")"))
+                  ylab = y.nm.case)
               } else {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10(", y.nm.case, ")"))
+                  ylab = y.nm.case)
               }
             }
 
@@ -677,10 +690,10 @@ singlePlot <- function(x, statistic, graphics, days.observed, points,
       } else {
         if (points) {
           plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-            ylab = paste0("log10(", y.nm.case, ")"))
+            ylab = y.nm.case)
         } else {
           plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-            ylab = paste0("log10(", y.nm.case, ")"))
+            ylab = y.nm.case)
         }
       }
 
