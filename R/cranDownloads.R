@@ -81,15 +81,23 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if ("args" %in% ls()) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-
-    cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
-      cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
-    }))
-
-    cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
-      cranlogs.data$package)
-    names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
-
+    if ("R" %in% args$packages) {
+      count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
+        cranlogs.data$os), sum)
+      cumulative <- apply(count, 2, cumsum)
+      dts <- rep(as.Date(row.names(count)), ncol(count))
+      plt <- rep(colnames(count), each = nrow(count))
+      cranlogs.data <- data.frame(date = dts, count = c(count),
+        cumulative = c(cumulative), platform = plt, row.names = NULL)
+    } else {
+      cumulative <- lapply(unique(cranlogs.data$package), function(pkg) {
+        cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
+      })
+      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")],
+        unlist(cumulative), cranlogs.data$package)
+      sel <- (ncol(cranlogs.data) - 1):ncol(cranlogs.data)
+      names(cranlogs.data)[sel] <- c("cumulative", "package")
+    }
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = args$when, from = args$from, to = args$to)
   } else {
