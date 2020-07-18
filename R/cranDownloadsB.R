@@ -1,4 +1,4 @@
-#' Filtered package downloads from the RStudio CRAN mirror. (protoype)
+#' Filtered package downloads from the RStudio CRAN mirror (protoype).
 #'
 #' Small and triplet filter.
 #' @param packages Character. Vector of package name(s).
