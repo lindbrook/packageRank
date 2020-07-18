@@ -189,7 +189,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     if (r.total) {
-      rTotPlot(dat, graphics, days.observed, legend.loc, points, smooth, se,
+      rTotPlot(x, statistic, graphics, legend.loc, points, smooth, se,
         r.version, f)
     } else {
       rPlot(x, statistic, graphics, legend.loc, points, smooth, se, r.version,
@@ -327,23 +327,27 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-rTotPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth,
-  se, r.version, f) {
+rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
+  r.version, f) {
 
-  daily <- vapply(days.observed, function(day) {
-    day.data <- dat[dat$date == day, ]
-      sum(day.data$count)
-  }, numeric(1L))
+  dat <- x$cranlogs.data
+  if (statistic == "count") ylab <- "Count"
+  if (statistic == "cumulative") ylab <- "Cumulative"
+  ct <- tapply(dat$count, dat$date, sum)
+  cs <- cumsum(ct)
+  dat2 <- data.frame(date = as.Date(names(ct)), count = ct, cumulative = cs,
+    row.names = NULL)
 
   if (graphics == "base") {
     if (points) {
-      plot(days.observed, daily, type = "o", xlab = "Date", ylab = "Count")
+      plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date", ylab = ylab)
     } else {
-      plot(days.observed, daily, type = "l", xlab = "Date", ylab = "Count")
+      plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date", ylab = ylab)
     }
 
     if (smooth) {
-      lines(stats::lowess(days.observed, daily, f), col = "blue", lwd = 1.25)
+      lines(stats::lowess(dat2$date, dat2[, statistic], f), col = "blue",
+        lwd = 1.25)
     }
 
     if (r.version) {
@@ -356,10 +360,13 @@ rTotPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth,
     title(main = "Total R Downloads")
 
   } else if (graphics == "ggplot2") {
-    dat2 <- data.frame(date = days.observed, count = daily)
+    if (statistic == "count") {
+      p <- ggplot(data = dat2, aes_string("date", "count"))
+    } else if (statistic == "cumulative") {
+      p <- ggplot(data = dat2, aes_string("date", "cumulative"))
+    }
 
-    p <- ggplot(data = dat2, aes_string("date", "count")) +
-      geom_line(size = 0.5) +
+    p <- p + geom_line(size = 0.5) +
       theme_bw() +
       theme(panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
