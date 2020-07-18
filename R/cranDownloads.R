@@ -225,38 +225,46 @@ summary.cranDownloads <- function(object, ...) {
   object$cranlogs.data
 }
 
-rPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth, se,
+rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
   r.version, f) {
 
+  dat <- x$cranlogs.data
+
+  if (statistic == "count") {
+    ylab <- "Count"
+  } else if (statistic == "cumulative") {
+    ylab <- "Cumulative"
+  }
+
   if (graphics == "base") {
-    daily <- lapply(days.observed, function(day) {
-      os <- unique(dat[dat$date == day, "os"])
-      day.data <- dat[dat$date == day, ]
-      tot.downloads <- sum(day.data$count)
-      count <- vapply(os, function(x) {
-        sum(day.data[day.data$os == x, "count"])
-      }, numeric(1L))
-      if ("NA" %in% names(count) == FALSE) {
-        count <- c(count, 0)
-        names(count)[length(count)] <- "NA"
-      }
-      count[order(names(count))]
-    })
-
-    daily <- as.data.frame(do.call(rbind, daily))
-
     if (points) {
-      plot(days.observed, daily$win, type = "o", ylim = range(daily),
-        xlab = "Date", ylab = "Count")
-      lines(days.observed, daily$osx, type = "o", pch = 0, col = "red")
-      lines(days.observed, daily$src, type = "o", pch = 2, col = "blue")
-      lines(days.observed, daily$`NA`, type = "o", pch = 3, col = "green")
+      plot(dat[dat$platform == "win", "date"],
+           dat[dat$platform == "win", statistic],
+           type = "o", ylim = range(dat[, statistic]),
+           xlab = "Date", ylab = ylab)
+      lines(dat[dat$platform == "osx", "date"],
+            dat[dat$platform == "osx", statistic],
+            type = "o", pch = 0, col = "red")
+      lines(dat[dat$platform == "src", "date"],
+            dat[dat$platform == "src", statistic],
+            type = "o", pch = 2, col = "blue")
+      lines(dat[dat$platform == "NA", "date"],
+            dat[dat$platform == "NA", statistic],
+            type = "o", pch = 3, col = "green")
     } else {
-      plot(days.observed, daily$win, type = "l", ylim = range(daily),
-        xlab = "Date", ylab = "Count")
-      lines(days.observed, daily$osx, pch = 0, col = "red")
-      lines(days.observed, daily$src, pch = 2, col = "blue")
-      lines(days.observed, daily$`NA`, pch = 3, col = "green")
+      plot(dat[dat$platform == "win", "date"],
+           dat[dat$platform == "win", statistic],
+           type = "l", ylim = range(dat[, statistic]),
+           xlab = "Date", ylab = ylab)
+      lines(dat[dat$platform == "osx", "date"],
+            dat[dat$platform == "osx", statistic],
+            col = "red")
+      lines(dat[dat$platform == "src", "date"],
+            dat[dat$platform == "src", statistic],
+            col = "blue")
+      lines(dat[dat$platform == "NA", "date"],
+            dat[dat$platform == "NA", statistic],
+            col = "green")
     }
 
     legend(x = legend.loc,
@@ -269,13 +277,18 @@ rPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth, se,
            lwd = 1)
 
     if (smooth) {
-      lines(stats::lowess(days.observed, daily$win, f = f), lty = "dotted")
-      lines(stats::lowess(days.observed, daily$osx, f = f), lty = "dotted",
-        col = "red")
-      lines(stats::lowess(days.observed, daily$src, f = f), lty = "dotted",
-        col = "blue")
-      lines(stats::lowess(days.observed, daily$`NA`, f = f), lty = "dotted",
-        col = "green")
+      lines(stats::lowess(dat[dat$platform == "win", "date"],
+                          dat[dat$platform == "win", statistic], f = f),
+                          lty = "dotted")
+      lines(stats::lowess(dat[dat$platform == "osx", "date"],
+                          dat[dat$platform == "osx", statistic], f = f),
+                          lty = "dotted", col = "red")
+      lines(stats::lowess(dat[dat$platform == "src", "date"],
+                          dat[dat$platform == "src", statistic], f = f),
+                          lty = "dotted", col = "blue")
+      lines(stats::lowess(dat[dat$platform == "NA", "date"],
+                          dat[dat$platform == "NA", statistic], f = f),
+                          lty = "dotted", col = "green")
     }
 
     if (r.version) {
@@ -288,14 +301,16 @@ rPlot <- function(dat, graphics, days.observed, legend.loc, points, smooth, se,
     title(main = "R Downloads")
 
   } else if (graphics == "ggplot2") {
-    dat2 <- as.data.frame(stats::xtabs(count ~ date + os, data = dat),
-      stringsAsFactors = FALSE)
-    names(dat2)[3] <- "count"
-    dat2$date <- as.Date(dat2$date)
+    if (statistic == "count") {
+      dat2 <- dat[, c("date", "count", "platform")]
+      p <- ggplot(data = dat2, aes_string("date", "count"))
+    } else {
+      dat2 <- dat[, c("date", "cumulative", "platform")]
+      p <- ggplot(data = dat2, aes_string("date", "cumulative"))
+    }
 
-    p <- ggplot(data = dat2, aes_string("date", "count")) +
-      geom_line(size = 0.5) +
-      facet_wrap(~ os, ncol = 2) +
+    p <- p + geom_line(size = 0.5) +
+      facet_wrap(~ platform, ncol = 2) +
       theme_bw() +
       theme(panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
