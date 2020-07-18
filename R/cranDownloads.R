@@ -192,16 +192,16 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       rTotPlot(dat, graphics, days.observed, legend.loc, points, smooth, se,
         r.version, f)
     } else {
-      rPlot(dat, graphics, days.observed, legend.loc, points, smooth, se,
-        r.version, f)
+      rPlot(x, statistic, graphics, legend.loc, points, smooth, se, r.version,
+        f)
     }
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, days.observed, log.count, legend.loc,
         points, smooth, se)
     } else {
-      singlePlot(x, statistic, graphics, days.observed, points, smooth,
-        se, f, log.count, package.version, dev.mode, r.version, same.xy)
+      singlePlot(x, statistic, graphics, days.observed, points, smooth, se, f,
+        log.count, package.version, dev.mode, r.version, same.xy)
     }
   }
 }
@@ -567,8 +567,8 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
-singlePlot <- function(x, statistic, graphics, days.observed, points,
-  smooth, se, f, log.count, package.version, dev.mode, r.version, same.xy) {
+singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
+  se, f, log.count, package.version, dev.mode, r.version, same.xy) {
 
   dat <- x$cranlogs.data
 
