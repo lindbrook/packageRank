@@ -64,7 +64,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     } else end.date <- cal.date
 
     if (start.date > end.date) stop('"from" must be <= "to".')
-    args <- list(packages, from = start.date, to = end.date)
+    args <- list(packages = packages, from = start.date, to = end.date)
 
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
