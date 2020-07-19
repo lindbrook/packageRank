@@ -509,27 +509,33 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
   }
 }
 
-cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
-  r.version) {
+cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
+  smooth, se, f, r.version) {
 
   dat <- x$cranlogs.data
+
+  if (statistic == "count") {
+    y.nm.case <- "Count"
+    y.nm <- tolower(y.nm.case)
+  } else if (statistic == "cumulative") {
+    y.nm.case <- "Cumulative"
+    y.nm <- tolower(y.nm.case)
+  }
 
   if (graphics == "base") {
     if (log.count) {
       if (points) {
-        plot(dat$date, dat$count, type = "o", xlab = "Date",
-          ylab = "log10(Count)", log = "y")
+        plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
+          ylab = paste0("log10(", y.nm.case, ")"), log = "y")
       } else {
-        plot(dat$date, dat$count, type = "l", xlab = "Date",
-          ylab = "log10(Count)", log = "y")
+        plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
+          ylab = paste0("log10(", y.nm.case, ")"), log = "y")
       }
     } else {
       if (points) {
-        plot(dat$date, dat$count, type = "o", xlab = "Date",
-          ylab = "Count")
+        plot(dat$date, dat[, y.nm], type = "o", xlab = "Date", ylab = y.nm.case)
       } else {
-        plot(dat$date, dat$count, type = "l", xlab = "Date",
-          ylab = "Count")
+        plot(dat$date, dat[, y.nm], type = "l", xlab = "Date", ylab = y.nm.case)
       }
     }
 
@@ -541,15 +547,20 @@ cranDownloadsPlot <- function(x, graphics, points, log.count, smooth, se, f,
     }
 
     if (smooth) {
-      lines(stats::lowess(dat$date, dat$count, f = f),
+      lines(stats::lowess(dat$date, dat[, y.nm], f = f),
         col = "blue")
     }
 
     title(main = "Total Package Downloads")
 
   } else if (graphics == "ggplot2") {
-    p <- ggplot(data = dat, aes_string("date", "count")) +
-      geom_line(size = 0.5) +
+    if (statistic == "count") {
+      p <- ggplot(data = dat, aes_string("date", "count"))
+    } else if (statistic == "cumulative") {
+      p <- ggplot(data = dat, aes_string("date", "cumulative"))
+    }
+
+    p <- p + geom_line(size = 0.5) +
       theme_bw() +
       ggtitle("Total Package Downloads") +
       theme(plot.title = element_text(hjust = 0.5))
@@ -594,7 +605,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
 
   if (graphics == "base") {
     if (is.null(x$packages)) {
-      cranDownloadsPlot(x, graphics, points, log.count, smooth, se,
+      cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth, se,
         f, r.version)
 
     } else if (length(x$packages) > 1) {
@@ -757,7 +768,8 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
 
   } else if (graphics == "ggplot2") {
     if (is.null(x$packages)) {
-      p <- cranDownloadsPlot(x, graphics, points, log.count, smooth, se, f)
+      p <- cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth,
+        se, f)
     } else {
       if (length(days.observed) == 1) {
         p <- ggplot(data = dat) +
