@@ -463,8 +463,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
              xlab("log10(count)")
       }
 
-      p <- p + geom_point(size = 2) +
-        geom_hline(yintercept = c(1, 2), linetype = "dotted") +
+      p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
         theme(panel.grid.minor = element_blank())
 
     } else if (length(days.observed) > 1) {
@@ -480,7 +479,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
              ggtitle("Cumulative Package Downloads")
       }
 
-      p <- p + geom_line() + geom_point() +
+      p <- p + geom_line() +
         theme(panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5))
     }
