@@ -1,3 +1,9 @@
+packageRank 0.3.5.9029
+==================
+
+- exclude os == NA for cranDownloads(packages = "R") and rPlot().
+
+
 packageRank 0.3.5.9028
 ==================
 

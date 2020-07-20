@@ -81,10 +81,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if ("args" %in% ls()) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-    
+
     if (is.null(args$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
     } else if ("R" %in% args$packages) {
+      cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
         cranlogs.data$os), sum)
       cumulative <- apply(count, 2, cumsum)
@@ -251,9 +252,6 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(dat[dat$platform == "src", "date"],
             dat[dat$platform == "src", statistic],
             type = "o", pch = 2, col = "blue")
-      lines(dat[dat$platform == "NA", "date"],
-            dat[dat$platform == "NA", statistic],
-            type = "o", pch = 3, col = "green")
     } else {
       plot(dat[dat$platform == "win", "date"],
            dat[dat$platform == "win", statistic],
@@ -265,15 +263,12 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(dat[dat$platform == "src", "date"],
             dat[dat$platform == "src", statistic],
             col = "blue")
-      lines(dat[dat$platform == "NA", "date"],
-            dat[dat$platform == "NA", statistic],
-            col = "green")
     }
 
     legend(x = legend.loc,
-           legend = c("win", "mac", "src", "NA"),
-           col = c("black", "red", "blue", "green"),
-           pch = c(1, 0, 2, 3),
+           legend = c("win", "mac", "src"),
+           col = c("black", "red", "blue"),
+           pch = c(1, 0, 2),
            bg = "white",
            cex = 2/3,
            title = "Platform",
@@ -289,9 +284,6 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(stats::lowess(dat[dat$platform == "src", "date"],
                           dat[dat$platform == "src", statistic], f = f),
                           lty = "dotted", col = "blue")
-      lines(stats::lowess(dat[dat$platform == "NA", "date"],
-                          dat[dat$platform == "NA", statistic], f = f),
-                          lty = "dotted", col = "green")
     }
 
     if (r.version) {
