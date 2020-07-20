@@ -252,9 +252,6 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(dat[dat$platform == "src", "date"],
             dat[dat$platform == "src", statistic],
             type = "o", pch = 2, col = "blue")
-      lines(dat[dat$platform == "NA", "date"],
-            dat[dat$platform == "NA", statistic],
-            type = "o", pch = 3, col = "green")
     } else {
       plot(dat[dat$platform == "win", "date"],
            dat[dat$platform == "win", statistic],
@@ -266,15 +263,12 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(dat[dat$platform == "src", "date"],
             dat[dat$platform == "src", statistic],
             col = "blue")
-      lines(dat[dat$platform == "NA", "date"],
-            dat[dat$platform == "NA", statistic],
-            col = "green")
     }
 
     legend(x = legend.loc,
-           legend = c("win", "mac", "src", "NA"),
-           col = c("black", "red", "blue", "green"),
-           pch = c(1, 0, 2, 3),
+           legend = c("win", "mac", "src"),
+           col = c("black", "red", "blue"),
+           pch = c(1, 0, 2),
            bg = "white",
            cex = 2/3,
            title = "Platform",
@@ -290,9 +284,6 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       lines(stats::lowess(dat[dat$platform == "src", "date"],
                           dat[dat$platform == "src", statistic], f = f),
                           lty = "dotted", col = "blue")
-      lines(stats::lowess(dat[dat$platform == "NA", "date"],
-                          dat[dat$platform == "NA", statistic], f = f),
-                          lty = "dotted", col = "green")
     }
 
     if (r.version) {
@@ -326,7 +317,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     } else if (points & !smooth) {
       p + geom_point()
     } else if (!points & smooth) {
-      p +  geom_smooth(method = "loess", formula = "y ~ x", se = se)
+      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else p
   } else stop('graphics must be "base" or "ggplot2"')
 }
