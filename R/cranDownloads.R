@@ -81,10 +81,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if ("args" %in% ls()) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-    
+
     if (is.null(args$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
     } else if ("R" %in% args$packages) {
+      cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
         cranlogs.data$os), sum)
       cumulative <- apply(count, 2, cumsum)
