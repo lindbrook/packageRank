@@ -325,7 +325,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     } else if (points & !smooth) {
       p + geom_point()
     } else if (!points & smooth) {
-      p +  geom_smooth(method = "loess", formula = "y ~ x", se = se)
+      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else p
   } else stop('graphics must be "base" or "ggplot2"')
 }
@@ -381,7 +381,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     } else if (points & !smooth) {
       p + geom_point()
     } else if (!points & smooth) {
-      p +  geom_smooth(method = "loess", formula = "y ~ x", se = se)
+      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else p
   } else stop('graphics must be "base" or "ggplot2"')
 }
