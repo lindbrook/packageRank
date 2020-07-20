@@ -57,10 +57,10 @@ cranlogs::cran_downloads(packages = "HistData")
 cranDownloads(packages = "HistData")
 ```
 
-    >         date count  package
-    > 1 2020-05-01   338 HistData
+    >         date count cumulative  package
+    > 1 2020-05-01   338        338 HistData
 
-The only difference is that `cranDownloads()` adds three features:
+The only difference is that `cranDownloads()` adds four features:
 
 #### i) check package names
 
@@ -77,8 +77,8 @@ cranDownloads(packages = "GGplot2")
 cranDownloads(packages = "ggplot2")
 ```
 
-    >         date count package
-    > 1 2020-05-01 56357 ggplot2
+    >         date count cumulative package
+    > 1 2020-05-01 56357      56357 ggplot2
 
 <br/> This also works for inactive or “retired” packages in the
 [Archive](https://CRAN.R-project.org/src/contrib/Archive):
@@ -96,8 +96,8 @@ cranDownloads(packages = "vr")
 cranDownloads(packages = "VR")
 ```
 
-    >         date count package
-    > 1 2020-05-01    11      VR
+    >         date count cumulative package
+    > 1 2020-05-01    11         11      VR
 
 <br/>
 
@@ -156,6 +156,21 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 
     ## Error in resolveDate(to, type = "to") : Not a valid date.
+
+#### iv) compute cumulative download counts
+
+``` r
+cranDownloads(packages = "HistData", when = "last-week")
+```
+
+    >         date count cumulative  package
+    > 1 2020-05-01   338        338 HistData
+    > 2 2020-05-02   259        597 HistData
+    > 3 2020-05-03   321        918 HistData
+    > 4 2020-05-04   344       1262 HistData
+    > 5 2020-05-05   324       1586 HistData
+    > 6 2020-05-06   356       1942 HistData
+    > 7 2020-05-07   324       2266 HistData
 
 <br/>
 
@@ -279,6 +294,18 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 ```
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+
+#### plot growth curves (cumulative download counts)
+
+To plot growth curves, set `statistic = "cumulative"`:
+
+``` r
+plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+  from = "2020", to = "2020-03-20"), statistic = "cumulative",
+  multi.plot = TRUE, points = FALSE)
+```
+
+![](man/figures/README-cranDownloads_growth_curves-1.png)<!-- -->
 
 #### population plot
 

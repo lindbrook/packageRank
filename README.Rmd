@@ -57,7 +57,7 @@ cranDownloads(packages = "HistData")
 cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
 ```
 
-The only difference is that `cranDownloads()` adds three features:
+The only difference is that `cranDownloads()` adds four features:
 
 #### i) check package names
 
@@ -144,6 +144,16 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 ```
 ## Error in resolveDate(to, type = "to") : Not a valid date.
+```
+
+#### iv) compute cumulative download counts
+
+```{r cranDownloads_cumulative, eval = FALSE}
+cranDownloads(packages = "HistData", when = "last-week")
+```
+
+```{r cranDownloads_cumulative_code, echo = FALSE}
+cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
 ```
 
 <br/>
@@ -239,6 +249,16 @@ To annotate a graph with R release dates:
 ```{r}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   r.version = TRUE)
+```
+
+#### plot growth curves (cumulative download counts)
+
+To plot growth curves, set `statistic = "cumulative"`:
+
+```{r cranDownloads_growth_curves}
+plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+  from = "2020", to = "2020-03-20"), statistic = "cumulative",
+  multi.plot = TRUE, points = FALSE)
 ```
 
 #### population plot
