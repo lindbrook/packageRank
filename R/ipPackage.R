@@ -46,4 +46,5 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   } else {
     out <- crosstab
   }
+  out
 }
