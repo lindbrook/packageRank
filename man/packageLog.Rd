@@ -6,7 +6,7 @@
 \usage{
 packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
   triplet.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE)
+  dev.mode = FALSE, clean.output = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -22,6 +22,8 @@ packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
 \item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
+
+\item{clean.output}{Logical. NULL row names.}
 }
 \value{
 An R data frame.

@@ -8,12 +8,13 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param clean.output Logical. NULL row names.
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   small.filter = TRUE, triplet.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE) {
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE) {
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
@@ -49,8 +50,11 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   }
 
   if (length(packages) == 1) {
-    cran_log[[1]]
+    out <- cran_log[[1]]
   } else {
-    cran_log
+    out <- cran_log
   }
+
+  if (clean.output) rownames(out) <- NULL
+  out
 }
