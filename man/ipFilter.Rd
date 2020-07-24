@@ -4,12 +4,12 @@
 \alias{ipFilter}
 \title{Identify IP's that are mirroring CRAN (prototype).}
 \usage{
-ipFilter(date = Sys.Date() - 1, cutpoint = 10000L, memoization = TRUE)
+ipFilter(date = Sys.Date() - 1, cutpoint = 15000L, memoization = TRUE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
 
-\item{cutpoint}{Numeric. Threshold number of downloads.}
+\item{cutpoint}{Numeric. Threshold number of unique packages downloaded.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
