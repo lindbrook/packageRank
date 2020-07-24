@@ -5,6 +5,7 @@
 #' @param date Character. Date.
 #' @param small.filter Logical.
 #' @param triplet.filter Logical.
+#' @param ip.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
@@ -13,8 +14,9 @@
 #' @export
 
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
-  small.filter = TRUE, triplet.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE) {
+  small.filter = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
+  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
+  clean.output = FALSE) {
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
@@ -27,7 +29,11 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  cran_log <- cran_log[!is.na(cran_log$package), ]
+
+  # cran_log <- cran_log[!is.na(cran_log$package), ]
+  cran_log <- cran_log[!is.na(cran_log$package) & !is.na(cran_log$size), ]
+
+  if (ip.filter) cran_log <- cran_log[!cran_log$ip_id %in% ipFilter(cran_log), ]
 
   if (!is.null(packages)) {
     cran_log <- lapply(packages, function(p) cran_log[cran_log$package == p, ])

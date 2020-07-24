@@ -8,13 +8,15 @@
 #' @param na.rm Logical. Remove NAs.
 #' @param small.filter Logical.
 #' @param triplet.filter Logical.
+#' @param ip.filter Logical.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
-  triplet.filter = TRUE, check.package = TRUE, dev.mode = FALSE) {
+  triplet.filter = TRUE, ip.filter = TRUE, check.package = TRUE,
+  dev.mode = FALSE) {
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
@@ -25,7 +27,8 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
   }
 
   lst <- packageLog(packages = packages, date = date, memoization = memoization,
-    small.filter = small.filter, triplet.filter = triplet.filter)
+    small.filter = small.filter, triplet.filter = triplet.filter,
+    ip.filter = ip.filter)
 
   if (na.rm) {
     out <- lapply(lst, function(x) table(x$country))

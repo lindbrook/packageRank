@@ -5,8 +5,8 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
-  triplet.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE)
+  triplet.filter = TRUE, ip.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -16,6 +16,8 @@ packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
 \item{small.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
+
+\item{ip.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
