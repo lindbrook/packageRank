@@ -16,5 +16,6 @@ ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE) {
     length(unique(x))
   })
 
-  data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  out <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  out[order(out$count, decreasing = TRUE), ]
 }
