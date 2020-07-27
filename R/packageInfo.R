@@ -6,8 +6,8 @@
 #' @param source Logical.
 #' @export
 
-packageInfo <- function(multi.core = TRUE, platform = "win", r.ver = "release",
-  source = TRUE) {
+packageInfo <- function(multi.core = TRUE, platform = "win", 
+  r.ver = "release", source = TRUE) {
 
   if (.Platform$OS.type == "windows" & multi.core > 1) {
     cores <- 1L
