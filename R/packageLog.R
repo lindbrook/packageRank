@@ -40,7 +40,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
 
     if (triplet.filter) {
       cran_log <- lapply(cran_log, function(x) {
-        filtered.data <- tripletFilter(x, small.filter = FALSE)
+        filtered.data <- tripletFilter(x)
         do.call(rbind, filtered.data)
       })
     }

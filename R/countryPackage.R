@@ -31,9 +31,9 @@ countryPackage <- function(country = "US", date = Sys.Date() - 1,
   if (triplet.filter) {
     tri.filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
       x <- cran_log[cran_log$package == p, ]
-      do.call(rbind, tripletFilter(x, small.filter = FALSE))
+      do.call(rbind, tripletFilter(x))
     }, mc.cores = cores)
-    
+
     cran_log <- do.call(rbind, tri.filtered)
   }
 
