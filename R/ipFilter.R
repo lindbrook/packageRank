@@ -34,6 +34,42 @@ ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
   })
 
   df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
-  # df[df$count >= quantile(df$count, cutpoint), "ip"]
   as.numeric(df[df$count >= cutpoint, "ip"])
+}
+
+#' Identify IP's that are mirroring CRAN (k-means prototype).
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param date Character. Date.
+#' @param centers Numeric. Number of k's for k-means clustering.
+#' @param nstart Numeric. Number of random sets.
+#' @param output Character. "ip" vector of ip address; "df" data frame.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @export
+
+ipFilter2 <- function(date = Sys.Date() - 1, centers = 2L, nstart = 25L,
+  output = "ip", memoization = TRUE) {
+
+  date <- check10CharDate(date)
+  ymd <- fixDate_2012(date)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  sel <- !is.na(cran_log$package) & !is.na(cran_log$size)
+  cran_log <- cran_log[sel, ]
+
+  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+    length(unique(x))
+  })
+
+  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  df <- df[!duplicated(df$count), ]
+  km <- stats::kmeans(stats::dist(df$count), centers = centers, nstart = nstart)
+  out <- data.frame(ip = df$ip, size = df$count, group = km$cluster)
+  if (output == "ip") {
+    grp <- as.numeric(names(which.min(table(out$group))))
+    as.numeric(out[out$group == grp, "ip"])
+  } else if (output == "df") {
+    out[order(out$size, decreasing = TRUE), ]
+  } else {
+    stop('"output" must be "ip" or "df".')
+  }
 }
