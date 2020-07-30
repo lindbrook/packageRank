@@ -2,11 +2,10 @@
 #'
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
-#' @param small.filter Logical.
-#' @param time.window Numeric.
+#' @param time.window Numeric. Seconds
 #' @export
 
-tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
+tripletFilter <- function(dat, time.window = 2) {
   ver <- unique(dat$version)
   out <- lapply(ver, function(v) {
     v.data <- dat[dat$version == v, ]
@@ -114,7 +113,6 @@ tripletFilter <- function(dat, small.filter = TRUE, time.window = 2) {
       }
     }
 
-    if (small.filter) v.data <- smallFilter(v.data)
     v.data[, c("machine", "id")] <- NULL
     v.data
   })
