@@ -8,7 +8,7 @@ packageRank 0.3.5.9035
 ==================
 
 - remove smallFilter() from tripletFilter().
-- add ipFilter2() (k-means standalong prototype).
+- add ipFilter2() (k-means standalone prototype).
 
 
 packageRank 0.3.5.9034
