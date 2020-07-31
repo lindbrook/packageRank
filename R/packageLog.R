@@ -33,7 +33,10 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   # cran_log <- cran_log[!is.na(cran_log$package), ]
   cran_log <- cran_log[!is.na(cran_log$package) & !is.na(cran_log$size), ]
 
-  if (ip.filter) cran_log <- cran_log[!cran_log$ip_id %in% ipFilter(cran_log), ]
+  if (ip.filter) {
+    sel <- !cran_log$ip_id %in% ipFilter3(cran_log)
+    cran_log <- cran_log[sel, ]
+  }
 
   if (!is.null(packages)) {
     cran_log <- lapply(packages, function(p) cran_log[cran_log$package == p, ])

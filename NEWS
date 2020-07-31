@@ -1,8 +1,14 @@
+packageRank 0.3.5.9036
+==================
+
+- add/use ipFilter3() (k-means helper prototype).
+
+
 packageRank 0.3.5.9035
 ==================
 
 - remove smallFilter() from tripletFilter().
-- add ipFilter2() (k-means prototype).
+- add ipFilter2() (k-means standalong prototype).
 
 
 packageRank 0.3.5.9034
