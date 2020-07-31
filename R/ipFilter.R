@@ -78,3 +78,39 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
     }
   }
 }
+
+#' Identify IP's that are mirroring CRAN (k-means helper prototype).
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param cran_log Object. cran log.
+#' @param output Character. "ip" vector of ip address; "df" data frame.
+#' @param centers Numeric. Number of k's for k-means clustering.
+#' @param nstart Numeric. Number of random sets.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @export
+
+ipFilter3 <- function(cran_log, output = "ip", centers = 2L,
+  nstart = 25L, memoization = TRUE) {
+
+  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+    length(unique(x))
+  })
+
+  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  df <- df[!duplicated(df$count), ]
+  km <- stats::kmeans(stats::dist(df$count), centers = centers, nstart = nstart)
+  out <- data.frame(ip = df$ip, size = df$count, group = km$cluster)
+
+  if (length(unique(km$cluster)) == 1) {
+    stop("No IP outliers!")
+  } else if (length(unique(km$cluster)) > 1) {
+    if (output == "ip") {
+      grp <- as.numeric(names(which.min(table(out$group))))
+      as.numeric(out[out$group == grp, "ip"])
+    } else if (output == "df") {
+      out[order(out$size, decreasing = TRUE), ]
+    } else {
+      stop('"output" must be "ip" or "df".')
+    }
+  }
+}
