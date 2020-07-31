@@ -2,19 +2,19 @@
 % Please edit documentation in R/ipFilter.R
 \name{ipFilter2}
 \alias{ipFilter2}
-\title{Identify IP's that are mirroring CRAN (k-means prototype).}
+\title{Identify IP's that are mirroring CRAN (k-means standalong prototype).}
 \usage{
-ipFilter2(date = Sys.Date() - 1, centers = 2L, nstart = 25L,
-  output = "ip", memoization = TRUE)
+ipFilter2(date = Sys.Date() - 1, output = "ip", centers = 2L,
+  nstart = 25L, memoization = TRUE)
 }
 \arguments{
 \item{date}{Character. Date.}
 
+\item{output}{Character. "ip" vector of ip address; "df" data frame.}
+
 \item{centers}{Numeric. Number of k's for k-means clustering.}
 
 \item{nstart}{Numeric. Number of random sets.}
-
-\item{output}{Character. "ip" vector of ip address; "df" data frame.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
