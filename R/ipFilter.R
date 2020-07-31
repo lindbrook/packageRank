@@ -37,7 +37,7 @@ ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
   as.numeric(df[df$count >= cutpoint, "ip"])
 }
 
-#' Identify IP's that are mirroring CRAN (k-means standalong prototype).
+#' Identify IP's that are mirroring CRAN (k-means standalone prototype).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.

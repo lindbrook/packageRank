@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipFilter.R
 \name{ipFilter2}
 \alias{ipFilter2}
-\title{Identify IP's that are mirroring CRAN (k-means standalong prototype).}
+\title{Identify IP's that are mirroring CRAN (k-means standalone prototype).}
 \usage{
 ipFilter2(date = Sys.Date() - 1, output = "ip", centers = 2L,
   nstart = 25L, memoization = TRUE)
