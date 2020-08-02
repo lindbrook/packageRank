@@ -48,12 +48,7 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
       })
     }
 
-    if (small.filter) {
-      cran_log <- lapply(cran_log, function(x) {
-        smallFilter(x, filter = small.filter)
-      })
-    }
-
+    if (small.filter) cran_log <- lapply(cran_log, smallFilter0)
     cran_log <- lapply(cran_log, function(x) x[order(x$time), ])
     names(cran_log) <- packages
   }
