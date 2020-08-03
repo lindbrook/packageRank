@@ -26,27 +26,34 @@ smallFilter <- function(dat, filter = TRUE) {
 #' @export
 
 smallFilter0 <- function(dat, centers = 2L, nstart = 25L) {
-  sm.entry <- dat$size < 1000
-  vers <- unique(dat[!sm.entry, "version"])
-  crosstab <- table(dat[!sm.entry, "version"])
+  dat <- dat[!is.na(dat$package), ]
+  dat0 <- dat[!duplicated(dat$size), ]
+  vers <- unique(dat0$version)
+  crosstab <- table(dat0$version)
 
   if (any(crosstab <= 2)) {
     too.few.obs <- names(crosstab[crosstab <= 2])
     vers <- setdiff(vers, too.few.obs)
-    # leftover <- row.names(dat[dat$version %in% too.few.obs & !sm.entry, ])
     leftover <- row.names(dat[dat$version %in% too.few.obs, ])
   }
 
   if (length(vers) != 0) {
     # median package size is 97000 via median(packageInfo()$byte)
+    size.audit <- vapply(vers, function(v) {
+      length(unique(round(log10(dat0[dat0$version == v , "size"]))))
+    }, integer(1L))
+
+    vers <- vers[size.audit >= 2]
+
     classified <- lapply(vers, function(v) {
-      tmp <- dat[dat$version == v , ]
+      tmp <- dat0[dat0$version == v , ]
       km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
         nstart = nstart)
       clusters <- data.frame(size = tmp$size, group = km$cluster)
       size <- tapply(clusters$size, clusters$group, mean)
       large.id <- as.numeric(names(which.max(size)))
-      row.names(tmp[clusters$group %in% large.id, ])
+      large.size <- tmp[clusters$group %in% large.id, "size"]
+      row.names(tmp[tmp$size %in% large.size, ])
     })
   }
 
