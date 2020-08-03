@@ -4,8 +4,7 @@
 \alias{ipFilter3}
 \title{Identify IP's that are mirroring CRAN (k-means helper prototype).}
 \usage{
-ipFilter3(cran_log, output = "ip", centers = 2L, nstart = 25L,
-  memoization = TRUE)
+ipFilter3(cran_log, output = "ip", centers = 2L, nstart = 25L)
 }
 \arguments{
 \item{cran_log}{Object. cran log.}
@@ -15,8 +14,6 @@ ipFilter3(cran_log, output = "ip", centers = 2L, nstart = 25L,
 \item{centers}{Numeric. Number of k's for k-means clustering.}
 
 \item{nstart}{Numeric. Number of random sets.}
-
-\item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
