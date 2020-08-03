@@ -31,15 +31,27 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
     ip.filter = ip.filter)
 
   if (na.rm) {
-    out <- lapply(lst, function(x) table(x$country))
+    if (is.data.frame(lst)) {
+      out <- table(lst$country)
+    } else if (is.list(lst)) {
+      out <- lapply(lst, function(x) table(x$country))
+    }
   } else {
-    out <- lapply(lst, function(x) table(x$country, useNA = "ifany"))
+    if (is.data.frame(lst)) {
+      out <- table(lst$country, useNA = "ifany")
+    } else if (is.list(lst)) {
+      out <- lapply(lst, function(x) table(x$country, useNA = "ifany"))
+    }
   }
 
   if (sort) {
-    out <- lapply(out, function(x) sort(x, decreasing = TRUE))
+    if (is.table(out)) {
+      out <- sort(out, decreasing = TRUE)
+    } else if (is.list(out)) {
+      out <- lapply(out, function(x) sort(x, decreasing = TRUE))
+      names(out) <- packages
+    }
   }
 
-  names(out) <- packages
   out
 }
