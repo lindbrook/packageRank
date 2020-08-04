@@ -20,8 +20,9 @@
 #'    \item{\code{ccode.ct}}{}
 #'    \item{\code{crosstab_2019_10_01}}{}
 #'    \item{\code{percentiles}}{}
+#'    \item{\code{top.n}}{}
 #' }
-#' @format A list with 19 elements.
+#' @format A list with 20 elements.
 #' @docType data
 "blog.data"
 
@@ -45,5 +46,6 @@
 # blog.data$ccode.ct <- ccode.ct
 # blog.data$crosstab_2019_10_01 <- crosstab_2019_10_01
 # blog.data$percentiles <- percentiles
+# blog.data$top.n <- top.n
 
 # usethis::use_data(blog.data, overwrite = TRUE)
