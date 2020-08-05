@@ -5,7 +5,7 @@
 \alias{blog.data}
 \title{Blog post data.}
 \format{
-A list with 19 elements.
+A list with 21 elements.
 }
 \usage{
 blog.data
@@ -31,6 +31,8 @@ blog.data
    \item{\code{ccode.ct}}{}
    \item{\code{crosstab_2019_10_01}}{}
    \item{\code{percentiles}}{}
+   \item{\code{top.n}}{}
+   \item{\code{download.country}}{}
 }
 }
 \keyword{datasets}
