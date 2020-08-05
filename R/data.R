@@ -23,7 +23,7 @@
 #'    \item{\code{top.n}}{}
 #'    \item{\code{download.country}}{}
 #' }
-#' @format A list with 20 elements.
+#' @format A list with 21 elements.
 #' @docType data
 "blog.data"
 

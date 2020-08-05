@@ -5,7 +5,7 @@
 \alias{blog.data}
 \title{Blog post data.}
 \format{
-A list with 20 elements.
+A list with 21 elements.
 }
 \usage{
 blog.data
