@@ -31,8 +31,8 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
 plotTopCountryCodes <- function(dat = packageRank::blog.data$top.n,
   log.downloads = FALSE) {
 
-  # p <- ggplot(data = dat, aes(x = id, y = downloads, label = country)) +
-  p <- ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
+  p <- ggplot(data = dat,
+    aes_string(x = "id", y =  "downloads", label = country)) +
     geom_line(color = "red", size = 1/3) +
     geom_text(size = 3.5) +
     theme_bw() +
