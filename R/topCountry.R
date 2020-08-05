@@ -73,10 +73,11 @@ downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
 
 #' Plot Compute Downloads by Country Code.
 #'
-#' @param dat Object.
+#' @param x Object.
 #' @export
 
-plotDownloadsCountry <- function(dat = packageRank::download.country) {
+plotDownloadsCountry <- function(x = packageRank::blog.data$download.country) {
+  dat <- x
   dat$downloads <- (dat$downloads) / 10^6
   ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
     geom_line(color = "red") +
