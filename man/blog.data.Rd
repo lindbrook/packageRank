@@ -32,6 +32,7 @@ blog.data
    \item{\code{crosstab_2019_10_01}}{}
    \item{\code{percentiles}}{}
    \item{\code{top.n}}{}
+   \item{\code{download.country}}{}
 }
 }
 \keyword{datasets}

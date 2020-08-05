@@ -21,6 +21,7 @@
 #'    \item{\code{crosstab_2019_10_01}}{}
 #'    \item{\code{percentiles}}{}
 #'    \item{\code{top.n}}{}
+#'    \item{\code{download.country}}{}
 #' }
 #' @format A list with 20 elements.
 #' @docType data
@@ -47,5 +48,6 @@
 # blog.data$crosstab_2019_10_01 <- crosstab_2019_10_01
 # blog.data$percentiles <- percentiles
 # blog.data$top.n <- top.n
+# blog.data$download.country <- download.country
 
 # usethis::use_data(blog.data, overwrite = TRUE)
