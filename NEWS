@@ -3,6 +3,7 @@ packageRank 0.3.5.9038
 
 - add topCountry() prototypes.
 - add top.n to packageRank::blog.data.
+- add downloadsCountry() and plotDownloadsCountry() prototypes.
 
 
 packageRank 0.3.5.9037
