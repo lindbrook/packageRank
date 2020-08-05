@@ -86,8 +86,9 @@ plotDownloadsCountry <- function(x = packageRank::blog.data$download.country) {
           panel.grid.minor = element_blank()) +
     facet_wrap(~ date, ncol = 7) +
     geom_point(data = dat[dat$id %in% 1:2, ]) +
-    geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 20, size = 3) +
-    scale_y_continuous(breaks = c(0, 1, 2)) +
+    geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 45, size = 3) +
+    scale_x_continuous(breaks = c(0, 100, 200)) +
+    scale_y_continuous(breaks = c(0, 1, 2), limits = c(-0.25, 2.75)) +
     xlab("Rank") +
     ylab("Downloads (millions)")
 }
