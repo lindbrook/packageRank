@@ -1,3 +1,9 @@
+packageRank 0.3.5.9039
+==================
+
+- add country codes to ipFilter3() dataframe output.
+
+
 packageRank 0.3.5.9038
 ==================
 
