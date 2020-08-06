@@ -88,9 +88,7 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-ipFilter3 <- function(cran_log, output = "ip", centers = 2L,
-  nstart = 25L) {
-
+ipFilter3 <- function(cran_log, output = "ip", centers = 2L, nstart = 25L) {
   crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
@@ -98,7 +96,11 @@ ipFilter3 <- function(cran_log, output = "ip", centers = 2L,
   df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
   df <- df[!duplicated(df$count), ]
   km <- stats::kmeans(stats::dist(df$count), centers = centers, nstart = nstart)
-  out <- data.frame(ip = df$ip, size = df$count, group = km$cluster)
+
+  out <- data.frame(ip = df$ip, downloads = df$count, group = km$cluster)
+  ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]
+  out <- merge(out, ip.country, by.x = "ip", by.y = "ip_id")
+  out <- out[, c("ip", "country", "downloads", "group")]
 
   if (length(unique(km$cluster)) == 1) {
     stop("No IP outliers!")
@@ -107,7 +109,7 @@ ipFilter3 <- function(cran_log, output = "ip", centers = 2L,
       grp <- as.numeric(names(which.min(table(out$group))))
       as.numeric(out[out$group == grp, "ip"])
     } else if (output == "df") {
-      out[order(out$size, decreasing = TRUE), ]
+      out[order(out$downloads, decreasing = TRUE), ]
     } else {
       stop('"output" must be "ip" or "df".')
     }
