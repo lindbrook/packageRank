@@ -115,7 +115,7 @@ ipFilter3 <- function(cran_log, floor = "auto", output = "ip", centers = 2L,
     } else if (length(unique(km$cluster)) > 1) {
       if (output == "ip") {
         grp <- as.numeric(names(which.min(table(out$group))))
-        out <- as.numeric(out[out$group == grp, "ip"])
+        out <- sort(as.numeric(out[out$group == grp, "ip"]))
       } else if (output == "df") {
         out <- out[order(out$downloads, decreasing = TRUE), ]
       }
@@ -125,7 +125,7 @@ ipFilter3 <- function(cran_log, floor = "auto", output = "ip", centers = 2L,
       stop('"floor" must be >= 0.')
     } else {
       if (output == "ip") {
-        out <- as.numeric(names(crosstab[crosstab >= floor]))
+        out <- sort(as.numeric(names(crosstab[crosstab >= floor])))
       } else if (output == "df") {
         df <- data.frame(ip = names(crosstab), count = c(crosstab),
           row.names = NULL)
