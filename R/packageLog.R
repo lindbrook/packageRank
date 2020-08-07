@@ -54,10 +54,12 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
     }
   }
 
-  if (length(packages) == 1) {
+  if (is.null(packages)) {
+    out <- cran_log
+  } else if (length(packages) == 1) {
     out <- cran_log[[1]]
     if (clean.output) rownames(out) <- NULL
-  } else {
+  } else if (length(packages > 1)) {
     out <- cran_log
     names(out) <- packages
   }
