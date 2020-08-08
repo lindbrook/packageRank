@@ -89,7 +89,7 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-ipFilter3 <- function(cran_log, floor = "auto", output = "ip", centers = 2L,
+ipFilter3 <- function(cran_log, floor = 8000L, output = "ip", centers = 2L,
   nstart = 25L) {
 
   if (!output %in% c("df", "ip")) stop('"output" must be "ip" or "df".')
@@ -115,7 +115,9 @@ ipFilter3 <- function(cran_log, floor = "auto", output = "ip", centers = 2L,
     } else if (length(unique(km$cluster)) > 1) {
       if (output == "ip") {
         grp <- as.numeric(names(which.min(table(out$group))))
-        out <- sort(as.numeric(out[out$group == grp, "ip"]))
+        out <- out[out$group == grp, ]
+        out <- out[order(out$downloads, decreasing = TRUE), ]
+        out <- as.numeric(out$ip)
       } else if (output == "df") {
         out <- out[order(out$downloads, decreasing = TRUE), ]
       }
@@ -125,7 +127,7 @@ ipFilter3 <- function(cran_log, floor = "auto", output = "ip", centers = 2L,
       stop('"floor" must be >= 0.')
     } else {
       if (output == "ip") {
-        out <- sort(as.numeric(names(crosstab[crosstab >= floor])))
+        out <- as.numeric(sort(crosstab[crosstab >= floor]))
       } else if (output == "df") {
         df <- data.frame(ip = names(crosstab), count = c(crosstab),
           row.names = NULL)
