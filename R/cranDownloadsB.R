@@ -1,6 +1,6 @@
 #' Filtered package downloads from the RStudio CRAN mirror (protoype).
 #'
-#' Small and triplet filter.
+#' triplet, ip and small filters.
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
 #' @param check.package Logical. Validate and "spell check" package.
