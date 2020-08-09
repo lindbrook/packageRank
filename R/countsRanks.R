@@ -8,8 +8,7 @@
 countsRanks <- function(package = "cholera", size.filter = FALSE) {
   Downloads <- summary(cranDownloads(packages = package, from = "2020-03-01",
     to = "2020-03-07", check.package = FALSE))$count
-  Date <- as.Date(c("2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04",
-    "2020-03-05", "2020-03-06", "2020-03-07"))
+  Date <- seq(as.Date("2020-03-01"), as.Date("2020-03-07"), by = "day")
 
   out <- list(package = package,
               Downloads = Downloads,
