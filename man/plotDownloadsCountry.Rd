@@ -4,10 +4,10 @@
 \alias{plotDownloadsCountry}
 \title{Plot Compute Downloads by Country Code.}
 \usage{
-plotDownloadsCountry(x = packageRank::blog.data$download.country)
+plotDownloadsCountry(dat = packageRank::blog.data$download.country)
 }
 \arguments{
-\item{x}{Object.}
+\item{dat}{Object.}
 }
 \description{
 Plot Compute Downloads by Country Code.
