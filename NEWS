@@ -1,3 +1,9 @@
+packageRank 0.3.5.9042
+==================
+
+- amend plotTopCountryCodes() and use sugrrants::facet_calendar().
+
+
 packageRank 0.3.5.9041
 ==================
 

@@ -25,22 +25,25 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
 #' Plot Top N Downloads by Country Code.
 #'
 #' @param dat Object.
-#' @param log.downloads Logical. Logarithm of package downloads.
 #' @export
 
-plotTopCountryCodes <- function(dat = packageRank::blog.data$top.n,
-  log.downloads = FALSE) {
-
-  p <- ggplot(data = dat,
+plotTopCountryCodes <- function(dat = packageRank::blog.data$top.n) {
+  dat$downloads <- (dat$downloads) / 10^6
+  ggplot(data = dat,
     aes_string(x = "id", y =  "downloads", label = "country")) +
-    geom_line(color = "red", size = 1/3) +
-    geom_text(size = 3.5) +
+    geom_line(size = 1/3) +
+    geom_text(data = dat[dat$id == 1, ], nudge_x = 0.8, size = 3,
+      color = "red") +
+    geom_point(data = dat[dat$id != 1, ]) +
+    geom_point(data = dat[dat$id == 1, ], color = "red") +
     theme_bw() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank()) +
-    facet_wrap(~ date, ncol = 7) +
-    scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5))
-  if (log.downloads) p + scale_y_log10() else p
+    facet_calendar(~ as.Date(date)) +
+    scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
+    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 2.75)) +
+    xlab("Rank") +
+    ylab("Downloads (millions)")
 }
 
 #' Compute Downloads by Country Code.
