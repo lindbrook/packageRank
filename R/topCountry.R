@@ -76,20 +76,22 @@ downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
 
 #' Plot Compute Downloads by Country Code.
 #'
-#' @param x Object.
+#' @param dat Object.
 #' @export
 
-plotDownloadsCountry <- function(x = packageRank::blog.data$download.country) {
-  dat <- x
+plotDownloadsCountry <- function(dat=packageRank::blog.data$download.country) {
   dat$downloads <- (dat$downloads) / 10^6
   ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
-    geom_line(color = "red") +
+    geom_line() +
     theme_bw() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank()) +
-    facet_wrap(~ date, ncol = 7) +
-    geom_point(data = dat[dat$id %in% 1:2, ]) +
-    geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 45, size = 3) +
+    facet_calendar(~ as.Date(date)) +
+    geom_point(data = dat[dat$id %in% 1:2, ], shape = 1, color = "red",
+      stroke = 1) +
+    geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 45, size = 3,
+      color = "red") +
+    geom_point(size = 0.5) +
     scale_x_continuous(breaks = c(0, 100, 200)) +
     scale_y_continuous(breaks = c(0, 1, 2), limits = c(-0.25, 2.75)) +
     xlab("Rank") +
