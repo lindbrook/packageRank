@@ -1,18 +1,17 @@
 #' Version Plot.
 #'
 #' Document code for blog graph.
-#' @importFrom sugrrants facet_calendar
 #' @export
 
 versionPlot <- function() {
-  cran.pkg_ver <- blog.data$cran.pkg_ver
+  cran.pkg_ver <- packageRank::blog.data$cran.pkg_ver
 
   for (i in seq_along(cran.pkg_ver)) {
     cran.pkg_ver[[i]]$pkg.id <- seq_len(nrow(cran.pkg_ver[[i]]))
   }
 
   pkg.dataA <- do.call(rbind, cran.pkg_ver)
-  archive.pkg_ver <- blog.data$archive.pkg_ver
+  archive.pkg_ver <- packageRank::blog.data$archive.pkg_ver
 
   for (i in seq_along(archive.pkg_ver)) {
     archive.pkg_ver[[i]]$pkg.id <- 100:199
