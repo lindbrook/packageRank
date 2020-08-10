@@ -1,8 +1,7 @@
 packageRank 0.3.5.9042
 ==================
 
-- amend plotTopCountryCodes() and plotDownloadsCountry; use
-  sugrrants::facet_calendar().
+- amend plotTopCountryCodes() and plotDownloadsCountry; use facet_calendar().
 - clean code and output for smallFilter0().
 
 
