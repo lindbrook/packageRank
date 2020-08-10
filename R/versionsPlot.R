@@ -24,15 +24,15 @@ versionPlot <- function() {
   titleA <- "Percent of Package-Versions Downloaded:"
   titleB <- "Active & Inactive Packages"
 
-  # https://github.com/tidyverse/ggplot2/issues/2963
-  # geom_vline(xintercept) --> geom_vline(aes(xintercept))
-
   ggplot(data = pkg.data, aes_string(x = "pkg.id", y = "pct.obs.exp")) +
-    geom_line(col = adjustcolor("red", alpha.f = 0.5), size = 0.5) +
+    geom_line(col = grDevices::adjustcolor("red", alpha.f = 0.5), size = 0.5) +
+
+    # https://github.com/tidyverse/ggplot2/issues/2963
+    # geom_vline(xintercept) --> geom_vline(aes(xintercept))
     geom_vline(aes(xintercept = 99.5), col = "black", linetype = "dashed") +
-    xlab("Package ID") +
+
+    xlab("Sample Package ID") +
     ylab("Percent") +
-    # facet_wrap(~ date, ncol = 7) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     theme_bw() +
     theme(panel.grid.minor = element_blank(),
