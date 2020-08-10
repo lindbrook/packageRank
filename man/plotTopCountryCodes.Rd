@@ -4,10 +4,7 @@
 \alias{plotTopCountryCodes}
 \title{Plot Top N Downloads by Country Code.}
 \usage{
-plotTopCountryCodes(dat = packageRank::blog.data$top.n)
-}
-\arguments{
-\item{dat}{Object.}
+plotTopCountryCodes()
 }
 \description{
 Plot Top N Downloads by Country Code.
