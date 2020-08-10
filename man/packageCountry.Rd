@@ -5,9 +5,9 @@
 \title{Package download counts by country.}
 \usage{
 packageCountry(packages = NULL, date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
-  triplet.filter = TRUE, ip.filter = TRUE, check.package = TRUE,
-  dev.mode = FALSE)
+  memoization = TRUE, sort = TRUE, na.rm = FALSE,
+  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
+  check.package = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -20,11 +20,11 @@ packageCountry(packages = NULL, date = Sys.Date() - 1,
 
 \item{na.rm}{Logical. Remove NAs.}
 
-\item{small.filter}{Logical.}
-
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{small.filter}{Logical.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 

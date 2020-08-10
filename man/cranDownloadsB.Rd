@@ -5,8 +5,8 @@
 \title{Filtered package downloads from the RStudio CRAN mirror (protoype).}
 \usage{
 cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
-  check.package = TRUE, small.filter = TRUE, triplet.filter = TRUE,
-  ip.filter = TRUE, memoization = TRUE, dev.mode = FALSE)
+  check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
+  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -15,11 +15,11 @@ cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
-\item{small.filter}{Logical.}
-
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{small.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

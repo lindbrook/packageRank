@@ -6,16 +6,16 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
 #' @param na.rm Logical. Remove NAs.
-#' @param small.filter Logical.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
+#' @param small.filter Logical.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE, small.filter = TRUE,
-  triplet.filter = TRUE, ip.filter = TRUE, check.package = TRUE,
+  memoization = TRUE, sort = TRUE, na.rm = FALSE, triplet.filter = TRUE,
+  ip.filter = TRUE, small.filter = TRUE, check.package = TRUE,
   dev.mode = FALSE) {
 
   if (!is.null(packages)) {
@@ -26,9 +26,9 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
     }
   }
 
-  lst <- packageLog(packages = packages, date = date, memoization = memoization,
-    small.filter = small.filter, triplet.filter = triplet.filter,
-    ip.filter = ip.filter)
+  lst <- packageLog2(packages = packages, date = date,
+    memoization = memoization, triplet.filter = triplet.filter,
+    ip.filter = ip.filter, small.filter = small.filter)
 
   if (na.rm) {
     if (is.data.frame(lst)) {

@@ -4,6 +4,7 @@ packageRank 0.3.5.9042
 - amend plotTopCountryCodes() and plotDownloadsCountry; use facet_calendar().
 - clean code and output for smallFilter0().
 - add versionsPlot() blog graph.
+- use packageLog2() in cranDownloadsB() and packageCountry().
 
 
 packageRank 0.3.5.9041
