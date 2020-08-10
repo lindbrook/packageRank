@@ -57,16 +57,17 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L) {
     }
 
     if (any(crosstab <= 2) & length(vers) != 0 & any(size.audit >= 2)) {
-      dat[row.names(dat) %in% c(leftover, unlist(classified)), ]
+      sel <- c(leftover, unlist(classified))
     } else if (any(crosstab <= 2) & length(vers) != 0 & all(size.audit == 1)) {
-      dat[row.names(dat) %in% c(leftover, unclassified), ]
+      sel <- c(leftover, unclassified)
     } else if (any(crosstab <= 2) & length(vers) == 0) {
-      dat[row.names(dat) %in% leftover, ]
+      sel <- leftover
     } else if (all(crosstab > 2 & length(vers) != 0) & any(size.audit >= 2)) {
-      dat[row.names(dat) %in% unlist(classified), ]
+      sel <- unlist(classified)
     } else if (all(crosstab > 2 & length(vers) != 0) & all(size.audit == 1)) {
-      dat[row.names(dat) %in% unclassified, ]
+      sel <- unclassified
     }
+
+    dat[row.names(dat) %in% sel, ]
   }
 }
-
