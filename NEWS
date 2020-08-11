@@ -2,6 +2,7 @@ packageRank 0.3.5.9043
 ==================
 
 - revise smallFilter0().
+- set floor for packages downloaded for k-means in ipFilter3().
 
 
 packageRank 0.3.5.9042
