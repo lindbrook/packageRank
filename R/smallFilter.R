@@ -40,11 +40,12 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L) {
       length(unique(round(log10(dat[dat$version == v , "size"]))))
     }, integer(1L))
 
-    if (all(size.audit == 1)) {
-      unclassified <- row.names(dat[dat$version %in% names(size.audit), ])
+    if (any(size.audit == 1)) {
+      no.variance <- names(size.audit[size.audit == 1])
+      unclassified <- row.names(dat[dat$version %in% no.variance, ])
     } else if (any(size.audit >= 2)) {
       vers <- vers[size.audit >= 2]
-      classified <- lapply(vers, function(v) {
+      classified <- unlist(lapply(vers, function(v) {
         tmp <- dat[dat$version == v , ]
         km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
           nstart = nstart)
@@ -53,19 +54,27 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L) {
         large.id <- as.numeric(names(which.max(size)))
         large.size <- tmp[clusters$group %in% large.id, "size"]
         row.names(tmp[tmp$size %in% large.size, ])
-      })
+      }))
     }
 
-    if (any(crosstab <= 2) & length(vers) != 0 & any(size.audit >= 2)) {
-      sel <- c(leftover, unlist(classified))
-    } else if (any(crosstab <= 2) & length(vers) != 0 & all(size.audit == 1)) {
+    l.test <- ifelse("leftover" %in% ls(),length(leftover) > 0, FALSE)
+    u.test <- ifelse("unclassified" %in% ls(), length(unclassified) > 0, FALSE)
+    c.test <- ifelse("classified" %in% ls(), length(classified) > 0, FALSE)
+
+    if (l.test & u.test & c.test) {
+      sel <- c(leftover, unclassified, classified)
+    } else if (l.test & u.test & !c.test) {
       sel <- c(leftover, unclassified)
-    } else if (any(crosstab <= 2) & length(vers) == 0) {
+    } else if (l.test & !u.test & c.test) {
+      sel <- c(leftover, classified)
+    } else if (!l.test & u.test & c.test) {
+      sel <- c(unclassified, classified)
+    } else if (l.test & !u.test & !c.test) {
       sel <- leftover
-    } else if (all(crosstab > 2 & length(vers) != 0) & any(size.audit >= 2)) {
-      sel <- unlist(classified)
-    } else if (all(crosstab > 2 & length(vers) != 0) & all(size.audit == 1)) {
+    } else if (!l.test & u.test & !c.test) {
       sel <- unclassified
+    } else if (!l.test & !u.test & c.test) {
+      sel <- classified
     }
 
     dat[row.names(dat) %in% sel, ]
