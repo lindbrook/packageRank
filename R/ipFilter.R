@@ -102,7 +102,8 @@ ipFilter3 <- function(cran_log, output = "ip", floor = NULL, centers = 2L,
   df <- df[!duplicated(df$count), ]
 
   if (is.null(floor)) {
-    cran.max <- nrow(utils::available.packages()) / 2
+    # cran.max <- nrow(utils::available.packages()) / 2
+    cran.max <- 8056L  # 2020-08-16
 
     if (max(crosstab) >= cran.max) {
       km <- stats::kmeans(stats::dist(df$count), centers = centers,
