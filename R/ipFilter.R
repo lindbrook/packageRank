@@ -102,27 +102,28 @@ ipFilter3 <- function(cran_log, output = "ip", floor = NULL, centers = 2L,
   df <- df[!duplicated(df$count), ]
 
   if (is.null(floor)) {
-    cran.max <- nrow(utils::available.packages()) / 2
+    # cran.max <- nrow(utils::available.packages()) / 2
+    cran.max <- 8056L  # 2020-08-16
 
     if (max(crosstab) >= cran.max) {
       km <- stats::kmeans(stats::dist(df$count), centers = centers,
         nstart = nstart)
-      out <- data.frame(ip = df$ip, downloads = df$count, group = km$cluster)
+      out <- data.frame(ip = df$ip, packages = df$count, group = km$cluster)
     } else {
-      out <- data.frame(ip = df$ip, downloads = df$count, group = 1)
+      out <- data.frame(ip = df$ip, packages = df$count, group = 1)
     }
 
     ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]
     out <- merge(out, ip.country, by.x = "ip", by.y = "ip_id")
-    out <- out[, c("ip", "country", "downloads", "group")]
+    out <- out[, c("ip", "country", "packages", "group")]
 
     if (output == "ip") {
       grp <- as.numeric(names(which.min(table(out$group))))
       out <- out[out$group == grp, ]
-      out <- out[order(out$downloads, decreasing = TRUE), ]
+      out <- out[order(out$packages, decreasing = TRUE), ]
       out <- as.numeric(out$ip)
     } else if (output == "df") {
-      out <- out[order(out$downloads, decreasing = TRUE), ]
+      out <- out[order(out$packages, decreasing = TRUE), ]
     }
 
   } else {
@@ -133,10 +134,10 @@ ipFilter3 <- function(cran_log, output = "ip", floor = NULL, centers = 2L,
       out <- names(sort(crosstab[crosstab >= floor], decreasing = TRUE))
       out <- as.numeric(out)
     } else if (output == "df") {
-      df <- data.frame(ip = names(crosstab), count = c(crosstab),
+      df <- data.frame(ip = names(crosstab), packages = c(crosstab),
         row.names = NULL)
-      df$group <- ifelse(df$count >= floor, 1, 2)
-      out <- df[order(df$count, decreasing = TRUE), ]
+      df$group <- ifelse(df$packages >= floor, 1, 2)
+      out <- df[order(df$packages, decreasing = TRUE), ]
     }
   }
 
