@@ -21,12 +21,22 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
 
   cran_log <- packageLog2(packages = packages, date = ymd,
     triplet.filter = FALSE, small.filter = FALSE, ip.filter = FALSE)
-  ct <- vapply(cran_log, nrow, integer(1L))
+
+  if (is.data.frame(cran_log)) {
+    ct <- nrow(cran_log)
+  } else {
+    ct <- vapply(cran_log, nrow, integer(1L))
+  }
 
   f.cran_log <- packageLog2(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,
     small.filter = small.filter)
-  f.ct <- vapply(f.cran_log, nrow, integer(1L))
+
+  if (is.data.frame(f.cran_log)) {
+    f.ct <- nrow(f.cran_log)
+  } else {
+    f.ct <- vapply(f.cran_log, nrow, integer(1L))
+  }
 
   data.frame(date = date, package = packages, downloads = ct,
     filtered.downloads = f.ct, row.names = NULL)
