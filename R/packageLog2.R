@@ -45,9 +45,7 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
   if (ip.filter) {
     ip.delete <- ipFilter3(cran_log)
     if (!is.null(packages)) {
-      out <- lapply(out, function(x) {
-        x[!x$ip_id %in% ip.delete, ]
-      })
+      out <- lapply(out, function(x) x[!x$ip_id %in% ip.delete, ])
     } else {
       cran_log <- cran_log[!cran_log$ip_id %in% ip.delete, ]
     }
@@ -55,7 +53,14 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
 
   if (small.filter) {
     if (!is.null(packages)) {
-      out <- lapply(out, smallFilter0)
+      size.audit <- vapply(out, function(x) {
+        length(unique(round(log10(x$size))))
+      }, integer(1L))
+      
+      if (any(size.audit > 1)) {
+        filtered <- lapply(out[size.audit > 1], smallFilter0)
+        out[which(size.audit > 1)] <- filtered
+      }
     } else {
       cran_log <- smallFilter(cran_log)
     }

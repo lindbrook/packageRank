@@ -1,3 +1,10 @@
+packageRank 0.3.5.9044
+==================
+
+- use size.audit in packageLog2().
+- fix cranDownloadsB().
+
+
 packageRank 0.3.5.9043
 ==================
 
