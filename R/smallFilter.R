@@ -7,10 +7,10 @@
 smallFilter <- function(dat, filter = TRUE) {
   if (is.numeric(filter)) {
     if (filter >= 0) {
-        dat[dat$size >= filter, ]
-      } else if (filter < 0) {
-        dat[dat$size < -filter, ]
-      }
+      dat[dat$size >= filter, ]
+    } else if (filter < 0) {
+      dat[dat$size < -filter, ]
+    }
   } else if (is.logical(filter)) {
     dat[dat$size >= 1000, ]
   } else {
