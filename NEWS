@@ -1,3 +1,10 @@
+packageRank 0.3.5.9046
+==================
+
+- use unique sizes, branch minimum observations and add filter argument in 
+  smallFilter0().
+
+
 packageRank 0.3.5.9045
 ==================
 

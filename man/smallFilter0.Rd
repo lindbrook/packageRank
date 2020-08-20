@@ -4,7 +4,7 @@
 \alias{smallFilter0}
 \title{Filter out small downloads (k-means prototype helper).}
 \usage{
-smallFilter0(dat, centers = 2L, nstart = 25L)
+smallFilter0(dat, centers = 2L, nstart = 25L, filter = TRUE)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}
@@ -12,6 +12,8 @@ smallFilter0(dat, centers = 2L, nstart = 25L)
 \item{centers}{Numeric. Number of k's for k-means clustering.}
 
 \item{nstart}{Numeric. Number of random sets.}
+
+\item{filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
 }
 \description{
 Filter out small downloads (k-means prototype helper).
