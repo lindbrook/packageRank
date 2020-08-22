@@ -1,12 +1,15 @@
 #' Filter out A-Z campaigns (protoype).
 #'
 #' Uses run length encoding rle().
-#' @param tmp Object. Package log entries.
+#' @param ip Numeric. Nominal IP address.
+#' @param cran_log Object. Package log entries.
 #' @param min.obs Numeric. Threshold number of unique packages downloaded.
+#' @param output Character. "df" or "rownames".
 #' @export
 #' @note For use with ipFilter3().
 
-campaigns <- function(tmp, min.obs = 5) {
+campaigns <- function(ip, cran_log, min.obs = 5, output = "rownames") {
+  tmp <- cran_log[cran_log$ip_id == ip, ]
   tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
   tmp <- tmp[order(tmp$t2, tmp$package), ]
 
@@ -40,7 +43,10 @@ campaigns <- function(tmp, min.obs = 5) {
     }))
   }))
 
-  tmp[-delete.id, ]
+if (output == "df") {
+  tmp[delete.id, ]
+} else if (output == "rownames")
+  row.names(tmp[delete.id, ])
 }
 
 firstLetter <- function(x) tolower(substring(x, 1, 1))
@@ -52,4 +58,3 @@ runLengthEncoding <- function(x) {
              start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
              end = cumsum(dat$lengths))
 }
-

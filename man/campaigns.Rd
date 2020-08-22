@@ -4,12 +4,16 @@
 \alias{campaigns}
 \title{Filter out A-Z campaigns (protoype).}
 \usage{
-campaigns(tmp, min.obs = 5)
+campaigns(ip, cran_log, min.obs = 5, output = "rownames")
 }
 \arguments{
-\item{tmp}{Object. Package log entries.}
+\item{ip}{Numeric. Nominal IP address.}
+
+\item{cran_log}{Object. Package log entries.}
 
 \item{min.obs}{Numeric. Threshold number of unique packages downloaded.}
+
+\item{output}{Character. "df" or "rownames".}
 }
 \description{
 Uses run length encoding rle().
