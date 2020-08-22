@@ -10,13 +10,16 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @param clean.output Logical. NULL row names.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
   triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
   memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
-  clean.output = FALSE) {
+  clean.output = FALSE, multi.core = TRUE) {
+
+  cores <- multiCore(multi.core)
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
@@ -43,12 +46,17 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
   }
 
   if (ip.filter) {
-    ip.delete <- ipFilter3(cran_log)
-    if (!is.null(packages)) {
-      out <- lapply(out, function(x) x[!x$ip_id %in% ip.delete, ])
-    } else {
-      cran_log <- cran_log[!cran_log$ip_id %in% ip.delete, ]
-    }
+    ip.outliers <- ipFilter3(cran_log)
+
+    # 18.7 sec.-> 12.4 sec.
+    row.delete <- unlist(parallel::mclapply(ip.outliers, function(ip) {
+      campaigns(ip, cran_log)
+    }, mc.cores = cores))
+
+    out <- lapply(out, function(x) {
+      x[!row.names(x) %in% row.delete, ]
+    })
+
   }
 
   if (small.filter) {
@@ -56,7 +64,7 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
       size.audit <- vapply(out, function(x) {
         length(unique(round(log10(x$size))))
       }, integer(1L))
-      
+
       if (any(size.audit > 1)) {
         filtered <- lapply(out[size.audit > 1], smallFilter0)
         out[which(size.audit > 1)] <- filtered

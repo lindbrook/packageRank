@@ -1,7 +1,15 @@
+packageRank 0.3.5.9047
+==================
+
+- add campaigns().
+- add packageLog2(multi.core).
+- amend packageLog2(ip.filter) output.
+
+
 packageRank 0.3.5.9046
 ==================
 
-- use unique sizes, branch minimum observations and add filter argument in 
+- use unique sizes, branch minimum observations and add filter argument in
   smallFilter0().
 
 
