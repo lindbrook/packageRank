@@ -32,7 +32,7 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
 
   if (!is.null(packages)) {
     cran_log <- cran_log[!is.na(cran_log$package) & !is.na(cran_log$size), ]
-    out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+    out <- lapply(packages, function(p) cran_log[cran_log$packadege == p, ])
 
     if (triplet.filter) {
       out <- lapply(out, function(x) {
@@ -43,12 +43,13 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
   }
 
   if (ip.filter) {
-    ip.delete <- ipFilter3(cran_log)
-    if (!is.null(packages)) {
-      out <- lapply(out, function(x) x[!x$ip_id %in% ip.delete, ])
-    } else {
-      cran_log <- cran_log[!cran_log$ip_id %in% ip.delete, ]
-    }
+    ip.outliers <- ipFilter3(cran_log)
+
+    row.delete <- unlist(lapply(ip.outliers, function(ip) {
+      campaigns(ip, cran_log)
+    }))
+
+    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
   if (small.filter) {
@@ -56,7 +57,7 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
       size.audit <- vapply(out, function(x) {
         length(unique(round(log10(x$size))))
       }, integer(1L))
-      
+
       if (any(size.audit > 1)) {
         filtered <- lapply(out[size.audit > 1], smallFilter0)
         out[which(size.audit > 1)] <- filtered
