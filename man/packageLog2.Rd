@@ -7,7 +7,7 @@
 packageLog2(packages = NULL, date = Sys.Date() - 1,
   triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
   memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
-  clean.output = FALSE)
+  clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -27,6 +27,8 @@ packageLog2(packages = NULL, date = Sys.Date() - 1,
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 
 \item{clean.output}{Logical. NULL row names.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \value{
 An R data frame.
