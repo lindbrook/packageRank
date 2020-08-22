@@ -32,7 +32,7 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
 
   if (!is.null(packages)) {
     cran_log <- cran_log[!is.na(cran_log$package) & !is.na(cran_log$size), ]
-    out <- lapply(packages, function(p) cran_log[cran_log$packadege == p, ])
+    out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
 
     if (triplet.filter) {
       out <- lapply(out, function(x) {
