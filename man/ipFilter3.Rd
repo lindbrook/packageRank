@@ -4,7 +4,7 @@
 \alias{ipFilter3}
 \title{Identify IP's that are mirroring CRAN (k-means helper prototype).}
 \usage{
-ipFilter3(cran_log, output = "ip", floor = NULL, centers = 2L, nstart = 25L)
+ipFilter3(cran_log, output = "ip", floor = 10000L, centers = 2L, nstart = 25L)
 }
 \arguments{
 \item{cran_log}{Object. cran log.}

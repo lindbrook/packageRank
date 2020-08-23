@@ -1,3 +1,10 @@
+packageRank 0.3.5.9048
+==================
+
+- use multi.core for packageLog2(triplet.filter = TRUE).
+- set ipFilter3(floor = 10000L).
+
+
 packageRank 0.3.5.9047
 ==================
 

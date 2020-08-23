@@ -89,7 +89,7 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-ipFilter3 <- function(cran_log, output = "ip", floor = NULL, centers = 2L,
+ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
   nstart = 25L) {
 
   if (!output %in% c("df", "ip")) stop('"output" must be "ip" or "df".')
@@ -99,11 +99,11 @@ ipFilter3 <- function(cran_log, output = "ip", floor = NULL, centers = 2L,
   })
 
   df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
-  df <- df[!duplicated(df$count), ]
 
   if (is.null(floor)) {
-    # cran.max <- nrow(utils::available.packages()) / 2
-    cran.max <- 8056L  # 2020-08-16
+    df <- df[!duplicated(df$count), ]
+    cran.max <- nrow(utils::available.packages()) / 2
+    # cran.max <- 8056L  # 2020-08-16
 
     if (max(crosstab) >= cran.max) {
       km <- stats::kmeans(stats::dist(df$count), centers = centers,
