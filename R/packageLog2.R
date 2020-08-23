@@ -38,10 +38,17 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
     out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
 
     if (triplet.filter) {
-      out <- lapply(out, function(x) {
-        filtered.data <- tripletFilter(x)
-        do.call(rbind, filtered.data)
-      })
+      if (length(packages) == 1) {
+        out <- lapply(out, function(x) {
+          filtered.data <- tripletFilter(x)
+          do.call(rbind, filtered.data)
+        })
+      } else if (length(packages) > 1) {
+        out <- parallel::mclapply(out, function(x) {
+          filtered.data <- tripletFilter(x)
+          do.call(rbind, filtered.data)
+        }, mc.cores = cores)
+      }
     }
   }
 
