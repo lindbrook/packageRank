@@ -104,3 +104,16 @@ packageLog2 <- function(packages = NULL, date = Sys.Date() - 1,
 
   if (is.null(packages)) cran_log else out
 }
+
+#' Get Package Download Logs.
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param date Character. Date.
+#' @return An R data frame.
+#' @export
+
+packageLog0 <- function(date = Sys.Date() - 1) {
+  date <- check10CharDate(date)
+  ymd <- fixDate_2012(date)
+  fetchCranLog(date = ymd, memoization = FALSE)
+}
