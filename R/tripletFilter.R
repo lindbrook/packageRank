@@ -74,13 +74,16 @@ tripletFilter <- function(dat, time.window = 2) {
       } else {
         time.fix <- lapply(possible.triplets, function(x) {
           possible.data <- v.data[v.data$id %in% x, ]
+
           possible.data$date.time <- as.POSIXlt(paste(possible.data$date,
             possible.data$time), tz = "Europe/Vienna")
 
           before.after <- c(possible.data$date.time + 1:time.window,
                             possible.data$date.time - 1:time.window)
 
-          before.after <- strftime(before.after, format = "%H:%M:%S")
+          before.after <- strftime(before.after, format = "%H:%M:%S",
+            tz = "Europe/Vienna")
+
           candidates <- paste0(before.after, "-", possible.data$machine)
 
           neighbor.test <- vapply(candidates, function(x) {

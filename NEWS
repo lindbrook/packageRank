@@ -3,6 +3,7 @@ packageRank 0.3.5.9050
 
 - use as.POSIXlt() for time.window; add exception for n < 3 in tripletFilter().
 - deprecate timeWindow().
+- fix/set strftime(tz = "Europe/Vienna") in tripletFilter().
 
 
 packageRank 0.3.5.9049
