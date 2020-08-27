@@ -4,20 +4,21 @@
 \alias{packageLog}
 \title{Get Package Download Logs.}
 \usage{
-packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
-  triplet.filter = TRUE, ip.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE)
+packageLog(packages = NULL, date = Sys.Date() - 1, triplet.filter = TRUE,
+  ip.filter = TRUE, small.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date.}
 
-\item{small.filter}{Logical.}
-
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{small.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
@@ -26,6 +27,8 @@ packageLog(packages = NULL, date = Sys.Date() - 1, small.filter = TRUE,
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 
 \item{clean.output}{Logical. NULL row names.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \value{
 An R data frame.

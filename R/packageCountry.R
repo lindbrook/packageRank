@@ -19,28 +19,26 @@ packageCountry <- function(packages = NULL, date = Sys.Date() - 1,
   dev.mode = FALSE) {
 
   if (!is.null(packages)) {
-    if (!"R" %in% packages) {
-      if (check.package) {
-        packages <- checkPackage(packages, dev.mode)
-      }
+    if (check.package) {
+      packages <- checkPackage(packages, dev.mode)
     }
   }
 
-  lst <- packageLog2(packages = packages, date = date,
+  p.log <- packageLog(packages = packages, date = date,
     memoization = memoization, triplet.filter = triplet.filter,
     ip.filter = ip.filter, small.filter = small.filter)
 
   if (na.rm) {
-    if (is.data.frame(lst)) {
-      out <- table(lst$country)
-    } else if (is.list(lst)) {
-      out <- lapply(lst, function(x) table(x$country))
+    if (is.data.frame(p.log)) {
+      out <- table(p.log$country)
+    } else if (is.list(p.log)) {
+      out <- lapply(p.log, function(x) table(x$country))
     }
   } else {
-    if (is.data.frame(lst)) {
-      out <- table(lst$country, useNA = "ifany")
-    } else if (is.list(lst)) {
-      out <- lapply(lst, function(x) table(x$country, useNA = "ifany"))
+    if (is.data.frame(p.log)) {
+      out <- table(p.log$country, useNA = "ifany")
+    } else if (is.list(p.log)) {
+      out <- lapply(p.log, function(x) table(x$country, useNA = "ifany"))
     }
   }
 
