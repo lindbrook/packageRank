@@ -124,6 +124,7 @@ ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
       out <- as.numeric(out$ip)
     } else if (output == "df") {
       out <- out[order(out$packages, decreasing = TRUE), ]
+      row.names(out) <- NULL
     }
 
   } else {
@@ -134,10 +135,14 @@ ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
       out <- names(sort(crosstab[crosstab >= floor], decreasing = TRUE))
       out <- as.numeric(out)
     } else if (output == "df") {
-      df <- data.frame(ip = names(crosstab), packages = c(crosstab),
+      out <- data.frame(ip = names(crosstab), packages = c(crosstab),
         row.names = NULL)
-      df$group <- ifelse(df$packages >= floor, 1, 2)
-      out <- df[order(df$packages, decreasing = TRUE), ]
+      out$group <- ifelse(out$packages >= floor, 1, 2)
+      ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]
+      out <- merge(out, ip.country, by.x = "ip", by.y = "ip_id")
+      out <- out[, c("ip", "country", "packages", "group")]
+      out <- out[order(out$packages, decreasing = TRUE), ]
+      row.names(out) <- NULL
     }
   }
 
