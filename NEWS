@@ -3,6 +3,7 @@ packageRank 0.3.5.9051
 
 - replace packageLog() with packageLog2().
 - amend/clean tripletFilter().
+- fix output of ipFilter3(output = "df", floor = 10000L).
 
 
 packageRank 0.3.5.9050
