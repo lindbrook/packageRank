@@ -85,12 +85,12 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
     if (clean.output) rownames(out) <- NULL
   } else if (length(packages > 1)) {
     names(out) <- packages
-    out <- lapply(out, function(x) {
+    out <- parallel::mclapply(out, function(x) {
       x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
       tmp <- x[order(x$date.time), ]
       tmp$date.time <- NULL
       tmp
-    })
+    }, mc.cores = cores)
   } else if (is.null(packages)) {
     cran_log$date.time <- as.POSIXlt(paste(cran_log$date, cran_log$time),
       tz = "Europe/Vienna")

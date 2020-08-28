@@ -1,3 +1,9 @@
+packageRank 0.3.5.9052
+==================
+
+- use mclapply() to order output by time in packageLog().
+
+
 packageRank 0.3.5.9051
 ==================
 
