@@ -105,11 +105,12 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.
+#' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @export
 
-packageLog0 <- function(date = Sys.Date() - 1) {
+packageLog0 <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  fetchCranLog(date = ymd, memoization = FALSE)
+  fetchCranLog(date = ymd, memoization = memoization)
 }

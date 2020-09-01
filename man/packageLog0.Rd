@@ -4,10 +4,12 @@
 \alias{packageLog0}
 \title{Get Package Download Logs.}
 \usage{
-packageLog0(date = Sys.Date() - 1)
+packageLog0(date = Sys.Date() - 1, memoization = TRUE)
 }
 \arguments{
 \item{date}{Character. Date.}
+
+\item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \value{
 An R data frame.
