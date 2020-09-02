@@ -6,7 +6,8 @@
 \usage{
 cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
   check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE)
+  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -20,6 +21,8 @@ cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
 \item{ip.filter}{Logical.}
 
 \item{small.filter}{Logical.}
+
+\item{sequence.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

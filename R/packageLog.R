@@ -6,6 +6,7 @@
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
 #' @param small.filter Logical.
+#' @param sequence.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
@@ -16,8 +17,8 @@
 
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
-  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
-  clean.output = FALSE, multi.core = TRUE) {
+  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
@@ -77,16 +78,26 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
     }
   }
 
+  if (sequence.filter) {
+    if (!is.null(packages)) {
+      out <- lapply(out, sequenceFilter)
+    }
+  }
+
   if (length(packages) == 1) {
     out <- out[[1]]
-    out$date.time <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
-    out <- out[order(out$date.time), ]
-    out$date.time <- NULL
+    if (!"t2" %in% names(out)) {
+      out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+    }
+    out <- out[order(out$t2), ]
+    out$t2 <- NULL
     if (clean.output) rownames(out) <- NULL
   } else if (length(packages > 1)) {
     names(out) <- packages
     out <- parallel::mclapply(out, function(x) {
-      x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
+      if (!"t2" %in% names(x)) {
+        x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
+      }
       tmp <- x[order(x$date.time), ]
       tmp$date.time <- NULL
       tmp
@@ -105,11 +116,12 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.
+#' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @export
 
-packageLog0 <- function(date = Sys.Date() - 1) {
+packageLog0 <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  fetchCranLog(date = ymd, memoization = FALSE)
+  fetchCranLog(date = ymd, memoization = memoization)
 }

@@ -7,20 +7,23 @@
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
 #' @param small.filter Logical.
+#' @param sequence.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
   check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE) {
+  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
+  dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
 
   cran_log <- packageLog(packages = packages, date = ymd,
-    triplet.filter = FALSE, small.filter = FALSE, ip.filter = FALSE)
+    triplet.filter = FALSE, ip.filter = FALSE, small.filter = FALSE,
+    sequence.filter = FALSE, memoization = memoization)
 
   if (is.data.frame(cran_log)) {
     ct <- nrow(cran_log)
@@ -30,7 +33,8 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
 
   f.cran_log <- packageLog(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,
-    small.filter = small.filter)
+    small.filter = small.filter, sequence.filter = sequence.filter,
+    memoization = memoization)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)

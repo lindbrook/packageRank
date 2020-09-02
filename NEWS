@@ -1,3 +1,11 @@
+packageRank 0.3.5.9053
+==================
+
+- archive sequentialVersion().
+- add memoization argument in packageLog0().
+- add/use sequenceFilter() prototype.
+
+
 packageRank 0.3.5.9052
 ==================
 
