@@ -4,18 +4,20 @@
 \alias{pkgLog}
 \title{Extract Package Logs.}
 \usage{
-pkgLog(i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  use.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  pkg = "cholera", dat, multi.core = TRUE)
+pkgLog(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
+  campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  pkg = "cholera", multi.core = TRUE, clean.output = TRUE)
 }
 \arguments{
+\item{dat}{Object. List of logs.}
+
 \item{i}{Numeric. Day/ID.}
 
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
 
-\item{use.campaigns}{Logical.}
+\item{campaigns}{Logical. For use with ip.filter.}
 
 \item{small.filter}{Logical.}
 
@@ -23,9 +25,9 @@ pkgLog(i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 
 \item{pkg}{Character.}
 
-\item{dat}{Object. List of logs.}
-
 \item{multi.core}{Logical or Numeric.}
+
+\item{clean.output}{Logical.}
 }
 \description{
 Extract Package Logs.
