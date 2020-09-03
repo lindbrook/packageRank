@@ -4,14 +4,28 @@
 \alias{pkgLog}
 \title{Extract Package Logs.}
 \usage{
-pkgLog(i = 1, pkg = "cholera", dat = july_log)
+pkgLog(i = 1, triplet.filter = TRUE, ip.filter = TRUE,
+  use.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  pkg = "cholera", dat, multi.core = TRUE)
 }
 \arguments{
 \item{i}{Numeric. Day/ID.}
 
+\item{triplet.filter}{Logical.}
+
+\item{ip.filter}{Logical.}
+
+\item{use.campaigns}{Logical.}
+
+\item{small.filter}{Logical.}
+
+\item{sequence.filter}{Logical.}
+
 \item{pkg}{Character.}
 
 \item{dat}{Object. List of logs.}
+
+\item{multi.core}{Logical or Numeric.}
 }
 \description{
 Extract Package Logs.

@@ -1,3 +1,9 @@
+packageRank 0.3.5.9055
+==================
+
+- move pkgLog() to pkgLog0(); amend pkgLog().
+
+
 packageRank 0.3.5.9054
 ==================
 
