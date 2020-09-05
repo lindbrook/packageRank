@@ -1,3 +1,9 @@
+packageRank 0.3.5.9057
+==================
+
+- use kmClassifier() helper with smallFilter0().
+
+
 packageRank 0.3.5.9056
 ==================
 

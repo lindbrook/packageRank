@@ -60,21 +60,8 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
         }
 
         if (any(size.audit >= 2 & obs.ct.audit > 2)) {
-          vers <- vers[size.audit >= 2 & obs.ct.audit > 2]
-          classified <- unlist(lapply(vers, function(v) {
-            v.data <- dat[dat$version == v, ]
-
-            # To avoid: "Error: vector memory exhausted (limit reached?)"
-            tmp <- v.data[!duplicated(v.data$size), ]
-
-            km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
-              nstart = nstart)
-            clusters <- data.frame(size = tmp$size, group = km$cluster)
-            size <- tapply(clusters$size, clusters$group, mean)
-            large.id <- as.numeric(names(which.max(size)))
-            large.size <- tmp[clusters$group %in% large.id, "size"]
-            row.names(v.data[v.data$size %in% large.size, ])
-          }))
+          classified <- kmClassifier(vers, dat, size.audit, obs.ct.audit,
+            centers, nstart)
         }
 
         l.test <- ifelse("leftover" %in% ls(), length(leftover) > 0, FALSE)
@@ -139,21 +126,8 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
       }
 
       if (any(size.audit >= 2 & obs.ct.audit > 2)) {
-        vers <- vers[size.audit >= 2 & obs.ct.audit > 2]
-        classified <- unlist(lapply(vers, function(v) {
-          v.data <- dat[dat$version == v, ]
-
-          # To avoid: "Error: vector memory exhausted (limit reached?)"
-          tmp <- v.data[!duplicated(v.data$size), ]
-
-          km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
-            nstart = nstart)
-          clusters <- data.frame(size = tmp$size, group = km$cluster)
-          size <- tapply(clusters$size, clusters$group, mean)
-          large.id <- as.numeric(names(which.max(size)))
-          large.size <- tmp[clusters$group %in% large.id, "size"]
-          row.names(v.data[v.data$size %in% large.size, ])
-        }))
+        classified <- kmClassifier(vers, dat, size.audit, obs.ct.audit,
+          centers, nstart)
       }
 
       s.test <- ifelse("size.null" %in% ls(), length(size.null) > 0, FALSE)
@@ -182,4 +156,21 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
 
   out <- dat[row.names(dat) %in% sel, ]
   smallFilter(out, filter = filter)
+}
+
+kmClassifier <- function(vers, dat, size.audit, obs.ct.audit, centers, nstart) {
+  vers <- vers[size.audit >= 2 & obs.ct.audit > 2]
+  unlist(lapply(vers, function(v) {
+    v.data <- dat[dat$version == v, ]
+    # Remove duplicates to avoid: "Error: vector memory exhausted (limit
+    # reached?)".
+    tmp <- v.data[!duplicated(v.data$size), ]
+    km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
+      nstart = nstart)
+    clusters <- data.frame(size = tmp$size, group = km$cluster)
+    size <- tapply(clusters$size, clusters$group, mean)
+    large.id <- as.numeric(names(which.max(size)))
+    large.size <- tmp[clusters$group %in% large.id, "size"]
+    row.names(v.data[v.data$size %in% large.size, ])
+  }))
 }
