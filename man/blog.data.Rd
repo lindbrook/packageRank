@@ -31,7 +31,8 @@ blog.data
    \item{\code{ccode.ct}}{}
    \item{\code{crosstab_2019_10_01}}{}
    \item{\code{percentiles}}{}
-   \item{\code{top.n}}{}
+   \item{\code{top.n.oct2019}}{}
+   \item{\code{top.n.jul2020}}{}
    \item{\code{download.country}}{}
 }
 }
