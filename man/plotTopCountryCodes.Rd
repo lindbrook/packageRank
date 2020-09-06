@@ -4,7 +4,10 @@
 \alias{plotTopCountryCodes}
 \title{Plot Top N Downloads by Country Code.}
 \usage{
-plotTopCountryCodes()
+plotTopCountryCodes(dataset = "october")
+}
+\arguments{
+\item{dataset}{Character}
 }
 \description{
 Plot Top N Downloads by Country Code.

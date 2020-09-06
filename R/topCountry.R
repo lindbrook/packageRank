@@ -24,12 +24,19 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
 
 #' Plot Top N Downloads by Country Code.
 #'
+#' @param dataset Character
 #' @importFrom sugrrants facet_calendar
 #' @export
 
-plotTopCountryCodes <- function() {
-  dat <- packageRank::blog.data$top.n
-  dat$downloads <- (dat$downloads) / 10^6
+plotTopCountryCodes <- function(dataset = "october") {
+  if (dataset == "october") {
+    dat <- packageRank::blog.data$top.n.oct2019
+  } else if (dataset == "july") {
+    dat <- packageRank::blog.data$top.n.jul2020
+  } else stop('dataset must be "july" or "october".')
+
+  dat$downloads <- dat$downloads / 10^6
+
   ggplot(data = dat,
     aes_string(x = "id", y = "downloads", label = "country")) +
     geom_line(size = 1/3) +
@@ -42,7 +49,7 @@ plotTopCountryCodes <- function() {
           panel.grid.minor = element_blank()) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
-    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 2.75)) +
+    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 3)) +
     xlab("Rank") +
     ylab("Downloads (millions)")
 }
@@ -82,7 +89,7 @@ downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
 
 plotDownloadsCountry <- function() {
   dat <- packageRank::blog.data$download.country
-  dat$downloads <- (dat$downloads) / 10^6
+  dat$downloads <- dat$downloads / 10^6
   ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
     geom_line() +
     theme_bw() +
