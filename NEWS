@@ -3,6 +3,7 @@ packageRank 0.3.5.9058
 
 - rename blog.data$top.n to blog.data$top.n.oct2019.
 - add blog.data$top.n.jul2020.
+- add dataset argument to plotTopCountryCodes().
 
 
 packageRank 0.3.5.9057
