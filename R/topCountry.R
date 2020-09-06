@@ -49,7 +49,7 @@ plotTopCountryCodes <- function(dataset = "october") {
           panel.grid.minor = element_blank()) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
-    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 2.75)) +
+    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 3)) +
     xlab("Rank") +
     ylab("Downloads (millions)")
 }
@@ -89,7 +89,7 @@ downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
 
 plotDownloadsCountry <- function() {
   dat <- packageRank::blog.data$download.country
-  dat$downloads <- (dat$downloads) / 10^6
+  dat$downloads <- dat$downloads / 10^6
   ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
     geom_line() +
     theme_bw() +
