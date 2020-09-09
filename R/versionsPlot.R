@@ -1,6 +1,7 @@
 #' Version Plot.
 #'
 #' Document code for blog graph.
+#' @importFrom sugrrants facet_calendar
 #' @export
 
 versionPlot <- function() {
