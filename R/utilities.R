@@ -153,9 +153,9 @@ plot.filterCounts <- function(x, filter = "all", smooth = FALSE, ...) {
        mgp = c(3, 0.5, 0))
 
   if (filter == "ip") {
-    title(main = paste(x$pkg, "with", toupper(filter), "Filter"))
+    title(main = paste0("'", x$pkg, "'", ": ", toupper(filter), " Filter"))
   } else {
-    title(main = paste(x$pkg, "with", wordCase(filter), "Filter"))
+    title(main = paste0("'", x$pkg, "'", ": ", wordCase(filter), " Filter"))
   }
 
   if (smooth) {
