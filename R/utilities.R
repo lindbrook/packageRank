@@ -97,33 +97,31 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
   dat <- dat0[dat0$package == pkg,]
 
   if (nrow(dat) != 0) {
-    # Triplet filter
+    # Triplet filter #
     out <- do.call(rbind, tripletFilter(dat))
     triplet.filtered <- nrow(out)
 
-    # IP filter
+    # IP filter #
     ip.outliers <- ipFilter3(dat0)
     if (ip.filter == "campaign") {
       row.delete <- unlist(lapply(ip.outliers, function(x) campaigns(x, dat0)))
-      ip.sel <- !row.names(out) %in% row.delete
-      ip.filtered <- sum(ip.sel)
-      out <- out[ip.sel, ]
+      ip.filtered <- sum(!row.names(dat) %in% row.delete)
+      out <- out[!row.names(out) %in% row.delete, ]
     } else if (ip.filter == "ip") {
-      ip.sel <- !dat$ip_id %in% ip.outliers
-      ip.filtered <- sum(ip.sel)
-      out <- out[ip.sel, ]
+      ip.filtered <- sum(!dat$ip_id %in% ip.outliers)
+      out <- out[!out$ip_id %in% ip.outliers, ]
     }
 
-    # Small Filter
+    # Small Filter #
     small.filtered <- nrow(smallFilter0(dat))
     if (nrow(out) != 0) out <- smallFilter0(out)
 
-    # Sequence Filter
+    # Sequence Filter #
     sequence.filtered <- nrow(sequenceFilter(dat))
     out <- sequenceFilter(out)
 
     data.frame(package = pkg, ct = nrow(dat), triplet = triplet.filtered,
-      ip = ip.filtered, small = small.filtered, sequence = sequence.filtered ,
+      ip = ip.filtered, small = small.filtered, sequence = sequence.filtered,
       all = nrow(out))
   } else {
     data.frame(package = pkg, ct = nrow(dat), triplet = 0, ip = 0, small = 0,
