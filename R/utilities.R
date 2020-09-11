@@ -148,7 +148,7 @@ plot.filterCounts <- function(x, filter = "all", smooth = FALSE, ...) {
   lines(dates, dat$ct, pch = 0, type = "o", col = "red",)
   lines(dates, dat[, filter], type = "o", pch = 16)
   axis(3, at = dates[wed.id], labels = rep("W", length(wed.id)), cex.axis = 2/3,
-       mgp = c(3, 0.5, 0))
+    mgp = c(3, 0.5, 0))
 
   if (filter == "ip") {
     title(main = paste0("'", x$pkg, "'", ": ", toupper(filter), " Filter"))
