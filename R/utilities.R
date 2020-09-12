@@ -80,7 +80,14 @@ filterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
     filter_counts(x, pkg = pkg, ip.filter = ip.filter)
   }, mc.cores = cores)
 
-  out <- list(data = do.call(rbind, out), pkg = pkg)
+  versions <- parallel::mclapply(july_log, function(x)  {
+    x <- x[!is.na(x$package), ]
+    unique(x[x$package == pkg, "version"])
+  }, mc.cores = cores)
+
+  versions <- length(unique(unlist(versions)))
+
+  out <- list(data = do.call(rbind, out), versions = versions, pkg = pkg)
   class(out) <- "filterCounts"
   out
 }
