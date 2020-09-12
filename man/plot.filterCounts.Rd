@@ -4,7 +4,7 @@
 \alias{plot.filterCounts}
 \title{Plot method for filterCounts().}
 \usage{
-\method{plot}{filterCounts}(x, filter = "all", smooth = FALSE, ...)
+\method{plot}{filterCounts}(x, filter = "all", smooth = FALSE, legend.loc = "topleft", ...)
 }
 \arguments{
 \item{x}{object.}
@@ -12,6 +12,8 @@
 \item{filter}{Character. "triplet", "ip", "small", "sequence", "all".}
 
 \item{smooth}{Logical.}
+
+\item{legend.loc}{Character. Location of legend.}
 
 \item{...}{Additional plotting parameters.}
 }

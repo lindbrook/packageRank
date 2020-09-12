@@ -80,7 +80,14 @@ filterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
     filter_counts(x, pkg = pkg, ip.filter = ip.filter)
   }, mc.cores = cores)
 
-  out <- list(data = do.call(rbind, out), pkg = pkg)
+  versions <- parallel::mclapply(lst, function(x)  {
+    x <- x[!is.na(x$package), ]
+    unique(x[x$package == pkg, "version"])
+  }, mc.cores = cores)
+
+  versions <- length(unique(unlist(versions)))
+
+  out <- list(data = do.call(rbind, out), versions = versions, pkg = pkg)
   class(out) <- "filterCounts"
   out
 }
@@ -134,24 +141,37 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
 #' @param x object.
 #' @param filter Character. "triplet", "ip", "small", "sequence", "all".
 #' @param smooth Logical.
+#' @param legend.loc Character. Location of legend.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.filterCounts <- function(x, filter = "all", smooth = FALSE, ...) {
+plot.filterCounts <- function(x, filter = "all", smooth = FALSE,
+  legend.loc = "topleft", ...) {
+
   dat <- x$data
   dates <- as.Date(row.names(dat))
   wed.id <- which(weekdays(dates, abbreviate = TRUE) == "Wed")
 
-  plot(as.Date(row.names(dat)), dat$ct, pch = NA, ylim = range(dat[, -1]),
-    xlab = "Date", ylab = "Downloads")
-  abline(v = dates[wed.id], col = "lightgray", lwd = 2/3)
-  lines(dates, dat$ct, pch = 0, type = "o", col = "red",)
+  plot(dates, dat$ct, pch = NA, ylim = range(dat[, -1]), xlab = "Date",
+    ylab = "Downloads")
+  abline(v = dates[wed.id], col = "gray", lwd = 2/3)
+  lines(dates, dat$ct, pch = 15, type = "o", col = "red",)
   lines(dates, dat[, filter], type = "o", pch = 16)
   axis(3, at = dates[wed.id], labels = rep("W", length(wed.id)), cex.axis = 2/3,
     mgp = c(3, 0.5, 0))
+  legend(x = legend.loc,
+       legend = c("unfiltered", "filtered"),
+       col = c("red", "black"),
+       pch = c(15, 16),
+       bg = "white",
+       cex = 2/3,
+       lwd = 1,
+       title = NULL)
 
   if (filter == "ip") {
     title(main = paste0("'", x$pkg, "'", ": ", toupper(filter), " Filter"))
+  } else if (filter == "all") {
+    title(main = paste0("'", x$pkg, "'", ": ", wordCase(filter), " Filters"))
   } else {
     title(main = paste0("'", x$pkg, "'", ": ", wordCase(filter), " Filter"))
   }
@@ -160,6 +180,14 @@ plot.filterCounts <- function(x, filter = "all", smooth = FALSE, ...) {
     lines(stats::lowess(dates, dat$ct), col = "red", lty = "dotted", lwd = 2)
     lines(stats::lowess(dates, dat[, filter]), lty = "dotted", lwd = 2)
   }
+
+  tot <- colSums(dat[, -1])
+  ptA <- paste0("Totals: unfiltered = ", format(tot["ct"], big.mark = ","),
+    "; filtered = ")
+  ptB <- paste0("% | ", x$versions, " vers. observed.")
+  delta.pct <- round(100 * (tot["ct"] - tot[filter]) / tot[filter], 1)
+  title(sub = paste0(ptA, format(tot[filter], big.mark = ","), "; inflation = ",
+    format(delta.pct, big.mark = ","), ptB))
 }
 
 wordCase <- function(x) {
