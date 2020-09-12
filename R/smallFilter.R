@@ -18,15 +18,13 @@ smallFilter <- function(dat, filter = TRUE) {
   }
 }
 
-#' Filter out small downloads (k-means prototype helper).
+#' Filter out small downloads (hierachical cluster prototype helper).
 #'
 #' @param dat Object. Package log entries.
-#' @param centers Numeric. Number of k's for k-means clustering.
-#' @param nstart Numeric. Number of random sets.
 #' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @export
 
-smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
+smallFilter0 <- function(dat, filter = TRUE) {
   vers <- unique(dat$version)
   crosstab <- table(dat$version)
 
@@ -60,8 +58,7 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
         }
 
         if (any(size.audit >= 2 & obs.ct.audit > 2)) {
-          classified <- kmClassifier(vers, dat, size.audit, obs.ct.audit,
-            centers, nstart)
+          classified <- hcClassifier(vers, dat, size.audit, obs.ct.audit)
         }
 
         l.test <- ifelse("leftover" %in% ls(), length(leftover) > 0, FALSE)
@@ -126,8 +123,7 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
       }
 
       if (any(size.audit >= 2 & obs.ct.audit > 2)) {
-        classified <- kmClassifier(vers, dat, size.audit, obs.ct.audit,
-          centers, nstart)
+        classified <- hcClassifier(vers, dat, size.audit, obs.ct.audit)
       }
 
       s.test <- ifelse("size.null" %in% ls(), length(size.null) > 0, FALSE)
@@ -158,19 +154,19 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
   smallFilter(out, filter = filter)
 }
 
-kmClassifier <- function(vers, dat, size.audit, obs.ct.audit, centers, nstart) {
-  vers <- vers[size.audit >= 2 & obs.ct.audit > 2]
-  unlist(lapply(vers, function(v) {
-    v.data <- dat[dat$version == v, ]
-    # Remove duplicates to avoid: "Error: vector memory exhausted (limit
-    # reached?)".
-    tmp <- v.data[!duplicated(v.data$size), ]
-    km <- stats::kmeans(stats::dist(tmp$size), centers = centers,
-      nstart = nstart)
-    clusters <- data.frame(size = tmp$size, group = km$cluster)
-    size <- tapply(clusters$size, clusters$group, mean)
-    large.id <- as.numeric(names(which.max(size)))
-    large.size <- tmp[clusters$group %in% large.id, "size"]
-    row.names(v.data[v.data$size %in% large.size, ])
-  }))
+hcClassifier <- function(vers, dat, size.audit, obs.ct.audit) {
+   vers <- vers[size.audit >= 2 & obs.ct.audit > 2]
+   unlist(lapply(vers, function(v) {
+      v.data <- dat[dat$version == v, ]
+      tmp <- v.data[!duplicated(v.data$size), ]
+      orders.magnitude <- trunc(log10(tmp$size))
+      ds <- stats::dist(orders.magnitude)
+      ca <- stats::hclust(ds)
+      cut.ca <- stats::cutree(ca, h = max(ds) - 1)
+      clusters <- data.frame(size = orders.magnitude, id = cut.ca)
+      mean.cluster.size <- tapply(clusters$size, clusters$id, mean)
+      cluster.to.select <- as.numeric(names(which.max(mean.cluster.size)))
+      sizes.to.select <- tmp[clusters$id %in% cluster.to.select, "size"]
+      row.names(v.data[v.data$size %in% sizes.to.select, ])
+   }))
 }
