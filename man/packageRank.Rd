@@ -5,21 +5,25 @@
 \title{Package download counts and rank percentiles.}
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE)
+  ip.filter = TRUE, small.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd".}
 
-\item{size.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
+\item{ip.filter}{Logical.}
+
+\item{small.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \value{
 An R data frame.
