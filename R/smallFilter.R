@@ -159,6 +159,7 @@ hcClassifier <- function(vers, dat, size.audit, obs.ct.audit) {
    unlist(lapply(vers, function(v) {
       v.data <- dat[dat$version == v, ]
       tmp <- v.data[!duplicated(v.data$size), ]
+      tmp <- tmp[tmp$size > 0, ] # exclude downloads of size 0.
       orders.magnitude <- trunc(log10(tmp$size))
       ds <- stats::dist(orders.magnitude)
       ca <- stats::hclust(ds)
