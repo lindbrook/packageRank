@@ -42,7 +42,7 @@ smallFilter0 <- function(dat, centers = 2L, nstart = 25L, filter = TRUE) {
     } else {
       if (length(vers) != 0) {
         size.audit <- vapply(vers, function(v) {
-          length(unique(round(log10(dat[dat$version == v , "size"]))))
+          length(unique(trunc(log10(dat[dat$version == v , "size"]))))
         }, integer(1L))
 
         obs.ct.audit <- vapply(vers, function(v) {
