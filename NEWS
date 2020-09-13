@@ -1,3 +1,9 @@
+packageRank 0.3.5.9063
+==================
+
+- packageRank(): add ip.filter and use smallFilter().
+
+
 packageRank 0.3.5.9062
 ==================
 

@@ -13,5 +13,5 @@ fetchLog(x)
 fread() to data.frame.
 }
 \note{
-mFetchLog() is memoized version.
+mfetchLog() is memoized version.
 }

@@ -3,10 +3,12 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
-#' @param size.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
+#' @param ip.filter Logical.
+#' @param small.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 #' @examples
@@ -16,28 +18,27 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE) {
+  ip.filter = TRUE, small.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE) {
 
-  if (check.package) {
-    packages <- checkPackage(packages, dev.mode)
-  }
+  cores <- multiCore(multi.core)
 
+  if (check.package) packages <- checkPackage(packages, dev.mode)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cran_log[!is.na(cran_log$package), ]
 
-  if (size.filter) {
-    if (is.numeric(size.filter)) {
-      if (size.filter >= 0) {
-          cran_log <- cran_log[cran_log$size >= size.filter, ]
-        } else if (size.filter < 0) {
-          cran_log <- cran_log[cran_log$size < -size.filter, ]
-        }
-    } else if (is.logical(size.filter)) {
-      cran_log <- cran_log[cran_log$size >= 1000, ]
-    } else stop("'size.filter' must be Logical or Numeric.")
+  if (ip.filter) {
+    ip.outliers <- ipFilter3(cran_log)
+    row.delete <- unlist(parallel::mclapply(ip.outliers, function(ip) {
+      campaigns(ip, cran_log)
+    }, mc.cores = cores))
+    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+  }
+
+  if (small.filter) {
+    cran_log <- smallFilter(cran_log, filter = small.filter)
   }
 
   if (all(packages %in% unique(cran_log$package) == FALSE)) {
