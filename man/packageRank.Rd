@@ -15,7 +15,7 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
+\item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

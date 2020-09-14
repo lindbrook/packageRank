@@ -4,7 +4,7 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @param ip.filter Logical.
-#' @param small.filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
+#' @param small.filter Logical TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
@@ -37,7 +37,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
-  if (small.filter) cran_log <- smallFilter0(cran_log, filter = small.filter)
+  if (small.filter) cran_log <- smallFilter0(cran_log)
 
   if (all(packages %in% unique(cran_log$package) == FALSE)) {
     stop(packages, ": not in log (not downloaded).")
