@@ -27,7 +27,7 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  cran_log <- cran_log[!is.na(cran_log$package), ]
+  cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
     ip.outliers <- ipFilter3(cran_log)
