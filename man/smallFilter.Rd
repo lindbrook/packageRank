@@ -2,7 +2,7 @@
 % Please edit documentation in R/smallFilter.R
 \name{smallFilter}
 \alias{smallFilter}
-\title{Filter out small downloads (prototype).}
+\title{Filter out small downloads (hierachical cluster prototype helper).}
 \usage{
 smallFilter(dat, filter = TRUE)
 }
@@ -12,5 +12,5 @@ smallFilter(dat, filter = TRUE)
 \item{filter}{Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.}
 }
 \description{
-Filter out small downloads (prototype).
+Filter out small downloads (hierachical cluster prototype helper).
 }

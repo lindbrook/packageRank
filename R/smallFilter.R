@@ -1,30 +1,10 @@
-#' Filter out small downloads (prototype).
-#'
-#' @param dat Object. Package log entries.
-#' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
-#' @export
-
-smallFilter <- function(dat, filter = TRUE) {
-  if (is.numeric(filter)) {
-    if (filter >= 0) {
-      dat[dat$size >= filter, ]
-    } else if (filter < 0) {
-      dat[dat$size < -filter, ]
-    }
-  } else if (is.logical(filter)) {
-    dat[dat$size >= 1000, ]
-  } else {
-    stop("'filter' must be Logical or Numeric.")
-  }
-}
-
 #' Filter out small downloads (hierachical cluster prototype helper).
 #'
 #' @param dat Object. Package log entries.
 #' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
 #' @export
 
-smallFilter0 <- function(dat, filter = TRUE) {
+smallFilter <- function(dat, filter = TRUE) {
   vers <- unique(dat$version)
   crosstab <- table(dat$version)
 
@@ -159,7 +139,7 @@ hcClassifier <- function(vers, dat, size.audit, obs.ct.audit) {
    unlist(lapply(vers, function(v) {
       v.data <- dat[dat$version == v, ]
       tmp <- v.data[!duplicated(v.data$size), ]
-      tmp <- tmp[tmp$size > 0, ] # exclude downloads of size 0.
+      # tmp <- tmp[tmp$size > 0, ] # exclude downloads of size 0.
       orders.magnitude <- trunc(log10(tmp$size))
       ds <- stats::dist(orders.magnitude)
       ca <- stats::hclust(ds)
@@ -170,4 +150,24 @@ hcClassifier <- function(vers, dat, size.audit, obs.ct.audit) {
       sizes.to.select <- tmp[clusters$id %in% cluster.to.select, "size"]
       row.names(v.data[v.data$size %in% sizes.to.select, ])
    }))
+}
+
+#' Filter out small downloads (prototype).
+#'
+#' @param dat Object. Package log entries.
+#' @param filter Logical or Numeric. If Logical, TRUE filters out downloads less than 1000 bytes. If Numeric, a positive value sets the minimum download size (in bytes) to consider; a negative value sets the maximum download size to consider.
+#' @export
+
+smallFilter0 <- function(dat, filter = TRUE) {
+  if (is.numeric(filter)) {
+    if (filter >= 0) {
+      dat[dat$size >= filter, ]
+    } else if (filter < 0) {
+      dat[dat$size < -filter, ]
+    }
+  } else if (is.logical(filter)) {
+    dat[dat$size >= 1000, ]
+  } else {
+    stop("'filter' must be Logical or Numeric.")
+  }
 }

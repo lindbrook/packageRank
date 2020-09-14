@@ -36,7 +36,7 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   }
 
   if (small.filter) {
-    cran_log <- smallFilter(cran_log, filter = small.filter)
+    cran_log <- smallFilter0(cran_log, filter = small.filter)
   }
 
   crosstab <- table(cran_log$package)
