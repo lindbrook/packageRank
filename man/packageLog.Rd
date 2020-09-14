@@ -4,10 +4,10 @@
 \alias{packageLog}
 \title{Get Package Download Logs.}
 \usage{
-packageLog(packages = NULL, date = Sys.Date() - 1, triplet.filter = TRUE,
-  ip.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
-  clean.cran_log = TRUE, clean.output = FALSE, multi.core = TRUE)
+packageLog(packages = "cholera", date = Sys.Date() - 1,
+  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
+  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -27,8 +27,6 @@ packageLog(packages = NULL, date = Sys.Date() - 1, triplet.filter = TRUE,
 \item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
-
-\item{clean.cran_log}{Logical.}
 
 \item{clean.output}{Logical. NULL row names.}
 
