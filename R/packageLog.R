@@ -70,11 +70,11 @@ packageLog <- function(packages = NULL, date = Sys.Date() - 1,
       }, integer(1L))
 
       if (any(size.audit > 1)) {
-        filtered <- lapply(out[size.audit > 1], smallFilter0)
+        filtered <- lapply(out[size.audit > 1], smallFilter)
         out[which(size.audit > 1)] <- filtered
       }
     } else {
-      cran_log <- smallFilter(cran_log)
+      cran_log <- smallFilter0(cran_log)
     }
   }
 
