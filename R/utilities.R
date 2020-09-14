@@ -7,8 +7,8 @@
 #' @export
 
 pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
-  cran_log <- dat[[i]]
-  tmp <- cran_log[!is.na(cran_log$package) & cran_log$package == pkg, ]
+  cran_log <- cleanLog(dat[[i]])
+  tmp <- cran_log[cran_log$package == pkg, ]
   tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
   tmp <- tmp[order(tmp$t2), c(1:6, 8:10)]
   if (clean.output) row.names(tmp) <- NULL
@@ -34,8 +34,8 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   pkg = "cholera", multi.core = TRUE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
-  cran_log <- dat[[i]]
-  tmp <- cran_log[!is.na(cran_log$package) & cran_log$package == pkg, ]
+  cran_log <- cleanLog(dat[[i]])
+  tmp <- cran_log[cran_log$package == pkg, ]
 
   if (triplet.filter) tmp <- do.call(rbind, tripletFilter(tmp))
 
@@ -100,8 +100,8 @@ filterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
 #' @noRd
 
 filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
-  dat0 <- dat[!is.na(dat$package), ]
-  dat <- dat0[dat0$package == pkg,]
+  dat0 <- cleanLog(dat)
+  dat <- dat0[dat0$package == pkg, ]
 
   if (nrow(dat) != 0) {
     # Triplet filter #
