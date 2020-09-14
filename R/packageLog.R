@@ -10,6 +10,7 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param clean.cran_log Logical.
 #' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
@@ -18,22 +19,21 @@
 packageLog <- function(packages = NULL, date = Sys.Date() - 1,
   triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
   sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
+  dev.mode = FALSE, clean.cran_log = TRUE, clean.output = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
   if (!is.null(packages)) {
-    if (check.package) {
-      packages <- checkPackage(packages, dev.mode)
-    }
+    if (check.package) packages <- checkPackage(packages, dev.mode)
   }
 
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  if (clean.cran_log) cran_log <- cleanLog(cran_log)
 
   if (!is.null(packages)) {
-    cran_log <- cran_log[!is.na(cran_log$package) & !is.na(cran_log$size), ]
     out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
 
     if (triplet.filter) {

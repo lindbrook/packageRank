@@ -16,7 +16,7 @@ packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  cran_log <- cran_log[!is.na(cran_log$package), ]
+  cran_log <- cleanLog(cran_log)
   out <- package_distribution(package, ymd, size.filter, memoization,
     check.package, cran_log)
   class(out) <- "packageDistribution"

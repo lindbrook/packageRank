@@ -1,14 +1,3 @@
-#' fread() to data.frame.
-#'
-#' @param x Character. URL.
-#' @import data.table memoise
-#' @importFrom R.utils decompressFile
-#' @export
-#' @note mfetchLog() is memoized version.
-
-fetchLog <- function(x) as.data.frame(data.table::fread(x))
-mfetchLog <- memoise::memoise(fetchLog)
-
 #' Fetch CRAN Logs.
 #'
 #' @param date Character. Date. yyyy-mm-dd.
@@ -22,13 +11,33 @@ fetchCranLog <- function(date, memoization) {
   url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
 
   if (RCurl::url.exists(url)) {
-    if (memoization) {
-      cran_log <- mfetchLog(url)
-    } else {
-      cran_log <- fetchLog(url)
-    }
+    if (memoization) cran_log <- mfetchLog(url)
+    else cran_log <- fetchLog(url)
   } else {
     msg <- "Check your internet connection or try the previous day."
     stop("Log for ", date, " not (yet) available. ", msg)
   }
+  cran_log
+}
+
+#' fread() to data.frame.
+#'
+#' @param x Character. URL.
+#' @import data.table memoise
+#' @importFrom R.utils decompressFile
+#' @export
+#' @note mfetchLog() is memoized version.
+
+fetchLog <- function(x) as.data.frame(data.table::fread(x))
+mfetchLog <- memoise::memoise(fetchLog)
+
+#' Pre-lean CRAN Logs.
+#'
+#' package and size NAs; package size = 0
+#' @param cran_log Object.
+#' @export
+
+cleanLog <- function(cran_log) {
+  sel <- !is.na(cran_log$package) & !is.na(cran_log$size) & cran_log$size != 0
+  cran_log[sel, ]
 }

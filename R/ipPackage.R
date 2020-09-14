@@ -20,11 +20,7 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   ymd <- fixDate_2012(date)
 
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  sel <- !is.na(cran_log$package) &
-         !is.na(cran_log$size) &
-         cran_log$ip_id == ip
-
-  cran_log <- cran_log[sel, ]
+  cran_log <- cleanLog(cran_log)
 
   if (triplet.filter) {
     tri.filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
