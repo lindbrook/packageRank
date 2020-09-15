@@ -9,8 +9,7 @@ ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  sel <- !is.na(cran_log$package) & !is.na(cran_log$size)
-  cran_log <- cran_log[sel, ]
+  cran_log <- cleanLog(cran_log)
 
   crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))

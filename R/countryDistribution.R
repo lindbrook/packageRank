@@ -8,15 +8,10 @@
 countryDistribution <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  sel <- !is.na(cran_log$package) &
-         !is.na(cran_log$country) &
-         !is.na(cran_log$size)
-
-  cran_log <- cran_log[sel, ]
+  cran_log <- cleanLog(cran_log)
+  cran_log <- cran_log[!is.na(cran_log$country), ]
   crosstab <- sort(table(cran_log$country), decreasing = TRUE)
-
   out <- list(date = date, data = crosstab)
   class(out) <- "countryDistribution"
   out
