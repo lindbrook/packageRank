@@ -5,57 +5,61 @@
 #' @param date Character. Date. yyyy-mm-dd.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
-#' @param small.filter Logical.
+#' @param ip.filter Logical.
 #' @param triplet.filter Logical.
+#' @param small.filter Logical.
+#' @param sequence.filter Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param output Character. "top.ten", "bottom.ten", or "all".
-#' @note "US" outlier 6-7 min with size filters.
+#' @note "US" outlier 10 min with all filters!
 #' @export
 
-countryPackage <- function(country = "US", date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
-  multi.core = TRUE, output = "top.ten") {
+countryPackage <- function(country = "HK", date = Sys.Date() - 1,
+  memoization = TRUE, sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
+  small.filter = TRUE, sequence.filter = TRUE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  sel <- !is.na(cran_log$package) &
-         !is.na(cran_log$country) &
-         !is.na(cran_log$size) &
-         cran_log$country == country
+  cran_log <- cleanLog(cran_log)
 
-  cran_log <- cran_log[sel, ]
+  if (ip.filter) {
+    ip.outliers <- ipFilter3(cran_log)
+    row.delete <- unlist(parallel::mclapply(ip.outliers, function(ip) {
+      campaigns(ip, cran_log)
+    }, mc.cores = cores))
+    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+  }
+
+  cran_log <- cran_log[!is.na(cran_log$country) & cran_log$country == country, ]
 
   if (triplet.filter) {
-    tri.filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
+    out <- parallel::mclapply(unique(cran_log$package), function(p) {
       x <- cran_log[cran_log$package == p, ]
       do.call(rbind, tripletFilter(x))
     }, mc.cores = cores)
-
-    cran_log <- do.call(rbind, tri.filtered)
   }
 
   if (small.filter) {
-    cran_log <- smallFilter(cran_log, filter = small.filter)
+    size.audit <- vapply(out, function(x) {
+      length(unique(round(log10(x$size))))
+    }, integer(1L))
+
+    if (any(size.audit > 1)) {
+      filtered <- parallel::mclapply(out[size.audit > 1], smallFilter,
+        mc.cores = cores)
+      out[which(size.audit > 1)] <- filtered
+    }
   }
 
-  crosstab <- table(cran_log$package)
-
-  if (sort) {
-    out <- sort(crosstab, decreasing = TRUE)
-  } else {
-    out <- crosstab
+  if (sequence.filter) {
+    out <- parallel::mclapply(out, sequenceFilter, mc.cores = cores)
   }
 
-  if (output == "top.ten") {
-    utils::head(out, 10)
-  } else if (output == "bottom.ten") {
-    utils::tail(out, 10)
-  } else if (output == "all") {
-    out
-  } else {
-    stop('output must be "top.ten", "bottom.ten", or "all".')
-  }
+  out <- do.call(rbind, out)
+  tab <- table(out$package)
+
+  if (sort) out <- sort(tab, decreasing = TRUE)
+  else out <- tab
+  out
 }

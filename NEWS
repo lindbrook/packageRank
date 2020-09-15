@@ -4,6 +4,7 @@ packageRank 0.3.5.9064
 - add/use cleanLog()
 - smallFilter0() <-> smallFilter().
 - simplify smallFilter0().
+- add all fiters to countryPackage().
 
 
 packageRank 0.3.5.9063
