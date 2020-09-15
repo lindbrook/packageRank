@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipDownloads.R
 \name{ipDownloads}
 \alias{ipDownloads}
-\title{Package download count  by IP distribution summary.}
+\title{Unique package download counts by IP address.}
 \usage{
 ipDownloads(date = Sys.Date() - 1, memoization = TRUE)
 }

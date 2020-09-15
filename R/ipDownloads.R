@@ -1,4 +1,4 @@
-#' Package download count  by IP distribution summary.
+#' Unique package download counts by IP address.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.
@@ -9,13 +9,14 @@ ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  sel <- !is.na(cran_log$package) & !is.na(cran_log$size)
-  cran_log <- cran_log[sel, ]
+  cran_log <- cleanLog(cran_log)
 
   crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  out <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
-  out[order(out$count, decreasing = TRUE), ]
+  out <- data.frame(ip = names(crosstab), count = c(crosstab))
+  out <- out[order(out$count, decreasing = TRUE), ]
+  row.names(out) <- NULL
+  out
 }
