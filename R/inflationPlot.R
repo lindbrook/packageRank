@@ -32,7 +32,7 @@ inflationPlot <- function(package = "cholera", filter = "size",
   lines(stats::lowess(oct, dat[, filter.id]), lty = "dotted")
   abline(v = oct[id], col = "gray", lty = "dotted")
   axis(3, at = oct[id], labels = rep("W", length(id)), cex.axis = 0.5,
-    col.ticks = "black")
+    col.ticks = "black", mgp = c(3, 0.5, 0))
 
   if (filter == "size") {
     title(main = paste0(package, ": Size"))
