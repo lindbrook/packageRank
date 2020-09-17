@@ -23,8 +23,10 @@
 #'    \item{\code{top.n.oct2019}}{}
 #'    \item{\code{top.n.jul2020}}{}
 #'    \item{\code{download.country}}{}
+#'    \item{\code{october.downloads}}{}
+#'    \item{\code{july.downloads}}{}
 #' }
-#' @format A list with 21 elements.
+#' @format A list with 24 elements.
 #' @docType data
 "blog.data"
 
@@ -51,5 +53,7 @@
 # blog.data$top.n.oct2019 <- top.n.oct2019
 # blog.data$top.n.jul2020 <- top.n.jul2020
 # blog.data$download.country <- download.country
+# blog.data$october.downloads <- downloads
+# blog.data$july.downloads <- downloads
 
 # usethis::use_data(blog.data, overwrite = TRUE)
