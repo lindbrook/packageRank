@@ -37,30 +37,33 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   cran_log <- cleanLog(dat[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
 
-  if (triplet.filter) tmp <- do.call(rbind, tripletFilter(tmp))
+  if (nrow(tmp) != 0) {
+    if (triplet.filter) tmp <- do.call(rbind, tripletFilter(tmp))
 
-  if (ip.filter) {
-    ip.outliers <- ipFilter3(cran_log)
-    if (campaigns) {
-      row.delete <- unlist(parallel::mclapply(ip.outliers, function(x) {
-        campaigns(x, cran_log)
-      }, mc.cores = cores))
-      tmp <- tmp[!row.names(tmp) %in% row.delete, ]
-    } else {
-      tmp <- tmp[!tmp$ip_id %in% ip.outliers, ]
+    if (ip.filter) {
+      ip.outliers <- ipFilter3(cran_log)
+      if (campaigns) {
+        row.delete <- unlist(parallel::mclapply(ip.outliers, function(x) {
+          campaigns(x, cran_log)
+        }, mc.cores = cores))
+        tmp <- tmp[!row.names(tmp) %in% row.delete, ]
+      } else {
+        tmp <- tmp[!tmp$ip_id %in% ip.outliers, ]
+      }
     }
+
+    if (small.filter) {
+      size.audit <- length(unique(round(log10(tmp$size))))
+      if (size.audit > 1) tmp <- smallFilter(tmp)
+    }
+
+    if (sequence.filter) tmp <- sequenceFilter(tmp)
+
+    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp <- tmp[order(tmp$t2), !names(tmp) %in% "t2"]
+    if (clean.output) row.names(tmp) <- NULL
   }
 
-  if (small.filter) {
-    size.audit <- length(unique(round(log10(tmp$size))))
-    if (size.audit > 1) tmp <- smallFilter(tmp)
-  }
-
-  if (sequence.filter) tmp <- sequenceFilter(tmp)
-
-  tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
-  tmp <- tmp[order(tmp$t2), !names(tmp) %in% "t2"]
-  if (clean.output) row.names(tmp) <- NULL
   tmp
 }
 
