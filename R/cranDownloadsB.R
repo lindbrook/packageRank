@@ -42,6 +42,9 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
     f.ct <- vapply(f.cran_log, nrow, integer(1L))
   }
 
+  inflation <- round(100 * (ct - f.ct) / f.ct, 2)
+
   data.frame(date = date, package = packages, downloads = ct,
-    filtered.downloads = f.ct, row.names = NULL)
+    filtered.downloads = f.ct, inflation = inflation, row.names = NULL)
+
 }

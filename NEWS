@@ -3,6 +3,8 @@ packageRank 0.3.5.9067
 
 - add new sequenceFilter() prototype.
 - add exception for zero downloads.
+- compute inflation in cranDownloadsB().
+
 
 packageRank 0.3.5.9066
 ==================
