@@ -21,6 +21,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
+  orig.pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
   date <- check10CharDate(date)
@@ -29,6 +30,15 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   cran_log <- cleanLog(cran_log)
 
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+  zero.downloads <- vapply(out, nrow, integer(1L))
+
+  if (any(zero.downloads == 0)) {
+    zero.sel <- zero.downloads == 0
+    zero.packages <- packages[zero.sel]
+    zero.out <- out[zero.sel]
+    packages <- packages[!zero.sel]
+    out <- out[!zero.sel]
+  }
 
   if (triplet.filter) {
     if (length(packages) == 1) {
@@ -66,15 +76,22 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 
   if (sequence.filter) out <- lapply(out, sequenceFilter)
 
+  if (any(zero.downloads == 0)) {
+    packages <- c(packages, zero.packages)
+    out <- c(out, zero.out)
+  }
+
   if (length(packages) == 1) {
     out <- out[[1]]
-    if (!"t2" %in% names(out)) {
-      out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+    if (nrow(out) != 0) {
+      if (!"t2" %in% names(out)) {
+        out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+      }
+      out <- out[order(out$t2), ]
+      out$t2 <- NULL
+      if (clean.output) rownames(out) <- NULL
     }
-    out <- out[order(out$t2), ]
-    out$t2 <- NULL
-    if (clean.output) rownames(out) <- NULL
-  } else if (length(packages > 1)) {
+  } else if (length(packages) > 1) {
     names(out) <- packages
     out <- parallel::mclapply(out, function(x) {
       if (!"t2" %in% names(x)) {
@@ -85,7 +102,8 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
       tmp
     }, mc.cores = cores)
   }
-  out
+
+  out[orig.pkg.order]
 }
 
 #' Get Package Download Logs.
