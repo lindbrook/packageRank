@@ -1,15 +1,12 @@
 #' Filter Downloads of sequential Versions (prototype).
 #'
 #' @param dat Object.
-#' @param timeframe Numeric. minutes
-#' @param one.timeframe Logical.
-#' @param one.country Logical.
-#' @param one.ip Logical.
+#' @param max.delta.time Numeric. Maximum time interval between downloads (seconds).
 #' @export
 
-sequenceFilter <- function(dat, timeframe = 15, one.timeframe = TRUE,
-  one.country = TRUE, one.ip = TRUE) {
-
+sequenceFilter <- function(dat, max.delta.time = 30) {
+  t0 <- strptime(paste(dat$date, dat$time), "%Y-%m-%d %T", tz = "Europe/Vienna")
+  dat <- dat[order(t0), ]
   rle.data <- rle(dat$ver)
   rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
 
@@ -31,55 +28,38 @@ sequenceFilter <- function(dat, timeframe = 15, one.timeframe = TRUE,
     }
   })
 
-  c.id <- c.id[vapply(c.id, function(x) !is.null(x), logical(1L))]
+  candidates.sel <- c.id[vapply(c.id, function(x) !is.null(x), logical(1L))]
 
-  c.sel <- vapply(c.id, function(id) {
-    if (length(id) > 1) {
-      vers <- sort(unique(rle.out[id, "values"]))
-      identical(sort(rle.out[id, "values"]), vers)
-    } else FALSE
-  }, logical(1L))
+  if (length(unlist(candidates.sel)) > 1) {
+    rows.delete <- unlist(lapply(candidates.sel, function(i) {
+      sel <-  cumsum(rle.out$lengths)[i]
+      tmp <- dat[sel, ]
+      tmp <- tmp[!duplicated(tmp$version), ]
+      t2 <- strptime(paste(tmp$date, tmp$time), "%Y-%m-%d %T",
+        tz = "Europe/Vienna")
 
-  out <- lapply(c.id[c.sel], function(x) {
-    seq.data <- dat[cumsum(rle.out$lengths)[x], ]
-    seq.data$t2 <- strptime(paste(seq.data$date, seq.data$time),
-      "%Y-%m-%d %T", tz = "Europe/Vienna")
-    # seq.data$stamp <- as.POSIXlt(paste(seq.data$date, seq.data$time),
-    #   tz = "Europe/Vienna")
+      delta <- vapply(seq_along(t2[-1]), function(i) {
+        difftime(t2[i + 1], t2[i], units = "secs")
+      }, numeric(1L))
 
-    delta <- difftime(max(seq.data$t2), min(seq.data$t2), units = "mins")
+      if (any(delta < max.delta.time)) {
+        delta.obs <- which(delta < max.delta.time)
+        delta.exp <- seq(delta.obs[1], length(delta.obs) + delta.obs[1] - 1)
+        seq.test <- identical(delta.obs, delta.exp)
 
-    if ((delta < timeframe) == TRUE) {
-      time.sel <- rep(TRUE, nrow(seq.data))
-    } else {
-      time.sel <- seq.data$t2 >= min(seq.data$t2) &
-                  seq.data$t2 <= min(seq.data$t2) + timeframe
-      if (sum(time.sel) == 1) {
-        time.sel <- rep(FALSE, nrow(seq.data))
-      }
-    }
+        if (seq.test) {
+          tmp.sel <- c(delta.obs, delta.obs[length(delta.obs)] + 1)
+          tmp <- tmp[tmp.sel, ]
+          t2.range <- range(t2[tmp.sel])
+          max.time.window <- max.delta.time * length(t2[tmp.sel])
+          obs.time.window <- difftime(t2.range[2], t2.range[1], units = "sec")
+          if (obs.time.window < max.time.window) {
+            row.names(dat[row.names(dat) %in% row.names(tmp), ])
+          }
+        } else NULL
+      } else NULL
+    }))
 
-    ip.sel <- ifelse(length(unique(seq.data$ip_id)) == 1, TRUE, FALSE)
-    country.sel <- ifelse(length(unique(seq.data$country)) == 1, TRUE, FALSE)
-
-    if (one.timeframe & !one.country & !one.ip) {
-      row.names(seq.data[time.sel, ])
-    } else if (one.timeframe & one.country & !one.ip) {
-      if (country.sel) {
-        row.names(seq.data[time.sel, ])
-      }
-    } else if (one.timeframe & !one.country & one.ip) {
-      if (ip.sel) {
-        row.names(seq.data[time.sel, ])
-      }
-    } else if (one.timeframe & one.country & one.ip) {
-      if (country.sel & ip.sel) {
-        row.names(seq.data[time.sel, ])
-      }
-    } else NULL
-  })
-
-  if (!is.null(unlist(out))) {
-    dat[!row.names(dat) %in% unlist(out), ]
+    dat[!row.names(dat) %in% rows.delete, ]
   } else dat
 }

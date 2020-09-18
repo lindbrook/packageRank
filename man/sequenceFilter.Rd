@@ -4,19 +4,12 @@
 \alias{sequenceFilter}
 \title{Filter Downloads of sequential Versions (prototype).}
 \usage{
-sequenceFilter(dat, timeframe = 15, one.timeframe = TRUE,
-  one.country = TRUE, one.ip = TRUE)
+sequenceFilter(dat, max.delta.time = 30)
 }
 \arguments{
 \item{dat}{Object.}
 
-\item{timeframe}{Numeric. minutes}
-
-\item{one.timeframe}{Logical.}
-
-\item{one.country}{Logical.}
-
-\item{one.ip}{Logical.}
+\item{max.delta.time}{Numeric. Maximum time interval between downloads (seconds).}
 }
 \description{
 Filter Downloads of sequential Versions (prototype).
