@@ -101,9 +101,11 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
       tmp$date.time <- NULL
       tmp
     }, mc.cores = cores)
+    
+    out <-  out[orig.pkg.order]
   }
 
-  out[orig.pkg.order]
+  out 
 }
 
 #' Get Package Download Logs.
