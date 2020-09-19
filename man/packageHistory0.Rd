@@ -10,5 +10,5 @@ packageHistory0(package = "cholera")
 \item{package}{Character. Package name.}
 }
 \description{
-Date and version of most recent publication.
+History of version, date and size (source file).
 }

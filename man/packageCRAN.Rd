@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageHistory.R
 \name{packageCRAN}
 \alias{packageCRAN}
-\title{Extract package version history from CRAN.}
+\title{Scrap package data from CRAN.}
 \usage{
 packageCRAN(package = "cholera")
 }
@@ -13,7 +13,7 @@ packageCRAN(package = "cholera")
 An R data frame or NULL.
 }
 \description{
-Date and version of most recent publication.
+Version, date and size (source file) of most recent publication.
 }
 \examples{
 \donttest{

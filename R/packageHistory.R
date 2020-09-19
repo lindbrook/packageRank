@@ -31,7 +31,7 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
 
 #' Extract package version history CRAN and Archive (scrape CRAN).
 #'
-#' Date and version of most recent publication.
+#' History of version, date and size (source file).
 #' @param package Character. Package name.
 #' @export
 
@@ -47,9 +47,9 @@ packageHistory0 <- function(package = "cholera") {
   out
 }
 
-#' Extract package version history from CRAN.
+#' Scrap package data from CRAN.
 #'
-#' Date and version of most recent publication.
+#' Version, date and size (source file) of most recent publication.
 #' @param package Character. Package name.
 #' @return An R data frame or NULL.
 #' @examples
@@ -60,39 +60,22 @@ packageHistory0 <- function(package = "cholera") {
 #' @export
 
 packageCRAN <- function(package = "cholera") {
-  root.url <- "https://CRAN.R-project.org/package"
-  url <- paste0(root.url, "=", package)
+  url <- "https://cran.r-project.org/src/contrib/"
+  web_page <- readLines(url)
+  id <- grep(package, web_page)
+  pkg.data <- gsub("<.*?>", "", web_page[id])
+  dat <- unlist(strsplit(pkg.data, '.tar.gz'))
+  ptA <- unlist(strsplit(dat[1], "_"))
+  ptB <- unlist(strsplit(dat[2], " "))
+  data.frame(package = ptA[1],
+             version = ptA[2],
+             date = as.Date(ptB[1]),
+             size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+             repository = "CRAN",
+             stringsAsFactors = FALSE)
+ }
 
-  if (RCurl::url.exists(url)) {
-    web_page <- readLines(url)
-
-    # 'SoilHyP'
-    removed <- any(vapply(seq_along(web_page), function(i) {
-      grepl("removed from the CRAN repository", web_page[i])
-    }, logical(1L)))
-
-    if (!removed) {
-      published.check <- grepString("Published:", web_page)
-      version.check <- grepString("<td>Version:</td>", web_page)
-
-      if (any(published.check)) {
-        line.id <- which(published.check) + 1
-        published <- gsubClean(web_page, line.id)
-      } else published <- NA
-
-      if (any(version.check)) {
-        line.id <- which(version.check) + 1
-        version <- gsubClean(web_page, line.id)
-      } else version.date <- NA
-
-      data.frame(package = package, version = version,
-        date = as.Date(published), repository = "CRAN",
-        stringsAsFactors = FALSE)
-    } # else warning("Package removed from CRAN.")
-  } # else warning("Package not on CRAN. Check spelling.")
-}
-
-#' Extract version history from Archive.
+#' Scrape package data from Archive.
 #'
 #' @param package Character. Package name.
 #' @return An R data frame or NULL.
@@ -149,7 +132,7 @@ packageArchive <- function(package = "cholera") {
       #   grepl(".save", x)
       # }, logical(1L))
       # if (any(filename.err)) archive.data <- archive.data[!filename.err]
-        
+
       if (any(ancestry.check2)) {
         version.date <- lapply(archive.data[!ancestry.check2], function(x) {
           unlist(strsplit(x, '.tar.gz'))
