@@ -124,9 +124,8 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
     }
 
     # Small Filter #
-    # small.filtered <- nrow(smallFilter(dat))
-    # if (nrow(out) != 0) out <- smallFilter(out)
-    out <- smallFilter0(out)
+    small.filtered <- nrow(smallFilter0(dat))
+    if (nrow(out) != 0) out <- smallFilter0(out)
 
     # Sequence Filter #
     sequence.filtered <- nrow(sequenceFilter(dat))
