@@ -21,7 +21,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  orig.pkg.order <- packages
+  pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
   date <- check10CharDate(date)
@@ -105,11 +105,11 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
       tmp$date.time <- NULL
       tmp
     }, mc.cores = cores)
-    
-    out <-  out[orig.pkg.order]
+
+    out <- out[pkg.order]
   }
 
-  out 
+  out
 }
 
 #' Get Package Download Logs.

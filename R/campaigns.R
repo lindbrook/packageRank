@@ -13,14 +13,14 @@ campaigns <- function(ip, cran_log, min.obs = 5, output = "rownames") {
   tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
   tmp <- tmp[order(tmp$t2, tmp$package), ]
 
-  rle.all <- runLengthEncoding(tmp)
-  start.data <- rle.all[rle.all$letter == "a" & rle.all$lengths >= min.obs, ]
+  rle.data <- runLengthEncoding(tmp)
+  start.data <- rle.data[rle.data$letter == "a" & rle.data$lengths >= min.obs, ]
   start.row <- as.numeric(row.names(start.data))
   stop.row <- start.row + length(letters) - 1
 
   delete.id <- unlist(lapply(seq_along(start.row), function(i) {
-    dat <- rle.all[start.row[i]:stop.row[i], ]
-    letter.vec <- rle.all$letter[start.row[i]:stop.row[i]]
+    dat <- rle.data[start.row[i]:stop.row[i], ]
+    letter.vec <- rle.data$letter[start.row[i]:stop.row[i]]
 
     if (any(is.na(dat$letter))) {
       dat <- dat[!is.na(dat$letter), ]
