@@ -53,8 +53,9 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
     }
 
     if (small.filter) {
-      size.audit <- length(unique(round(log10(tmp$size))))
-      if (size.audit > 1) tmp <- smallFilter(tmp)
+      # size.audit <- length(unique(round(log10(tmp$size))))
+      # if (size.audit > 1) tmp <- smallFilter(tmp)
+      tmp <- smallFilter0(tmp)
     }
 
     if (sequence.filter) tmp <- sequenceFilter(tmp)
@@ -123,8 +124,9 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
     }
 
     # Small Filter #
-    small.filtered <- nrow(smallFilter(dat))
-    if (nrow(out) != 0) out <- smallFilter(out)
+    # small.filtered <- nrow(smallFilter(dat))
+    # if (nrow(out) != 0) out <- smallFilter(out)
+    out <- smallFilter0(out)
 
     # Sequence Filter #
     sequence.filtered <- nrow(sequenceFilter(dat))
