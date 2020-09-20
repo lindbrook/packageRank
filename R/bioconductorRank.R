@@ -42,11 +42,11 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
 
   names(ct) <- sel.data$Package
 
-  crosstab <- sort(ct, decreasing = TRUE)
+  freqtab <- sort(ct, decreasing = TRUE)
 
   # packages in bin
   packages.bin <- lapply(packages, function(nm) {
-    crosstab[crosstab %in% crosstab[nm]]
+    freqtab[freqtab %in% freqtab[nm]]
   })
 
   # offset: ties arbitrarily broken by alphabetical order
@@ -55,18 +55,18 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
   }, numeric(1L))
 
   nominal.rank <- lapply(seq_along(packages), function(i) {
-    sum(crosstab > crosstab[packages[i]]) + packages.bin.delta[i]
+    sum(freqtab > freqtab[packages[i]]) + packages.bin.delta[i]
   })
 
-  tot.packagess <- length(crosstab)
+  tot.packagess <- length(freqtab)
 
   packages.percentile <- vapply(packages, function(x) {
-    round(100 * mean(crosstab < crosstab[x]), 1)
+    round(100 * mean(freqtab < freqtab[x]), 1)
   }, numeric(1L))
 
   dat <- data.frame(date = date,
                     packages = packages,
-                    downloads = c(crosstab[packages]),
+                    downloads = c(freqtab[packages]),
                     rank = unlist(nominal.rank),
                     percentile = packages.percentile,
                     total.downloads = sum(ct),
@@ -75,7 +75,7 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
                     row.names = NULL)
 
   out <- list(packages = packages, date = date, package.data = dat,
-    crosstab = crosstab)
+    freqtab = freqtab)
 
   class(out) <- "bioconductorRank"
   out
@@ -96,34 +96,34 @@ plot.bioconductorRank <- function(x, graphics = NULL, log_count = TRUE,
 
   if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
 
-  crosstab <- x$crosstab + 1
+  freqtab <- x$freqtab + 1
   package.data <- x$package.data
   packages <- x$packages
   date <- x$date
-  y.max <- crosstab[1]
-  q <- stats::quantile(crosstab)[2:4]
+  y.max <- freqtab[1]
+  q <- stats::quantile(freqtab)[2:4]
 
   iqr <- vapply(c("75%", "50%", "25%"), function(id) {
-    dat <- which(crosstab > q[[id]])
+    dat <- which(freqtab > q[[id]])
     dat[length(dat)]
   }, numeric(1L))
 
   if (is.null(graphics)) {
     if (length(packages) == 1) {
-      basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
     } else if (length(packages) > 1) {
-      ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
+      ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
     } else stop("Error.")
   } else if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
-        basePlot(pkg, log_count, crosstab, iqr, package.data, y.max, date)
+        basePlot(pkg, log_count, freqtab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(packages, log_count, crosstab, iqr, package.data, y.max, date)
+      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
     }
   } else if (graphics == "ggplot2") {
-    ggPlot(x, log_count, crosstab, iqr, package.data, y.max, date)
+    ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
   } else stop('graphics must be "base" or "ggplot2"')
 }
 

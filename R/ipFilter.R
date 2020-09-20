@@ -7,8 +7,8 @@
 
 ipFilter <- function(dat, cutpoint = 15000L) {
   # number of unique packages downloaded by ip address.
-  crosstab <- tapply(dat$package, dat$ip_id, function(x) length(unique(x)))
-  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  freqtab <- tapply(dat$package, dat$ip_id, function(x) length(unique(x)))
+  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
   as.numeric(df[df$count >= cutpoint, "ip"])
 }
 
@@ -28,11 +28,11 @@ ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
-  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
   as.numeric(df[df$count >= cutpoint, "ip"])
 }
 
@@ -54,11 +54,11 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
-  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
   df <- df[!duplicated(df$count), ]
   km <- stats::kmeans(stats::dist(df$count), centers = centers, nstart = nstart)
   out <- data.frame(ip = df$ip, size = df$count, group = km$cluster)
@@ -92,18 +92,18 @@ ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
 
   if (!output %in% c("df", "ip")) stop('"output" must be "ip" or "df".')
 
-  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  df <- data.frame(ip = names(crosstab), count = c(crosstab), row.names = NULL)
+  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
 
   if (is.null(floor)) {
     df <- df[!duplicated(df$count), ]
     cran.max <- nrow(utils::available.packages()) / 2
     # cran.max <- 8056L  # 2020-08-16
 
-    if (max(crosstab) >= cran.max) {
+    if (max(freqtab) >= cran.max) {
       km <- stats::kmeans(stats::dist(df$count), centers = centers,
         nstart = nstart)
       out <- data.frame(ip = df$ip, packages = df$count, group = km$cluster)
@@ -130,10 +130,10 @@ ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
     else if (floor < 0) stop('"floor" must be a positive number.')
 
     if (output == "ip") {
-      out <- names(sort(crosstab[crosstab >= floor], decreasing = TRUE))
+      out <- names(sort(freqtab[freqtab >= floor], decreasing = TRUE))
       out <- as.numeric(out)
     } else if (output == "df") {
-      out <- data.frame(ip = names(crosstab), packages = c(crosstab),
+      out <- data.frame(ip = names(freqtab), packages = c(freqtab),
         row.names = NULL)
       out$group <- ifelse(out$packages >= floor, 1, 2)
       ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]

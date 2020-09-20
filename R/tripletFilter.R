@@ -39,8 +39,8 @@ tripletFilter <- function(dat, time.window = 2) {
         }
 
       } else {
-        crosstab <- table(v.data$id)
-        triplets <- names(crosstab[crosstab == 3])
+        freqtab <- table(v.data$id)
+        triplets <- names(freqtab[freqtab == 3])
         if (!is.null(triplets)) {
           tri.delete <- unlist(lapply(triplets, function(id) {
             tmp <- v.data[v.data$id %in% id, ]

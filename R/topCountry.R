@@ -10,9 +10,9 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
 
   top_n <- parallel::mclapply(month_cran_log, function(x) {
     tmp <- x[!is.na(x$package) & !is.na(x$country), ]
-    crosstab <- sort(table(tmp$country), decreasing = TRUE)
-    data.frame(country = names(crosstab)[1:top.n],
-      downloads = c(crosstab)[1:top.n], stringsAsFactors = FALSE)
+    freqtab <- sort(table(tmp$country), decreasing = TRUE)
+    data.frame(country = names(freqtab)[1:top.n],
+      downloads = c(freqtab)[1:top.n], stringsAsFactors = FALSE)
   }, mc.cores = cores)
 
   out <- do.call(rbind, top_n)
@@ -63,8 +63,8 @@ plotTopCountryCodes <- function(dataset = "october") {
 downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
   dl.data <- parallel::mclapply(month_cran_log, function(x) {
     tmp <- x[!is.na(x$package) & !is.na(x$country), ]
-    crosstab <- sort(c(table(tmp$country)), decreasing = TRUE)
-    data.frame(country = names(crosstab), downloads = crosstab,
+    freqtab <- sort(c(table(tmp$country)), decreasing = TRUE)
+    data.frame(country = names(freqtab), downloads = freqtab,
       stringsAsFactors = FALSE)
   }, mc.cores = multiCore(multi.core))
 

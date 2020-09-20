@@ -6,10 +6,10 @@
 
 smallFilter <- function(dat, filter = TRUE) {
   vers <- unique(dat$version)
-  crosstab <- table(dat$version)
+  freqtab <- table(dat$version)
 
-  if (any(crosstab <= 2)) {
-    too.few.obs <- names(crosstab[crosstab <= 2])
+  if (any(freqtab <= 2)) {
+    too.few.obs <- names(freqtab[freqtab <= 2])
     vers <- setdiff(vers, too.few.obs)
     leftover <- row.names(dat[dat$version %in% too.few.obs, ])
   }

@@ -11,16 +11,16 @@ packageSample <- function(cran_log, sample.pct = 1, multi.core = TRUE) {
   init.pkgs <- stats::na.omit(init.pkgs)
 
   pkgs <- cran_log[cran_log$package %in% init.pkgs, ]
-  crosstab <- table(pkgs$package)
+  freqtab <- table(pkgs$package)
   cores <- multiCore(multi.core)
 
-  rank.percentile <- parallel::mclapply(names(crosstab), function(nm) {
-    mean(crosstab < crosstab[nm])
+  rank.percentile <- parallel::mclapply(names(freqtab), function(nm) {
+    mean(freqtab < freqtab[nm])
   }, mc.cores = cores)
 
   rank.percentile <- unlist(rank.percentile)
 
-  pct <- data.frame(pkg = names(crosstab), percentile = rank.percentile,
+  pct <- data.frame(pkg = names(freqtab), percentile = rank.percentile,
     stringsAsFactors = FALSE)
   pct <- pct[order(pct$percentile, decreasing = TRUE), ]
   row.names(pct) <- NULL

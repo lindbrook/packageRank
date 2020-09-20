@@ -18,7 +18,6 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
@@ -31,16 +30,14 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
     cran_log <- do.call(rbind, tri.filtered)
   }
 
-  if (small.filter) {
-    cran_log <- smallFilter0(cran_log)
-  }
+  if (small.filter) cran_log <- smallFilter0(cran_log)
 
-  crosstab <- table(cran_log$package)
+  freqtab <- table(cran_log$package)
 
   if (sort) {
-    out <- sort(crosstab, decreasing = TRUE)
+    out <- sort(freqtab, decreasing = TRUE)
   } else {
-    out <- crosstab
+    out <- freqtab
   }
   out
 }

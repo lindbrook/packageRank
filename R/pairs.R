@@ -22,15 +22,15 @@ pairID <- function(x, sample.pct = 5, multi.core = TRUE) {
     dat <- x[x$package == p, ]
     dat$id <- paste0(dat$package, "-", dat$time, "-", dat$ip_id, "-",
       dat$r_version, "-", dat$r_arch, "-", dat$r_os, "-", dat$version)
-    crosstab <- table(dat$id)
-    pairs <- vapply(names(crosstab[crosstab == 2]), function(nm) {
+    freqtab <- table(dat$id)
+    pairs <- vapply(names(freqtab[freqtab == 2]), function(nm) {
       time.stamp <- dat[dat$id == nm, ]
       test_500 <- any(time.stamp$size < 1000)
       size <- ceiling(log10(dat[dat$id == nm, "size"]))
       test_size <- length(unique(size)) == 2
       test_500 & test_size
     }, logical(1L))
-    names(crosstab[crosstab == 2][pairs])
+    names(freqtab[freqtab == 2][pairs])
   }, mc.cores = cores)
 
   unlist(pair.id)
@@ -49,5 +49,5 @@ pairEntry <- function(id, x) {
   out <- x[x$id == id, ]
   out$id <- NULL
   out
-  
+
 }

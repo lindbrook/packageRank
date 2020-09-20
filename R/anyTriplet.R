@@ -26,9 +26,9 @@ anyTriplet <- function(x, sample.pct = 5, multi.core = TRUE) {
                      dat$r_arch, "-",
                      dat$r_os, "-",
                      dat$version)
-    crosstab <- table(dat$id)
-    if (any(crosstab == 3)) {
-      triplets <- vapply(names(crosstab[crosstab == 3]), function(nm) {
+    freqtab <- table(dat$id)
+    if (any(freqtab == 3)) {
+      triplets <- vapply(names(freqtab[freqtab == 3]), function(nm) {
         time.stamp <- dat[dat$id == nm, ]
         test_500 <- any(time.stamp$size < 1000)
         size <- ceiling(log10(dat[dat$id == nm, "size"]))

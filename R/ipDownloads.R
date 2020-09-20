@@ -11,11 +11,11 @@ ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE) {
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
-  crosstab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  out <- data.frame(ip = names(crosstab), count = c(crosstab))
+  out <- data.frame(ip = names(freqtab), count = c(freqtab))
   out <- out[order(out$count, decreasing = TRUE), ]
   row.names(out) <- NULL
   out
