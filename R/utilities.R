@@ -145,11 +145,12 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
 #' @param x object.
 #' @param filter Character. "triplet", "ip", "small", "sequence", "all".
 #' @param smooth Logical.
+#' @param median Logical.
 #' @param legend.loc Character. Location of legend.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.filterCounts <- function(x, filter = "all", smooth = FALSE,
+plot.filterCounts <- function(x, filter = "all", smooth = FALSE, median = FALSE,
   legend.loc = "topleft", ...) {
 
   dat <- x$data
@@ -173,7 +174,7 @@ plot.filterCounts <- function(x, filter = "all", smooth = FALSE,
        title = NULL)
 
   if (filter == "ip") {
-    title(main = paste0("'", x$pkg, "'", ": ", toupper(filter), " Filter"))
+    title(main = paste0("'", x$pkg, "'", " ", toupper(filter), " Filter"))
   } else if (filter == "all") {
     title(main = paste0("'", x$pkg, "'", ": ", wordCase(filter), " Filters"))
   } else {
@@ -185,10 +186,15 @@ plot.filterCounts <- function(x, filter = "all", smooth = FALSE,
     lines(stats::lowess(dates, dat[, filter]), lty = "dotted", lwd = 2)
   }
 
+  if (median) {
+    axis(4, at = median(dat$ct), labels = median(dat$ct), col.axis = "red")
+    axis(4, at = median(dat[, filter]), labels = median(dat[, filter]))
+  }
+
   tot <- colSums(dat[, -1])
-  ptA <- paste0("Totals: unfiltered = ", format(tot["ct"], big.mark = ","),
+  ptA <- paste0("unfiltered = ", format(tot["ct"], big.mark = ","),
     "; filtered = ")
-  ptB <- paste0("% | ", x$versions, " vers. observed.")
+  ptB <- paste0("% | ", x$versions, " vers. observed")
   delta.pct <- round(100 * (tot["ct"] - tot[filter]) / tot[filter], 1)
   title(sub = paste0(ptA, format(tot[filter], big.mark = ","), "; inflation = ",
     format(delta.pct, big.mark = ","), ptB))
