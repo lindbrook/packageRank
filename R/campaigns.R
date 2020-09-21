@@ -49,7 +49,10 @@ if (output == "df") {
   row.names(tmp[delete.id, ])
 }
 
-firstLetter <- function(x) tolower(substring(x, 1, 1))
+firstLetter <- function(x, case.sensitive = FALSE) {
+  if (case.sensitive) tolower(substring(x, 1, 1))
+  else substring(x, 1, 1)
+}
 
 runLengthEncoding <- function(x) {
   dat <- rle(firstLetter(x$package))
