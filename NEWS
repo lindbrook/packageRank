@@ -2,6 +2,7 @@ packageRank 0.3.5.9069
 ==================
 
 - compute file size in cranData().
+- add firstLetter(case.sensitive).
 
 
 packageRank 0.3.5.9068
