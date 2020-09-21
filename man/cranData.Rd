@@ -4,14 +4,18 @@
 \alias{cranData}
 \title{Scrape CRAN package information.}
 \usage{
-cranData(multi.core = TRUE)
+cranData(binary = FALSE, bytes = FALSE, multi.core = TRUE)
 }
 \arguments{
+\item{binary}{Logical. Compute size of binary files.}
+
+\item{bytes}{Logical. Compute approximate numeric file size in bytes.}
+
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \value{
 An R data frame.
 }
 \description{
-Current version, date and size (source).
+Current version, date and size (source and binary).
 }
