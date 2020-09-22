@@ -4,10 +4,12 @@
 \alias{packageArchive}
 \title{Scrape package data from Archive.}
 \usage{
-packageArchive(package = "cholera")
+packageArchive(package = "cholera", check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
 }
 \value{
 An R data frame or NULL.

@@ -10,14 +10,10 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
     "date")
   history <- pkgsearch::cran_package_history(package)[vars]
   history <- data.frame(history)
-
   all.archive <- pkgsearch::cran_package(package, "all")$archived
 
-  if (all.archive) {
-    repository <- rep("Archive", nrow(history))
-  } else {
-    repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
-  }
+  if (all.archive) repository <- rep("Archive", nrow(history))
+  else repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
 
   if (short.date) {
     date <- strsplit(history$Date.Publication, "[ ]")
@@ -29,7 +25,7 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
   }
 }
 
-#' Extract package version history CRAN and Archive (scrape CRAN).
+#' Scrape package version history CRAN and Archive.
 #'
 #' History of version, date and size (source file).
 #' @param package Character. Package name.
@@ -37,20 +33,18 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
 
 packageHistory0 <- function(package = "cholera") {
   # "2008-02-16" first package
-  if (any(is.na(packageCRAN(package)))) {
-    cran <- NULL
-  } else {
-    cran <- packageCRAN(package)
-  }
+  if (any(is.na(packageCRAN(package)))) cran <- NULL
+  else cran <- packageCRAN(package)
   out <- rbind(packageArchive(package), cran)
   row.names(out) <- NULL
   out
 }
 
-#' Scrap package data from CRAN.
+#' Scrape package data from CRAN.
 #'
 #' Version, date and size (source file) of most recent publication.
 #' @param package Character. Package name.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @return An R data frame or NULL.
 #' @examples
 #' \donttest{
@@ -59,25 +53,36 @@ packageHistory0 <- function(package = "cholera") {
 #' }
 #' @export
 
-packageCRAN <- function(package = "cholera") {
+packageCRAN <- function(package = "cholera", check.package = TRUE) {
+  if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
-  web_page <- readLines(url)
-  id <- grep(package, web_page)
-  pkg.data <- gsub("<.*?>", "", web_page[id])
-  dat <- unlist(strsplit(pkg.data, '.tar.gz'))
-  ptA <- unlist(strsplit(dat[1], "_"))
-  ptB <- unlist(strsplit(dat[2], " "))
-  data.frame(package = ptA[1],
-             version = ptA[2],
-             date = as.Date(ptB[1]),
-             size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
-             repository = "CRAN",
-             stringsAsFactors = FALSE)
- }
+  web_page <- mreadLinesURL(url)
+  pkg.match <- grepl(package, web_page, fixed = TRUE)
+
+  if (any(pkg.match)) {
+    pkg.data <- gsub("<.*?>", "", web_page[pkg.match])
+
+    if (length(pkg.data) > 1) {
+      multiple.matches <- unname(vapply(pkg.data, function(x) {
+        unlist(strsplit(x[1], "_"))[1]
+      }, character(1L)))
+
+      if (package %in% multiple.matches) {
+        pkg.data <- pkg.data[multiple.matches %in% package]
+        out <- package_info(pkg.data)
+      } else out <- NA
+
+    } else if (length(pkg.data) == 1) {
+      out <- package_info(pkg.data)
+    } else out <- NA
+  }
+  out
+}
 
 #' Scrape package data from Archive.
 #'
 #' @param package Character. Package name.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @return An R data frame or NULL.
 #' @export
 #' @examples
@@ -86,12 +91,13 @@ packageCRAN <- function(package = "cholera") {
 #' packageArchive(package = "adjustedcranlogs")  # No archived versions.
 #' }
 
-packageArchive <- function(package = "cholera") {
+packageArchive <- function(package = "cholera", check.package = TRUE) {
+  if (check.package) package <- checkPackage(package)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   url <- paste0(root.url, package)
 
   if (RCurl::url.exists(url)) {
-    web_page <- readLines(url)
+    web_page <- mreadLinesURL(url)
     ancestry.check <- grepString("Ancestry", web_page) # 'Rmosek'
 
     if (any(ancestry.check)) {
@@ -101,16 +107,8 @@ packageArchive <- function(package = "cholera") {
       line.id <- which(ancestry.id)[-1]
 
       ancestry.data <- lapply(line.id, function(i) {
-        dat <- gsub("<.*?>", "", ancestry_page[i])
-        dat <- unlist(strsplit(dat, '.tar.gz'))
-        ptA <- unlist(strsplit(dat[1], "_"))
-        ptB <- unlist(strsplit(dat[2], " "))
-        data.frame(package = ptA[1],
-                   version = ptA[2],
-                   date = as.Date(ptB[1]),
-                   size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
-                   repository = "Ancestry",
-                   stringsAsFactors = FALSE)
+        pkg.data <- gsub("<.*?>", "", ancestry_page[i])
+        package_info(pkg.data, repository = "Ancestry")
       })
 
       ancestry.data <- do.call(rbind, ancestry.data)
@@ -155,10 +153,7 @@ packageArchive <- function(package = "cholera") {
         repository = "Archive", stringsAsFactors = FALSE)
     }
 
-    if (any(ancestry.check)) {
-      out <- rbind(ancestry.data, out)
-    }
-
+    if (any(ancestry.check)) out <- rbind(ancestry.data, out)
     out <- out[order(out$date), ]
     row.names(out) <- NULL
     out
@@ -174,6 +169,17 @@ grepString <- function(string, dat, reg.exp = FALSE) {
   }, logical(1L))
 }
 
-gsubClean <- function(dat, id) {
-  gsub("<.*?>", "", dat[id])
+package_info <- function(pkg.data, repository = "CRAN") {
+  dat <- unlist(strsplit(pkg.data, '.tar.gz'))
+  ptA <- unlist(strsplit(dat[1], "_"))
+  ptB <- unlist(strsplit(dat[2], " "))
+  data.frame(package = ptA[1],
+             version = ptA[2],
+             date = as.Date(ptB[1]),
+             size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+             repository = "CRAN",
+             stringsAsFactors = FALSE)
 }
+
+readLinesURL <- function(url) readLines(url)
+mreadLinesURL <- memoise::memoise(readLinesURL)
