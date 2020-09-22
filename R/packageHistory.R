@@ -169,6 +169,17 @@ grepString <- function(string, dat, reg.exp = FALSE) {
   }, logical(1L))
 }
 
-gsubClean <- function(dat, id) {
-  gsub("<.*?>", "", dat[id])
+package_info <- function(pkg.data, repository = "CRAN") {
+  dat <- unlist(strsplit(pkg.data, '.tar.gz'))
+  ptA <- unlist(strsplit(dat[1], "_"))
+  ptB <- unlist(strsplit(dat[2], " "))
+  data.frame(package = ptA[1],
+             version = ptA[2],
+             date = as.Date(ptB[1]),
+             size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+             repository = "CRAN",
+             stringsAsFactors = FALSE)
 }
+
+readLinesURL <- function(url) readLines(url)
+mreadLinesURL <- memoise::memoise(readLinesURL)
