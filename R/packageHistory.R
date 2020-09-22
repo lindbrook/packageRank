@@ -102,7 +102,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
 
     if (any(ancestry.check)) {
       ancestry.url <- paste0(url, "/", "Ancestry")
-      ancestry_page <- readLines(ancestry.url)
+      ancestry_page <- mreadLinesURL(ancestry.url)
       ancestry.id <- grepString("</td><td align=\"right\">", ancestry_page)
       line.id <- which(ancestry.id)[-1]
 

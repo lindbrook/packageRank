@@ -6,7 +6,7 @@
 #' @param source Logical.
 #' @export
 
-packageInfo <- function(multi.core = TRUE, platform = "win", 
+packageInfo <- function(multi.core = TRUE, platform = "win",
   r.ver = "release", source = TRUE) {
 
   if (.Platform$OS.type == "windows" & multi.core > 1) {
@@ -55,7 +55,7 @@ packageInfo <- function(multi.core = TRUE, platform = "win",
     }
   }
 
-  web_page <- readLines(url)
+  web_page <- mreadLinesURL(url)
 
   if (source) {
     ext <- ".tar.gz"

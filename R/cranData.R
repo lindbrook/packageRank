@@ -61,7 +61,7 @@ binary_data <- function(dat, cores) {
 }
 
 webData <- function(url) {
-  web_page <- readLines(url)
+  web_page <- mreadLinesURL(url)
   pkg.id <- grepString("compressed.gif", web_page)
   dat <- gsub("<.*?>", "", web_page[pkg.id])
   dat[!grepl("PACKAGES", dat, fixed = TRUE)] # error 2020-09-22
