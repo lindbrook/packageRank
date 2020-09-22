@@ -2,12 +2,14 @@
 % Please edit documentation in R/packageHistory.R
 \name{packageCRAN}
 \alias{packageCRAN}
-\title{Scrap package data from CRAN.}
+\title{Scrape package data from CRAN.}
 \usage{
-packageCRAN(package = "cholera")
+packageCRAN(package = "cholera", check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
 }
 \value{
 An R data frame or NULL.
