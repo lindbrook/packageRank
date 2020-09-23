@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageSample.R
 \name{packageSample}
 \alias{packageSample}
-\title{Stratified random sample of packages}
+\title{Stratified random sample of packages.}
 \usage{
 packageSample(cran_log, sample.pct = 1, multi.core = TRUE)
 }

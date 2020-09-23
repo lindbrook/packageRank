@@ -7,10 +7,10 @@
 #' @return An R data frame.
 #' @export
 
-cranData <- function(binary = FALSE, bytes = FALSE, multi.core = TRUE) {
+cranPackages <- function(binary = FALSE, bytes = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  dat <- cran_data(code = "source", cores)
-  if (binary) dat <- binary_data(dat, cores)
+  dat <- getCranData(code = "source", cores)
+  if (binary) dat <- getBinaryData(dat, cores)
   if (bytes) {
     if("size" %in% names(dat)) {
       dat$bytes <- computeFileSize(dat$size)
@@ -35,7 +35,7 @@ computeFileSize <- function(x) {
   out
 }
 
-cran_data <- function(code = "source", cores) {
+getCranData <- function(code = "source", cores) {
   if (code == "source") {
     url <- "https://cran.r-project.org/src/contrib/"
   } else if (code == "mac") {
@@ -44,12 +44,12 @@ cran_data <- function(code = "source", cores) {
     url <- "https://cran.r-project.org/bin/windows/contrib/r-release/"
   }
   web.data <- webData(url)
-  cranDF(web.data, code = code, cores)
+  toDataFrame(web.data, code = code, cores)
 }
 
-binary_data <- function(dat, cores) {
+getBinaryData <- function(dat, cores) {
   platform <- c("mac", "win")
-  binary.data <- lapply(platform, function(x) cran_data(x, cores))
+  binary.data <- lapply(platform, function(x) getCranData(x, cores))
   names(binary.data) <- platform
   tmp <- merge(dat, binary.data$mac[, c("package", "size")], by = "package")
   names(tmp)[grep("size", names(tmp))] <- c("source", "mac")
@@ -61,13 +61,13 @@ binary_data <- function(dat, cores) {
 }
 
 webData <- function(url) {
-  web_page <- mreadLinesURL(url)
+  web_page <- mreadLines(url)
   pkg.id <- grepString("compressed.gif", web_page)
   dat <- gsub("<.*?>", "", web_page[pkg.id])
   dat[!grepl("PACKAGES", dat, fixed = TRUE)] # error 2020-09-22
 }
 
-cranDF <- function(web.data, code = "source", cores) {
+toDataFrame <- function(web.data, code = "source", cores) {
   if (code == "source") extension <- '.tar.gz'
   if (code == "win") extension <- '.zip'
   if (code == "mac") extension <- '.tgz'
