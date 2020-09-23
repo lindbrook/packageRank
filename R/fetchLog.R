@@ -30,12 +30,3 @@ fetchCranLog <- function(date, memoization) {
 
 fetchLog <- function(x) as.data.frame(data.table::fread(x))
 mfetchLog <- memoise::memoise(fetchLog)
-
-#' Memoized readLines().
-#'
-#' @param url Character. URL.
-#' @noRd
-#' @note mreadLines() is memoized version.
-
-readLinesURL <- function(url) readLines(url)
-mreadLines <- memoise::memoise(readLinesURL)
