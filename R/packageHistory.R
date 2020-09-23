@@ -56,7 +56,7 @@ packageHistory0 <- function(package = "cholera") {
 packageCRAN <- function(package = "cholera", check.package = TRUE) {
   if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
-  web_page <- mreadLinesURL(url)
+  web_page <- mreadLines(url)
   pkg.match <- grepl(package, web_page, fixed = TRUE)
 
   if (any(pkg.match)) {
@@ -97,12 +97,12 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
   url <- paste0(root.url, package)
 
   if (RCurl::url.exists(url)) {
-    web_page <- mreadLinesURL(url)
+    web_page <- mreadLines(url)
     ancestry.check <- grepString("Ancestry", web_page) # 'Rmosek'
 
     if (any(ancestry.check)) {
       ancestry.url <- paste0(url, "/", "Ancestry")
-      ancestry_page <- mreadLinesURL(ancestry.url)
+      ancestry_page <- mreadLines(ancestry.url)
       ancestry.id <- grepString("</td><td align=\"right\">", ancestry_page)
       line.id <- which(ancestry.id)[-1]
 
@@ -180,6 +180,3 @@ package_info <- function(pkg.data, repository = "CRAN") {
              repository = "CRAN",
              stringsAsFactors = FALSE)
 }
-
-readLinesURL <- function(url) readLines(url)
-mreadLinesURL <- memoise::memoise(readLinesURL)
