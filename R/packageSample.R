@@ -1,4 +1,4 @@
-#' Stratified random sample of packages
+#' Stratified random sample of packages.
 #'
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param cran_log Object. CRAN log.
