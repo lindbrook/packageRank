@@ -9,7 +9,7 @@
 
 cranPackages <- function(binary = FALSE, bytes = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  dat <- getCranData(code = "source", cores)
+  dat <- getData(code = "source", cores)
   if (binary) dat <- getBinaryData(dat, cores)
   if (bytes) {
     if("size" %in% names(dat)) {
@@ -35,7 +35,7 @@ computeFileSize <- function(x) {
   out
 }
 
-getCranData <- function(code = "source", cores) {
+getData <- function(code = "source", cores) {
   if (code == "source") {
     url <- "https://cran.r-project.org/src/contrib/"
   } else if (code == "mac") {
@@ -43,13 +43,13 @@ getCranData <- function(code = "source", cores) {
   } else if (code == 'win') {
     url <- "https://cran.r-project.org/bin/windows/contrib/r-release/"
   }
-  web.data <- webData(url)
+  web.data <- scrapeData(url)
   toDataFrame(web.data, code = code, cores)
 }
 
 getBinaryData <- function(dat, cores) {
   platform <- c("mac", "win")
-  binary.data <- lapply(platform, function(x) getCranData(x, cores))
+  binary.data <- lapply(platform, function(x) getData(x, cores))
   names(binary.data) <- platform
   tmp <- merge(dat, binary.data$mac[, c("package", "size")], by = "package")
   names(tmp)[grep("size", names(tmp))] <- c("source", "mac")
@@ -60,7 +60,7 @@ getBinaryData <- function(dat, cores) {
   tmp[, vars]
 }
 
-webData <- function(url) {
+scrapeData <- function(url) {
   web_page <- mreadLines(url)
   pkg.id <- grepString("compressed.gif", web_page)
   dat <- gsub("<.*?>", "", web_page[pkg.id])

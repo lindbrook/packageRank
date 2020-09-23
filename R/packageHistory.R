@@ -161,9 +161,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
 }
 
 grepString <- function(string, dat, reg.exp = FALSE) {
-  if (reg.exp) {
-    string <- paste0("\\<", string, "\\>")
-  }
+  if (reg.exp) string <- paste0("\\<", string, "\\>")
   vapply(seq_along(dat), function(i) {
     grepl(string, dat[i])
   }, logical(1L))
@@ -181,7 +179,7 @@ package_info <- function(pkg.data, repository = "CRAN") {
              stringsAsFactors = FALSE)
 }
 
-#' Memoized readLines().
+#' Memoize readLines().
 #'
 #' @param url Character. URL.
 #' @noRd
