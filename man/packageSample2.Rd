@@ -23,3 +23,6 @@ packageSample2(lst, repository = "cran", strata.samples = 20,
 \description{
 Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 }
+\note{
+July benchmarks: cran = 61.684; archive = 35.597.
+}
