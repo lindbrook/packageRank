@@ -5,14 +5,16 @@
 #' @param repository Character. "cran" or "archive".
 #' @param strata.samples Numeric. Number of samples from each stratum.
 #' @param package.samples Numeric. Number of packages to sample from across strata for use in versionPlot().
-#' @param set.seed Logical.
+#' @param use.seed Logical. Use todays's date as seed.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @note July benchmarks: cran = 61.684; archive = 35.597.
+#' @export
 
 packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
-  package.samples = 100, set.seed = TRUE, multi.core = TRUE) {
+  package.samples = 100, use.seed = TRUE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  dts <- names(lst)
+  dts <- as.Date(names(lst))
   # seq(as.Date("2020-07-01"), as.Date("2019-07-31"), by = "day")
 
   first <- lst[[1]]
@@ -21,9 +23,9 @@ packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
   first.wed <- which(weekdays(dts, abbreviate = TRUE) == "Wed")[1]
   wed.pkgs <- unique(lst[[first.wed]]$package)
 
-  # guestimate for packages based on current (now) CRAN and Archive
-  cran.pkgs <- cranPackages()
-  all.archive <- archivePackages()
+  # estimate for packages based on current (now) CRAN and Archive
+  cran.pkgs <- cranPackages(multi.core = cores)
+  all.archive <- archivePackages(multi.core = cores)
   archive.pkgs <- all.archive[!all.archive %in% cran.pkgs$package]
 
   wed.cran <- wed.pkgs[wed.pkgs %in% cran.pkgs$package]
@@ -36,10 +38,10 @@ packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
   } else stop('"respository" must be "archive" or "cran".')
 
   tmp <- tmp[tmp %in% unique(first$package)]
-  init.pkgs <- tmp[tmp %in% unique(last$package)]
+  pkgs <- tmp[tmp %in% unique(last$package)]
 
-  pkgs <- first[first$package %in% init.pkgs, ]
-  freqtab <- table(pkgs$package)
+  p.data <- first[first$package %in% pkgs, ]
+  freqtab <- table(p.data$package)
 
   rank.percentile <- parallel::mclapply(names(freqtab), function(nm) {
     mean(freqtab < freqtab[nm])
@@ -59,8 +61,8 @@ packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
     which(pct$percentile > breaks[i] & pct$percentile <= breaks[i - 1])
   })
 
-  # set seed for random sampling
-  if (set.seed) set.seed(as.numeric(Sys.Date()))
+  # use seed for random sampling
+  if (use.seed) set.seed(as.numeric(Sys.Date()))
 
   # vapply(bin.id, length, integer(1L))
   sample.id <- lapply(bin.id, function(x) {
@@ -69,6 +71,9 @@ packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
   })
 
   names(sample.id) <- paste(round(breaks[-1], 2))
+  
+  sel <- vapply(sample.id, function(x) all(!is.na(x)), logical(1L))
+  sample.id <- sample.id[sel]
 
   sel <- sample(unlist(sample.id), package.samples)
   pct[sel, "pkg"]

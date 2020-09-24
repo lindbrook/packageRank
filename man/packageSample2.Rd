@@ -5,7 +5,7 @@
 \title{Stratified random sample of packages for versionPlot().}
 \usage{
 packageSample2(lst, repository = "cran", strata.samples = 20,
-  package.samples = 100, set.seed = TRUE, multi.core = TRUE)
+  package.samples = 100, use.seed = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{lst}{Object. List of CRAN download logs data frames.}
@@ -16,7 +16,7 @@ packageSample2(lst, repository = "cran", strata.samples = 20,
 
 \item{package.samples}{Numeric. Number of packages to sample from across strata for use in versionPlot().}
 
-\item{set.seed}{Logical.}
+\item{use.seed}{Logical. Use todays's date as seed.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
