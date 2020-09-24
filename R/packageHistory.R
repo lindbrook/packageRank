@@ -75,7 +75,7 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
     } else if (length(pkg.data) == 1) {
       out <- package_info(pkg.data)
     } else out <- NA
-  }
+  } else out <- NA
   out
 }
 
