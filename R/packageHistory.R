@@ -149,6 +149,10 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
                    stringsAsFactors = FALSE)
       })
 
+      # exception for 'sdcTable' readme
+      readme <- vapply(version.date, function(x) all(is.na(x)), logical(1L))
+      if (any(readme)) version.date <- version.date[!readme]
+      
       out <- data.frame(package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
     }
