@@ -12,11 +12,15 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
   history <- data.frame(history)
   all.archive <- pkgsearch::cran_package(package, "all")$archived
 
-  if (all.archive) repository <- rep("Archive", nrow(history))
-  else repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+  if (all.archive) {
+    repository <- rep("Archive", nrow(history))
+  } else {
+    repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+  }
 
   if (short.date) {
-    date <- strsplit(history$Date.Publication, "[ ]")
+    date <- strsplit(history$crandb_file_date, "[ ]")
+    date <- strsplit(history$date, "[ ]")
     date <- as.Date(vapply(date, function(x) x[1], character(1L)))
     data.frame(history[, c("Package", "Version")], Date = date,
       Repository = repository, stringsAsFactors = FALSE)
