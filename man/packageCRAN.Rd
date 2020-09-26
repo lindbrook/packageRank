@@ -18,7 +18,7 @@ An R data frame or NULL.
 Version, date and size (source file) of most recent publication.
 }
 \examples{
-\donttest{
+\dontrun{
 packageCRAN(package = "HistData")
 packageCRAN(package = "VR") # No version on CRAN (archived)
 }

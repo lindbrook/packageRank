@@ -25,8 +25,12 @@
 #'    \item{\code{download.country}}{}
 #'    \item{\code{october.downloads}}{}
 #'    \item{\code{july.downloads}}{}
+#'    \item{\code{cran.pkgs.oct}}{}
+#'    \item{\code{arch.pkgs.oct}}{}
+#'    \item{\code{cran.pkgs.jul}}{}
+#'    \item{\code{arch.pkgs.jul}}{}
 #' }
-#' @format A list with 24 elements.
+#' @format A list with 28 elements.
 #' @docType data
 "blog.data"
 
@@ -55,5 +59,9 @@
 # blog.data$download.country <- download.country
 # blog.data$october.downloads <- downloads
 # blog.data$july.downloads <- downloads
+# blog.data$cran.pkgs.oct <- cran.pkgs
+# blog.data$arch.pkgs.oct <- arch.pkgs
+# blog.data$cran.pkgs.jul <- cran.pkgs
+# blog.data$arch.pkgs.jul <- arch.pkgs
 
 # usethis::use_data(blog.data, overwrite = TRUE)

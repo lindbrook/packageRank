@@ -6,17 +6,30 @@
 #' @export
 
 packageHistory <- function(package = "cholera", short.date = TRUE) {
-  vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-    "date")
+  # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
+  #   "date")
+
+  #    Error: Can't subset columns that don't exist.
+  # x Column `Date/Publication` doesn't exist.
+
+  # Error: <package_not_found_error in pkgsearch::cran_package_history(package):
+  # Package not found: VR>
+  # R/packageHistory.R:14:3
+
+  vars <- c("Package", "Version", "crandb_file_date", "date")
   history <- pkgsearch::cran_package_history(package)[vars]
   history <- data.frame(history)
   all.archive <- pkgsearch::cran_package(package, "all")$archived
 
-  if (all.archive) repository <- rep("Archive", nrow(history))
-  else repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+  if (all.archive) {
+    repository <- rep("Archive", nrow(history))
+  } else {
+    repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+  }
 
   if (short.date) {
-    date <- strsplit(history$Date.Publication, "[ ]")
+    date <- strsplit(history$crandb_file_date, "[ ]")
+    date <- strsplit(history$date, "[ ]")
     date <- as.Date(vapply(date, function(x) x[1], character(1L)))
     data.frame(history[, c("Package", "Version")], Date = date,
       Repository = repository, stringsAsFactors = FALSE)
@@ -47,7 +60,7 @@ packageHistory0 <- function(package = "cholera") {
 #' @param check.package Logical. Validate and "spell check" package.
 #' @return An R data frame or NULL.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' packageCRAN(package = "HistData")
 #' packageCRAN(package = "VR") # No version on CRAN (archived)
 #' }
@@ -86,7 +99,7 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
 #' @return An R data frame or NULL.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' packageArchive(package = "HistData")
 #' packageArchive(package = "adjustedcranlogs")  # No archived versions.
 #' }
@@ -152,7 +165,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
       # exception for 'sdcTable' readme
       readme <- vapply(version.date, function(x) all(is.na(x)), logical(1L))
       if (any(readme)) version.date <- version.date[!readme]
-      
+
       out <- data.frame(package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
     }
