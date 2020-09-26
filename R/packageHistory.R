@@ -6,8 +6,17 @@
 #' @export
 
 packageHistory <- function(package = "cholera", short.date = TRUE) {
-  vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-    "date")
+  # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
+  #   "date")
+
+  #    Error: Can't subset columns that don't exist.
+  # x Column `Date/Publication` doesn't exist.
+
+  # Error: <package_not_found_error in pkgsearch::cran_package_history(package):
+  # Package not found: VR>
+  # R/packageHistory.R:14:3
+
+  vars <- c("Package", "Version", "crandb_file_date", "date")
   history <- pkgsearch::cran_package_history(package)[vars]
   history <- data.frame(history)
   all.archive <- pkgsearch::cran_package(package, "all")$archived
@@ -156,7 +165,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
       # exception for 'sdcTable' readme
       readme <- vapply(version.date, function(x) all(is.na(x)), logical(1L))
       if (any(readme)) version.date <- version.date[!readme]
-      
+
       out <- data.frame(package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
     }
