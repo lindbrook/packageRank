@@ -51,7 +51,7 @@ packageHistory0 <- function(package = "cholera") {
 #' @param check.package Logical. Validate and "spell check" package.
 #' @return An R data frame or NULL.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' packageCRAN(package = "HistData")
 #' packageCRAN(package = "VR") # No version on CRAN (archived)
 #' }
@@ -90,7 +90,7 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
 #' @return An R data frame or NULL.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' packageArchive(package = "HistData")
 #' packageArchive(package = "adjustedcranlogs")  # No archived versions.
 #' }

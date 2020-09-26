@@ -18,7 +18,7 @@ An R data frame or NULL.
 Scrape package data from Archive.
 }
 \examples{
-\donttest{
+\dontrun{
 packageArchive(package = "HistData")
 packageArchive(package = "adjustedcranlogs")  # No archived versions.
 }
