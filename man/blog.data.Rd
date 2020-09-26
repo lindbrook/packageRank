@@ -5,7 +5,7 @@
 \alias{blog.data}
 \title{Blog post data.}
 \format{
-A list with 24 elements.
+A list with 28 elements.
 }
 \usage{
 blog.data
@@ -36,6 +36,10 @@ blog.data
    \item{\code{download.country}}{}
    \item{\code{october.downloads}}{}
    \item{\code{july.downloads}}{}
+   \item{\code{cran.pkgs.oct}}{}
+   \item{\code{arch.pkgs.oct}}{}
+   \item{\code{cran.pkgs.jul}}{}
+   \item{\code{arch.pkgs.jul}}{}
 }
 }
 \keyword{datasets}
