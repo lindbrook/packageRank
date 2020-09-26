@@ -1,3 +1,11 @@
+packageRank 0.3.5.9073
+==================
+
+- use "crandb_file_date" instead of "Date/Publication" in packageHistory().
+- add cran.pkgs.oct, arch.pkgs.oct, cran.pkgs.jul, arch.pkgs.jul samples.
+- add packageVersionPercent() and monthlyLogs().
+
+
 packageRank 0.3.5.9072
 ==================
 
