@@ -59,7 +59,8 @@ resolveDate <- function(date, type = "from") {
     warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
     x.date <- first.log
   } else if (x.date > cal.date) {
-    stop("Date in future!")
+    # stop("Date in future!")
+    cal.date
   } else x.date
 }
 
