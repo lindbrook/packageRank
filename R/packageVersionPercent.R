@@ -1,20 +1,27 @@
 #' Compute data for versionPlot().
 #'
 #' packageRank::blog.data or recompute random sample of packages.
-#' @param lst Object. List of CRAN download logs data frames. Use monthlyLogs().
-#' @param resample Logical.
+#' @param lst Object. List of CRAN download logs data frames. Use monthlyLog().
+#' @param yr.mo Character. "yyyy-mo". packageVersionsPercent(NULL, yr.mo)
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @examples
+#' \dontrun{
+#' # To resample and recompute: 
+#' packageVersionPercent(NULL, yr.mo = "2020-07")
+#' 
+#' Otherwise, requires pre-computed list.
+#' }
 #' @export
 
-packageVersionPercent <- function(lst, resample = FALSE, multi.core = TRUE) {
+packageVersionPercent <- function(lst, yr.mo = "2020-07", multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  mo <- months(as.Date(names(lst)[1]))
 
-  if (resample) {
-    lst <- monthlyLogs(month = mo)
+  if (is.null(lst)) {
+    lst <- monthlyLog(yr.mo = yr.mo)
     cran.pkgs <- packageSample2(lst, multi.core = cores)
     arch.pkgs <- packageSample2(lst, "arch", multi.core = cores)
   } else {
+     mo <- months(as.Date(names(lst)[1]))
     if (mo == "October") {
       cran.pkgs <- packageRank::blog.data$cran.pkgs.oct
       arch.pkgs <- packageRank::blog.data$arch.pkgs.oct

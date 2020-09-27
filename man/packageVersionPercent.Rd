@@ -4,15 +4,23 @@
 \alias{packageVersionPercent}
 \title{Compute data for versionPlot().}
 \usage{
-packageVersionPercent(lst, resample = FALSE, multi.core = TRUE)
+packageVersionPercent(lst, yr.mo = "2020-07", multi.core = TRUE)
 }
 \arguments{
-\item{lst}{Object. List of CRAN download logs data frames. Use monthlyLogs().}
+\item{lst}{Object. List of CRAN download logs data frames. Use monthlyLog().}
 
-\item{resample}{Logical.}
+\item{yr.mo}{Character. "yyyy-mo". packageVersionsPercent(NULL, yr.mo)}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 packageRank::blog.data or recompute random sample of packages.
+}
+\examples{
+\dontrun{
+# To resample and recompute: 
+packageVersionPercent(NULL, yr.mo = "2020-07")
+
+Otherwise, requires pre-computed list.
+}
 }
