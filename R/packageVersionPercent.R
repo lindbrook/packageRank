@@ -26,29 +26,26 @@ packageVersionPercent <- function(lst, resample = FALSE, multi.core = TRUE) {
 
   pkgs <- c(cran.pkgs, arch.pkgs)
   pkg.data <- lapply(pkgs, function(x) computeVersionPercents(lst, x, cores))
-  #      user  system elapsed
-  # 596.149 236.667 711.117
-
   names(pkg.data) <- pkgs
   out <- list(cran.pkgs = cran.pkgs, arch.pkgs = arch.pkgs, pkg.data = pkg.data)
   class(out) <- "packageVersionPercent"
-
   out
 }
 
-#' Get CRAN logs for October 2019 or July 2020.
+#' Get CRAN logs for selected month.
 #'
-#' Compute 'lst' for packageVersions().
-#' @param month Character. "October" or "July".
-#' @note This is an intensive task since you're downloading 30 odd log files that are each around 50 MB in size.
+#' Compute list of log files, 'lst', for packageVersionPercent().
+#' @param yr.mo Character. "yyyy-mm".
+#' @note This is computationally intensive; you're downloading 30 odd files that are each around 50 MB in size (and creating a ~1.5 GB file)! Parallelization not practical; multiple attempts to connect to website causes problems. Truncates in-progress/future dates to yesterday's date. Automatically takes care of leap days (e.g., monthlyLog("2020-02").
 #' @export
 
-monthlyLogs <- function(month = "October") {
-  if (month == "October") {
-    days <- seq(as.Date("2019-10-01"), as.Date("2019-10-31"), by = "day")
-  } else if (month == "July") {
-    days <- seq(as.Date("2020-07-01"), as.Date("2019-07-31"), by = "day")
-  } else stop('"month" must be "October" or "July".')
+monthlyLog <- function(yr.mo = "2020-07") {
+  cal.date <- Sys.Date() - 1
+  start.date <- resolveDate(yr.mo)
+  end.date <- resolveDate(yr.mo, "to")
+  start.date <- fixDate_2012(start.date)
+  end.date <- fixDate_2012(end.date)
+  days <- seq(start.date, end.date, by = "day")
   lapply(days, function(d) packageLog0(d, memoization = FALSE))
 }
 
