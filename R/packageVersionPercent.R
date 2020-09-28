@@ -8,7 +8,7 @@
 #' \dontrun{
 #' # To resample and recompute: 
 #' packageVersionPercent(NULL, yr.mo = "2020-07")
-#' 
+#'
 #' Otherwise, requires pre-computed list.
 #' }
 #' @export
@@ -95,7 +95,7 @@ plot.packageVersionPercent <- function(x, ...) {
 
   titleA <- "Percent of Versions Downloaded:"
   titleB <- 'CRAN (1-100) & Archive (101-200)'
-  titleC <- paste(':', months(pkg.data[1, "date"]), year(pkg.data[1, "date"]))
+  titleC <- paste0(':', month(pkg.data[1, "date"]), year(pkg.data[1, "date"]))
 
   ggplot(data = pkg.data, aes_string(x = "id", y = "pct.of.versions")) +
     geom_point(color = "gray") +
