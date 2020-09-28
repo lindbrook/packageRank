@@ -1,3 +1,12 @@
+packageRank 0.3.5.9074
+==================
+
+- rename and amend monthlyLog()'s interface.
+- silently truncate future dates in resolveDate().
+- amend packageVersionPercent() and plot.packageVersionPercent().
+- add final check for package match in packageCRAN().
+
+
 packageRank 0.3.5.9073
 ==================
 

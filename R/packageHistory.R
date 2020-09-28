@@ -74,7 +74,6 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
 
   if (any(pkg.match)) {
     pkg.data <- gsub("<.*?>", "", web_page[pkg.match])
-
     if (length(pkg.data) > 1) {
       multiple.matches <- unname(vapply(pkg.data, function(x) {
         unlist(strsplit(x[1], "_"))[1]
@@ -83,13 +82,12 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
       if (package %in% multiple.matches) {
         pkg.data <- pkg.data[multiple.matches %in% package]
         out <- package_info(pkg.data)
-      } else out <- NA
+      }
+    } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
+  }
 
-    } else if (length(pkg.data) == 1) {
-      out <- package_info(pkg.data)
-    } else out <- NA
-  } else out <- NA
-  out
+  if (identical(out$package, package)) out
+  else NA
 }
 
 #' Scrape package data from Archive.
@@ -162,7 +160,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
                    stringsAsFactors = FALSE)
       })
 
-      # exception for 'sdcTable' readme
+      # exception for readme (e.g.,'sdcTable')
       readme <- vapply(version.date, function(x) all(is.na(x)), logical(1L))
       if (any(readme)) version.date <- version.date[!readme]
 
