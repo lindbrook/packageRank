@@ -68,7 +68,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   tmp
 }
 
-#' Filter Counts.
+#' Package Filter Counts.
 #'
 #' @param lst Object. cran_log list of data frames.
 #' @param pkg Character.
@@ -76,7 +76,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-filterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
+packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
   multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
@@ -92,7 +92,7 @@ filterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
   versions <- length(unique(unlist(versions)))
 
   out <- list(data = do.call(rbind, out), versions = versions, pkg = pkg)
-  class(out) <- "filterCounts"
+  class(out) <- "packageFilterCounts"
   out
 }
 
@@ -140,7 +140,7 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
   }
 }
 
-#' Plot method for filterCounts().
+#' Plot method for packageFilterCounts().
 #'
 #' @param x object.
 #' @param filter Character. "triplet", "ip", "small", "sequence", "all".
@@ -150,8 +150,8 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.filterCounts <- function(x, filter = "all", smooth = FALSE, median = FALSE,
-  legend.loc = "topleft", ...) {
+plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
+  median = FALSE, legend.loc = "topleft", ...) {
 
   dat <- x$data
   dates <- as.Date(row.names(dat))
