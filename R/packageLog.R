@@ -115,12 +115,78 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 #' Get Package Download Logs.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param packages Character. Vector of package name(s).
+#' @param date Character. Date.
+#' @param check.package Logical. Validate and "spell check" package.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
+  check.package = TRUE, memoization = TRUE, multi.core = TRUE) {
+
+  cores <- multiCore(multi.core)
+  pkg.order <- packages
+
+  if (check.package) packages <- checkPackage(packages)
+  date <- check10CharDate(date)
+  ymd <- fixDate_2012(date)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- cleanLog(cran_log)
+
+  out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+  zero.downloads <- vapply(out, nrow, integer(1L))
+
+  if (any(zero.downloads == 0)) {
+    zero.sel <- zero.downloads == 0
+    zero.packages <- packages[zero.sel]
+    zero.out <- out[zero.sel]
+    packages <- packages[!zero.sel]
+    out <- out[!zero.sel]
+  }
+
+  if (length(packages) == 1) {
+    out <- out[[1]]
+    if (nrow(out) != 0) {
+      if (!"t2" %in% names(out)) {
+        out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+      }
+      out <- out[order(out$t2), ]
+      out$t2 <- NULL
+    }
+  } else if (length(packages) > 1) {
+    names(out) <- packages
+    out <- parallel::mclapply(out, function(x) {
+      if (!"t2" %in% names(x)) {
+        x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
+      }
+      tmp <- x[order(x$date.time), ]
+      tmp$date.time <- NULL
+      tmp
+    }, mc.cores = cores)
+    # out <- out[pkg.order]
+  }
+
+  if (any(zero.downloads == 0)) {
+    packages <- c(packages, zero.packages)
+    out <- c(out, zero.out)
+    names(out) <- packages
+  }
+
+   out[pkg.order]
+}
+
+
+#' Get Package Download Logs.
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @return An R data frame.
 #' @export
 
-packageLog0 <- function(date = Sys.Date() - 1, memoization = TRUE) {
+cranLog <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   fetchCranLog(date = ymd, memoization = memoization)
