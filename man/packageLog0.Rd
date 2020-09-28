@@ -4,12 +4,19 @@
 \alias{packageLog0}
 \title{Get Package Download Logs.}
 \usage{
-packageLog0(date = Sys.Date() - 1, memoization = TRUE)
+packageLog0(packages = "cholera", date = Sys.Date() - 1,
+  check.package = TRUE, memoization = TRUE, multi.core = TRUE)
 }
 \arguments{
+\item{packages}{Character. Vector of package name(s).}
+
 \item{date}{Character. Date.}
 
+\item{check.package}{Logical. Validate and "spell check" package.}
+
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \value{
 An R data frame.
