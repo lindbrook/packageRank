@@ -200,6 +200,103 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
     format(delta.pct, big.mark = ","), ptB))
 }
 
+#' CRAN Filter Counts.
+#'
+#' @param lst Object. cran_log list of data frames.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @export
+
+cranFilterCounts <- function(lst, multi.core = TRUE) {
+  cores <- multiCore(multi.core)
+  out <- parallel::mclapply(lst, function(x) {
+    cran_log <- cleanLog(x)
+    u.ct <- length(unique(cran_log$package))
+
+    ip.outliers <- ipFilter3(cran_log)
+    row.delete <- lapply(ip.outliers, function(x) campaigns(x, cran_log))
+    tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
+    ip.ct <- length(unique(tmp$package))
+
+    sm.tmp <- smallFilter0(cran_log)
+    sm.ct <- length(unique(sm.tmp$package))
+
+    tmp <- smallFilter0(tmp)
+    ip_sm.ct <- length(unique(tmp$package))
+
+    data.frame(ct = u.ct, ip = ip.ct, small = sm.ct, all = ip_sm.ct)
+  }, mc.cores = cores)
+
+  dates <- as.Date(names(out))
+  out <- do.call(rbind, out)
+  out <- list(data = data.frame(date = dates, out, row.names = NULL))
+  class(out) <- "cranFilterCounts"
+  out
+}
+
+#' Plot method for cranFilterCounts().
+#'
+#' @param x object.
+#' @param filter Character.  "ip", "small", "all".
+#' @param smooth Logical.
+#' @param median Logical.
+#' @param legend.loc Character. Location of legend.
+#' @param ... Additional plotting parameters.
+#' @export
+
+plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
+  median = FALSE, legend.loc = "topleft", ...) {
+
+  c.data <- x$data
+  mo <- c.data$date
+  id <- which(weekdays(mo, abbreviate = TRUE) == "Wed")
+
+  plot(mo, c.data$ct, type = "o", col = "red", pch = 15,
+    ylim = range(c.data[, -1]), xlab = "Date", ylab = "Count")
+
+  # lines(mo, c.data$f.ct, type = "o", col = "black", pch = 16, lwd = 2)
+  lines(mo, c.data[, filter], type = "o", pch = 16)
+
+  abline(v = mo[id], col = "gray", lty = "dotted")
+  axis(3, at = mo[id], labels = rep("W", length(id)), cex.axis = 2/3,
+    col.ticks = "black", mgp = c(3, 0.5, 0))
+  # title(main = "Packages Downloaded")
+  legend(x = legend.loc,
+         legend = c("all", "filtered"),
+         col = c("red", "black"),
+         pch = c(15, 16),
+         bg = "white",
+         cex = 2/3,
+         lwd = 1,
+         title = NULL)
+
+   if (filter == "ip") {
+     title(main = paste0(toupper(filter), " Filter"))
+   } else if (filter == "all") {
+     title(main = paste0(wordCase(filter), " Filters"))
+   } else {
+     title(main = paste0(wordCase(filter), " Filter"))
+   }
+
+   if (smooth) {
+     lines(stats::lowess(mo, c.data$u.ct), col = "red", lty = "dotted", lwd = 2)
+     lines(stats::lowess(mo, c.data[, filter]), lty = "dotted", lwd = 2)
+   }
+
+   if (median) {
+     axis(4, at = median(c.data$ct), labels = median(c.data$ct),
+       col.axis = "red")
+     axis(4, at = median(c.data[, filter]), labels = median(c.data[, filter]))
+   }
+
+   tot <- colSums(c.data[, -1])
+   ptA <- paste0("unfiltered = ", format(tot["ct"], big.mark = ","),
+     "; filtered = ")
+   # ptB <- paste0("% | ", x$versions, " vers. observed")
+   delta.pct <- round(100 * (tot["ct"] - tot[filter]) / tot[filter], 1)
+   title(sub = paste0(ptA, format(tot[filter], big.mark = ","), "; inflation = ",
+     format(delta.pct, big.mark = ",")))
+}
+
 wordCase <- function(x) {
   # tools::toTitleCase("all")?
   paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
