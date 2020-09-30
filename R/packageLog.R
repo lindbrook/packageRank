@@ -177,7 +177,6 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
    out[pkg.order]
 }
 
-
 #' Get Package Download Logs.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
@@ -186,7 +185,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
 #' @return An R data frame.
 #' @export
 
-cranLog <- function(date = Sys.Date() - 1, memoization = TRUE) {
+cranLogs <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   fetchCranLog(date = ymd, memoization = memoization)
