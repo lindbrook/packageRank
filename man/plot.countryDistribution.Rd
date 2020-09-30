@@ -2,7 +2,7 @@
 % Please edit documentation in R/countryDistribution.R
 \name{plot.countryDistribution}
 \alias{plot.countryDistribution}
-\title{Plot to 10 package downloads by country domain.}
+\title{Plot top 10 package downloads by country domain.}
 \usage{
 \method{plot}{countryDistribution}(x, ...)
 }

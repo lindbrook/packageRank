@@ -17,7 +17,7 @@ countryDistribution <- function(date = Sys.Date() - 1, memoization = TRUE) {
   out
 }
 
-#' Plot to 10 package downloads by country domain.
+#' Plot top 10 package downloads by country domain.
 #'
 #' Plot method for packageDistribution().
 #' @param x An object of class "countryDistribution" created by \code{countryDistribution()}.
