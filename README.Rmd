@@ -376,13 +376,13 @@ To facilitate interpretation and comparison, I use the _rank percentile_ of a do
 For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 
 ```{r packageRank1}
-packageRank(package = "cholera", date = "2020-03-04", ip.filter = TRUE, small.filter = TRUE)
+packageRank(package = "cholera", date = "2020-03-04", ip.filter = FALSE, small.filter = FALSE)
 ```
 
 On Wednesday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 38 downloads, came in 5,556th place out of 18,038 unique packages downloaded, and earned a spot in the 68th percentile.
 
 ```{r packageRank2}
-packageRank(package = "cholera", date = "2020-03-07", ip.filter = TRUE, small.filter = TRUE)
+packageRank(package = "cholera", date = "2020-03-07", ip.filter = FALSE, small.filter = FALSE)
 ```
 
 On Saturday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 29 downloads, came in 3,061st place out of 15,950 unique packages downloaded, earned a spot in the 80th percentile.
@@ -395,7 +395,7 @@ To compute rank percentiles, I do the following. For each package, I tabulate th
 
 ```{r percentile}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = TRUE, small.filter = TRUE)
+  ip.filter = FALSE, small.filter = FALSE)
 
 downloads <- pkg.rank$freqtab
 

@@ -388,9 +388,9 @@ For example, we can compare Wednesday (“2020-03-04”) to Saturday
 (“2020-03-07”):
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-04", ip.filter = TRUE, small.filter = TRUE)
+packageRank(package = "cholera", date = "2020-03-04", ip.filter = FALSE, small.filter = FALSE)
 >         date packages downloads            rank percentile
-> 1 2020-03-04  cholera        20 8,031 of 15,987       45.1
+> 1 2020-03-04  cholera        38 5,556 of 18,038       67.9
 ```
 
 On Wednesday, we can see that
@@ -399,9 +399,9 @@ downloads, came in 5,556th place out of 18,038 unique packages
 downloaded, and earned a spot in the 68th percentile.
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-07", ip.filter = TRUE, small.filter = TRUE)
+packageRank(package = "cholera", date = "2020-03-07", ip.filter = FALSE, small.filter = FALSE)
 >         date packages downloads            rank percentile
-> 1 2020-03-07  cholera        25 2,971 of 15,940       80.7
+> 1 2020-03-07  cholera        29 3,061 of 15,950         80
 ```
 
 On Saturday, we can see that
@@ -423,25 +423,25 @@ Wednesday as an example:
 
 ``` r
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = TRUE, small.filter = TRUE)
+  ip.filter = FALSE, small.filter = FALSE)
 
 downloads <- pkg.rank$freqtab
 
 round(100 * mean(downloads < downloads["cholera"]), 1)
-> [1] 45.1
+> [1] 67.9
 ```
 
 To put it differently:
 
 ``` r
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["cholera"]))
-> [1] 7216
+> [1] 12250
 
 (tot.pkgs <- length(downloads))
-> [1] 15987
+> [1] 18038
 
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
-> [1] 45.1
+> [1] 67.9
 ```
 
 #### nominal ranks
