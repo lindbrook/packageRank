@@ -53,16 +53,24 @@ cranlogs::cran_downloads(packages = "HistData")
     >         date count  package
     > 1 2020-05-01   338 HistData
 
+The only difference is that `cranDownloads()` adds four features:
+
+#### i) computes cumulative count
+
 ``` r
-cranDownloads(packages = "HistData")
+cranDownloads(packages = "HistData", when = "last-week")
 ```
 
     >         date count cumulative  package
     > 1 2020-05-01   338        338 HistData
+    > 2 2020-05-02   259        597 HistData
+    > 3 2020-05-03   321        918 HistData
+    > 4 2020-05-04   344       1262 HistData
+    > 5 2020-05-05   324       1586 HistData
+    > 6 2020-05-06   356       1942 HistData
+    > 7 2020-05-07   324       2266 HistData
 
-The only difference is that `cranDownloads()` adds four features:
-
-#### i) check package names
+#### ii) spell checks package names
 
 ``` r
 cranDownloads(packages = "GGplot2")
@@ -101,13 +109,12 @@ cranDownloads(packages = "VR")
 
 <br/>
 
-#### ii) two additional date formats
+#### iii) adds two date formats
 
 With `cranlogs::cran_downloads()`, you specify a time frame using the
 `from` and `to` arguments. The downside of this is that you *must* use
-the “yyyy-mm-dd” date format. For convenience’s sake and to reduce
-typing, `cranDownloads()` also allows you to use “yyyy-mm” or “yyyy”
-(yyyy also works).
+the “yyyy-mm-dd” date format. For convenience’s sake, `cranDownloads()`
+also allows you to use “yyyy-mm” or “yyyy” (yyyy also works).
 
 ##### “yyyy-mm”
 
@@ -146,9 +153,7 @@ cranDownloads(packages = "rstan", from = "2020")
 
 <br/>
 
-#### iii) check dates
-
-`cranDownloads()` checks for valid dates:
+#### iv) checks for valid date
 
 ``` r
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -156,21 +161,6 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 
     ## Error in resolveDate(to, type = "to") : Not a valid date.
-
-#### iv) compute cumulative download counts
-
-``` r
-cranDownloads(packages = "HistData", when = "last-week")
-```
-
-    >         date count cumulative  package
-    > 1 2020-05-01   338        338 HistData
-    > 2 2020-05-02   259        597 HistData
-    > 3 2020-05-03   321        918 HistData
-    > 4 2020-05-04   344       1262 HistData
-    > 5 2020-05-05   324       1586 HistData
-    > 6 2020-05-06   356       1942 HistData
-    > 7 2020-05-07   324       2266 HistData
 
 <br/>
 
@@ -195,8 +185,8 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 
 <img src="man/figures/README-cranDownloads_viz2a-1.png" style="display: block; margin: auto;" />
 
-If you pass a vector of package names for multiple days, `plot()`
-defaults to using `ggplot2` facets:
+If you pass a vector of package names for multiple days, `plot()` uses
+`ggplot2` facets:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -216,15 +206,16 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 
 ![](man/figures/README-cranDownloads_viz3-1.png)<!-- -->
 
-<br/> If you want separate plots, use `graphics = "base"` and you’ll be
-prompted for each plot:
+<br/> If you want plot those data in separate plots on the same scale,
+use `graphics = "base"` and you’ll be prompted for each plot:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-If you want those plots independently, set `same.xy = FALSE`:
+If you want do the above on spearate independent scales, set `same.xy =
+FALSE`:
 
 ``` r
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -397,9 +388,9 @@ For example, we can compare Wednesday (“2020-03-04”) to Saturday
 (“2020-03-07”):
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-04", size.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-04", ip.filter = TRUE, small.filter = TRUE)
 >         date packages downloads            rank percentile
-> 1 2020-03-04  cholera        38 5,556 of 18,038       67.9
+> 1 2020-03-04  cholera        20 8,031 of 15,987       45.1
 ```
 
 On Wednesday, we can see that
@@ -408,9 +399,9 @@ downloads, came in 5,556th place out of 18,038 unique packages
 downloaded, and earned a spot in the 68th percentile.
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-07", size.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-07", ip.filter = TRUE, small.filter = TRUE)
 >         date packages downloads            rank percentile
-> 1 2020-03-07  cholera        29 3,061 of 15,950         80
+> 1 2020-03-07  cholera        25 2,971 of 15,940       80.7
 ```
 
 On Saturday, we can see that
@@ -432,25 +423,25 @@ Wednesday as an example:
 
 ``` r
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  size.filter = FALSE)
+  ip.filter = TRUE, small.filter = TRUE)
 
-downloads <- pkg.rank$crosstab
+downloads <- pkg.rank$freqtab
 
 round(100 * mean(downloads < downloads["cholera"]), 1)
-> [1] 67.9
+> [1] 45.1
 ```
 
 To put it differently:
 
 ``` r
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["cholera"]))
-> [1] 12250
+> [1] 7216
 
 (tot.pkgs <- length(downloads))
-> [1] 18038
+> [1] 15987
 
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
-> [1] 67.9
+> [1] 45.1
 ```
 
 #### nominal ranks
@@ -465,8 +456,8 @@ that it is 31st in the list of 263 packages with 38 downloads:
 
 ``` r
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  size.filter = FALSE)
-downloads <- pkg.rank$crosstab
+  ip.filter = FALSE, small.filter = FALSE)
+downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
 > [1] 31
@@ -502,38 +493,7 @@ dotted vertical lines. The package with the most downloads,
 cases, is at top left (in blue). The total number of downloads is at the
 top right (in blue).
 
-### VI - filter “small” downloads
-
-`packageDistribution()`, `packageRank()` and `packageLog()` have a
-‘size.filter’ argument that removes downloads smaller than 1000 bytes.
-This can provide a more accurate count of package downloads. For
-example, here is a raw download count:
-
-``` r
-packageRank(packages = "HistData", date = "2019-10-30", size.filter = FALSE)
->         date packages downloads          rank percentile
-> 1 2019-10-30 HistData       403 794 of 17,396       95.4
-```
-
-Below is a filtered count.
-
-``` r
-packageRank(packages = "HistData", date = "2019-10-30", size.filter = TRUE)
->         date packages downloads          rank percentile
-> 1 2019-10-30 HistData       382 796 of 15,330       94.8
-```
-
-Besides a difference of 21 downloads, notice that the number of unique
-packages downloaded falls from 17,396 to 15,330.
-
-By default, `size.filter = TRUE` for `packageRank()` while `size.filter
-= FALSE` for `packageDistribution()` and `packageLog()`. For details
-about “small” downloads see the “Inflationary Bias of Download Counts”
-section of this
-[post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
-on the [R-hub blog](https://blog.r-hub.io).
-
-### VII - memoization
+### VI - memoization
 
 To avoid the bottleneck of downloading multiple log files,
 `packageRank()` is currently limited to individual days. However, to

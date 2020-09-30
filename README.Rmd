@@ -49,17 +49,21 @@ cranlogs::cran_downloads(packages = "HistData")
 cranlogs::cran_downloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
 ```
 
-```{r cranDownloads, eval = FALSE}
-cranDownloads(packages = "HistData")
-```
-
-```{r cranDownloads_code, echo = FALSE}
-cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
-```
 
 The only difference is that `cranDownloads()` adds four features:
 
-#### i) check package names
+
+#### i) computes cumulative count
+
+```{r cranDownloads_cumulative, eval = FALSE}
+cranDownloads(packages = "HistData", when = "last-week")
+```
+
+```{r cranDownloads_cumulative_code, echo = FALSE}
+cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
+```
+
+#### ii) spell checks package names
 
 ```{r spell_check_fail, eval = FALSE}
 cranDownloads(packages = "GGplot2")
@@ -98,9 +102,9 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 
 <br/>
 
-#### ii) two additional date formats
+#### iii) adds two date formats
 
-With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake and to reduce typing, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
+With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
 
 ##### "yyyy-mm"
 Let's say you want the download counts for ['HistData'](https://CRAN.R-project.org/package=HistData) for the month of February 2020. With `cranlogs::cran_downloads()`, you'd have to type out the whole date and remember that 2020 was a leap year:
@@ -134,9 +138,7 @@ cranDownloads(packages = "rstan", from = "2020")
 
 <br/>
 
-#### iii) check dates
-
-`cranDownloads()` checks for valid dates:
+#### iv) checks for valid date
 
 ```{r check_date, eval = FALSE}
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -144,16 +146,6 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 ```
 ## Error in resolveDate(to, type = "to") : Not a valid date.
-```
-
-#### iv) compute cumulative download counts
-
-```{r cranDownloads_cumulative, eval = FALSE}
-cranDownloads(packages = "HistData", when = "last-week")
-```
-
-```{r cranDownloads_cumulative_code, echo = FALSE}
-cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
 ```
 
 <br/>
@@ -173,7 +165,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-If you pass a vector of package names for multiple days, `plot()` defaults to using `ggplot2` facets:
+If you pass a vector of package names for multiple days, `plot()` uses `ggplot2` facets:
 
 ```{r cranDownloads_viz2, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -189,14 +181,14 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 ```
 
 <br/>
-If you want separate plots, use `graphics = "base"` and you'll be prompted for each plot:
+If you want plot those data in separate plots on the same scale, use `graphics = "base"` and you'll be prompted for each plot:
 
 ```{r cranDownloads_viz4, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-If you want those plots independently, set `same.xy = FALSE`:
+If you want do the above on spearate independent scales, set `same.xy = FALSE`:
 
 ```{r cranDownloads_viz5, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -305,11 +297,11 @@ freq.dist2 <- x[[2]]$freq.dist
 xlim <- range(freq.dist1$count, freq.dist2$count)
 ylim <- range(freq.dist1$frequency, freq.dist2$frequency)
 
-crosstab <- x[[1]]$crosstab
+freqtab <- x[[1]]$freqtab
 plot(freq.dist1$count, freq.dist1$frequency, xlab = "Downloads",
   ylab = "Frequency", xlim = xlim, ylim = ylim)
-pkg.ct <- crosstab[names(crosstab) == x[[1]]$package]
-pkg.bin <- crosstab[crosstab == pkg.ct]
+pkg.ct <- freqtab[names(freqtab) == x[[1]]$package]
+pkg.bin <- freqtab[freqtab == pkg.ct]
 axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
   cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
 abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
@@ -319,11 +311,11 @@ title(paste0(x[[1]]$package, " @ ", x[[1]]$date, " (", day, ")"))
 
 ```{r skew_sat, fig.align = "center", echo = FALSE}
 
-crosstab <- x[[2]]$crosstab
+freqtab <- x[[2]]$freqtab
 plot(freq.dist2$count, freq.dist2$frequency, xlab = "Downloads",
   ylab = "Frequency", xlim = xlim, ylim = ylim)
-pkg.ct <- crosstab[names(crosstab) == x[[2]]$package]
-pkg.bin <- crosstab[crosstab == pkg.ct]
+pkg.ct <- freqtab[names(freqtab) == x[[2]]$package]
+pkg.bin <- freqtab[freqtab == pkg.ct]
 axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
   cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
 abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
@@ -338,17 +330,17 @@ To see what's going on, I take the log of download counts (x-axis) and redraw th
 ```{r packageDistribution, echo = FALSE}
 plot_package_distribution <- function(dat, xlim, ylim) {
   freq.dist <- dat$freq.dist
-  crosstab <- dat$crosstab
+  freqtab <- dat$freqtab
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
     xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
-  axis(3, at = crosstab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
-    col.ticks = "dodgerblue", labels = paste(names(crosstab[1]), "=",
-    format(crosstab[1], big.mark = ",")))
-  abline(v = crosstab[1], col = "dodgerblue", lty = "dotted")
+  axis(3, at = freqtab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
+    col.ticks = "dodgerblue", labels = paste(names(freqtab[1]), "=",
+    format(freqtab[1], big.mark = ",")))
+  abline(v = freqtab[1], col = "dodgerblue", lty = "dotted")
 
   if (!is.null(dat$package)) {
-    pkg.ct <- crosstab[names(crosstab) == dat$package]
-    pkg.bin <- crosstab[crosstab == pkg.ct]
+    pkg.ct <- freqtab[names(freqtab) == dat$package]
+    pkg.bin <- freqtab[freqtab == pkg.ct]
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
@@ -384,13 +376,13 @@ To facilitate interpretation and comparison, I use the _rank percentile_ of a do
 For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 
 ```{r packageRank1}
-packageRank(package = "cholera", date = "2020-03-04", size.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-04", ip.filter = TRUE, small.filter = TRUE)
 ```
 
 On Wednesday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 38 downloads, came in 5,556th place out of 18,038 unique packages downloaded, and earned a spot in the 68th percentile.
 
 ```{r packageRank2}
-packageRank(package = "cholera", date = "2020-03-07", size.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-07", ip.filter = TRUE, small.filter = TRUE)
 ```
 
 On Saturday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 29 downloads, came in 3,061st place out of 15,950 unique packages downloaded, earned a spot in the 80th percentile.
@@ -403,9 +395,9 @@ To compute rank percentiles, I do the following. For each package, I tabulate th
 
 ```{r percentile}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  size.filter = FALSE)
+  ip.filter = TRUE, small.filter = TRUE)
 
-downloads <- pkg.rank$crosstab
+downloads <- pkg.rank$freqtab
 
 round(100 * mean(downloads < downloads["cholera"]), 1)
 ```
@@ -426,8 +418,8 @@ In the example above, 38 downloads puts 'cholera' in 5,556th place among the 18,
 
 ```{r nominal}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  size.filter = FALSE)
-downloads <- pkg.rank$crosstab
+  ip.filter = FALSE, small.filter = FALSE)
+downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
 length(downloads[downloads == 38])
@@ -443,52 +435,52 @@ plot(packageRank(packages = "cholera", date = "2020-03-04"))
 
 ```{r packageRank_data, echo = FALSE}
 dat <- lapply(c("2020-03-04", "2020-03-07"), function(x) {
-  packageRank("cholera", date = x, size.filter = FALSE)
+  packageRank("cholera", date = x, ip.filter = FALSE, small.filter = FALSE)
 })
 
-crosstab1 <- dat[[1]]$crosstab
-crosstab2 <- dat[[2]]$crosstab
-xlim <- range(seq_along(crosstab1), seq_along(crosstab2))
-ylim <- range(c(crosstab1), c(crosstab2))
+freqtab1 <- dat[[1]]$freqtab
+freqtab2 <- dat[[2]]$freqtab
+xlim <- range(seq_along(freqtab1), seq_along(freqtab2))
+ylim <- range(c(freqtab1), c(freqtab2))
 ```
 
 ```{r packageRank_plot_code_wed, echo = FALSE, fig.align = "center"}
 
-crosstab <- dat[[1]]$crosstab
+freqtab <- dat[[1]]$freqtab
 package.data <- dat[[1]]$package.data
 pkg <- dat[[1]]$packages
 date <- dat[[1]]$date
-y.max <- crosstab[1]
-q <- stats::quantile(crosstab)[2:4]
+y.max <- freqtab[1]
+q <- stats::quantile(freqtab)[2:4]
 
 iqr <- vapply(c("75%", "50%", "25%"), function(id) {
-  dat <- which(crosstab > q[[id]])
+  dat <- which(freqtab > q[[id]])
   dat[length(dat)]
 }, numeric(1L))
 
-plot(seq_along(crosstab), c(crosstab), type = "l", xlab = "Rank",
+plot(seq_along(freqtab), c(freqtab), type = "l", xlab = "Rank",
   ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
 abline(v = iqr, col = "black", lty = "dotted")
 iqr.labels <- c("75th", "50th", "25th")
 invisible(lapply(seq_along(iqr), function(i) {
   text(iqr[[i]], y.max / 2, labels = iqr.labels[i], cex = 0.75)
 }))
-abline(v = which(names(crosstab) == pkg), col = "red")
-abline(h = crosstab[pkg], col = "red")
+abline(v = which(names(freqtab) == pkg), col = "red")
+abline(h = freqtab[pkg], col = "red")
 pct <- package.data[package.data$package == pkg, "percentile"]
 pct.label <- paste0(round(pct, 2), "%")
-axis(3, at = which(names(crosstab) == pkg), padj = 0.9, col.axis = "red",
+axis(3, at = which(names(freqtab) == pkg), padj = 0.9, col.axis = "red",
   col.ticks = "red", labels = pct.label, cex.axis = 0.8)
-axis(4, at = crosstab[pkg], col.axis = "red", col.ticks = "red",
-  cex.axis = 0.8, labels = format(crosstab[pkg], big.mark = ","))
-points(which(names(crosstab) == pkg), crosstab[pkg], col = "red")
-points(which(names(crosstab) == names(crosstab[1])), y.max,
+axis(4, at = freqtab[pkg], col.axis = "red", col.ticks = "red",
+  cex.axis = 0.8, labels = format(freqtab[pkg], big.mark = ","))
+points(which(names(freqtab) == pkg), freqtab[pkg], col = "red")
+points(which(names(freqtab) == names(freqtab[1])), y.max,
   col = "dodgerblue")
-text(which(names(crosstab) == names(crosstab[1])), y.max, pos = 4,
-  labels = paste(names(crosstab[1]), "=", format(crosstab[1],
+text(which(names(freqtab) == names(freqtab[1])), y.max, pos = 4,
+  labels = paste(names(freqtab[1]), "=", format(freqtab[1],
   big.mark = ",")), cex = 0.8, col = "dodgerblue")
 text(max(xlim), max(ylim),
-  labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")), cex = 0.8,
+  labels = paste("Tot = ", format(sum(freqtab), big.mark = ",")), cex = 0.8,
   col = "dodgerblue", pos = 2)
 day <- weekdays(as.Date(date), abbreviate = TRUE)
 title(main = paste0(pkg, " @ ", date, " (", day, ")"))
@@ -502,41 +494,41 @@ plot(packageRank(packages = "cholera", date = "2020-03-07"))
 
 ```{r packageRank_plot_code_sat, echo = FALSE, fig.align = "center"}
 
-crosstab <- dat[[2]]$crosstab
+freqtab <- dat[[2]]$freqtab
 package.data <- dat[[2]]$package.data
 pkg <- dat[[2]]$packages
 date <- dat[[2]]$date
-y.max <- crosstab[1]
-q <- stats::quantile(crosstab)[2:4]
+y.max <- freqtab[1]
+q <- stats::quantile(freqtab)[2:4]
 
 iqr <- vapply(c("75%", "50%", "25%"), function(id) {
-  dat <- which(crosstab > q[[id]])
+  dat <- which(freqtab > q[[id]])
   dat[length(dat)]
 }, numeric(1L))
 
-plot(seq_along(crosstab), c(crosstab), type = "l", xlab = "Rank",
+plot(seq_along(freqtab), c(freqtab), type = "l", xlab = "Rank",
   ylab = "log10(Count)", log = "y", xlim = xlim, ylim = ylim)
 abline(v = iqr, col = "black", lty = "dotted")
 iqr.labels <- c("75th", "50th", "25th")
 invisible(lapply(seq_along(iqr), function(i) {
   text(iqr[[i]], y.max / 2, labels = iqr.labels[i], cex = 0.75)
 }))
-abline(v = which(names(crosstab) == pkg), col = "red")
-abline(h = crosstab[pkg], col = "red")
+abline(v = which(names(freqtab) == pkg), col = "red")
+abline(h = freqtab[pkg], col = "red")
 pct <- package.data[package.data$package == pkg, "percentile"]
 pct.label <- paste0(round(pct, 2), "%")
-axis(3, at = which(names(crosstab) == pkg), padj = 0.9, col.axis = "red",
+axis(3, at = which(names(freqtab) == pkg), padj = 0.9, col.axis = "red",
   col.ticks = "red", labels = pct.label, cex.axis = 0.8)
-axis(4, at = crosstab[pkg], col.axis = "red", col.ticks = "red",
-  cex.axis = 0.8, labels = format(crosstab[pkg], big.mark = ","))
-points(which(names(crosstab) == pkg), crosstab[pkg], col = "red")
-points(which(names(crosstab) == names(crosstab[1])), y.max,
+axis(4, at = freqtab[pkg], col.axis = "red", col.ticks = "red",
+  cex.axis = 0.8, labels = format(freqtab[pkg], big.mark = ","))
+points(which(names(freqtab) == pkg), freqtab[pkg], col = "red")
+points(which(names(freqtab) == names(freqtab[1])), y.max,
   col = "dodgerblue")
-text(which(names(crosstab) == names(crosstab[1])), y.max, pos = 4,
-  labels = paste(names(crosstab[1]), "=", format(crosstab[1],
+text(which(names(freqtab) == names(freqtab[1])), y.max, pos = 4,
+  labels = paste(names(freqtab[1]), "=", format(freqtab[1],
   big.mark = ",")), cex = 0.8, col = "dodgerblue")
 text(max(xlim), max(ylim),
-  labels = paste("Tot = ", format(sum(crosstab), big.mark = ",")), cex = 0.8,
+  labels = paste("Tot = ", format(sum(freqtab), big.mark = ",")), cex = 0.8,
   col = "dodgerblue", pos = 2)
 day <- weekdays(as.Date(date), abbreviate = TRUE)
 title(main = paste0(pkg, " @ ", date, " (", day, ")"))
@@ -544,25 +536,7 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 
 These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
-### VI - filter "small" downloads
-
-`packageDistribution()`, `packageRank()` and `packageLog()` have a 'size.filter' argument that removes downloads smaller than 1000 bytes. This can provide a more accurate count of package downloads. For example, here is a raw download count:
-
-```{r filter1}
-packageRank(packages = "HistData", date = "2019-10-30", size.filter = FALSE)
-```
-
-Below is a filtered count.
-
-```{r filter2}
-packageRank(packages = "HistData", date = "2019-10-30", size.filter = TRUE)
-```
-
-Besides a difference of 21 downloads, notice that the number of unique packages downloaded falls from 17,396 to 15,330.
-
-By default, `size.filter = TRUE` for `packageRank()` while `size.filter = FALSE` for `packageDistribution()` and `packageLog()`. For details about "small" downloads see the "Inflationary Bias of Download Counts" section of this [post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts) on the [R-hub blog](https://blog.r-hub.io).
-
-### VII - memoization
+### VI - memoization
 
 To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual days. However, to reduce the need to re-download logs, 'packageRank' makes use of memoization via the 'memoise' package.
 
