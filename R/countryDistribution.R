@@ -25,6 +25,7 @@ countryDistribution <- function(date = Sys.Date() - 1, memoization = TRUE) {
 #' @export
 
 plot.countryDistribution <- function(x, ...) {
-  barplot(x$data[1:10])
+  ct <- x$data / 10^6
+  barplot(ct[1:10], ylab = "Downloads (Millions)")
   title(paste("Top Ten Country Domains @", x$date))
 }
