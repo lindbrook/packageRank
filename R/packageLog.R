@@ -24,9 +24,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- cranLog(date = date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
@@ -130,9 +128,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
   pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- cranLog(date = date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
@@ -165,7 +161,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
       tmp$date.time <- NULL
       tmp
     }, mc.cores = cores)
-    # out <- out[pkg.order]
+    out <- out[pkg.order]
   }
 
   if (any(zero.downloads == 0)) {
@@ -174,7 +170,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
     names(out) <- packages
   }
 
-   out[pkg.order]
+   out
 }
 
 #' Get Package Download Logs.
@@ -185,7 +181,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
 #' @return An R data frame.
 #' @export
 
-cranLogs <- function(date = Sys.Date() - 1, memoization = TRUE) {
+cranLog <- function(date = Sys.Date() - 1, memoization = TRUE) {
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
   fetchCranLog(date = ymd, memoization = memoization)
