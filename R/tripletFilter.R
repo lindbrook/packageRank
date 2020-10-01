@@ -2,7 +2,7 @@
 #'
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
-#' @param time.window Numeric. Seconds
+#' @param time.window Numeric. Seconds.
 #' @export
 
 tripletFilter <- function(dat, time.window = 2) {

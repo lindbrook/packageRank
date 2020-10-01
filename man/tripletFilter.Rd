@@ -9,7 +9,7 @@ tripletFilter(dat, time.window = 2)
 \arguments{
 \item{dat}{Object. Package log entries.}
 
-\item{time.window}{Numeric. Seconds}
+\item{time.window}{Numeric. Seconds.}
 }
 \description{
 Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
