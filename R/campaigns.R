@@ -9,7 +9,7 @@
 #' @note For use with ipFilter3().
 
 campaigns <- function(ip, cran_log, min.obs = 5, output = "rownames") {
-  tmp <- cran_log[cran_log$ip_id == ip, ]
+  tmp <- cleanLog(cran_log[cran_log$ip_id == ip, ])
   tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
   tmp <- tmp[order(tmp$t2, tmp$package), ]
 
