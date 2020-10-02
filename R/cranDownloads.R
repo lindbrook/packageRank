@@ -751,7 +751,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$date, dat$count, f = f), col = "blue")
+        lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
       }
 
       title(main = x$packages)
