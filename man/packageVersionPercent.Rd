@@ -18,9 +18,9 @@ packageRank::blog.data or recompute random sample of packages.
 }
 \examples{
 \dontrun{
-# To resample and recompute: 
+# To resample and recompute, set lst to NULL, specify a yr.mo:
 packageVersionPercent(NULL, yr.mo = "2020-07")
 
-Otherwise, requires pre-computed list.
+Otherwise, you must provide a pre-computed lst of logs.
 }
 }
