@@ -2,7 +2,7 @@
 % Please edit documentation in R/sequenceFilter.R
 \name{sequenceFilter}
 \alias{sequenceFilter}
-\title{Filter Downloads of sequential Versions (prototype).}
+\title{Filter downloads of full-sized sequential versions (prototype).}
 \usage{
 sequenceFilter(dat, max.delta.time = 30)
 }
@@ -12,5 +12,5 @@ sequenceFilter(dat, max.delta.time = 30)
 \item{max.delta.time}{Numeric. Maximum time interval between downloads (seconds).}
 }
 \description{
-Filter Downloads of sequential Versions (prototype).
+Filter downloads of full-sized sequential versions (prototype).
 }
