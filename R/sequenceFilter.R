@@ -1,4 +1,4 @@
-#' Filter Downloads of sequential Versions (prototype).
+#' Filter downloads of full-sized sequential versions (prototype).
 #'
 #' @param dat Object.
 #' @param max.delta.time Numeric. Maximum time interval between downloads (seconds).

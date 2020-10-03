@@ -67,11 +67,12 @@ inflationPlot <- function(package = "cholera", filter = "size",
 #' Document code.
 #' @param dataset Character. "october" or "july" for October 2019 or July 2020.
 #' @param filter Character. "small", "ip", or "ip.small".
+#' @param wed Logical.
 #' @param legend.loc Character. Location of legend.
 #' @export
 
-inflationPlot2 <- function(dataset = "october", filter = "ip.small",
-  legend.loc = "bottomright") {
+inflationPlot2 <- function(dataset = "october", filter = "small", wed = FALSE,
+  legend.loc = "topleft") {
 
   if (dataset == "october") dat <- packageRank::blog.data$october.downloads
   else if (dataset == "july") dat <- packageRank::blog.data$july.downloads
@@ -92,9 +93,13 @@ inflationPlot2 <- function(dataset = "october", filter = "ip.small",
     ylim = range(dat[, vars]), xlab = "Date", ylab = "Downloads (millions)")
   lines(dat$date, dat[, filter], type = "o", pch = 16)
   title(main = paste("Package Download Counts:", filter))
-  abline(v = mo[id], col = "gray", lty = "dotted")
-  axis(3, at = mo[id], labels = rep("W", length(id)), cex.axis = 0.5,
-    col.ticks = "black", mgp = c(3, 0.5, 0))
+
+  if (wed) {
+    abline(v = mo[id], col = "gray", lty = "dotted")
+    axis(3, at = mo[id], labels = rep("W", length(id)), cex.axis = 0.5,
+      col.ticks = "black", mgp = c(3, 0.5, 0))
+  }
+
   legend(x = legend.loc, legend = c("unfiltered", "filtered"),
     col = c("red", "black"), pch = c(15, 16), bg = "white", cex = 2/3, lwd = 1,
     title = NULL)
@@ -103,6 +108,25 @@ inflationPlot2 <- function(dataset = "october", filter = "ip.small",
                 format(round(unfiltered.ct, 2), big.mark = ","),
                 "; filtered = ",
                 format(round(filtered.ct, 2), big.mark = ","))
-                
+
   title(sub = paste0(ptA, "; inflation = ", paste0(inflation, "%")))
+}
+
+#' CRAN Plot.
+#'
+#' Document code.
+#' @param dataset Character. "october" or "july" for October 2019 or July 2020.
+#' @export
+
+cranPlot <- function(dataset = "october") {
+  if (dataset == "october") dat <- packageRank::blog.data$october.downloads
+  else if (dataset == "july") dat <- packageRank::blog.data$july.downloads
+  else stop('"dataset" must be "october" or "july".')
+  vars <- names(dat) != "date"
+  dat[, vars] <- dat[, vars] / 10^6
+  mo <- dat$date
+  id <- which(weekdays(mo, abbreviate = TRUE) == "Wed")
+  plot(dat$date, dat$unfiltered, type = "o", pch = 16,
+    ylim = range(dat[, vars]), xlab = "Date", ylab = "Downloads (millions)")
+  title(main = "Package Downloads")
 }
