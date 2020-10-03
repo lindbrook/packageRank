@@ -46,9 +46,10 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
 
 packageHistory0 <- function(package = "cholera") {
   # "2008-02-16" first package
-  if (any(is.na(packageCRAN(package)))) cran <- NULL
-  else cran <- packageCRAN(package)
-  out <- rbind(packageArchive(package), cran)
+  cran <- packageCRAN(package)
+  arch <- packageArchive(package)
+  if (any(is.na(cran))) cran <- NULL
+  out <- rbind(arch, cran)
   row.names(out) <- NULL
   out
 }
@@ -82,12 +83,13 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
       if (package %in% multiple.matches) {
         pkg.data <- pkg.data[multiple.matches %in% package]
         out <- package_info(pkg.data)
-      }
+      } else out <- NULL
     } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
-  }
 
-  if (identical(out$package, package)) out
-  else NA
+    if (!is.null(out)) {
+      if (identical(out$package, package)) out
+    } else NA
+  } else NA
 }
 
 #' Scrape package data from Archive.
