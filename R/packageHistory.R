@@ -83,12 +83,13 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
       if (package %in% multiple.matches) {
         pkg.data <- pkg.data[multiple.matches %in% package]
         out <- package_info(pkg.data)
-      }
+      } else out <- NULL
     } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
-  }
 
-  if (identical(out$package, package)) out
-  else NA
+    if (!is.null(out)) {
+      if (identical(out$package, package)) out
+    } else NA
+  } else NA
 }
 
 #' Scrape package data from Archive.
