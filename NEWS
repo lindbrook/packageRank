@@ -1,3 +1,10 @@
+packageRank 0.3.5.9078
+==================
+
+- add campaignRLE().
+- add second.place argument to plotTopCountryCodes().
+
+
 packageRank 0.3.5.9077
 ==================
 

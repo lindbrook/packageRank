@@ -61,3 +61,24 @@ runLengthEncoding <- function(x) {
              start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
              end = cumsum(dat$lengths))
 }
+
+#' Run Length Encoding of First Letter of Packages Downloaded.
+#'
+#' Uses rle().
+#' @param ip Numeric. Nominal IP address.
+#' @param cran_log Object. Package log entries.
+#' @export
+#' @examples
+#' \dontrun{
+#' campaignRLE(ip = 24851, cran_log = july01)
+#' }
+
+campaignRLE <- function(ip, cran_log) {
+  cran_log <-  cleanLog(cran_log)
+  cran_log <- cran_log[cran_log$ip_id == ip, ]
+  cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
+    tz = "Europe/Vienna")
+  cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
+  rle.data <- runLengthEncoding(cran_log)
+  paste(rle.data$letter, collapse = "")
+}
