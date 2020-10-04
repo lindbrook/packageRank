@@ -4,10 +4,12 @@
 \alias{plotTopCountryCodes}
 \title{Plot Top N Downloads by Country Code.}
 \usage{
-plotTopCountryCodes(dataset = "october")
+plotTopCountryCodes(dataset = "october", second.place = FALSE)
 }
 \arguments{
-\item{dataset}{Character}
+\item{dataset}{Character.}
+
+\item{second.place}{Logical. Annotate second place country.}
 }
 \description{
 Plot Top N Downloads by Country Code.

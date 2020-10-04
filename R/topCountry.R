@@ -24,11 +24,12 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
 
 #' Plot Top N Downloads by Country Code.
 #'
-#' @param dataset Character
+#' @param dataset Character.
+#' @param second.place Logical. Annotate second place country.
 #' @importFrom sugrrants facet_calendar
 #' @export
 
-plotTopCountryCodes <- function(dataset = "october") {
+plotTopCountryCodes <- function(dataset = "october", second.place = FALSE) {
   if (dataset == "october") {
     dat <- packageRank::blog.data$top.n.oct2019
   } else if (dataset == "july") {
@@ -37,14 +38,31 @@ plotTopCountryCodes <- function(dataset = "october") {
 
   dat$downloads <- dat$downloads / 10^6
 
-  ggplot(data = dat,
+  p <- ggplot(data = dat,
     aes_string(x = "id", y = "downloads", label = "country")) +
-    geom_line(size = 1/3) +
-    geom_text(data = dat[dat$id == 1, ], nudge_x = 0.8, size = 3,
-      color = "red") +
-    geom_point(data = dat[dat$id != 1, ]) +
-    geom_point(data = dat[dat$id == 1, ], color = "red") +
-    theme_bw() +
+    geom_line(size = 0.125) +
+    geom_point(data = dat[dat$id == 1, ],
+               color = "red") +
+    geom_text(data = dat[dat$id == 1, ],
+              nudge_x = 0.8,
+              size = 3,
+              color = "red")
+
+    if (second.place) {
+      p <- p + geom_point(data = dat[dat$id == 2, ],
+                          color = "dodgerblue",
+                          shape = 15) +
+               geom_text(data = dat[dat$id == 2, ],
+                         nudge_x = 0.8,
+                         nudge_y = 0.4,
+                         size = 3,
+                         color = "dodgerblue") +
+        geom_point(data = dat[!dat$id %in% 1:2, ], size = 1)
+    } else {
+      p <- p + geom_point(data = dat[dat$id != 1, ], size = 1)
+    }
+
+    p + theme_bw() +
     theme(panel.grid.major = element_blank(),
           panel.grid.minor = element_blank()) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
