@@ -5,7 +5,7 @@
 \title{Inflation plots of effects of "small" downloads on aggregate CRAN downloads for October 2019 and July 2020.}
 \usage{
 inflationPlot2(dataset = "october", filter = "small", wed = FALSE,
-  legend.loc = "topleft")
+  subtitle = TRUE, legend.loc = "topleft")
 }
 \arguments{
 \item{dataset}{Character. "october" or "july" for October 2019 or July 2020.}
@@ -13,6 +13,8 @@ inflationPlot2(dataset = "october", filter = "small", wed = FALSE,
 \item{filter}{Character. "small", "ip", or "ip.small".}
 
 \item{wed}{Logical.}
+
+\item{subtitle}{Logical.}
 
 \item{legend.loc}{Character. Location of legend.}
 }

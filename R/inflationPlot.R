@@ -68,11 +68,12 @@ inflationPlot <- function(package = "cholera", filter = "size",
 #' @param dataset Character. "october" or "july" for October 2019 or July 2020.
 #' @param filter Character. "small", "ip", or "ip.small".
 #' @param wed Logical.
+#' @param subtitle Logical.
 #' @param legend.loc Character. Location of legend.
 #' @export
 
 inflationPlot2 <- function(dataset = "october", filter = "small", wed = FALSE,
-  legend.loc = "topleft") {
+  subtitle = TRUE, legend.loc = "topleft") {
 
   if (dataset == "october") dat <- packageRank::blog.data$october.downloads
   else if (dataset == "july") dat <- packageRank::blog.data$july.downloads
@@ -104,12 +105,13 @@ inflationPlot2 <- function(dataset = "october", filter = "small", wed = FALSE,
     col = c("red", "black"), pch = c(15, 16), bg = "white", cex = 2/3, lwd = 1,
     title = NULL)
 
-  ptA <- paste0("unfiltered = ",
-                format(round(unfiltered.ct, 2), big.mark = ","),
-                "; filtered = ",
-                format(round(filtered.ct, 2), big.mark = ","))
-
-  title(sub = paste0(ptA, "; inflation = ", paste0(inflation, "%")))
+  if (subtitle) {
+    ptA <- paste0("unfiltered = ",
+                  format(round(unfiltered.ct, 2), big.mark = ","),
+                  "; filtered = ",
+                  format(round(filtered.ct, 2), big.mark = ","))
+    title(sub = paste0(ptA, "; inflation = ", paste0(inflation, "%")))
+  }  
 }
 
 #' CRAN Plot.
