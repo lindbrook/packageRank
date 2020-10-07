@@ -2,13 +2,13 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. CRAN log data frame
-#' @param output Character. "list" or "dataframe".
+#' @param output Character. "list" or "data.frame".
 #' @param time.window Numeric. Seconds.
 #' @param time.sort Logical. Sort output by time.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-identifyTriplets <- function(dat, output = "dataframe", time.window = 2,
+identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
   time.sort = TRUE, multi.core = TRUE) {
 
   if (all(dat$size > 1000L)) {
@@ -35,41 +35,25 @@ identifyTriplets <- function(dat, output = "dataframe", time.window = 2,
         }
       }
     }, mc.cores = cores)
-  }
 
-  if (output == "dataframe") {
-    do.call(rbind, output)
-  } else if (output == "list") {
-    out
-  } else {
-    stop('output must be "list" or "dataframe".')
+    if (output == "data.frame") {
+      do.call(rbind, out)
+    } else if (output == "list") {
+      out
+    } else {
+      stop('output must be "list" or "dataframe".')
+    }
   }
 }
 
 identify_triplets <- function(v.data, time.window, time.sort) {
   freqtab <- table(v.data$id)
+
   triplets <- names(freqtab[freqtab == 3])
-  small.id <- unique(v.data[v.data$size < 1000, "id"])
-
-  size.test <- vapply(triplets, function(id) {
-    tmp <- v.data[v.data$id == id, ]
-    sz <- trunc(log10(tmp$size))
-    three.different <- length(unique(sz)) == 3
-    two.small <- sum(sz == min(sz)) == 2 & sum(sz == max(sz)) == 1
-
-    large.test <- sum(sz == max(sz)) == 2 & sum(sz == min(sz)) == 1
-    if (large.test) {
-      lg.sizes <- unique(round(tmp$size[sz == max(sz)] / 10^max(sz)))
-      two.large <- ifelse(length(lg.sizes) == 1, TRUE, FALSE)
-    } else {
-      two.large <- FALSE
-    }
-
-    three.different | two.small | two.large
-  }, logical(1L))
-
-
+  size.test <- sizeTest(triplets, v.data)
   triplets <- triplets[size.test]
+
+  small.id <- unique(v.data[v.data$size < 1000, "id"])
 
   if (length(triplets) != 0 & length(small.id) != 0) {
     if (identical(triplets, small.id)) {
@@ -189,9 +173,13 @@ isTriplet <- function(time.fix, v.data) {
   }, integer(1L)) == 3
 
   candidates <- names(count.test[count.test])
+  size.test <- sizeTest(candidates, test.data)
+  candidates[size.test]
+}
 
-  size.test <- vapply(candidates, function(id) {
-    tmp <- test.data[test.data$id == id, ]
+sizeTest <- function(candidates, v.data) {
+  vapply(candidates, function(id) {
+    tmp <- v.data[v.data$id == id, ]
     sz <- trunc(log10(tmp$size))
     three.different <- length(unique(sz)) == 3
     two.small <- sum(sz == min(sz)) == 2 & sum(sz == max(sz)) == 1
@@ -206,6 +194,4 @@ isTriplet <- function(time.fix, v.data) {
 
     three.different | two.small | two.large
   }, logical(1L))
-
-  candidates[size.test]
 }

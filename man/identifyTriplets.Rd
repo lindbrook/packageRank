@@ -4,13 +4,13 @@
 \alias{identifyTriplets}
 \title{Extract triplets from logs (prototype).}
 \usage{
-identifyTriplets(dat, output = "dataframe", time.window = 2,
+identifyTriplets(dat, output = "data.frame", time.window = 2,
   time.sort = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{dat}{Object. CRAN log data frame}
 
-\item{output}{Character. "list" or "dataframe".}
+\item{output}{Character. "list" or "data.frame".}
 
 \item{time.window}{Numeric. Seconds.}
 
