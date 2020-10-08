@@ -2,19 +2,19 @@
 % Please edit documentation in R/campaigns.R
 \name{campaigns}
 \alias{campaigns}
-\title{Filter out A-Z campaigns (protoype).}
+\title{Filter Out A-Z Campaigns (protoype).}
 \usage{
 campaigns(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
   output = "rownames")
 }
 \arguments{
-\item{ip}{Numeric. Nominal IP address.}
+\item{ip}{Numeric. Nominal IP address (ip_id).}
 
 \item{cran_log}{Object. Package log entries.}
 
 \item{case.sensitive}{Logical.}
 
-\item{min.obs}{Numeric. Threshold number of unique packages downloaded.}
+\item{min.obs}{Numeric. Threshold number of downloads.}
 
 \item{output}{Character. "df" or "rownames".}
 }
