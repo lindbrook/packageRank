@@ -4,12 +4,15 @@
 \alias{campaigns}
 \title{Filter out A-Z campaigns (protoype).}
 \usage{
-campaigns(ip, cran_log, min.obs = 5, output = "rownames")
+campaigns(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
+  output = "rownames")
 }
 \arguments{
 \item{ip}{Numeric. Nominal IP address.}
 
 \item{cran_log}{Object. Package log entries.}
+
+\item{case.sensitive}{Logical.}
 
 \item{min.obs}{Numeric. Threshold number of unique packages downloaded.}
 

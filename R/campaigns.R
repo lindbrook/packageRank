@@ -3,18 +3,28 @@
 #' Uses run length encoding rle().
 #' @param ip Numeric. Nominal IP address.
 #' @param cran_log Object. Package log entries.
+#' @param case.sensitive Logical.
 #' @param min.obs Numeric. Threshold number of unique packages downloaded.
 #' @param output Character. "df" or "rownames".
 #' @export
 #' @note For use with ipFilter3().
 
-campaigns <- function(ip, cran_log, min.obs = 5, output = "rownames") {
+campaigns <- function(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
+  output = "rownames") {
+
   tmp <- cleanLog(cran_log[cran_log$ip_id == ip, ])
   tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
   tmp <- tmp[order(tmp$t2, tmp$package), ]
 
-  rle.data <- runLengthEncoding(tmp)
-  start.data <- rle.data[rle.data$letter == "a" & rle.data$lengths >= min.obs, ]
+  rle.data <- runLengthEncoding(tmp, case.sensitive = case.sensitive)
+  if (case.sensitive) {
+    start.data <- rle.data[(rle.data$letter == "A" | rle.data$letter == "a") &
+                            rle.data$lengths >= min.obs, ]
+  } else {
+    start.data <- rle.data[rle.data$letter == "a" &
+                           rle.data$lengths >= min.obs, ]
+  }
+
   start.row <- as.numeric(row.names(start.data))
   stop.row <- start.row + length(letters) - 1
 
@@ -50,12 +60,12 @@ if (output == "df") {
 }
 
 firstLetter <- function(x, case.sensitive = FALSE) {
-  if (case.sensitive) tolower(substring(x, 1, 1))
-  else substring(x, 1, 1)
+  if (case.sensitive) substring(x, 1, 1)
+  else tolower(substring(x, 1, 1))
 }
 
-runLengthEncoding <- function(x) {
-  dat <- rle(firstLetter(x$package))
+runLengthEncoding <- function(x, case.sensitive = FALSE) {
+  dat <- rle(firstLetter(x$package, case.sensitive = case.sensitive))
   data.frame(letter = dat$values,
              lengths = dat$lengths,
              start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
@@ -67,18 +77,19 @@ runLengthEncoding <- function(x) {
 #' Uses rle().
 #' @param ip Numeric. Nominal IP address.
 #' @param cran_log Object. Package log entries.
+#' @param case.sensitive Logical.
 #' @export
 #' @examples
 #' \dontrun{
 #' campaignRLE(ip = 24851, cran_log = july01)
 #' }
 
-campaignRLE <- function(ip, cran_log) {
+campaignRLE <- function(ip, cran_log, case.sensitive = FALSE) {
   cran_log <-  cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
   cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
     tz = "Europe/Vienna")
   cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
-  rle.data <- runLengthEncoding(cran_log)
+  rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
   paste(rle.data$letter, collapse = "")
 }
