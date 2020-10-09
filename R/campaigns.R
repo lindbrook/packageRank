@@ -43,7 +43,7 @@ campaigns <- function(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
     }, logical(1L))
 
     if (any(!order.test)) {
-      out <- dat[1:which(!order.test)[1] - 1, ]
+      out <- dat[1:which(!order.test)[1], ]
     } else {
       out <- dat
     }
