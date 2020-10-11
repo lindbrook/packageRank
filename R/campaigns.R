@@ -89,3 +89,60 @@ campaignRLE <- function(ip, cran_log, case.sensitive = FALSE) {
   rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
   paste(rle.data$letter, collapse = "")
 }
+
+#' Filter Out A-Z Campaigns (protoype).
+#'
+#' Uses run length encoding rle().
+#' @param cran_log Object. Package log entries.
+#' @param no.of.ips Numeric. Number of IP addresses to check.
+#' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding.
+#' @param case.sensitive Logical.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @export
+
+campaigns2 <- function(cran_log, no.of.ips = 100, rle.depth = 100,
+  case.sensitive = FALSE, multi.core = TRUE) {
+
+  cores <- multiCore(multi.core)
+  ip.df <- ipFilter3(cran_log, "df")
+
+  rle.data <- parallel::mclapply(ip.df$ip[1:no.of.ips], function(ip) {
+    tmp <- cran_log[cran_log$ip_id == ip, ]
+    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp <- tmp[order(tmp$t2, tmp$package), ]
+    rle.data <- runLengthEncoding(tmp, case.sensitive = case.sensitive)
+    data.frame(ip = ip, nrow = nrow(rle.data))
+  }, mc.cores = cores)
+
+  rle.data <- do.call(rbind, rle.data)
+  ips <- as.numeric(rle.data[rle.data$nrow <= rle.depth, "ip"])
+
+  rows.delete <- parallel::mclapply(ips, function(ip) {
+    tmp <- cran_log[cran_log$ip_id == ip, ]
+    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp <- tmp[order(tmp$t2, tmp$package), ]
+    rle.data <- runLengthEncoding(tmp, case.sensitive = case.sensitive)
+
+    A <- rle.data[rle.data$letter == "a" & rle.data$lengths >= 10, ]
+
+    start <- as.numeric(row.names(A))
+    end <- as.numeric(row.names(A)) + length(letters) - 1
+
+    data.select <- lapply(seq_along(start), function(i) {
+      audit.data <- rle.data[start[i]:end[i], ]
+      if (all(!is.na(audit.data))) {
+        data.frame(ip = ip, start = audit.data[1, "start"],
+          end = audit.data[nrow(audit.data), "end"])
+      }
+    })
+
+    data.select <- do.call(rbind, data.select)
+
+    if (!is.null(data.select)) {
+      unlist(lapply(seq_len(nrow(data.select)), function(i) {
+        row.names(tmp[data.select[i, "start"]:data.select[i, "end"], ])
+      }))
+    } else NULL
+  }, mc.cores = cores)
+  rows.delete
+}
