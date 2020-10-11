@@ -4,7 +4,7 @@
 \alias{campaigns2}
 \title{Filter Out A-Z Campaigns (protoype).}
 \usage{
-campaigns2(cran_log, no.of.ips = 100, rle.depth = 100,
+campaigns2(cran_log, no.of.ips = 50, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE)
 }
 \arguments{

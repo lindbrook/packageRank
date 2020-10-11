@@ -100,7 +100,7 @@ campaignRLE <- function(ip, cran_log, case.sensitive = FALSE) {
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-campaigns2 <- function(cran_log, no.of.ips = 100, rle.depth = 100,
+campaigns2 <- function(cran_log, no.of.ips = 50, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
