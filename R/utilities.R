@@ -290,8 +290,8 @@ plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
      "; filtered = ")
    # ptB <- paste0("% | ", x$versions, " vers. observed")
    delta.pct <- round(100 * (tot["ct"] - tot[filter]) / tot[filter], 1)
-   title(sub = paste0(ptA, format(tot[filter], big.mark = ","), "; inflation = ",
-     format(delta.pct, big.mark = ",")))
+   title(sub = paste0(ptA, format(tot[filter], big.mark = ","),
+     "; inflation = ", format(delta.pct, big.mark = ",")))
 }
 
 wordCase <- function(x) {
