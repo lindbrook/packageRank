@@ -17,6 +17,7 @@ campaigns <- function(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
   tmp <- tmp[order(tmp$t2, tmp$package), ]
 
   rle.data <- runLengthEncoding(tmp, case.sensitive = case.sensitive)
+
   if (case.sensitive) {
     start.data <- rle.data[(rle.data$letter == "A" | rle.data$letter == "a") &
                             rle.data$lengths >= min.obs, ]
@@ -31,11 +32,6 @@ campaigns <- function(ip, cran_log, case.sensitive = FALSE, min.obs = 5,
   delete.id <- unlist(lapply(seq_along(start.row), function(i) {
     dat <- rle.data[start.row[i]:stop.row[i], ]
     letter.vec <- rle.data$letter[start.row[i]:stop.row[i]]
-
-    if (any(is.na(dat$letter))) {
-      dat <- dat[!is.na(dat$letter), ]
-      letter.vec <- letter.vec[!is.na(letter.vec)]
-    }
 
     idx <- seq_along(letter.vec)[-length(letter.vec)]
     order.test <- vapply(idx, function(i) {
