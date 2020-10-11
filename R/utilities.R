@@ -43,9 +43,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
     if (ip.filter) {
       ip.outliers <- ipFilter3(cran_log)
       if (campaigns) {
-        row.delete <- unlist(parallel::mclapply(ip.outliers, function(x) {
-          campaigns(x, cran_log)
-        }, mc.cores = cores))
+        row.delete <- campaigns2(cran_log, multi.core = cores)
         tmp <- tmp[!row.names(tmp) %in% row.delete, ]
       } else {
         tmp <- tmp[!tmp$ip_id %in% ip.outliers, ]
@@ -115,7 +113,7 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
     # IP filter #
     ip.outliers <- ipFilter3(dat0)
     if (ip.filter == "campaign") {
-      row.delete <- unlist(lapply(ip.outliers, function(x) campaigns(x, dat0)))
+      row.delete <- campaigns2(dat)
       ip.filtered <- sum(!row.names(dat) %in% row.delete)
       out <- out[!row.names(out) %in% row.delete, ]
     } else if (ip.filter == "ip") {
@@ -212,8 +210,7 @@ cranFilterCounts <- function(lst, multi.core = TRUE) {
     cran_log <- cleanLog(x)
     u.ct <- length(unique(cran_log$package))
 
-    ip.outliers <- ipFilter3(cran_log)
-    row.delete <- lapply(ip.outliers, function(x) campaigns(x, cran_log))
+    row.delete <- campaigns2(cran_log, multi.core = cores)
     tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
     ip.ct <- length(unique(tmp$package))
 

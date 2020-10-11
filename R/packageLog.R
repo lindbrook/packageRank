@@ -53,10 +53,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   }
 
   if (ip.filter) {
-    ip.outliers <- ipFilter3(cran_log)
-    row.delete <- unlist(parallel::mclapply(ip.outliers, function(ip) {
-      campaigns(ip, cran_log)
-    }, mc.cores = cores))
+    row.delete <- campaigns2(cran_log, multi.core = cores)
     out <- lapply(out, function(x) {
       x[!row.names(x) %in% row.delete, ]
     })
