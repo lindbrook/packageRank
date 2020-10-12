@@ -232,11 +232,12 @@ cranFilterCounts <- function(lst, multi.core = TRUE) {
 #' @param smooth Logical.
 #' @param median Logical.
 #' @param legend.loc Character. Location of legend.
+#' @param add.legend Logical.
 #' @param ... Additional plotting parameters.
 #' @export
 
 plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
-  median = FALSE, legend.loc = "topleft", ...) {
+  median = FALSE, legend.loc = "topleft", add.legend = TRUE, ...) {
 
   c.data <- x$data
   mo <- c.data$date
@@ -252,14 +253,16 @@ plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
   axis(3, at = mo[id], labels = rep("W", length(id)), cex.axis = 2/3,
     col.ticks = "black", mgp = c(3, 0.5, 0))
   # title(main = "Packages Downloaded")
-  legend(x = legend.loc,
-         legend = c("all", "filtered"),
-         col = c("red", "black"),
-         pch = c(15, 16),
-         bg = "white",
-         cex = 2/3,
-         lwd = 1,
-         title = NULL)
+  if (add.legend) {
+    legend(x = legend.loc,
+           legend = c("all", "filtered"),
+           col = c("red", "black"),
+           pch = c(15, 16),
+           bg = "white",
+           cex = 2/3,
+           lwd = 1,
+           title = NULL)
+  }
 
    if (filter == "ip") {
      title(main = paste0(toupper(filter), " Filter"))
