@@ -55,19 +55,6 @@ if (output == "df") {
   row.names(tmp[delete.id, ])
 }
 
-firstLetter <- function(x, case.sensitive = FALSE) {
-  if (case.sensitive) substring(x, 1, 1)
-  else tolower(substring(x, 1, 1))
-}
-
-runLengthEncoding <- function(x, case.sensitive = FALSE) {
-  dat <- rle(firstLetter(x$package, case.sensitive = case.sensitive))
-  data.frame(letter = dat$values,
-             lengths = dat$lengths,
-             start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
-             end = cumsum(dat$lengths))
-}
-
 #' Run Length Encoding of First Letter of Packages Downloaded.
 #'
 #' Uses rle().

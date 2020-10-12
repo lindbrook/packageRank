@@ -59,16 +59,6 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
     })
   }
 
-  # if (small.filter) {
-  #   size.audit <- vapply(out, function(x) {
-  #     length(unique(round(log10(x$size))))
-  #   }, integer(1L))
-  #   if (any(size.audit > 1)) {
-  #     filtered <- lapply(out[size.audit > 1], smallFilter)
-  #     out[which(size.audit > 1)] <- filtered
-  #   }
-  # }
-
   if (small.filter) {
     out <- parallel::mclapply(out, smallFilter0, mc.cores = cores)
   }

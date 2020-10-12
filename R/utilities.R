@@ -50,12 +50,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
       }
     }
 
-    if (small.filter) {
-      # size.audit <- length(unique(round(log10(tmp$size))))
-      # if (size.audit > 1) tmp <- smallFilter(tmp)
-      tmp <- smallFilter0(tmp)
-    }
-
+    if (small.filter) tmp <- smallFilter0(tmp)
     if (sequence.filter) tmp <- sequenceFilter(tmp)
 
     tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
