@@ -106,12 +106,12 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
     triplet.filtered <- nrow(out)
 
     # IP filter #
-    ip.outliers <- ipFilter3(dat0)
     if (ip.filter == "campaign") {
-      row.delete <- campaigns2(dat)
+      row.delete <- campaigns2(dat0, multi.core = FALSE)
       ip.filtered <- sum(!row.names(dat) %in% row.delete)
       out <- out[!row.names(out) %in% row.delete, ]
     } else if (ip.filter == "ip") {
+      ip.outliers <- ipFilter3(dat0)
       ip.filtered <- sum(!dat$ip_id %in% ip.outliers)
       out <- out[!out$ip_id %in% ip.outliers, ]
     }
