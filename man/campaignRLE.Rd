@@ -4,7 +4,7 @@
 \alias{campaignRLE}
 \title{Run Length Encoding of First Letter of Packages Downloaded.}
 \usage{
-campaignRLE(ip, cran_log, case.sensitive = FALSE)
+campaignRLE(ip, cran_log, case.sensitive = FALSE, concatenate = TRUE)
 }
 \arguments{
 \item{ip}{Numeric. Nominal IP address.}
@@ -12,6 +12,8 @@ campaignRLE(ip, cran_log, case.sensitive = FALSE)
 \item{cran_log}{Object. Package log entries.}
 
 \item{case.sensitive}{Logical.}
+
+\item{concatenate}{Logical.}
 }
 \description{
 Uses rle().

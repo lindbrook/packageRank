@@ -61,20 +61,26 @@ if (output == "df") {
 #' @param ip Numeric. Nominal IP address.
 #' @param cran_log Object. Package log entries.
 #' @param case.sensitive Logical.
+#' @param concatenate Logical.
 #' @export
 #' @examples
 #' \dontrun{
 #' campaignRLE(ip = 24851, cran_log = july01)
 #' }
 
-campaignRLE <- function(ip, cran_log, case.sensitive = FALSE) {
+campaignRLE <- function(ip, cran_log, case.sensitive = FALSE,
+  concatenate = TRUE) {
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
   cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
     tz = "Europe/Vienna")
   cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
   rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
-  paste(rle.data$letter, collapse = "")
+  if (concatenate) {
+    paste(rle.data$letter, collapse = "")
+  } else {
+    rle.data$letter
+  }
 }
 
 #' Filter Out A-Z Campaigns (protoype).
