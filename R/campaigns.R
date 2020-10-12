@@ -55,19 +55,6 @@ if (output == "df") {
   row.names(tmp[delete.id, ])
 }
 
-firstLetter <- function(x, case.sensitive = FALSE) {
-  if (case.sensitive) substring(x, 1, 1)
-  else tolower(substring(x, 1, 1))
-}
-
-runLengthEncoding <- function(x, case.sensitive = FALSE) {
-  dat <- rle(firstLetter(x$package, case.sensitive = case.sensitive))
-  data.frame(letter = dat$values,
-             lengths = dat$lengths,
-             start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
-             end = cumsum(dat$lengths))
-}
-
 #' Run Length Encoding of First Letter of Packages Downloaded.
 #'
 #' Uses rle().
@@ -104,6 +91,7 @@ campaigns2 <- function(cran_log, no.of.ips = 50, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
+  cran_log <- smallFilter0(cran_log)
   ip.df <- ipFilter3(cran_log, "df")
 
   rle.data <- parallel::mclapply(ip.df$ip[1:no.of.ips], function(ip) {
@@ -144,5 +132,18 @@ campaigns2 <- function(cran_log, no.of.ips = 50, rle.depth = 100,
       }))
     } else NULL
   }, mc.cores = cores)
-  rows.delete
+  unlist(rows.delete)
+}
+
+firstLetter <- function(x, case.sensitive = FALSE) {
+  if (case.sensitive) substring(x, 1, 1)
+  else tolower(substring(x, 1, 1))
+}
+
+runLengthEncoding <- function(x, case.sensitive = FALSE) {
+  dat <- rle(firstLetter(x$package, case.sensitive = case.sensitive))
+  data.frame(letter = dat$values,
+             lengths = dat$lengths,
+             start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
+             end = cumsum(dat$lengths))
 }

@@ -37,18 +37,6 @@ countryPackage <- function(country = "HK", date = Sys.Date() - 1,
     }, mc.cores = cores)
   }
 
-  # if (small.filter) {
-  #   size.audit <- vapply(out, function(x) {
-  #     length(unique(round(log10(x$size))))
-  #   }, integer(1L))
-  #
-  #   if (any(size.audit > 1)) {
-  #     filtered <- parallel::mclapply(out[size.audit > 1], smallFilter,
-  #       mc.cores = cores)
-  #     out[which(size.audit > 1)] <- filtered
-  #   }
-  # }
-
   if (small.filter) {
     out <- parallel::mclapply(out, smallFilter0, mc.cores = cores)
   }

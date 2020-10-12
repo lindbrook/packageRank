@@ -5,7 +5,7 @@
 \title{Plot method for cranFilterCounts().}
 \usage{
 \method{plot}{cranFilterCounts}(x, filter = "all", smooth = FALSE,
-  median = FALSE, legend.loc = "topleft", ...)
+  median = FALSE, legend.loc = "topleft", add.legend = TRUE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -17,6 +17,8 @@
 \item{median}{Logical.}
 
 \item{legend.loc}{Character. Location of legend.}
+
+\item{add.legend}{Logical.}
 
 \item{...}{Additional plotting parameters.}
 }

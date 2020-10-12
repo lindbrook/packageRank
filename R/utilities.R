@@ -50,12 +50,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
       }
     }
 
-    if (small.filter) {
-      # size.audit <- length(unique(round(log10(tmp$size))))
-      # if (size.audit > 1) tmp <- smallFilter(tmp)
-      tmp <- smallFilter0(tmp)
-    }
-
+    if (small.filter) tmp <- smallFilter0(tmp)
     if (sequence.filter) tmp <- sequenceFilter(tmp)
 
     tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
@@ -111,12 +106,12 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
     triplet.filtered <- nrow(out)
 
     # IP filter #
-    ip.outliers <- ipFilter3(dat0)
     if (ip.filter == "campaign") {
-      row.delete <- campaigns2(dat)
+      row.delete <- campaigns2(dat0, multi.core = FALSE)
       ip.filtered <- sum(!row.names(dat) %in% row.delete)
       out <- out[!row.names(out) %in% row.delete, ]
     } else if (ip.filter == "ip") {
+      ip.outliers <- ipFilter3(dat0)
       ip.filtered <- sum(!dat$ip_id %in% ip.outliers)
       out <- out[!out$ip_id %in% ip.outliers, ]
     }
@@ -237,11 +232,12 @@ cranFilterCounts <- function(lst, multi.core = TRUE) {
 #' @param smooth Logical.
 #' @param median Logical.
 #' @param legend.loc Character. Location of legend.
+#' @param add.legend Logical.
 #' @param ... Additional plotting parameters.
 #' @export
 
 plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
-  median = FALSE, legend.loc = "topleft", ...) {
+  median = FALSE, legend.loc = "topleft", add.legend = TRUE, ...) {
 
   c.data <- x$data
   mo <- c.data$date
@@ -257,14 +253,16 @@ plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
   axis(3, at = mo[id], labels = rep("W", length(id)), cex.axis = 2/3,
     col.ticks = "black", mgp = c(3, 0.5, 0))
   # title(main = "Packages Downloaded")
-  legend(x = legend.loc,
-         legend = c("all", "filtered"),
-         col = c("red", "black"),
-         pch = c(15, 16),
-         bg = "white",
-         cex = 2/3,
-         lwd = 1,
-         title = NULL)
+  if (add.legend) {
+    legend(x = legend.loc,
+           legend = c("all", "filtered"),
+           col = c("red", "black"),
+           pch = c(15, 16),
+           bg = "white",
+           cex = 2/3,
+           lwd = 1,
+           title = NULL)
+  }
 
    if (filter == "ip") {
      title(main = paste0(toupper(filter), " Filter"))
