@@ -91,6 +91,7 @@ campaigns2 <- function(cran_log, no.of.ips = 50, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
+  cran_log <- smallFilter0(cran_log)
   ip.df <- ipFilter3(cran_log, "df")
 
   rle.data <- parallel::mclapply(ip.df$ip[1:no.of.ips], function(ip) {
