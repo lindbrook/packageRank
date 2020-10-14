@@ -4,12 +4,22 @@
 \alias{countryDistribution}
 \title{Tabulate package downloads by country.}
 \usage{
-countryDistribution(date = Sys.Date() - 1, memoization = TRUE)
+countryDistribution(date = Sys.Date() - 1, ip.filter = TRUE,
+  small.filter = TRUE, memoization = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
 
+\item{ip.filter}{Logical.}
+
+\item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
+
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+}
+\value{
+An R data frame.
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
