@@ -1,7 +1,13 @@
+packageRank 0.3.5.9086
+==================
+
+- add small and IP filters to countryDistribution().
+
+
 packageRank 0.3.5.9085
 ==================
 
-add concatenate argument to campaignRLE().
+- add concatenate argument to campaignRLE().
 
 
 packageRank 0.3.5.9084
