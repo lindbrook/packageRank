@@ -12,13 +12,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo = FALSE}
+```{r library, echo = FALSE}
 library(packageRank)
 ```
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-NOTE (2015 October 15): R version 4.0.3 seems to create a problem that prevents the downloading of log files. Reverting back to version 4.0.2 is the working solution. For those interested, details are available [here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
+NOTE (2020 October 15): R version 4.0.3 seems to create a problem that prevents the downloading of log files. Reverting back to version 4.0.2 is the working solution. For those interested, details are available [here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a `plot()` method and a more user-friendly interface. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other [CRAN](https://CRAN.R-project.org/) packages.
 
@@ -201,7 +201,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 
 `cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN. You can plot these data by using:
 
-```{r}
+```{r null_packages}
 plot(cranDownloads(from = 2019, to = 2019))
 ```
 
@@ -209,7 +209,7 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 `cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!). You can plot these data by using:
 
-```{r}
+```{r r_downloads}
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 ```
 
@@ -217,14 +217,14 @@ plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 
 To add a lowess smoother to your plot, use `smooth = TRUE`:
 
-```{r}
+```{r lowess}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   smooth = TRUE)
 ```
 
 With graphs that use 'ggplot2', `se = TRUE` will add confidence intervals:
 
-```{r}
+```{r ci}
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
@@ -233,14 +233,14 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
 
 To annotate a graph with a package's release dates:
 
-```{r}
+```{r pkg_release_date}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   package.version = TRUE)
 ```
 
 To annotate a graph with R release dates:
 
-```{r}
+```{r r_release_date}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   r.version = TRUE)
 ```
