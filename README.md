@@ -1,8 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9086-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9087-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
+
+NOTE (2015 October 15): R version 4.0.3 seems to create a problem that
+prevents the downloading of log files. Reverting back to version 4.0.2
+is the working solution. For those interested, details are available
+[here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
@@ -15,8 +20,8 @@ tells you the percentage of packages with fewer downloads, to help you
 see how your package is doing compared to all other
 [CRAN](https://CRAN.R-project.org/) packages.
 
-NOTE: [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-requires an active internet connection, and relies on the
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
+an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package
 and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter
 record traffic to what was previously called RStudio’s [CRAN
@@ -231,7 +236,7 @@ package downloads from CRAN. You can plot these data by using:
 plot(cranDownloads(from = 2019, to = 2019))
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
 #### `packages = "R"`
 
@@ -243,7 +248,7 @@ vector of packages names, not both\!). You can plot these data by using:
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 #### smoothers and confidence intervals
 
@@ -254,7 +259,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   smooth = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 With graphs that use ‘ggplot2’, `se = TRUE` will add confidence
 intervals:
@@ -264,7 +269,7 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 #### package and R release dates
 
@@ -275,7 +280,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   package.version = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 To annotate a graph with R release dates:
 
@@ -284,7 +289,7 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   r.version = TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
 #### plot growth curves (cumulative download counts)
 

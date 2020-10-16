@@ -1,3 +1,11 @@
+packageRank 0.3.5.9087
+==================
+
+- add note about R v4.0.3 downloading error.
+- fix resolveDate() by first as.character() all dates.
+- add base R code to fetchCranLog().
+
+
 packageRank 0.3.5.9086
 ==================
 
