@@ -44,5 +44,5 @@ plot.countryDistribution <- function(x, ...) {
   ct <- x$data / 10^6
   barplot(ct[1:10], ylab = "Downloads (Millions)")
   title(main = paste("Top Ten Country Domains @", x$date),
-        sub = paste0("NAs = ", round(100 * mean(out$na.country), 1), "%"))
+        sub = paste0("NAs = ", round(100 * mean(x$na.country), 1), "%"))
 }
