@@ -48,7 +48,7 @@ mfetchLog <- memoise::memoise(fetchLog)
 fetchLogBase <- function(x) {
   connection <- gzcon(url(x))
   dat <- readLines(connection)
-  cran_log <- read.csv(textConnection(dat))
+  cran_log <- utils::read.csv(textConnection(dat))
 }
 
 mfetchLogBase <- memoise::memoise(fetchLogBase)
