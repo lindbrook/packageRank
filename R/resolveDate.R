@@ -9,10 +9,9 @@ resolveDate <- function(date, type = "from") {
   first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1
   mm <- c(paste0(0, 1:9), paste(10:12))
+  if (!type %in% c("to", "from")) stop('type must be "to" or "from".')
 
-  if (type %in% c("to", "from") == FALSE) {
-    stop('type must be "to" or "from".')
-  }
+  date <- as.character(date)
 
   if (nchar(date) == 10L & grepl("-", date)) {
     err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
@@ -59,7 +58,7 @@ resolveDate <- function(date, type = "from") {
     warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
     x.date <- first.log
   } else if (x.date > cal.date) {
-    # stop("Date in future!")
+    warning("Date of a future log!")
     cal.date
   } else x.date
 }
