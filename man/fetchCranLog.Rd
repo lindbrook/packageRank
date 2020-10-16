@@ -4,12 +4,14 @@
 \alias{fetchCranLog}
 \title{Fetch CRAN Logs.}
 \usage{
-fetchCranLog(date, memoization)
+fetchCranLog(date, memoization = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical. Use Base R code.}
 }
 \description{
 Fetch CRAN Logs.
