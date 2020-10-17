@@ -4,11 +4,6 @@
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9088-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-NOTE (2020 October 15): R version 4.0.3 seems to create a problem that
-prevents the downloading of log files. Reverting back to version 4.0.2
-is the working solution. For those interested, details are available
-[here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
-
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
 via two functions, `cranDownloads()` and `packageRank()`.
@@ -30,6 +25,12 @@ mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for
 the previous day are generally posted the following day at 18:00 (GMT+1)
 or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
 rely on ‘cranlogs’ are generally available soon thereafter.
+
+Note that a new feature in R version 4.0.3 appears to *intermittently*
+prevent the successful downloading of log files. Reverting to version
+4.0.2 is the working solution. For those interested, details are
+available
+[here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
 
 ### I - getting started
 

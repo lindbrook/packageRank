@@ -2,6 +2,7 @@ packageRank 0.3.5.9088
 ==================
 
 - fix typo in plot.countryDistribution().
+- amend note about R v4.0.3 downloading error.
 
 
 packageRank 0.3.5.9087
