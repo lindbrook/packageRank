@@ -80,10 +80,16 @@ dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
 #' Check and validate "yyyy-mm-dd" date.
 #'
 #' @param date Character. \code{"yyyy-mm-dd"}.
+#' @param repository Character. "CRAN" or "MRAN".
 #' @noRd
 
-check10CharDate <- function(date) {
-  first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
+check10CharDate <- function(date, repository = "CRAN") {
+  if (repository == "CRAN") {
+    first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
+  } else if (repository == "MRAN") {
+     first.log <- as.Date("2014-09-17") # MRAN timemachine
+  } else stop('repository must be "CRAN" or "MRAN".')
+
   cal.date <- Sys.Date() - 1
   mm <- c(paste0(0, 1:9), paste(10:12))
   date <- as.character(date)
