@@ -1,7 +1,8 @@
 packageRank 0.3.5.9089
 ==================
 
-- add packageMRAN() prototype.
+- add packageMRAN().
+- add mranPackages().
 
 
 packageRank 0.3.5.9088
@@ -36,7 +37,7 @@ packageRank 0.3.5.9084
 
 - campaigns2(): pre-filter with smallFilter0() and fix output.
 - fix ip.filter code in filter_counts().
-- add add.legend argument to plot.cranFilterCounts(). 
+- add add.legend argument to plot.cranFilterCounts().
 
 
 packageRank 0.3.5.9083
