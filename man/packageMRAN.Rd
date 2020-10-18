@@ -4,12 +4,17 @@
 \alias{packageMRAN}
 \title{Extract package data from MRAN (protoype).}
 \usage{
-packageMRAN(date = Sys.Date() - 1, type = "source")
+packageMRAN(package = "cholera", date = Sys.Date() - 1, type = "source",
+  check.package = TRUE)
 }
 \arguments{
+\item{package}{Character. Package name.}
+
 \item{date}{Character.}
 
 \item{type}{Character. "source", "mac", or "win".}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
 }
 \description{
 Binary or source size.
