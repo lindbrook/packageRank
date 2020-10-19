@@ -5,6 +5,7 @@
 #' @param date Character.
 #' @param type Character. "source", "mac", or "win".
 #' @param check.package Logical. Validate and "spell check" package.
+#' @note Depending on when syncrhonization occurred, you may need to add 3 or 4 days to CRAN publication date, see packageHistory(), to find the package or version you're looking for.
 #' @export
 
 packageMRAN <- function(package = "cholera", date = Sys.Date() - 1,
@@ -44,7 +45,8 @@ packageMRAN <- function(package = "cholera", date = Sys.Date() - 1,
     }, character(1L))
     pkg.data <- unlist(pkg.data[pkg.nms == package])
   } else if (sum(pkg.match) == 0) {
-    stop('Not on MRAN (on date). Check packageHistory(package) and add a day or two.')
+    txt1 <- "Not on MRAN (on date). Try adding 3 or 4 days to date."
+    stop(txt1)
   }
 
   tmp <- unlist(strsplit(pkg.data[1], file.extension))

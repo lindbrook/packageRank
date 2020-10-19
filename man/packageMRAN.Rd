@@ -19,3 +19,6 @@ packageMRAN(package = "cholera", date = Sys.Date() - 1, type = "source",
 \description{
 Binary or source size.
 }
+\note{
+Depending on when syncrhonization occurred, you may need to add 3 or 4 days to CRAN publication date, see packageHistory(), to find the package or version you're looking for.
+}
