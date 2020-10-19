@@ -111,8 +111,12 @@ check10CharDate <- function(date, repository = "CRAN") {
   if (is.na(x.date)) {
     stop('Not a valid date.')
   } else if (x.date < as.Date(first.log)) {
-    warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
-    x.date <- first.log
+    if (repository == "CRAN") {
+      stop(paste0('RStudio CRAN logs begin on ', first.log, "."))
+    } else if (repository == "MRAN") {
+      stop(paste0('MRAN snapshots begin on ', first.log, "."))
+    }
+    # x.date <- first.log
   } else if (x.date > cal.date) {
     stop("Date in future!")
   } else x.date
