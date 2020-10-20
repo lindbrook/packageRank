@@ -305,7 +305,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     }
 
     p <- p + geom_line(size = 0.5) +
-      facet_wrap(~ platform, ncol = 2) +
+      facet_wrap(~ platform, nrow = 2) +
       theme_bw() +
       theme(panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
@@ -767,7 +767,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
              theme_bw() +
              theme(panel.grid.major.x = element_blank(),
                    panel.grid.minor = element_blank()) +
-             facet_wrap(~ date, ncol = 2)
+             facet_wrap(~ date, nrow = 2)
 
         if (statistic == "count") {
           p <- p + geom_point(aes_string("count", "package"))
@@ -785,7 +785,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
         }
 
         p <- p + geom_line(size = 0.5) +
-          facet_wrap(~ package, ncol = 2) +
+          facet_wrap(~ package, nrow = 2) +
           theme_bw() +
           theme(panel.grid.minor = element_blank())
 

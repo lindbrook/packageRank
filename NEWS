@@ -3,6 +3,7 @@ packageRank 0.3.5.9091
 
 - archive R v4.0.3 error note.
 - fix Mac directory changes in mranPackages() and packageMRAN().
+- change default orientation of ggplot2 facets in plot.cranDownalods().
 
 
 packageRank 0.3.5.9090
