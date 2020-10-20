@@ -26,12 +26,6 @@ the previous day are generally posted the following day at 18:00 (GMT+1)
 or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
 rely on ‘cranlogs’ are generally available soon thereafter.
 
-Note that a new feature in R version 4.0.3 appears to *intermittently*
-prevent the successful downloading of log files. Reverting to version
-4.0.2 is the working solution. For those interested, details are
-available
-[here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
-
 ### I - getting started
 
 To install ‘packageRank’ from CRAN:

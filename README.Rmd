@@ -22,8 +22,6 @@ library(packageRank)
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for the previous day are generally posted the following day at 18:00 (GMT+1) or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
 
-Note that a new feature in R version 4.0.3 appears to _intermittently_ prevent the successful downloading of log files. Reverting to version 4.0.2 is the working solution. For those interested, details are available [here.](https://github.com/lindbrook/packageRank/blob/master/docs/R403.error.md)
-
 ### I - getting started
 
 To install 'packageRank' from CRAN:
