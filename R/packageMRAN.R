@@ -49,8 +49,7 @@ packageMRAN <- function(package = "cholera", date = Sys.Date() - 1,
     }, character(1L))
     pkg.data <- unlist(pkg.data[pkg.nms == package])
   } else if (sum(pkg.match) == 0) {
-    txt1 <- "Not on MRAN (on date). Try adding 3 or 4 days to date."
-    stop(txt1)
+    stop("Not on MRAN (on date). Try adding 3 or 4 days to date.")
   }
 
   tmp <- unlist(strsplit(pkg.data[1], file.extension))
