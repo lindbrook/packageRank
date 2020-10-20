@@ -17,14 +17,18 @@ packageMRAN <- function(package = "cholera", date = Sys.Date() - 1,
   root.url <- paste0(mran.url, ymd)
 
   if (type == "source") {
-    url.suffix <- "/src/contrib"
     file.extension <- '.tar.gz'
+    url.suffix <- "/src/contrib"
   } else if (type == "mac") {
-    url.suffix <- "/bin/macosx/el-capitan/contrib/r-release/"
     file.extension <- '.tgz'
+    if (ymd < as.Date("2017-07-08")) {
+      url.suffix <- "/bin/macosx/mavericks/contrib/r-release/"
+    } else if (ymd >= as.Date("2017-07-08")) {
+      url.suffix <- "/bin/macosx/el-capitan/contrib/r-release/"
+    }
   } else if (type == "win") {
-    url.suffix <- "/bin/windows/contrib/r-release/"
     file.extension <- '.zip'
+    url.suffix <- "/bin/windows/contrib/r-release/"
   } else stop('type must be "source", "mac", or "win".')
 
   url <- paste0(root.url, url.suffix)
