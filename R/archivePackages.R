@@ -9,8 +9,8 @@
 archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   dev.mode = FALSE) {
 
-  url <- "https://cran.r-project.org/src/contrib/Archive/"
-  web_page <- mreadLines(url)
+  archive.url <- "https://cran.r-project.org/src/contrib/Archive/"
+  web_page <- mreadLines(archive.url) # packageHistory.R
   cores <- multiCore(multi.core)
 
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
@@ -112,10 +112,14 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   # 2020-01-11 14:37 time stamp
   empty.folder3 <- c("problems", "reminders.")
 
-  # 2020-02-19 10:40 	time stamp
+  # 2020-02-19 10:40 time stamp
   empty.folder4 <- c("2020-02-18", "in", "time.", "2015-09-01")
 
-  empty <- c(empty.folder1, empty.folder2, empty.folder3, empty.folder4)
+  # 2020-06-30 05:42 time stamp
+  empty.folder5 <- "ENmisc."
+
+  empty <- c(empty.folder1, empty.folder2, empty.folder3, empty.folder4,
+    empty.folder5)
 
   # 2020-01-11 14:37 time stamp
   # empties_2020.01.11 <- c("Archived", "as", "check", "corrected", "despite",
