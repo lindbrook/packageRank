@@ -115,8 +115,13 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   # 2020-02-19 10:40 time stamp
   empty.folder4 <- c("2020-02-18", "in", "time.", "2015-09-01")
 
-  # 2020-06-27 06:43; 2020-06-30 05:42 time stamps
-  empty.folder5 <- c("X-CRAN-History:", "ENmisc.")
+  # 2020-05-14 11:03; 2020-06-27 06:43; 2020-06-30 05:42; 2020-06-30 05:42;
+  # 2020-05-14 11:03; 2020-04-20 12:08; 2020-05-14 11:03; 2020-05-14 11:03;
+  # 2020-05-14 11:03; 2020-05-14 11:03; 2020-05-14 11:03; 2020-05-14 11:03;
+  # 2020-05-14 11:03; 2020-06-30 05:42; 2020-06-30 05:42; 2020-05-14 11:03
+  empty.folder5 <- c("and", "X-CRAN-History:", "ENmisc.", "archived", "been",
+    "datasa", "depending", "given", "have", "it", "long", "notice.",
+    "orphaned", "package", "requires", "those")
 
   empty <- c(empty.folder1, empty.folder2, empty.folder3, empty.folder4,
     empty.folder5)
