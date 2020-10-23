@@ -2,40 +2,38 @@
 #'
 #' Date and version of all publications.
 #' @param package Character. Package name.
-#' @param short.date Logical
 #' @export
 
-packageHistory <- function(package = "cholera", short.date = TRUE) {
-  # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-  #   "date")
+packageHistory <- function(package = "cholera") {
+  # Use packageHistory0() for "missing" and lastest packages.
+  # e.g.,"VR" in cran_package() but not cran_package_history()
+  history <- try(pkgsearch::cran_package_history(package), silent = TRUE)
 
-  #    Error: Can't subset columns that don't exist.
-  # x Column `Date/Publication` doesn't exist.
-
-  # Error: <package_not_found_error in pkgsearch::cran_package_history(package):
-  # Package not found: VR>
-  # R/packageHistory.R:14:3
-
-  vars <- c("Package", "Version", "crandb_file_date", "date")
-  history <- pkgsearch::cran_package_history(package)[vars]
-  history <- data.frame(history)
-  all.archive <- pkgsearch::cran_package(package, "all")$archived
-
-  if (all.archive) {
-    repository <- rep("Archive", nrow(history))
+  if (any(class(history) == "try-error")) {
+    out <- packageHistory0(package)
   } else {
-    repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
-  }
+    # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
+    #   "date")
+    #    Error: Can't subset columns that don't exist.
+    # x Column `Date/Publication` doesn't exist.
+    vars <- c("Package", "Version", "crandb_file_date", "date")
+    history <- data.frame(history[, vars])
+    all.archive <- pkgsearch::cran_package(package, "all")$archived
 
-  if (short.date) {
+    if (all.archive) {
+      repository <- rep("Archive", nrow(history))
+    } else {
+      repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+    }
+
     date <- strsplit(history$crandb_file_date, "[ ]")
     date <- strsplit(history$date, "[ ]")
     date <- as.Date(vapply(date, function(x) x[1], character(1L)))
-    data.frame(history[, c("Package", "Version")], Date = date,
+    out <- data.frame(history[, c("Package", "Version")], Date = date,
       Repository = repository, stringsAsFactors = FALSE)
-  } else {
-    data.frame(history, Repository = repository, stringsAsFactors = FALSE)
   }
+
+  out
 }
 
 #' Scrape package version history CRAN and Archive.
@@ -45,9 +43,9 @@ packageHistory <- function(package = "cholera", short.date = TRUE) {
 #' @export
 
 packageHistory0 <- function(package = "cholera") {
-  # "2008-02-16" first package
-  cran <- packageCRAN(package)
-  arch <- packageArchive(package)
+  # set check.package = FALSE to pass "latest" packages.
+  cran <- packageCRAN(package, check.package = FALSE)
+  arch <- packageArchive(package, check.package = FALSE)
   if (any(is.na(cran))) cran <- NULL
   out <- rbind(arch, cran)
   row.names(out) <- NULL
