@@ -36,7 +36,7 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 #' @export
 #' @note mfetchLog() is memoized version.
 
-fetchLog <- function(x) as.data.frame(data.table::fread(x))
+fetchLog <- function(x) data.table::fread(x, data.table = FALSE)
 mfetchLog <- memoise::memoise(fetchLog)
 
 #' Get gzipped data at URL.

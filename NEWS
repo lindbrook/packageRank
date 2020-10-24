@@ -1,3 +1,9 @@
+packageRank 0.3.5.9093
+==================
+
+- use fread(data.table = FALSE).
+
+
 packageRank 0.3.5.9092
 ==================
 
