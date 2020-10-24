@@ -2,6 +2,7 @@ packageRank 0.3.5.9093
 ==================
 
 - use fread(data.table = FALSE).
+- test stop(call. = FALSE).
 
 
 packageRank 0.3.5.9092

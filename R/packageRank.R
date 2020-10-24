@@ -37,10 +37,10 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   if (small.filter) cran_log <- smallFilter0(cran_log)
 
   if (all(packages %in% unique(cran_log$package) == FALSE)) {
-    stop(packages, ": not in log (not downloaded).")
+    stop(packages, ": not in log (not downloaded).", call. = FALSE)
   } else if (any(packages %in% unique(cran_log$package) == FALSE)) {
     err <- packages[packages %in% unique(cran_log$package) == FALSE]
-    warning(err, ": not in log (not downloaded).")
+    warning(err, ": not in log (not downloaded).", call. = FALSE)
     packages <- packages[packages %in% unique(cran_log$package)]
   }
 

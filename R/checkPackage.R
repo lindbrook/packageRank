@@ -13,10 +13,11 @@ checkPackage <- function(packages, dev.mode = FALSE) {
   }
   if (is.list(pkg.chk)) {
     error <- paste(pkg.chk$invalid, collapse = ", ")
+    msg <- ": misspelled or not on CRAN/Archive."
     if (length(pkg.chk$valid) == 0) {
-      stop(error, ": misspelled or not on CRAN/Archive.")
+      stop(error, msg, call. = FALSE)
     } else {
-      warning(error, ": misspelled or not on CRAN/Archive.")
+      warning(error, msg, call. = FALSE)
       packages <- pkg.chk$valid
     }
   }

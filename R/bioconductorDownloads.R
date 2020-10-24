@@ -42,7 +42,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
   # January 2009
   if (observation %in% c("month", "year") == FALSE) {
-    stop('observation must be "month" or "year".')
+    stop('observation must be "month" or "year".', call. = FALSE)
   }
 
   current.date <- Sys.Date()
@@ -105,7 +105,7 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
         points <- FALSE
       }
     } else if (is.logical(points) == FALSE) {
-      stop('points must be "auto", TRUE, or FALSE.')
+      stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
     }
   } else if (x$observation == "year") points <- TRUE
 
@@ -126,7 +126,7 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
     } else graphics <- "ggplot2"
   } else {
     if (all(graphics %in% c("base", "ggplot2") == FALSE))
-    stop('graphics must be "base" or "ggplot2"')
+    stop('graphics must be "base" or "ggplot2".', call. = FALSE)
   }
 
   if (graphics == "base") {
@@ -202,7 +202,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         log.data <- bioc.data[bioc.data$Month == "all", ]
         dat <- log.data[log.data$Year %in% c(current.yr, current.yr - 1), ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year"')
+      } else stop('"observation must be "month" or "year".', call. = FALSE)
 
     } else if (when == "year-to-date" | when == "ytd") {
       if (observation == "month") {
@@ -219,8 +219,10 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         log.data <- bioc.data[bioc.data$Month == "all", ]
         dat <- log.data[log.data$Year == current.yr, ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year"')
-    } else stop('when must be "last-year", "year-to-date" or "ytd".')
+      } else stop('"observation must be "month" or "year".', call. = FALSE)
+    } else {
+      stop('when must be "last-year", "year-to-date" or "ytd".', call. = FALSE)
+    }
 
   } else {
     if (is.null(from) & is.null(to)) {
@@ -235,7 +237,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
       } else if (observation == "year") {
         dat <- bioc.data[bioc.data$Month == "all", ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year"')
+      } else stop('"observation must be "month" or "year".', call. = FALSE)
 
     } else if (all(c(from, to) %in% 2009:current.yr)) {
       if (observation == "month") {
@@ -288,7 +290,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
     } else {
       msg1 <- '"from" and "to" are formatted as "yyyy" or "yyyy-mm". '
       msg2 <- 'Logs begin January 2009.'
-      stop(msg1, msg2)
+      stop(msg1, msg2, call. = FALSE)
     }
   }
   row.names(dat) <- NULL
@@ -418,21 +420,24 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
 }
 
 checkDate <- function(string, end.date = FALSE) {
-  if (!is.character(string)) stop("date must a character string.")
+  if (!is.character(string)) {
+    stop("date must a character string.", call. = FALSE)
+  }
   if (nchar(string) != 7 | (grepl("-", string) == FALSE)) {
-    stop('Format must be "yyyy-mm".')
+    stop('Format must be "yyyy-mm".', call. = FALSE)
   } else {
     date.parts <- unlist(strsplit(string, "-"))
     if (date.parts[2] %in% c(paste0(0, 1:9), paste(10:12)) == FALSE) {
-      stop("Month must be between 01 and 12.")
+      stop("Month must be between 01 and 12.", call. = FALSE)
     }
     if (date.parts[1] < 2009) {
-      warning(paste0('Bioconductor logs begin ', "January 2009", "."))
+      msg <- paste0('Bioconductor logs begin ', "January 2009", ".")
+      warning(msg, call. = FALSE)
     }
   }
 
   date.candidate <- as.Date(paste0(string, "-01"), optional = TRUE)
-  if (is.na(date.candidate)) stop("No such date.")
-  else if (date.candidate > Sys.Date()) stop("Date in future!")
+  if (is.na(date.candidate)) stop("No such date.", call. = FALSE)
+  else if (date.candidate > Sys.Date()) stop("Date in future!", call. = FALSE)
   else date.candidate
 }

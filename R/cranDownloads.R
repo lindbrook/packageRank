@@ -33,7 +33,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if (length(packages) > 1) {
     if ("R" %in% packages) {
-      stop("R downloads cannot be mixed with package downloads.")
+      stop("R downloads cannot be mixed with package downloads.", call. = FALSE)
     }
   }
 
@@ -54,7 +54,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
       args <- list(packages = packages, when = when)
-    } else stop('"when" must be "last-day", "last-week" or "last-month".')
+    } else stop('"when" must be "last-day", "last-week" or "last-month".',
+      call. = FALSE)
 
   } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
@@ -63,7 +64,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       end.date <- resolveDate(to, type = "to")
     } else end.date <- cal.date
 
-    if (start.date > end.date) stop('"from" must be <= "to".')
+    if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
     args <- list(packages = packages, from = start.date, to = end.date)
 
   } else if (is.null(when) & !is.null(to)) {
@@ -170,13 +171,20 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   }
 
-  if (is.logical(log.count) == FALSE) stop("log.count must be TRUE or FALSE.")
-  if (is.logical(smooth) == FALSE) stop("smooth must be TRUE or FALSE.")
-  if (is.logical(se) == FALSE) stop("se must be TRUE or FALSE.")
-  if (is.numeric(f) == FALSE) stop("f must be numeric.")
-
+  if (is.logical(log.count) == FALSE) {
+    stop("log.count must be TRUE or FALSE.", call. = FALSE)
+  }
+  if (is.logical(smooth) == FALSE) {
+    stop("smooth must be TRUE or FALSE.", call. = FALSE)
+  }
+  if (is.logical(se) == FALSE) {
+    stop("se must be TRUE or FALSE.", call. = FALSE)
+  }
+  if (is.numeric(f) == FALSE) {
+    stop("f must be numeric.", call. = FALSE)
+  }
   if (statistic %in% c("count", "cumulative") == FALSE) {
-    stop('"statistic" must be "count" or "cumulative".')
+    stop('"statistic" must be "count" or "cumulative".', call. = FALSE)
   }
 
   dat <- x$cranlogs.data
@@ -185,7 +193,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (points == "auto") {
     if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
   } else if (is.logical(points) == FALSE) {
-    stop('points must be "auto", TRUE, or FALSE.')
+    stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
   }
 
   if (population.plot) {
@@ -319,7 +327,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     } else if (!points & smooth) {
       p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else p
-  } else stop('graphics must be "base" or "ggplot2"')
+  } else stop('graphics must be "base" or "ggplot2"', call. = FALSE)
 }
 
 rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
@@ -375,7 +383,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
     } else if (!points & smooth) {
       p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else p
-  } else stop('graphics must be "base" or "ggplot2"')
+  } else stop('graphics must be "base" or "ggplot2"', call. = FALSE)
 }
 
 multiPlot <- function(x, statistic, graphics, days.observed, log.count,
@@ -400,7 +408,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
       }
     } else if (length(days.observed) > 1) {
       if (length(x$packages) > 8) {
-        stop('Use <= 8 packages when graphics = "base".')
+        stop('Use <= 8 packages when graphics = "base".', call. = FALSE)
       } else {
         if (log.count) {
           if (points) {
@@ -576,7 +584,7 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
       p + scale_y_log10()
     } else p
 
-  } else stop('graphics must be "base" or "ggplot2"')
+  } else stop('graphics must be "base" or "ggplot2".', call. = FALSE)
 }
 
 singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,

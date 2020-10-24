@@ -9,7 +9,9 @@ resolveDate <- function(date, type = "from") {
   first.log <- as.Date("2012-10-01") # first log on RStudio CRAN mirror.
   cal.date <- Sys.Date() - 1
   mm <- c(paste0(0, 1:9), paste(10:12))
-  if (!type %in% c("to", "from")) stop('type must be "to" or "from".')
+  if (!type %in% c("to", "from")) {
+    stop('type must be "to" or "from".', call. = FALSE)
+  }
 
   date <- as.character(date)
 
@@ -17,11 +19,11 @@ resolveDate <- function(date, type = "from") {
     err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
     date.check <- unlist(strsplit(date, "-"))
     if (!length(date.check) == 3) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2, 2))) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (date.check[2] %in% mm == FALSE) {
-      stop("Month must be between 01 and 12.")
+      stop("Month must be between 01 and 12.", call. = FALSE)
     } else {
       x.date <- as.Date(date, optional = TRUE)
     }
@@ -29,11 +31,11 @@ resolveDate <- function(date, type = "from") {
     err.format <- 'Invalid format. Must be "yyyy-mm".'
     date.check <- unlist(strsplit(date, "-"))
     if (!length(date.check) == 2) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2))) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (date.check[2] %in% mm == FALSE) {
-      stop("Month must be between 01 and 12.")
+      stop("Month must be between 01 and 12.", call. = FALSE)
     } else if (type == "from") {
       x.date <- dayOfMonth(date, first.log)
     } else if (type == "to") {
@@ -43,22 +45,24 @@ resolveDate <- function(date, type = "from") {
     if (is.na(suppressWarnings(as.numeric(date)))) {
       msg1 <- 'yyyy must either be a 4 digit number'
       msg2 <- 'or string of 4 numbers ("yyyy").'
-      stop(msg1, msg2)
+      stop(msg1, msg2, call. = FALSE)
     } else if (type == "from") {
       x.date <- as.Date(paste0(date, "-01-01"), optional = TRUE)
     } else if (type == "to") {
       x.date <- as.Date(paste0(date, "-12-31"), optional = TRUE)
       if (x.date > cal.date) x.date <- cal.date
     }
-  } else stop('Format must be "yyyy-mm-dd", "yyyy-mm", "yyyy", or yyyy.')
+  } else stop('Format must be "yyyy-mm-dd", "yyyy-mm", "yyyy", or yyyy.',
+              call. = FALSE)
 
   if (is.na(x.date)) {
-    stop('Not a valid date.')
+    stop('Not a valid date.', call. = FALSE)
   } else if (x.date < as.Date(first.log)) {
-    warning(paste0('RStudio CRAN logs begin on ', first.log, "."))
+    warning(paste0('RStudio CRAN logs begin on ', first.log, "."), 
+      call. = FALSE)
     x.date <- first.log
   } else if (x.date > cal.date) {
-    warning("Date of a future log!")
+    warning("Date of a future log!", call. = FALSE)
     cal.date
   } else x.date
 }
@@ -98,26 +102,28 @@ check10CharDate <- function(date, repository = "CRAN") {
     err.format <- 'Invalid format. Must be "yyyy-mm-dd".'
     date.check <- unlist(strsplit(date, "-"))
     if (!length(date.check) == 3) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (!all(vapply(date.check, nchar, integer(1L)) == c(4, 2, 2))) {
-      stop(err.format)
+      stop(err.format, call. = FALSE)
     } else if (date.check[2] %in% mm == FALSE) {
-      stop("Month must be between 01 and 12.")
+      stop("Month must be between 01 and 12.", call. = FALSE)
     } else {
       x.date <- as.Date(date, optional = TRUE)
     }
-  } else stop('Format must be "yyyy-mm-dd".')
+  } else stop('Format must be "yyyy-mm-dd".', call. = FALSE)
 
   if (is.na(x.date)) {
-    stop('Not a valid date.')
+    stop('Not a valid date.', call. = FALSE)
   } else if (x.date < as.Date(first.log)) {
     if (repository == "CRAN") {
-      stop(paste0('RStudio CRAN logs begin on ', first.log, "."))
+      txt <- 'RStudio CRAN logs begin on '
+      stop(paste0(txt, first.log, "."), call. = FALSE)
     } else if (repository == "MRAN") {
-      stop(paste0('MRAN snapshots begin on ', first.log, "."))
+      txt <- 'MRAN snapshots begin on '
+      stop(paste0(txt, first.log, "."), call. = FALSE)
     }
     # x.date <- first.log
   } else if (x.date > cal.date) {
-    stop("Date in future!")
+    stop("Date in future!", call. = FALSE)
   } else x.date
 }
