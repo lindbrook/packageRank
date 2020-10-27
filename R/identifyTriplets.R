@@ -180,18 +180,6 @@ isTriplet <- function(time.fix, v.data) {
 sizeTest <- function(candidates, v.data) {
   vapply(candidates, function(id) {
     tmp <- v.data[v.data$id == id, ]
-    sz <- trunc(log10(tmp$size))
-    three.different <- length(unique(sz)) == 3
-    two.small <- sum(sz == min(sz)) == 2 & sum(sz == max(sz)) == 1
-
-    large.test <- sum(sz == max(sz)) == 2 & sum(sz == min(sz)) == 1
-    if (large.test) {
-      lg.sizes <- unique(round(tmp$size[sz == max(sz)] / 10^max(sz)))
-      two.large <- ifelse(length(lg.sizes) == 1, TRUE, FALSE)
-    } else {
-      two.large <- FALSE
-    }
-
-    three.different | two.small | two.large
+    sum(tmp$size < 1000L) == 1
   }, logical(1L))
 }
