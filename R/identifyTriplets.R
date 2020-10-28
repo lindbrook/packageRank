@@ -48,23 +48,18 @@ identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
 
 identify_triplets <- function(v.data, time.window, time.sort) {
   freqtab <- table(v.data$id)
-
   triplets <- names(freqtab[freqtab == 3])
   size.test <- sizeTest(triplets, v.data)
   triplets <- triplets[size.test]
 
-  small.id <- unique(v.data[v.data$size < 1000, "id"])
+  small.id <- unique(v.data[v.data$size < 1000L, "id"])
 
   if (length(triplets) != 0 & length(small.id) != 0) {
-    if (identical(triplets, small.id)) {
-      sel <- v.data$id %in% triplets
-    } else {
+    if (!identical(triplets, small.id)) {
       possible.triplets <- setdiff(small.id, triplets)
       leftovers <- v.data$id %in% possible.triplets
 
-      if (sum(leftovers) < 3) {
-        sel <- v.data$id %in% triplets
-      } else {
+      if (sum(leftovers) >= 3) {
         time.fix <- timeFix(possible.triplets, v.data, time.window)
 
         if (!is.null(time.fix)) {
@@ -78,12 +73,14 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 
           if (length(fixed.triplets) != 0) {
             sel <- v.data$id %in% c(triplets, fixed.triplets)
-          } else sel <- NULL
-        } else sel <- NULL
-      }
-    }
+          } else sel <- v.data$id %in% triplets
+        } else sel <- v.data$id %in% triplets
+      } else sel <- v.data$id %in% triplets
+    } else sel <- v.data$id %in% triplets
+
   } else if (length(triplets) != 0 & length(small.id) == 0) {
     sel <- v.data$id %in% triplets
+
   } else if (length(triplets) == 0 & length(small.id) != 0) {
     possible.triplets <- small.id
     time.fix <- timeFix(possible.triplets, v.data, time.window)
@@ -99,10 +96,8 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 
       if (length(fixed.triplets) != 0) {
         sel <- v.data$id %in% fixed.triplets
-      } else {
-        sel <- NULL
-      }
-    } else sel <- NULL
+      } else sel <- v.data$id %in% triplets
+    } else sel <- v.data$id %in% triplets
   }
 
   if (!is.null(sel)) {
@@ -180,18 +175,6 @@ isTriplet <- function(time.fix, v.data) {
 sizeTest <- function(candidates, v.data) {
   vapply(candidates, function(id) {
     tmp <- v.data[v.data$id == id, ]
-    sz <- trunc(log10(tmp$size))
-    three.different <- length(unique(sz)) == 3
-    two.small <- sum(sz == min(sz)) == 2 & sum(sz == max(sz)) == 1
-
-    large.test <- sum(sz == max(sz)) == 2 & sum(sz == min(sz)) == 1
-    if (large.test) {
-      lg.sizes <- unique(round(tmp$size[sz == max(sz)] / 10^max(sz)))
-      two.large <- ifelse(length(lg.sizes) == 1, TRUE, FALSE)
-    } else {
-      two.large <- FALSE
-    }
-
-    three.different | two.small | two.large
+    sum(tmp$size < 1000L) == 1
   }, logical(1L))
 }
