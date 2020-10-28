@@ -48,23 +48,18 @@ identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
 
 identify_triplets <- function(v.data, time.window, time.sort) {
   freqtab <- table(v.data$id)
-
   triplets <- names(freqtab[freqtab == 3])
   size.test <- sizeTest(triplets, v.data)
   triplets <- triplets[size.test]
 
-  small.id <- unique(v.data[v.data$size < 1000, "id"])
+  small.id <- unique(v.data[v.data$size < 1000L, "id"])
 
   if (length(triplets) != 0 & length(small.id) != 0) {
-    if (identical(triplets, small.id)) {
-      sel <- v.data$id %in% triplets
-    } else {
+    if (!identical(triplets, small.id)) {
       possible.triplets <- setdiff(small.id, triplets)
       leftovers <- v.data$id %in% possible.triplets
 
-      if (sum(leftovers) < 3) {
-        sel <- v.data$id %in% triplets
-      } else {
+      if (sum(leftovers) >= 3) {
         time.fix <- timeFix(possible.triplets, v.data, time.window)
 
         if (!is.null(time.fix)) {
@@ -78,12 +73,14 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 
           if (length(fixed.triplets) != 0) {
             sel <- v.data$id %in% c(triplets, fixed.triplets)
-          } else sel <- NULL
-        } else sel <- NULL
-      }
-    }
+          } else sel <- v.data$id %in% triplets
+        } else sel <- v.data$id %in% triplets
+      } else sel <- v.data$id %in% triplets
+    } else sel <- v.data$id %in% triplets
+
   } else if (length(triplets) != 0 & length(small.id) == 0) {
     sel <- v.data$id %in% triplets
+
   } else if (length(triplets) == 0 & length(small.id) != 0) {
     possible.triplets <- small.id
     time.fix <- timeFix(possible.triplets, v.data, time.window)
@@ -99,10 +96,8 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 
       if (length(fixed.triplets) != 0) {
         sel <- v.data$id %in% fixed.triplets
-      } else {
-        sel <- NULL
-      }
-    } else sel <- NULL
+      } else sel <- v.data$id %in% triplets
+    } else sel <- v.data$id %in% triplets
   }
 
   if (!is.null(sel)) {
