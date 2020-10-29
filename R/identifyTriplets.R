@@ -60,15 +60,16 @@ identify_triplets <- function(v.data, time.window, time.sort) {
       leftovers <- v.data$id %in% possible.triplets
 
       if (sum(leftovers) >= 3) {
+        # select "correct" time by majority rule
         time.fix <- timeFix(possible.triplets, v.data, time.window)
 
         if (!is.null(time.fix)) {
-          if (any(duplicated(time.fix$err))) {
+          if (any(duplicated(time.fix$minority))) {
             time.fix <- fixDuplicates(time.fix, v.data)
           }
 
           fixed.ids <- isTriplet(time.fix, v.data)
-          unfixed.ids <- time.fix[time.fix$fix %in% fixed.ids, "err"]
+          unfixed.ids <- time.fix[time.fix$majority %in% fixed.ids, "minority"]
           fixed.triplets <- c(unfixed.ids, fixed.ids)
 
           if (length(fixed.triplets) != 0) {
@@ -85,13 +86,13 @@ identify_triplets <- function(v.data, time.window, time.sort) {
     possible.triplets <- small.id
     time.fix <- timeFix(possible.triplets, v.data, time.window)
 
-    if (any(duplicated(time.fix$err))) {
+    if (any(duplicated(time.fix$minority))) {
       time.fix <- fixDuplicates(time.fix, v.data)
     }
 
     if (!is.null(time.fix)) {
       fixed.ids <- isTriplet(time.fix, v.data)
-      unfixed.ids <- time.fix[time.fix$fix %in% fixed.ids, "err"]
+      unfixed.ids <- time.fix[time.fix$majority %in% fixed.ids, "minority"]
       fixed.triplets <- c(unfixed.ids, fixed.ids)
 
       if (length(fixed.triplets) != 0) {
@@ -127,11 +128,13 @@ timeFix <- function(possible.triplets, v.data, time.window) {
     if (any(candidate)) {
       candidate.data <- v.data[v.data$id %in% candidate.id, ]
       majority.rule <- c(nrow(obs.data), nrow(candidate.data))
-      err.id <- which.min(majority.rule)
-      if (err.id == 1) {
-        data.frame(err = unique(obs.data$id), fix = unique(candidate.data$id))
-      } else if (err.id == 2) {
-        data.frame(err = unique(candidate.data$id), fix = unique(obs.data$id))
+      minority <- which.min(majority.rule)
+      if (minority == 1) {
+        data.frame(minority = unique(obs.data$id),
+                   majority = unique(candidate.data$id))
+      } else if (minority == 2) {
+        data.frame(minority = unique(candidate.data$id),
+                   majority = unique(obs.data$id))
       }
     }
   })
@@ -139,18 +142,19 @@ timeFix <- function(possible.triplets, v.data, time.window) {
 }
 
 fixDuplicates <- function(time.fix, v.data) {
-  duplicates <- time.fix$err[duplicated(time.fix$err)]
+  duplicates <- time.fix$minority[duplicated(time.fix$minority)]
   soln <- vapply(duplicates, function(x) {
-    tmp <- time.fix[time.fix$err == x, ]
-    tmp$err.time <- str2Time(tmp, time.fix, v.data)
-    tmp$fix.time <- str2Time(tmp, time.fix, v.data, "fix")
-    id.change <- which.max(abs(tmp$err.time - tmp$fix.time))
-    row.names(time.fix[time.fix$err == x, ][id.change, ])
+    tmp <- time.fix[time.fix$minority == x, ]
+    tmp$minority.time <- str2Time(tmp, time.fix, v.data)
+    tmp$majority.time <- str2Time(tmp, time.fix, v.data, "majority")
+    id.change <- which.max(abs(tmp$minority.time - tmp$majority.time))
+    row.names(time.fix[time.fix$minority == x, ][id.change, ])
   }, character(1L))
   time.fix[!row.names(time.fix) %in% soln, ]
 }
 
-str2Time <- function(tmp, time.fix, v.data, var = "err", tz = "Europe/Vienna") {
+str2Time <- function(tmp, time.fix, v.data, var = "minority",
+  tz = "Europe/Vienna") {
   data.time <- vapply(strsplit(tmp[, var], "-"), function(x) {
     paste(v.data$date[1], x[1])
   }, character(1L))
@@ -160,10 +164,11 @@ str2Time <- function(tmp, time.fix, v.data, var = "err", tz = "Europe/Vienna") {
 isTriplet <- function(time.fix, v.data) {
   test.data <- v.data
   for (i in seq_len(nrow(time.fix))) {
-    test.data[test.data$id == time.fix[i, "err"], "id"] <- time.fix[i, "fix"]
+    sel <- test.data$id == time.fix[i, "minority"]
+    test.data[sel, "id"] <- time.fix[i, "majority"]
   }
 
-  count.test <- vapply(time.fix$fix, function(x) {
+  count.test <- vapply(time.fix$majority, function(x) {
     nrow(test.data[test.data$id == x, ])
   }, integer(1L)) == 3
 
