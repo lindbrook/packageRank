@@ -74,7 +74,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
     out <- out[[1]]
     if (nrow(out) != 0) {
       if (!"t2" %in% names(out)) {
-        out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+        out$t2 <- dateTime(out$date, out$time)
       }
       out <- out[order(out$t2), ]
       out$t2 <- NULL
@@ -84,7 +84,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
     names(out) <- packages
     out <- parallel::mclapply(out, function(x) {
       if (!"t2" %in% names(x)) {
-        x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
+        x$date.time <- dateTime(x$date, x$time)
       }
       tmp <- x[order(x$date.time), ]
       tmp$date.time <- NULL
@@ -133,7 +133,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
     out <- out[[1]]
     if (nrow(out) != 0) {
       if (!"t2" %in% names(out)) {
-        out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
+        out$t2 <- dateTime(out$date, out$time)
       }
       out <- out[order(out$t2), ]
       out$t2 <- NULL
@@ -142,7 +142,7 @@ packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
     names(out) <- packages
     out <- parallel::mclapply(out, function(x) {
       if (!"t2" %in% names(x)) {
-        x$date.time <- as.POSIXlt(paste(x$date, x$time), tz = "Europe/Vienna")
+        x$date.time <- dateTime(x$date, x$time)
       }
       tmp <- x[order(x$date.time), ]
       tmp$date.time <- NULL
