@@ -114,21 +114,19 @@ identify_triplets <- function(v.data, time.window, time.sort) {
   }
 }
 
-timeFix <- function(possible.triplets, v.data, time.window) {
-  out <- lapply(possible.triplets, function(x) {
+timeFix <- function(potential.triplets, v.data, time.window) {
+  out <- lapply(potential.triplets, function(x) {
     obs.data <- v.data[v.data$id %in% x, ]
-    obs.time <- unique(as.POSIXlt(paste(obs.data$date, obs.data$time),
-      tz = "Europe/Vienna"))
+    obs.time <- dateTime(obs.data$date, obs.data$time)
     tm.window <- c(obs.time + 1:time.window, obs.time - 1:time.window)
     candidate.hms <- strftime(tm.window, format = "%H:%M:%S",
       tz = "Europe/Vienna")
     candidate.id <- paste0(candidate.hms, "-", obs.data$machine)
     candidate <- v.data$id %in% candidate.id
 
-    if (any(candidate)) {
+    if (any(candidate) & sum(nrow(obs.data), sum(candidate)) == 3) {
       candidate.data <- v.data[v.data$id %in% candidate.id, ]
-      majority.rule <- c(nrow(obs.data), nrow(candidate.data))
-      minority <- which.min(majority.rule)
+      minority <- which.min(c(nrow(obs.data), nrow(candidate.data)))
       if (minority == 1) {
         data.frame(minority = unique(obs.data$id),
                    majority = unique(candidate.data$id))

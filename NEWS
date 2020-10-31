@@ -2,6 +2,7 @@ packageRank 0.3.5.9095
 ==================
 
 - replace clockTime() with dateTime().
+- amend majority rule syntax in timeFix().
 
 
 packageRank 0.3.5.9094
