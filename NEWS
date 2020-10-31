@@ -1,3 +1,11 @@
+packageRank 0.3.5.9095
+==================
+
+- replace clockTime() with dateTime().
+- amend majority rule syntax in timeFix().
+- identify_triplets(): fix/amend syntax; add triplet time (t2).
+
+
 packageRank 0.3.5.9094
 ==================
 

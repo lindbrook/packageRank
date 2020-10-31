@@ -51,28 +51,29 @@ identify_triplets <- function(v.data, time.window, time.sort) {
   triplets <- names(freqtab[freqtab == 3])
   size.test <- sizeTest(triplets, v.data)
   triplets <- triplets[size.test]
-
   small.id <- unique(v.data[v.data$size < 1000L, "id"])
 
   if (length(triplets) != 0 & length(small.id) != 0) {
     if (!identical(triplets, small.id)) {
-      possible.triplets <- setdiff(small.id, triplets)
-      leftovers <- v.data$id %in% possible.triplets
+      potential.triplets <- setdiff(small.id, triplets)
+      potential.id <- v.data$id %in% potential.triplets
 
-      if (sum(leftovers) >= 3) {
-        time.fix <- timeFix(possible.triplets, v.data, time.window)
+      # at least one potential triplet
+      if (sum(potential.id) >= 3) {
+        # selects "correct" time by majority rule
+        time.fix <- timeFix(potential.triplets, v.data, time.window)
 
         if (!is.null(time.fix)) {
-          if (any(duplicated(time.fix$err))) {
+          if (any(duplicated(time.fix$minority))) {
             time.fix <- fixDuplicates(time.fix, v.data)
           }
 
-          fixed.ids <- isTriplet(time.fix, v.data)
-          unfixed.ids <- time.fix[time.fix$fix %in% fixed.ids, "err"]
-          fixed.triplets <- c(unfixed.ids, fixed.ids)
+          root <- isTriplet(time.fix, v.data)
+          complement <- time.fix[time.fix$majority %in% root, "minority"]
+          latent.triplets <- c(root, complement)
 
-          if (length(fixed.triplets) != 0) {
-            sel <- v.data$id %in% c(triplets, fixed.triplets)
+          if (length(latent.triplets) != 0) {
+            sel <- v.data$id %in% c(triplets, latent.triplets)
           } else sel <- v.data$id %in% triplets
         } else sel <- v.data$id %in% triplets
       } else sel <- v.data$id %in% triplets
@@ -82,56 +83,72 @@ identify_triplets <- function(v.data, time.window, time.sort) {
     sel <- v.data$id %in% triplets
 
   } else if (length(triplets) == 0 & length(small.id) != 0) {
-    possible.triplets <- small.id
-    time.fix <- timeFix(possible.triplets, v.data, time.window)
-
-    if (any(duplicated(time.fix$err))) {
-      time.fix <- fixDuplicates(time.fix, v.data)
-    }
-
+    potential.triplets <- small.id
+    time.fix <- timeFix(potential.triplets, v.data, time.window)
     if (!is.null(time.fix)) {
-      fixed.ids <- isTriplet(time.fix, v.data)
-      unfixed.ids <- time.fix[time.fix$fix %in% fixed.ids, "err"]
-      fixed.triplets <- c(unfixed.ids, fixed.ids)
+      if (any(duplicated(time.fix$minority))) {
+        time.fix <- fixDuplicates(time.fix, v.data)
+      }
 
-      if (length(fixed.triplets) != 0) {
-        sel <- v.data$id %in% fixed.triplets
+      root <- isTriplet(time.fix, v.data)
+      complement <- time.fix[time.fix$majority %in% root, "minority"]
+      latent.triplets <- c(root, complement)
+
+      if (length(latent.triplets) != 0) {
+        sel <- v.data$id %in% latent.triplets
       } else sel <- v.data$id %in% triplets
     } else sel <- v.data$id %in% triplets
   }
 
-  if (!is.null(sel)) {
-    out <- v.data[sel, ]
-    if (time.sort & nrow(out) != 0) {
-      out$t2 <- as.POSIXlt(paste(out$date, out$time), tz = "Europe/Vienna")
-      out <- out[order(out$t2), ]
-      out[, c("machine", "id", "id2", "t2")] <- NULL
-    } else if (!time.sort & nrow(out) != 0) {
-      out[, c("machine", "id", "id2")] <- NULL
+  out <- v.data[sel, ]
+
+  if (nrow(out) != 0) {
+    out$t2 <- dateTime(out$date, out$time)
+    if ("time.fix" %in% ls()) {
+      t.adj <- time.fix[time.fix$minority %in% out$id, "majority"]
+      t.adj <- vapply(t.adj, function(x) x[1], character(1L))
+      t.adj <- dateTime(unique(out$date), t.adj)
+      t.delta <- out[out$id %in% time.fix$minority, "t2"] - t.adj
+      sel <- out$id %in% time.fix$minority
+      out[sel, "t2"] <- out[sel, "t2"] - t.delta
+
+      id.adj <- strsplit(out[sel, "id"], "-")
+      id.adj <- lapply(id.adj, function(x) x[-1])
+      t.fix <- strftime(t.adj, format = "%H:%M:%S", tz = "Europe/Vienna")
+
+      id2 <- vapply(seq_along(id.adj), function(i) {
+        paste0(t.fix[i], "-", paste(id.adj[[i]], collapse = "-"))
+      }, character(1L))
+
+      out[out$id %in% time.fix$minority, "id"] <- id2
     }
-    out
+
+    if (time.sort) out <- out[order(out$t2, out$size), ]
   }
+
+  out[, c("machine", "id")] <- NULL
+  out
 }
 
-timeFix <- function(possible.triplets, v.data, time.window) {
-  out <- lapply(possible.triplets, function(x) {
+timeFix <- function(potential.triplets, v.data, time.window) {
+  out <- lapply(potential.triplets, function(x) {
     obs.data <- v.data[v.data$id %in% x, ]
-    obs.time <- unique(as.POSIXlt(paste(obs.data$date, obs.data$time),
-      tz = "Europe/Vienna"))
+    obs.time <- dateTime(obs.data$date, obs.data$time)
     tm.window <- c(obs.time + 1:time.window, obs.time - 1:time.window)
     candidate.hms <- strftime(tm.window, format = "%H:%M:%S",
       tz = "Europe/Vienna")
     candidate.id <- paste0(candidate.hms, "-", obs.data$machine)
     candidate <- v.data$id %in% candidate.id
 
-    if (any(candidate)) {
+    if (any(candidate) & sum(nrow(obs.data), sum(candidate)) == 3) {
       candidate.data <- v.data[v.data$id %in% candidate.id, ]
-      majority.rule <- c(nrow(obs.data), nrow(candidate.data))
-      err.id <- which.min(majority.rule)
-      if (err.id == 1) {
-        data.frame(err = unique(obs.data$id), fix = unique(candidate.data$id))
-      } else if (err.id == 2) {
-        data.frame(err = unique(candidate.data$id), fix = unique(obs.data$id))
+      minority <- which.min(c(nrow(obs.data), nrow(candidate.data)))
+      if (minority == 1) {
+        data.frame(minority = unique(obs.data$id),
+                   majority = unique(candidate.data$id))
+      } else if (minority == 2) {
+        data.frame(minority = unique(candidate.data$id),
+                   majority = unique(obs.data$id))
       }
     }
   })
@@ -139,18 +156,19 @@ timeFix <- function(possible.triplets, v.data, time.window) {
 }
 
 fixDuplicates <- function(time.fix, v.data) {
-  duplicates <- time.fix$err[duplicated(time.fix$err)]
+  duplicates <- time.fix$minority[duplicated(time.fix$minority)]
   soln <- vapply(duplicates, function(x) {
-    tmp <- time.fix[time.fix$err == x, ]
-    tmp$err.time <- str2Time(tmp, time.fix, v.data)
-    tmp$fix.time <- str2Time(tmp, time.fix, v.data, "fix")
-    id.change <- which.max(abs(tmp$err.time - tmp$fix.time))
-    row.names(time.fix[time.fix$err == x, ][id.change, ])
+    tmp <- time.fix[time.fix$minority == x, ]
+    tmp$minority.time <- str2Time(tmp, time.fix, v.data)
+    tmp$majority.time <- str2Time(tmp, time.fix, v.data, "majority")
+    id.change <- which.max(abs(tmp$minority.time - tmp$majority.time))
+    row.names(time.fix[time.fix$minority == x, ][id.change, ])
   }, character(1L))
   time.fix[!row.names(time.fix) %in% soln, ]
 }
 
-str2Time <- function(tmp, time.fix, v.data, var = "err", tz = "Europe/Vienna") {
+str2Time <- function(tmp, time.fix, v.data, var = "minority",
+  tz = "Europe/Vienna") {
   data.time <- vapply(strsplit(tmp[, var], "-"), function(x) {
     paste(v.data$date[1], x[1])
   }, character(1L))
@@ -159,11 +177,13 @@ str2Time <- function(tmp, time.fix, v.data, var = "err", tz = "Europe/Vienna") {
 
 isTriplet <- function(time.fix, v.data) {
   test.data <- v.data
+
   for (i in seq_len(nrow(time.fix))) {
-    test.data[test.data$id == time.fix[i, "err"], "id"] <- time.fix[i, "fix"]
+    sel <- test.data$id == time.fix[i, "minority"]
+    test.data[sel, "id"] <- time.fix[i, "majority"]
   }
 
-  count.test <- vapply(time.fix$fix, function(x) {
+  count.test <- vapply(time.fix$majority, function(x) {
     nrow(test.data[test.data$id == x, ])
   }, integer(1L)) == 3
 

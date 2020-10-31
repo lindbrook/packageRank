@@ -9,7 +9,7 @@
 pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
   cran_log <- cleanLog(dat[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
-  tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+  tmp$t2 <- dateTime(tmp$date, tmp$time)
   tmp <- tmp[order(tmp$t2), c(1:6, 8:10)]
   if (clean.output) row.names(tmp) <- NULL
   tmp
@@ -53,7 +53,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
     if (small.filter) tmp <- smallFilter0(tmp)
     if (sequence.filter) tmp <- sequenceFilter(tmp)
 
-    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp$t2 <- dateTime(tmp$date, tmp$time)
     tmp <- tmp[order(tmp$t2), !names(tmp) %in% "t2"]
     if (clean.output) row.names(tmp) <- NULL
   }
