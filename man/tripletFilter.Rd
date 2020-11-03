@@ -4,12 +4,14 @@
 \alias{tripletFilter}
 \title{Filter out small downloads triplets (prototype).}
 \usage{
-tripletFilter(dat, time.window = 2)
+tripletFilter(dat, time.window = 2, multi.core = TRUE)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}
 
 \item{time.window}{Numeric. Seconds.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/

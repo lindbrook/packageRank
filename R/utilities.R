@@ -38,7 +38,7 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   tmp <- cran_log[cran_log$package == pkg, ]
 
   if (nrow(tmp) != 0) {
-    if (triplet.filter) tmp <- do.call(rbind, tripletFilter(tmp))
+    if (triplet.filter) tmp <- tripletFilter(tmp)
 
     if (ip.filter) {
       ip.outliers <- ipFilter3(cran_log)
@@ -102,7 +102,7 @@ filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
 
   if (nrow(dat) != 0) {
     # Triplet filter #
-    out <- do.call(rbind, tripletFilter(dat))
+    out <- tripletFilter(dat, multi.core = FALSE)
     triplet.filtered <- nrow(out)
 
     # IP filter #
