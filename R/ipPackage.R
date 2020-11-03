@@ -22,22 +22,15 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   cran_log <- cleanLog(cran_log)
 
   if (triplet.filter) {
-    tri.filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
-      x <- cran_log[cran_log$package == p, ]
-      do.call(rbind, tripletFilter(x))
+    filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
+      tripletFilter(cran_log[cran_log$package == p, ], multi.core = FALSE)
     }, mc.cores = cores)
 
-    cran_log <- do.call(rbind, tri.filtered)
+    cran_log <- do.call(rbind, filtered)
   }
 
   if (small.filter) cran_log <- smallFilter0(cran_log)
-
   freqtab <- table(cran_log$package)
-
-  if (sort) {
-    out <- sort(freqtab, decreasing = TRUE)
-  } else {
-    out <- freqtab
-  }
-  out
+  if (sort) sort(freqtab, decreasing = TRUE)
+  else freqtab
 }

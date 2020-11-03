@@ -40,15 +40,9 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 
   if (triplet.filter) {
     if (length(packages) == 1) {
-      out <- lapply(out, function(x) {
-        filtered.data <- tripletFilter(x)
-        do.call(rbind, filtered.data)
-      })
+      out <- lapply(out, tripletFilter)
     } else if (length(packages) > 1) {
-      out <- parallel::mclapply(out, function(x) {
-        filtered.data <- tripletFilter(x)
-        do.call(rbind, filtered.data)
-      }, mc.cores = cores)
+      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
     }
   }
 
