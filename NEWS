@@ -2,6 +2,7 @@ packageRank 0.3.5.9097
 ==================
 
 - add ipCount().
+- revise checkPackage().
 
 
 packageRank 0.3.5.9096
