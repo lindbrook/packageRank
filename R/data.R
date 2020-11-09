@@ -64,4 +64,4 @@
 # blog.data$cran.pkgs.jul <- cran.pkgs
 # blog.data$arch.pkgs.jul <- arch.pkgs
 
-# usethis::use_data(blog.data, overwrite = TRUE)
+# usethis::use_data(blog.data, overwrite = TRUE, version = 3L)

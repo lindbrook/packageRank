@@ -2,7 +2,7 @@ Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
 Version: 0.3.5.9098
-Date: 2020-11-08
+Date: 2020-11-09
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
@@ -10,7 +10,7 @@ Description: Compute and visualize the cross-sectional and longitudinal number
     and rank percentile of package downloads from RStudio's CRAN mirror.
 URL: https://github.com/lindbrook/packageRank
 BugReports: https://github.com/lindbrook/packageRank/issues
-Depends: R (>= 3.4)
+Depends: R (>= 3.5)
 License: GPL (>= 2)
 Encoding: UTF-8
 Language: en-US

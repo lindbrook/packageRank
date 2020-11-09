@@ -2,6 +2,7 @@ packageRank 0.3.5.9098
 ==================
 
 - add cranMirrors().
+- use serialization format = 3 for blog.data.
 
 
 packageRank 0.3.5.9097
