@@ -13,39 +13,41 @@ checkPackage <- function(packages, dev.mode = FALSE) {
   }
 
   # 'pkgsearch' errors
-  archive.err <- c("dseplus", "empiricalBayes", "forecasting", "VR")
+  archive.package.errors <- c("dseplus", "empiricalBayes", "forecasting", "VR")
 
-  if (any(packages %in% archive.err)) {
-    pkgs <- packages[!packages %in% archive.err]
-    pkgs0 <- packages[packages %in% archive.err]
+  if (any(packages %in% archive.package.errors)) {
+    pkgs <- packages[!packages %in% archive.package.errors]
+    pkgs0 <- packages[packages %in% archive.package.errors]
     pkg.chk <- validatePackage(pkgs)
     pkg.chk0 <- validatePackage0(pkgs0)
     if (!is.list(pkg.chk)) {
       delta <- setdiff(packages, c(pkg.chk, pkg.chk0))
-      if (length(delta) != 0) {
-        err2 <- paste(delta, collapse = ", ")
-      }
+      if (length(delta) != 0) arch.pkg.err <- delta
     }
   }
 
-  if (is.list(pkg.chk) & !"err2" %in% ls()) {
-    error <- paste(pkg.chk$invalid, collapse = ", ")
-  } else if (!is.list(pkg.chk) & "err2" %in% ls()) {
-    error <- paste(err2, collapse = ", ")
-  } else if (is.list(pkg.chk) & "err2" %in% ls()) {
-    error <- paste(c(pkg.chk$invalid, err2), collapse = ", ")
+  if (is.list(pkg.chk) & "arch.pkg.err" %in% ls()) {
+    pkg.err <- c(pkg.chk$invalid, arch.pkg.err)
+  } else if (is.list(pkg.chk) & !"arch.pkg.err" %in% ls()) {
+    pkg.err <- pkg.chk$invalid
+  } else if (!is.list(pkg.chk) & "arch.pkg.err" %in% ls()) {
+    pkg.err <- arch.pkg.err
   }
 
-  msg <- ": misspelled or not on CRAN/Archive."
+  if ("pkg.err" %in% ls()) {
+    pkg.err.msg <- paste(pkg.err, collapse = ", ")
+    msg <- ": misspelled or not on CRAN/Archive."
+    err.test <- length(setdiff(packages, pkg.err)) == 0
 
-  if (setdiff(error, packages) == 0) {
-    stop(error, msg, call. = FALSE)
-  } else {
-    warning(error, msg, call. = FALSE)
-    if ("pkg.chk0" %in% ls()) {
-      packages <- c(pkg.chk$valid, pkg.chk0)
+    if (err.test) {
+      stop(pkg.err.msg, msg, call. = FALSE)
     } else {
-      packages <- pkg.chk$valid
+      warning(pkg.err.msg, msg, call. = FALSE)
+      if ("pkg.chk0" %in% ls()) {
+        packages <- c(pkg.chk$valid, pkg.chk0)
+      } else {
+        packages <- pkg.chk$valid
+      }
     }
   }
 
