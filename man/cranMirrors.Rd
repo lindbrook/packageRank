@@ -2,10 +2,13 @@
 % Please edit documentation in R/cranMirrors.R
 \name{cranMirrors}
 \alias{cranMirrors}
-\title{Scrape CRAN Mirror data.}
+\title{Scrape CRAN Mirrors data.}
 \usage{
-cranMirrors()
+cranMirrors(mirror.description = FALSE)
+}
+\arguments{
+\item{mirror.description}{Logical. Mirror details.}
 }
 \description{
-"https://cran.r-project.org/mirrors.html"
+https://cran.r-project.org/mirrors.html
 }

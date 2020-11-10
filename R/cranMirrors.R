@@ -1,9 +1,10 @@
-#' Scrape CRAN Mirror data.
+#' Scrape CRAN Mirrors data.
 #'
-#' "https://cran.r-project.org/mirrors.html"
+#' https://cran.r-project.org/mirrors.html
+#' @param mirror.description Logical. Mirror details.
 #' @export
 
-cranMirrors <- function() {
+cranMirrors <- function(mirror.description = FALSE) {
   mirrors.url <- "https://cran.r-project.org/mirrors.html"
   web_page <- readLines(mirrors.url)
 
@@ -30,13 +31,15 @@ cranMirrors <- function() {
       }, character(1L)))
 
       mirror <- gsub("<.*?>", "", web_page[h1])
-      # desc <- host.tmp[grep("<td>", host.tmp) + 1]
+      desc <- host.tmp[grep("<td>", host.tmp) + 1]
 
       data.frame(country = hosts[i],
                  url = urls,
-                 # description = desc,
-                 country.code = country.code[i])
+                 country.code = country.code[i],
+                 description = desc)
     })
 
-  do.call(rbind,out)
+  out <- do.call(rbind,out)
+  if (mirror.description) out
+  else out[, names(out) != "description"]
 }
