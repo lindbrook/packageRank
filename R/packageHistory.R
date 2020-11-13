@@ -2,10 +2,13 @@
 #'
 #' Date and version of all publications.
 #' @param package Character. Package name.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
-packageHistory <- function(package = "cholera") {
-  # Use packageHistory0() for "missing" and lastest packages.
+packageHistory <- function(package = "cholera", check.package = TRUE) {
+  if (check.package) package <- checkPackage(package)
+
+  # Use packageHistory0() for "missing" and latest packages.
   # e.g.,"VR" in cran_package() but not cran_package_history()
   history <- try(pkgsearch::cran_package_history(package), silent = TRUE)
 
@@ -40,12 +43,13 @@ packageHistory <- function(package = "cholera") {
 #'
 #' History of version, date and size (source file).
 #' @param package Character. Package name.
+#' @param size Logical. Include size of source file.
 #' @export
 
-packageHistory0 <- function(package = "cholera") {
+packageHistory0 <- function(package = "cholera", size = FALSE) {
   # set check.package = FALSE to pass "latest" packages.
-  cran <- packageCRAN(package, check.package = FALSE)
-  arch <- packageArchive(package, check.package = FALSE)
+  cran <- packageCRAN(package, check.package = FALSE, size = size)
+  arch <- packageArchive(package, check.package = FALSE, size = size)
   if (any(is.na(cran))) cran <- NULL
   out <- rbind(arch, cran)
   row.names(out) <- NULL
@@ -57,6 +61,7 @@ packageHistory0 <- function(package = "cholera") {
 #' Version, date and size (source file) of most recent publication.
 #' @param package Character. Package name.
 #' @param check.package Logical. Validate and "spell check" package.
+#' @param size Logical. Include size of source file.
 #' @return An R data frame or NULL.
 #' @examples
 #' \dontrun{
@@ -65,7 +70,9 @@ packageHistory0 <- function(package = "cholera") {
 #' }
 #' @export
 
-packageCRAN <- function(package = "cholera", check.package = TRUE) {
+packageCRAN <- function(package = "cholera", check.package = TRUE,
+  size = FALSE) {
+
   if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
   web_page <- mreadLines(url)
@@ -85,7 +92,10 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
     } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
 
     if (!is.null(out)) {
-      if (identical(out$package, package)) out
+      if (identical(out$package, package)) {
+        if (size) out
+        else out[, names(out) != "size"]
+      }
     } else NA
   } else NA
 }
@@ -94,6 +104,7 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
 #'
 #' @param package Character. Package name.
 #' @param check.package Logical. Validate and "spell check" package.
+#' @param size Logical. Include size of source file.
 #' @return An R data frame or NULL.
 #' @export
 #' @examples
@@ -102,7 +113,9 @@ packageCRAN <- function(package = "cholera", check.package = TRUE) {
 #' packageArchive(package = "adjustedcranlogs")  # No archived versions.
 #' }
 
-packageArchive <- function(package = "cholera", check.package = TRUE) {
+packageArchive <- function(package = "cholera", check.package = TRUE,
+  size = FALSE) {
+
   if (check.package) package <- checkPackage(package)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   url <- paste0(root.url, package)
@@ -170,8 +183,8 @@ packageArchive <- function(package = "cholera", check.package = TRUE) {
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
     out <- out[order(out$date), ]
-    row.names(out) <- NULL
-    out
+    if (size) out
+    else out[, names(out) != "size"]
   }
 }
 

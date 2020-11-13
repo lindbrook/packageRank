@@ -4,10 +4,12 @@
 \alias{packageHistory0}
 \title{Scrape package version history CRAN and Archive.}
 \usage{
-packageHistory0(package = "cholera")
+packageHistory0(package = "cholera", size = FALSE)
 }
 \arguments{
 \item{package}{Character. Package name.}
+
+\item{size}{Logical. Include size of source file.}
 }
 \description{
 History of version, date and size (source file).

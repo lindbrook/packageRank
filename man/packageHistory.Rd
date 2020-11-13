@@ -4,10 +4,12 @@
 \alias{packageHistory}
 \title{Extract package version history CRAN and Archive.}
 \usage{
-packageHistory(package = "cholera")
+packageHistory(package = "cholera", check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
+
+\item{check.package}{Logical. Validate and "spell check" package.}
 }
 \description{
 Date and version of all publications.
