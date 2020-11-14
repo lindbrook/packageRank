@@ -23,10 +23,11 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
 
   cores <- multiCore(multi.core)
 
-  if (check.package) packages <- checkPackage(packages, dev.mode)
+  if (check.package) packages <- checkPackage(packages)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
