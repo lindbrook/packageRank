@@ -83,7 +83,28 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   out
 }
 
-#' Plot method for packageRank().
+#' Package download counts and rank percentiles.
+#'
+#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' @param packages Character. Vector of package name(s).
+#' @param date Character. Date. "yyyy-mm-dd".
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param check.package Logical. Validate and "spell check" package.
+#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+packageRank0 <- function(packages = "HistData", date = Sys.Date() - 1,
+  memoization = TRUE, check.package = FALSE, dev.mode = FALSE,
+  multi.core = TRUE) {
+
+  packageRank(packages = packages, date = date, memoization = memoization,
+    ip.filter = FALSE, small.filter = FALSE, check.package = check.package,
+    dev.mode = dev.mode, multi.core = multi.core)
+}
+
+#' Plot method for packageRank() and packageRank0().
 #' @param x An object of class "packageRank" created by \code{packageRank()}.
 #' @param graphics Character. "base" or "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.

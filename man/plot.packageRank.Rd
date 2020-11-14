@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageRank.R
 \name{plot.packageRank}
 \alias{plot.packageRank}
-\title{Plot method for packageRank().}
+\title{Plot method for packageRank() and packageRank0().}
 \usage{
 \method{plot}{packageRank}(x, graphics = NULL, log_count = TRUE, ...)
 }
@@ -19,7 +19,7 @@
 A base R or ggplot2 plot.
 }
 \description{
-Plot method for packageRank().
+Plot method for packageRank() and packageRank0().
 }
 \examples{
 \dontrun{
