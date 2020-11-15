@@ -26,7 +26,7 @@ packageLog(packages = "cholera", date = Sys.Date() - 1,
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
-\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
+\item{dev.mode}{Logical.}
 
 \item{clean.output}{Logical. NULL row names.}
 
