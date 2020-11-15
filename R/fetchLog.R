@@ -13,7 +13,11 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 
   if (RCurl::url.exists(log.url)) {
     if (dev.mode) {
-      cran_log <- mfetchLogBase(log.url)
+      if (memoization) {
+        cran_log <- fetchLogBase(log.url)
+      } else {
+        cran_log <- fetchLogBase(log.url)
+      }
     } else {
       if (memoization) {
         cran_log <- mfetchLog(log.url)
@@ -46,9 +50,12 @@ mfetchLog <- memoise::memoise(fetchLog)
 #' @note mfetchLogBase() is memoized version.
 
 fetchLogBase <- function(x) {
-  connection <- gzcon(url(x))
-  dat <- readLines(connection)
-  cran_log <- utils::read.csv(textConnection(dat))
+  tmp <- tempfile(fileext = ".gz")
+  utils::download.file(x, tmp)
+  unizp.tmp <- gzfile(tmp, "rt")
+  out <- utils::read.csv(unizp.tmp)
+  close(unizp.tmp)
+  out
 }
 
 mfetchLogBase <- memoise::memoise(fetchLogBase)

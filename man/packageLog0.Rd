@@ -5,7 +5,8 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog0(packages = "cholera", date = Sys.Date() - 1,
-  check.package = TRUE, memoization = TRUE, multi.core = TRUE)
+  check.package = TRUE, memoization = TRUE, dev.mode = FALSE,
+  clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -15,6 +16,10 @@ packageLog0(packages = "cholera", date = Sys.Date() - 1,
 \item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical.}
+
+\item{clean.output}{Logical. NULL row names.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
