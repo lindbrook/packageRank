@@ -2,6 +2,9 @@ packageRank 0.3.5.9101
 ==================
 
 - add packageRank0().
+- remove cranLog(). 
+- add packageLog0().
+- amend fetchLogBase() without memoization.
 
 
 packageRank 0.3.5.9100
