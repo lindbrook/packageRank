@@ -18,14 +18,16 @@ ipFilter <- function(dat, cutpoint = 15000L) {
 #' @param date Character. Date.
 #' @param cutpoint Numeric. Threshold of unique packages downloaded.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @export
 
 ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
-  memoization = TRUE) {
+  memoization = TRUE, dev.mode = FALSE) {
 
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
   freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
@@ -44,14 +46,16 @@ ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
 #' @param centers Numeric. Number of k's for k-means clustering.
 #' @param nstart Numeric. Number of random sets.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @export
 
 ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
-  nstart = 25L, memoization = TRUE) {
+  nstart = 25L, memoization = TRUE, dev.mode = FALSE) {
 
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
   freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {

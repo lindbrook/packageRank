@@ -7,18 +7,20 @@
 #' @param sort Logical. Sort by download count.
 #' @param small.filter Logical.
 #' @param triplet.filter Logical.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @note ip = 10 is a tw top-level domain on 2020-07-09.
 #' @export
 
 ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
-  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
+  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE, dev.mode = FALSE,
   multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
   if (triplet.filter) {

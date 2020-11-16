@@ -5,17 +5,20 @@
 #' @param ip.filter Logical.
 #' @param small.filter Logical TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param dev.mode Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 countryDistribution <- function(date = Sys.Date() - 1, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, multi.core = TRUE) {
+  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
   na.country <- is.na(cran_log$country)
   cran_log <- cran_log[!na.country, ]

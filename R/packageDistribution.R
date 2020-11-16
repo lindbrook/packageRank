@@ -5,17 +5,18 @@
 #' @param size.filter Logical. If Logical, TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @export
 
 packageDistribution <- function(package = "HistData", date = Sys.Date() - 1,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE) {
 
-  if (check.package) packages <- checkPackage(package, dev.mode)
+  if (check.package) packages <- checkPackage(package)
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
   out <- package_distribution(package, ymd, size.filter, memoization,
     check.package, cran_log)

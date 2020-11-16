@@ -5,7 +5,8 @@
 \title{Tabulate package downloads by country.}
 \usage{
 countryDistribution(date = Sys.Date() - 1, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, multi.core = TRUE)
+  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
@@ -15,6 +16,8 @@ countryDistribution(date = Sys.Date() - 1, ip.filter = TRUE,
 \item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

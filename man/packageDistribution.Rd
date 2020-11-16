@@ -19,7 +19,7 @@ packageDistribution(package = "HistData", date = Sys.Date() - 1,
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
-\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
+\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 Package Download Distribution.

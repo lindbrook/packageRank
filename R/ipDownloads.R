@@ -3,12 +3,16 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @export
 
-ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE) {
+ipDownloads <- function(date = Sys.Date() - 1, memoization = TRUE,
+  dev.mode = FALSE) {
+    
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
   freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {

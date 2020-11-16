@@ -4,7 +4,8 @@
 \alias{ipFilter0}
 \title{Identify IP's that are mirroring CRAN (standalone prototype).}
 \usage{
-ipFilter0(date = Sys.Date() - 1, cutpoint = 5000L, memoization = TRUE)
+ipFilter0(date = Sys.Date() - 1, cutpoint = 5000L, memoization = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date.}
@@ -12,6 +13,8 @@ ipFilter0(date = Sys.Date() - 1, cutpoint = 5000L, memoization = TRUE)
 \item{cutpoint}{Numeric. Threshold of unique packages downloaded.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

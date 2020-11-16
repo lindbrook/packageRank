@@ -4,12 +4,14 @@
 \alias{ipDownloads}
 \title{Unique package download counts by IP address.}
 \usage{
-ipDownloads(date = Sys.Date() - 1, memoization = TRUE)
+ipDownloads(date = Sys.Date() - 1, memoization = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

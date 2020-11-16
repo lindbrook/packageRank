@@ -6,7 +6,7 @@
 \usage{
 ipPackage(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
-  multi.core = TRUE)
+  dev.mode = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id.}
@@ -20,6 +20,8 @@ ipPackage(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
 \item{small.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
+
+\item{dev.mode}{Logical. Use fetchLogBase().}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

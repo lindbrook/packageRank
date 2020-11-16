@@ -4,7 +4,8 @@
 \alias{ipCount}
 \title{Count number of IP addresses.}
 \usage{
-ipCount(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE)
+ipCount(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
@@ -12,6 +13,8 @@ ipCount(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE)
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{sort}{Logical. Sort by download count.}
+
+\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

@@ -4,12 +4,16 @@
 #' @param date Character. Date. yyyy-mm-dd.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
+#' @param dev.mode Logical. Use fetchLogBase().
 #' @export
 
-ipCount <- function(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE) {
+ipCount <- function(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE,
+  dev.mode = FALSE) {
+    
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
+    dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
   freqtab <- table(cran_log$ip_id)
   if (sort) sort(freqtab, decreasing = TRUE)

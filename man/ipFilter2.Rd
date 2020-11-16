@@ -5,7 +5,7 @@
 \title{Identify IP's that are mirroring CRAN (k-means standalone prototype).}
 \usage{
 ipFilter2(date = Sys.Date() - 1, output = "ip", centers = 2L,
-  nstart = 25L, memoization = TRUE)
+  nstart = 25L, memoization = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date.}
@@ -17,6 +17,8 @@ ipFilter2(date = Sys.Date() - 1, output = "ip", centers = 2L,
 \item{nstart}{Numeric. Number of random sets.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
