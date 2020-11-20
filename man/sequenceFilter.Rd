@@ -4,12 +4,14 @@
 \alias{sequenceFilter}
 \title{Filter downloads of full-sized sequential versions (prototype).}
 \usage{
-sequenceFilter(dat, max.delta.time = 30)
+sequenceFilter(pkg.data, arch.pkg.history, download.time = 30)
 }
 \arguments{
-\item{dat}{Object.}
+\item{pkg.data}{Object.}
 
-\item{max.delta.time}{Numeric. Maximum time interval between downloads (seconds).}
+\item{arch.pkg.history}{Object.}
+
+\item{download.time}{Numeric. Package download time allowance (seconds).}
 }
 \description{
 Filter downloads of full-sized sequential versions (prototype).

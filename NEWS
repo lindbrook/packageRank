@@ -1,7 +1,9 @@
 packageRank 0.3.5.9103
 ==================
 
-- add identifySequences().
+- add identifySequences0().
+- amend identifySequences().
+- amend sequenceFilter(); use identifySequences().
 
 
 packageRank 0.3.5.9102
