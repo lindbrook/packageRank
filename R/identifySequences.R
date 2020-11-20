@@ -1,39 +1,21 @@
 #' Extract Archive sequences from logs (prototype).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param package Character. Package name.
-#' @param date Character. Date.
+
+#' @param pkg.data Object.
+#' @param arch.pkg.history Object.
 #' @param download.time Numeric. Package download time allowance (seconds).
-#' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical.
 #' @export
 
-identifySequences <- function(package = "cholera", date = Sys.Date() - 1,
-  download.time = 30, memoization = TRUE, dev.mode = FALSE) {
-
-  packages <- checkPackage(package)
-  pkg.hist <- packageHistory(package)
-  pkg.hist <- pkg.hist[pkg.hist$Date <= as.Date(date), ]
-  arch.pkg.hist <- pkg.hist[pkg.hist$Repository == "Archive", ]
-
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
-  cran_log <- cleanLog(cran_log)
-
-  pkg.dat <- cran_log[cran_log$package == package, ]
-  pkg.dat$t0 <- strptime(paste(pkg.dat$date, pkg.dat$time), "%Y-%m-%d %T",
+identifySequences <- function(pkg.data, arch.pkg.history, download.time = 30) {
+  pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",
     tz = "Europe/Vienna")
-  pkg.dat <- pkg.dat[order(pkg.dat$t0), ]
-  
-  pkg.dat <- tripletFilter(pkg.dat)
-  pkg.dat <- smallFilter0(pkg.dat)
+  pkg.data <- pkg.data[order(pkg.data$t0), ]
 
-  rle.data <- rle(pkg.dat$ver)
+  rle.data <- rle(pkg.data$ver)
   rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
 
-  archive.obs <- arch.pkg.hist$Version %in%
+  archive.obs <- arch.pkg.history$Version %in%
     rle.out[rle.data$lengths == 1, "values"]
 
   if (all(archive.obs)) {
@@ -52,15 +34,15 @@ identifySequences <- function(package = "cholera", date = Sys.Date() - 1,
 
     candidate.check <- vapply(candidate.seqs, function(sel) {
       dat <- rle.out[sel, ]
-      elements.check <- identical(sort(dat$values), arch.pkg.hist$Version)
+      elements.check <- identical(sort(dat$values), arch.pkg.history$Version)
       if (elements.check) {
-        t.range <- range(pkg.dat[cumsum(rle.out$lengths)[sel], "t0"])
+        t.range <- range(pkg.data[cumsum(rle.out$lengths)[sel], "t0"])
         time.window <- download.time * nrow(dat)
         difftime(t.range[2], t.range[1], units = "sec") < time.window
       }
     }, logical(1L))
 
     obs.sel <- unlist(candidate.seqs[candidate.check])
-    pkg.dat[cumsum(rle.out$lengths)[obs.sel], names(pkg.dat) != "t0"]
+    pkg.data[cumsum(rle.out$lengths)[obs.sel], names(pkg.data) != "t0"]
   }
 }

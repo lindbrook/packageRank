@@ -4,19 +4,14 @@
 \alias{identifySequences}
 \title{Extract Archive sequences from logs (prototype).}
 \usage{
-identifySequences(package = "cholera", date = Sys.Date() - 1,
-  download.time = 30, memoization = TRUE, dev.mode = FALSE)
+identifySequences(pkg.data, arch.pkg.history, download.time = 30)
 }
 \arguments{
-\item{package}{Character. Package name.}
+\item{pkg.data}{Object.}
 
-\item{date}{Character. Date.}
+\item{arch.pkg.history}{Object.}
 
 \item{download.time}{Numeric. Package download time allowance (seconds).}
-
-\item{memoization}{Logical. Use memoization when downloading logs.}
-
-\item{dev.mode}{Logical.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
