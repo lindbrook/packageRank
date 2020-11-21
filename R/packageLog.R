@@ -64,9 +64,9 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
       tmp[tmp$Date <= as.Date(date) & tmp$Repository == "Archive", ]
     }, mc.cores = cores)
 
-    out <- lapply(seq_along(out), function(i) {
+    out <- parallel::mclapply(seq_along(out), function(i) {
       sequenceFilter(out[[i]], arch.pkg.history[[i]])
-    })
+    }, mc.cores = cores)
   }
 
   if (any(zero.downloads == 0)) {
