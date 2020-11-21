@@ -15,7 +15,7 @@
 
 countryPackage <- function(country = "HK", date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, multi.core = TRUE) {
+  small.filter = TRUE, sequence.filter = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
