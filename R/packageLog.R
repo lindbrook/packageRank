@@ -51,9 +51,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 
   if (ip.filter) {
     row.delete <- campaigns2(cran_log, multi.core = cores)
-    out <- lapply(out, function(x) {
-      x[!row.names(x) %in% row.delete, ]
-    })
+    out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
   }
 
   if (small.filter) {
@@ -79,9 +77,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   if (length(packages) == 1) {
     out <- out[[1]]
     if (nrow(out) != 0) {
-      if (!"t2" %in% names(out)) {
-        out$t2 <- dateTime(out$date, out$time)
-      }
+      if (!"t2" %in% names(out)) out$t2 <- dateTime(out$date, out$time)
       out <- out[order(out$t2), ]
       out$t2 <- NULL
       if (clean.output) rownames(out) <- NULL
@@ -89,9 +85,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   } else if (length(packages) > 1) {
     names(out) <- packages
     out <- parallel::mclapply(out, function(x) {
-      if (!"t2" %in% names(x)) {
-        x$date.time <- dateTime(x$date, x$time)
-      }
+      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
       tmp <- x[order(x$date.time), ]
       tmp$date.time <- NULL
       tmp
