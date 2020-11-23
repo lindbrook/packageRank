@@ -2,15 +2,19 @@
 % Please edit documentation in R/ipFilter.R
 \name{ipFilter}
 \alias{ipFilter}
-\title{Identify IP's that are mirroring CRAN (prototype).}
+\title{Filter Out A-Z Campaigns from IPs with many unique package downloads.}
 \usage{
-ipFilter(dat, cutpoint = 15000L)
+ipFilter(cran_log, rle.depth = 100, case.sensitive = FALSE, multi.core = TRUE)
 }
 \arguments{
-\item{dat}{Object. Package log entries.}
+\item{cran_log}{Object. Package log entries.}
 
-\item{cutpoint}{Numeric. Threshold number of unique packages downloaded.}
+\item{rle.depth}{s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs}
+
+\item{case.sensitive}{Logical.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
-From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+Uses run length encoding rle().
 }
