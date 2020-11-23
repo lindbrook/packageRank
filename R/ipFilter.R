@@ -1,84 +1,63 @@
-#' Identify IP's that are mirroring CRAN (prototype).
+#' Filter Out A-Z Campaigns from IPs with many unique package downloads.
 #'
-#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param dat Object. Package log entries.
-#' @param cutpoint Numeric. Threshold number of unique packages downloaded.
+#' Uses run length encoding rle().
+#' @param cran_log Object. Package log entries.
+
+#' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs
+#' @param case.sensitive Logical.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-ipFilter <- function(dat, cutpoint = 15000L) {
-  # number of unique packages downloaded by ip address.
-  freqtab <- tapply(dat$package, dat$ip_id, function(x) length(unique(x)))
-  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
-  as.numeric(df[df$count >= cutpoint, "ip"])
-}
+ipFilter <- function(cran_log, rle.depth = 100, case.sensitive = FALSE,
+  multi.core = TRUE) {
 
-#' Identify IP's that are mirroring CRAN (standalone prototype).
-#'
-#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param date Character. Date.
-#' @param cutpoint Numeric. Threshold of unique packages downloaded.
-#' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical. Use fetchLogBase().
-#' @export
+  cores <- multiCore(multi.core)
+  cran_log <- smallFilter0(cran_log)
+  greedy.ips <- ip_filter(cran_log, "ip") # IPs w/ >= 10K unique packages
 
-ipFilter0 <- function(date = Sys.Date() - 1, cutpoint = 5000L,
-  memoization = TRUE, dev.mode = FALSE) {
+  # candidate data #
 
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
-  cran_log <- cleanLog(cran_log)
+  candidate.data <- parallel::mclapply(greedy.ips, function(ip) {
+    tmp <- cran_log[cran_log$ip_id == ip, ]
+    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp[order(tmp$t2, tmp$package), ]
+  }, mc.cores = cores)
 
-  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
-    length(unique(x))
-  })
+  rle.data <- parallel::mclapply(candidate.data, function(x) {
+    runLengthEncoding(x, case.sensitive = case.sensitive)
+  }, mc.cores = cores)
 
-  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
-  as.numeric(df[df$count >= cutpoint, "ip"])
-}
+  rle.ct <- vapply(rle.data, nrow, integer(1L))
+  candidate.ids <- which(rle.ct <= rle.depth)
 
-#' Identify IP's that are mirroring CRAN (k-means standalone prototype).
-#'
-#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param date Character. Date.
-#' @param output Character. "ip" vector of ip address; "df" data frame.
-#' @param centers Numeric. Number of k's for k-means clustering.
-#' @param nstart Numeric. Number of random sets.
-#' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical. Use fetchLogBase().
-#' @export
+  # check for campaigns #
 
-ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
-  nstart = 25L, memoization = TRUE, dev.mode = FALSE) {
+  rows.delete <- parallel::mclapply(seq_along(candidate.ids), function(i) {
+    tmp <- rle.data[[candidate.ids[i]]]
+    A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
+    start <- as.numeric(row.names(A))
+    end <- as.numeric(row.names(A)) + length(letters) - 1
 
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
-  cran_log <- cleanLog(cran_log)
+    data.select <- lapply(seq_along(start), function(i) {
+      audit.data <- tmp[start[i]:end[i], ]
+      if (all(!is.na(audit.data))) {
+        data.frame(ip = greedy.ips[candidate.ids[i]],
+                   start = audit.data[1, "start"],
+                   end = audit.data[nrow(audit.data), "end"])
+      }
+    })
 
-  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
-    length(unique(x))
-  })
+    data.select <- do.call(rbind, data.select)
+    c.data <- candidate.data[[candidate.ids[i]]]
 
-  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
-  df <- df[!duplicated(df$count), ]
-  km <- stats::kmeans(stats::dist(df$count), centers = centers, nstart = nstart)
-  out <- data.frame(ip = df$ip, size = df$count, group = km$cluster)
+    if (!is.null(data.select)) {
+      unlist(lapply(seq_len(nrow(data.select)), function(i) {
+        row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
+      }))
+    } else NULL
+  }, mc.cores = cores)
 
-  if (length(unique(km$cluster)) == 1) {
-    stop("No IP outliers!")
-  } else if (length(unique(km$cluster)) > 1) {
-    if (output == "ip") {
-      grp <- as.numeric(names(which.min(table(out$group))))
-      as.numeric(out[out$group == grp, "ip"])
-    } else if (output == "df") {
-      out[order(out$size, decreasing = TRUE), ]
-    } else {
-      stop('"output" must be "ip" or "df".')
-    }
-  }
+  unlist(rows.delete)
 }
 
 #' Identify IP's that are mirroring CRAN (k-means helper prototype).
@@ -91,7 +70,7 @@ ipFilter2 <- function(date = Sys.Date() - 1, output = "ip", centers = 2L,
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
+ip_filter <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
   nstart = 25L) {
 
   if (!output %in% c("df", "ip")) stop('"output" must be "ip" or "df".')
@@ -149,4 +128,45 @@ ipFilter3 <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
   }
 
   out
+}
+
+runLengthEncoding <- function(x, case.sensitive = FALSE) {
+  dat <- rle(firstLetter(x$package, case.sensitive = case.sensitive))
+  data.frame(letter = dat$values,
+             lengths = dat$lengths,
+             start = cumsum(c(1, dat$lengths[-length(dat$lengths)])),
+             end = cumsum(dat$lengths))
+}
+
+firstLetter <- function(x, case.sensitive = FALSE) {
+  if (case.sensitive) substring(x, 1, 1)
+  else tolower(substring(x, 1, 1))
+}
+
+#' Run Length Encoding of First Letter of Packages Downloaded.
+#'
+#' Uses rle().
+#' @param ip Numeric. Nominal IP address.
+#' @param cran_log Object. Package log entries.
+#' @param case.sensitive Logical.
+#' @param concatenate Logical.
+#' @export
+#' @examples
+#' \dontrun{
+#' campaignRLE(ip = 24851, cran_log = july01)
+#' }
+
+campaignRLE <- function(ip, cran_log, case.sensitive = FALSE,
+  concatenate = TRUE) {
+  cran_log <- cleanLog(cran_log)
+  cran_log <- cran_log[cran_log$ip_id == ip, ]
+  cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
+    tz = "Europe/Vienna")
+  cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
+  rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
+  if (concatenate) {
+    paste(rle.data$letter, collapse = "")
+  } else {
+    rle.data$letter
+  }
 }

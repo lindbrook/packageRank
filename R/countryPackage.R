@@ -24,7 +24,7 @@ countryPackage <- function(country = "HK", date = Sys.Date() - 1,
   cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
-    row.delete <- campaigns2(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
