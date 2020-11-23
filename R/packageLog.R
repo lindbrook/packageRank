@@ -50,7 +50,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   }
 
   if (ip.filter) {
-    row.delete <- campaigns2(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
   }
 
