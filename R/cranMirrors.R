@@ -21,23 +21,23 @@ cranMirrors <- function(mirror.description = FALSE) {
     "tr", "uk", "us", "uy")
 
   out <- lapply(seq_along(hosts)[-length(hosts)], function(i) {
-      h1 <- hosts.id[i]
-      h2 <- hosts.id[i + 1] - 1
-      host.tmp <- web_page[h1:h2]
-      data.tmp <- host.tmp[grep("href", host.tmp)]
+    h1 <- hosts.id[i]
+    h2 <- hosts.id[i + 1] - 1
+    host.tmp <- web_page[h1:h2]
+    data.tmp <- host.tmp[grep("href", host.tmp)]
 
-      urls <- unname(vapply(data.tmp, function(x) {
-        gsub("<.*?>", "", x)
-      }, character(1L)))
+    urls <- unname(vapply(data.tmp, function(x) {
+      gsub("<.*?>", "", x)
+    }, character(1L)))
 
-      mirror <- gsub("<.*?>", "", web_page[h1])
-      desc <- host.tmp[grep("<td>", host.tmp) + 1]
+    mirror <- gsub("<.*?>", "", web_page[h1])
+    desc <- host.tmp[grep("<td>", host.tmp) + 1]
 
-      data.frame(country = hosts[i],
-                 url = urls,
-                 country.code = country.code[i],
-                 description = desc)
-    })
+    data.frame(country = hosts[i],
+               url = urls,
+               country.code = country.code[i],
+               description = desc)
+  })
 
   out <- do.call(rbind,out)
   if (mirror.description) out

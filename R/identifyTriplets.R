@@ -56,9 +56,9 @@ identify_triplets <- function(v.data, time.window, time.sort) {
   if (length(triplets) != 0 & length(small.id) != 0) {
     if (!identical(triplets, small.id)) {
       potential.triplets <- setdiff(small.id, triplets)
-      
+
       if (length(potential.triplets) > 0) {
-        # selects "correct" time by majority rule
+        # select "correct" time by majority rule
         time.fix <- timeFix(potential.triplets, v.data, time.window)
 
         if (!is.null(time.fix)) {

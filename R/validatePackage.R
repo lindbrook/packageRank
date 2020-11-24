@@ -29,7 +29,7 @@ validatePackage0 <- function(packages, check.archive = TRUE) {
   # By default, utils::available.packages() excludes non-applicable packages.
   if (.Platform$OS.type == "windows") {
     unix.package <- c("bigGP", "bigReg", "CommT", "corrcoverage", "cronR",
-      "doMC","exif", "gcbd", "ieeeround", "kmcudaR", "littler", "nice",
+      "doMC", "exif", "gcbd", "ieeeround", "kmcudaR", "littler", "nice",
       "PACVr", "permGPU", "qtbase", "R4dfp", "RAppArmor", "RcppGetconf",
       "Rdsm", "Rip46", "Rpoppler", "rPython", "rrd", "RSvgDevice", "rsyslog",
       "RVowpalWabbit", "snpStatsWriter", "solarius", "spp", "ssh.utils",
