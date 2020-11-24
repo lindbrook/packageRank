@@ -21,9 +21,8 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
   date <- check10CharDate(date)
   ymd <- fixDate_2012(date)
 
-  cran_log <- packageLog(packages = packages, date = ymd,
-    triplet.filter = FALSE, ip.filter = FALSE, small.filter = FALSE,
-    sequence.filter = FALSE, memoization = memoization)
+  cran_log <- packageLog0(packages = packages, date = ymd,
+    memoization = memoization)
 
   if (is.data.frame(cran_log)) {
     ct <- nrow(cran_log)
