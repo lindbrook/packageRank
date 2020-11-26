@@ -4,14 +4,13 @@
 \alias{fetchLog2}
 \title{Get gzipped data at URL.}
 \usage{
-fetchLog2(x)
+fetchLog2(x, memoization = FALSE)
 }
 \arguments{
 \item{x}{Character. URL.}
+
+\item{memoization}{Logical. Use memoization}
 }
 \description{
 Base R version.
-}
-\note{
-mfetchLog2() is memoized version.
 }

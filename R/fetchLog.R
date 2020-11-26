@@ -13,12 +13,7 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 
   if (RCurl::url.exists(log.url)) {
     if (dev.mode) {
-      if (memoization) {
-        cran_log <- mfetchLog2(log.url)
-      } else {
-        cran_log <- fetchLog2(log.url)
-      }
-
+      cran_log <- fetchLog2(log.url, memoization)
     } else {
       if (memoization) {
         cran_log <- mfetchLog(log.url)
@@ -48,50 +43,18 @@ mfetchLog <- memoise::memoise(fetchLog)
 #'
 #' Base R version.
 #' @param x Character. URL.
+#' @param memoization Logical. Use memoization
 #' @export
-#' @note mfetchLogBase() is memoized version.
 
-fetchLogBase <- function(x) {
-  tmp <- tempfile(fileext = ".gz")
-  utils::download.file(x, tmp)
-  tmp <- gzfile(tmp, "rt")
-  out <- utils::read.csv(tmp)
-  close(tmp)
-  out
-}
-
-# mfetchLogBase <- memoise::memoise(fetchLogBase)
-
-#' Get gzipped data at URL.
-#'
-#' Base R version.
-#' @param x Character. URL.
-#' @export
-#' @note mfetchLog2() is memoized version.
-
-fetchLog2 <- function(x) {
+fetchLog2 <- function(x, memoization = FALSE) {
   con <- gzcon(url(x))
-  raw <- textConnection(readLines(con))
+  if (memoization) {
+    raw <- textConnection(readLines(con))
+  } else {
+    raw <- textConnection(mreadLines(con))
+  }
   close(con)
   dat <- utils::read.csv(raw)
   close(raw)
   dat
 }
-
-#' Get gzipped data at URL.
-#'
-#' Base R version.
-#' @param x Character. URL.
-#' @export
-#' @note mfetchLog2() is memoized version.
-
-mfetchLog2 <- function(x) {
-  con <- gzcon(url(x))
-  raw <- textConnection(mreadLines(con))
-  close(con)
-  dat <- utils::read.csv(raw)
-  close(raw)
-  dat
-}
-
-mreadLines <- memoise::memoise(readLines)
