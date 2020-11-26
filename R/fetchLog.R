@@ -6,7 +6,7 @@
 #' @export
 
 fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
-  if (date > Sys.Date()) stop("Can't see into the future!")
+  if (date > Sys.Date()) stop("Can't see into the future!", call. = FALSE)
   year <- as.POSIXlt(date)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
@@ -28,7 +28,7 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
     }
   } else {
     msg <- "Check your internet connection or try the previous day."
-    stop("Log for ", date, " not (yet) available. ", msg)
+    stop("Log for ", date, " not (yet) available. ", msg, call. = FALSE)
   }
   cran_log
 }
