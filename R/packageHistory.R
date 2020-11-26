@@ -206,12 +206,3 @@ package_info <- function(pkg.data, repository = "CRAN") {
              repository = "CRAN",
              stringsAsFactors = FALSE)
 }
-
-#' Memoize readLines().
-#'
-#' @param url Character. URL.
-#' @noRd
-#' @note mreadLines() is memoized version.
-
-readLinesURL <- function(url) readLines(url)
-mreadLines <- memoise::memoise(readLinesURL)

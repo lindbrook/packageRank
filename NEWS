@@ -2,7 +2,7 @@ packageRank 0.3.5.9105
 ==================
 
 - add/use fetchLog2(memoization = FALSE).
-- move mreadLines() to own file.
+- move mreadLines() to separate file.
 
 
 packageRank 0.3.5.9104

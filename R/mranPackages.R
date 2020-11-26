@@ -26,7 +26,7 @@ mranPackages <- function(date = Sys.Date() - 1, type = "source") {
   } else stop('type must be "source", "mac", or "win".')
 
   url <- paste0(root.url, url.suffix)
-  web_page <- mreadLines(url) # packageHistory.R
+  web_page <- mreadLines(url)
   pkg.sel <- grepl(file.extension, web_page, fixed = TRUE)
   pkg.data <- gsub("<.*?>", "", web_page[pkg.sel])
   pkg.data <- gsub("\\s+", " ", pkg.data)

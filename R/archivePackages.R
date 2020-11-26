@@ -10,7 +10,7 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   dev.mode = FALSE) {
 
   archive.url <- "https://cran.r-project.org/src/contrib/Archive/"
-  web_page <- mreadLines(archive.url) # packageHistory.R
+  web_page <- mreadLines(archive.url)
   cores <- multiCore(multi.core)
 
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
