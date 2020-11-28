@@ -29,8 +29,9 @@
 #'    \item{\code{arch.pkgs.oct}}{}
 #'    \item{\code{cran.pkgs.jul}}{}
 #'    \item{\code{arch.pkgs.jul}}{}
+#'    \item{\code{pkg.history}}{}
 #' }
-#' @format A list with 28 elements.
+#' @format A list with 29 elements.
 #' @docType data
 "blog.data"
 
@@ -63,5 +64,6 @@
 # blog.data$arch.pkgs.oct <- arch.pkgs
 # blog.data$cran.pkgs.jul <- cran.pkgs
 # blog.data$arch.pkgs.jul <- arch.pkgs
+# blog.data$pkg.history <- pkg.history
 
 # usethis::use_data(blog.data, overwrite = TRUE, version = 3L)
