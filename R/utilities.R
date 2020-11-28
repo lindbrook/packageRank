@@ -1,13 +1,13 @@
 #' Extract Package Logs.
 #'
-#' @param dat Object. List of logs.
+#' @param lst Object. List of logs.
 #' @param i Numeric. Day/ID.
 #' @param pkg Character.
 #' @param clean.output Logical.
 #' @export
 
-pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
-  cran_log <- cleanLog(dat[[i]])
+pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
+  cran_log <- cleanLog(lst[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
   tmp$t2 <- dateTime(tmp$date, tmp$time)
   tmp <- tmp[order(tmp$t2), c(1:6, 8:10)]
@@ -17,11 +17,10 @@ pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
 
 #' Extract Package Logs.
 #'
-#' @param dat Object. List of logs.
+#' @param lst Object. List of logs.
 #' @param i Numeric. Day/ID.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
-#' @param campaigns Logical. For use with ip.filter.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param pkg Character.
@@ -29,29 +28,32 @@ pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @param clean.output Logical.
 #' @export
 
-pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  pkg = "cholera", multi.core = TRUE, clean.output = TRUE) {
+pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
+  small.filter = TRUE, sequence.filter = TRUE, pkg = "cholera",
+  multi.core = TRUE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
-  cran_log <- cleanLog(dat[[i]])
+  cran_log <- cleanLog(lst[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
 
   if (nrow(tmp) != 0) {
     if (triplet.filter) tmp <- tripletFilter(tmp)
 
     if (ip.filter) {
-      ip.outliers <- ipFilter3(cran_log)
-      if (campaigns) {
-        row.delete <- campaigns2(cran_log, multi.core = cores)
-        tmp <- tmp[!row.names(tmp) %in% row.delete, ]
-      } else {
-        tmp <- tmp[!tmp$ip_id %in% ip.outliers, ]
-      }
+      row.delete <- ipFilter(cran_log, multi.core = cores)
+      tmp <- tmp[!row.names(tmp) %in% row.delete, ]
     }
 
     if (small.filter) tmp <- smallFilter0(tmp)
-    if (sequence.filter) tmp <- sequenceFilter(tmp)
+
+    if (sequence.filter) {
+      pkg.history <- packageRank::blog.data$pkg.history
+      p.hist <- pkg.history[[pkg]]
+      p.date <- names(lst)[i]
+      sel <- p.hist$Date <= as.Date(p.date) & p.hist$Repository == "Archive"
+      arch.pkg.history <- p.hist[sel, ]
+      tmp <- sequenceFilter(tmp, arch.pkg.history)
+    }
 
     tmp$t2 <- dateTime(tmp$date, tmp$time)
     tmp <- tmp[order(tmp$t2), !names(tmp) %in% "t2"]
@@ -205,7 +207,7 @@ cranFilterCounts <- function(lst, multi.core = TRUE) {
     cran_log <- cleanLog(x)
     u.ct <- length(unique(cran_log$package))
 
-    row.delete <- campaigns2(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
     ip.ct <- length(unique(tmp$package))
 
