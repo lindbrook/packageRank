@@ -67,16 +67,16 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #'
 #' @param lst Object. cran_log list of data frames.
 #' @param pkg Character.
-#' @param ip.filter Character. "campaign" or "ip".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
-  multi.core = TRUE) {
+packageFilterCounts <- function(lst, pkg = "cholera", multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  out <- parallel::mclapply(lst, function(x) {
-    filter_counts(x, pkg = pkg, ip.filter = ip.filter)
+  dates <- names(lst)
+
+  out <- parallel::mclapply(seq_along(lst), function(i) {
+    filter_counts(lst[[i]], pkg = pkg, date = dates[i])
   }, mc.cores = cores)
 
   versions <- parallel::mclapply(lst, function(x)  {
@@ -86,7 +86,11 @@ packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
 
   versions <- length(unique(unlist(versions)))
 
-  out <- list(data = do.call(rbind, out), versions = versions, pkg = pkg)
+  out <- list(data = do.call(rbind, out),
+              versions = versions,
+              pkg = pkg,
+              dates = dates)
+
   class(out) <- "packageFilterCounts"
   out
 }
@@ -95,40 +99,42 @@ packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
 #'
 #' @param dat Object. cran_log data frame.
 #' @param pkg Character.
-#' @param ip.filter Character. "campaign" or "ip".
+#' @param date Character.
 #' @noRd
 
-filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
+filter_counts <- function(dat, pkg = "cholera", date) {
   dat0 <- cleanLog(dat)
   dat <- dat0[dat0$package == pkg, ]
 
   if (nrow(dat) != 0) {
     # Triplet filter #
-    out <- tripletFilter(dat, multi.core = FALSE)
+    out <- tripletFilter(dat)
     triplet.filtered <- nrow(out)
 
     # IP filter #
-    if (ip.filter == "campaign") {
-      row.delete <- campaigns2(dat0, multi.core = FALSE)
-      ip.filtered <- sum(!row.names(dat) %in% row.delete)
-      out <- out[!row.names(out) %in% row.delete, ]
-    } else if (ip.filter == "ip") {
-      ip.outliers <- ipFilter3(dat0)
-      ip.filtered <- sum(!dat$ip_id %in% ip.outliers)
-      out <- out[!out$ip_id %in% ip.outliers, ]
-    }
+    row.delete <- ipFilter(dat0, multi.core = FALSE)
+    ip.filtered <- sum(!row.names(dat) %in% row.delete)
+    out <- out[!row.names(out) %in% row.delete, ]
 
     # Small Filter #
     small.filtered <- nrow(smallFilter0(dat))
     if (nrow(out) != 0) out <- smallFilter0(out)
 
     # Sequence Filter #
-    sequence.filtered <- nrow(sequenceFilter(dat))
-    out <- sequenceFilter(out)
+    pkg.history <- packageRank::blog.data$pkg.history
+    p.hist <- pkg.history[[pkg]]
+    sel <- p.hist$Date <= as.Date(date) & p.hist$Repository == "Archive"
+    arch.pkg.history <- p.hist[sel, ]
 
+    pre.filter <- nrow(dat) - nrow(out)
+    out <- sequenceFilter(out, arch.pkg.history)
+    sequence.filtered <- nrow(out) + pre.filter
+
+    # Output #
     data.frame(package = pkg, ct = nrow(dat), triplet = triplet.filtered,
       ip = ip.filtered, small = small.filtered, sequence = sequence.filtered,
       all = nrow(out))
+
   } else {
     data.frame(package = pkg, ct = nrow(dat), triplet = 0, ip = 0, small = 0,
       sequence = 0, all = 0)
@@ -149,7 +155,7 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
   median = FALSE, legend.loc = "topleft", ...) {
 
   dat <- x$data
-  dates <- as.Date(row.names(dat))
+  dates <- as.Date(x$dates)
   wed.id <- which(weekdays(dates, abbreviate = TRUE) == "Wed")
 
   plot(dates, dat$ct, pch = NA, ylim = range(dat[, -1]), xlab = "Date",
