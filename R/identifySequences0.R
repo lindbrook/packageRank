@@ -25,15 +25,15 @@ identifySequences0 <- function(package = "cholera", date = Sys.Date() - 1,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
 
-  pkg.dat <- cran_log[cran_log$package == package, ]
-  pkg.dat$t0 <- strptime(paste(pkg.dat$date, pkg.dat$time), "%Y-%m-%d %T",
+  pkg.data <- cran_log[cran_log$package == package, ]
+  pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",
     tz = "Europe/Vienna")
-  pkg.dat <- pkg.dat[order(pkg.dat$t0), ]
+  pkg.data <- pkg.data[order(pkg.data$t0), ]
 
-  if (triplet.filter) pkg.dat <- tripletFilter(pkg.dat)
-  if (small.filter) pkg.dat <- smallFilter0(pkg.dat)
+  if (triplet.filter) pkg.data <- tripletFilter(pkg.data)
+  if (small.filter) pkg.data <- smallFilter0(pkg.data)
 
-  rle.data <- rle(pkg.dat$ver)
+  rle.data <- rle(pkg.data$ver)
   rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
 
   archive.obs <- arch.pkg.hist$Version %in%
@@ -53,17 +53,17 @@ identifySequences0 <- function(package = "cholera", date = Sys.Date() - 1,
 
     candidate.seqs <- candidate.seqs[!is.na(candidate.seqs)]
 
-    candidate.check <- vapply(candidate.seqs, function(sel) {
+    candidate.check <- unlist(lapply(candidate.seqs, function(sel) {
       dat <- rle.out[sel, ]
       elements.check <- identical(sort(dat$values), arch.pkg.hist$Version)
       if (elements.check) {
-        t.range <- range(pkg.dat[cumsum(rle.out$lengths)[sel], "t0"])
+        t.range <- range(pkg.data[cumsum(rle.out$lengths)[sel], "t0"])
         time.window <- download.time * nrow(dat)
         difftime(t.range[2], t.range[1], units = "sec") < time.window
-      }
-    }, logical(1L))
+      } else FALSE
+    }))
 
     obs.sel <- unlist(candidate.seqs[candidate.check])
-    pkg.dat[cumsum(rle.out$lengths)[obs.sel], names(pkg.dat) != "t0"]
+    pkg.data[cumsum(rle.out$lengths)[obs.sel], names(pkg.data) != "t0"]
   }
 }

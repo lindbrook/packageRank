@@ -4,10 +4,10 @@
 \alias{pkgLog0}
 \title{Extract Package Logs.}
 \usage{
-pkgLog0(dat, i = 1, pkg = "cholera", clean.output = TRUE)
+pkgLog0(lst, i = 1, pkg = "cholera", clean.output = TRUE)
 }
 \arguments{
-\item{dat}{Object. List of logs.}
+\item{lst}{Object. List of logs.}
 
 \item{i}{Numeric. Day/ID.}
 

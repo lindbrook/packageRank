@@ -31,16 +31,16 @@ identifySequences <- function(pkg.data, arch.pkg.history, download.time = 30) {
     })
 
     candidate.seqs <- candidate.seqs[!is.na(candidate.seqs)]
-
-    candidate.check <- vapply(candidate.seqs, function(sel) {
+    
+    candidate.check <- unlist(lapply(candidate.seqs, function(sel) {
       dat <- rle.out[sel, ]
       elements.check <- identical(sort(dat$values), arch.pkg.history$Version)
       if (elements.check) {
         t.range <- range(pkg.data[cumsum(rle.out$lengths)[sel], "t0"])
         time.window <- download.time * nrow(dat)
         difftime(t.range[2], t.range[1], units = "sec") < time.window
-      }
-    }, logical(1L))
+      } else FALSE
+    }))
 
     obs.sel <- unlist(candidate.seqs[candidate.check])
     pkg.data[cumsum(rle.out$lengths)[obs.sel], names(pkg.data) != "t0"]

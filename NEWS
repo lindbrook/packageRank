@@ -1,3 +1,12 @@
+packageRank 0.3.5.9106
+==================
+
+- amend pkgLog0(), pkgLog(), and cranFilterCounts().
+- add pkg.history to blog.data.
+- fix identifySequences() and identifySequences0().
+- amend packageFilterCounts() functions and methods.
+
+
 packageRank 0.3.5.9105
 ==================
 

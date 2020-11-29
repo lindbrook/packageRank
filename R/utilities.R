@@ -1,13 +1,13 @@
 #' Extract Package Logs.
 #'
-#' @param dat Object. List of logs.
+#' @param lst Object. List of logs.
 #' @param i Numeric. Day/ID.
 #' @param pkg Character.
 #' @param clean.output Logical.
 #' @export
 
-pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
-  cran_log <- cleanLog(dat[[i]])
+pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
+  cran_log <- cleanLog(lst[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
   tmp$t2 <- dateTime(tmp$date, tmp$time)
   tmp <- tmp[order(tmp$t2), c(1:6, 8:10)]
@@ -17,11 +17,10 @@ pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
 
 #' Extract Package Logs.
 #'
-#' @param dat Object. List of logs.
+#' @param lst Object. List of logs.
 #' @param i Numeric. Day/ID.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
-#' @param campaigns Logical. For use with ip.filter.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param pkg Character.
@@ -29,29 +28,32 @@ pkgLog0 <- function(dat, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @param clean.output Logical.
 #' @export
 
-pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  pkg = "cholera", multi.core = TRUE, clean.output = TRUE) {
+pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
+  small.filter = TRUE, sequence.filter = TRUE, pkg = "cholera",
+  multi.core = TRUE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
-  cran_log <- cleanLog(dat[[i]])
+  cran_log <- cleanLog(lst[[i]])
   tmp <- cran_log[cran_log$package == pkg, ]
 
   if (nrow(tmp) != 0) {
     if (triplet.filter) tmp <- tripletFilter(tmp)
 
     if (ip.filter) {
-      ip.outliers <- ipFilter3(cran_log)
-      if (campaigns) {
-        row.delete <- campaigns2(cran_log, multi.core = cores)
-        tmp <- tmp[!row.names(tmp) %in% row.delete, ]
-      } else {
-        tmp <- tmp[!tmp$ip_id %in% ip.outliers, ]
-      }
+      row.delete <- ipFilter(cran_log, multi.core = cores)
+      tmp <- tmp[!row.names(tmp) %in% row.delete, ]
     }
 
     if (small.filter) tmp <- smallFilter0(tmp)
-    if (sequence.filter) tmp <- sequenceFilter(tmp)
+
+    if (sequence.filter) {
+      pkg.history <- packageRank::blog.data$pkg.history
+      p.hist <- pkg.history[[pkg]]
+      p.date <- names(lst)[i]
+      sel <- p.hist$Date <= as.Date(p.date) & p.hist$Repository == "Archive"
+      arch.pkg.history <- p.hist[sel, ]
+      tmp <- sequenceFilter(tmp, arch.pkg.history)
+    }
 
     tmp$t2 <- dateTime(tmp$date, tmp$time)
     tmp <- tmp[order(tmp$t2), !names(tmp) %in% "t2"]
@@ -65,16 +67,16 @@ pkgLog <- function(dat, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #'
 #' @param lst Object. cran_log list of data frames.
 #' @param pkg Character.
-#' @param ip.filter Character. "campaign" or "ip".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
-  multi.core = TRUE) {
+packageFilterCounts <- function(lst, pkg = "cholera", multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  out <- parallel::mclapply(lst, function(x) {
-    filter_counts(x, pkg = pkg, ip.filter = ip.filter)
+  dates <- names(lst)
+
+  out <- parallel::mclapply(seq_along(lst), function(i) {
+    filter_counts(lst[[i]], pkg = pkg, date = dates[i])
   }, mc.cores = cores)
 
   versions <- parallel::mclapply(lst, function(x)  {
@@ -84,7 +86,11 @@ packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
 
   versions <- length(unique(unlist(versions)))
 
-  out <- list(data = do.call(rbind, out), versions = versions, pkg = pkg)
+  out <- list(data = do.call(rbind, out),
+              versions = versions,
+              pkg = pkg,
+              dates = dates)
+
   class(out) <- "packageFilterCounts"
   out
 }
@@ -93,40 +99,42 @@ packageFilterCounts <- function(lst, pkg = "cholera", ip.filter = "campaign",
 #'
 #' @param dat Object. cran_log data frame.
 #' @param pkg Character.
-#' @param ip.filter Character. "campaign" or "ip".
+#' @param date Character.
 #' @noRd
 
-filter_counts <- function(dat, pkg = "cholera", ip.filter = "campaign") {
+filter_counts <- function(dat, pkg = "cholera", date) {
   dat0 <- cleanLog(dat)
   dat <- dat0[dat0$package == pkg, ]
 
   if (nrow(dat) != 0) {
     # Triplet filter #
-    out <- tripletFilter(dat, multi.core = FALSE)
+    out <- tripletFilter(dat)
     triplet.filtered <- nrow(out)
 
     # IP filter #
-    if (ip.filter == "campaign") {
-      row.delete <- campaigns2(dat0, multi.core = FALSE)
-      ip.filtered <- sum(!row.names(dat) %in% row.delete)
-      out <- out[!row.names(out) %in% row.delete, ]
-    } else if (ip.filter == "ip") {
-      ip.outliers <- ipFilter3(dat0)
-      ip.filtered <- sum(!dat$ip_id %in% ip.outliers)
-      out <- out[!out$ip_id %in% ip.outliers, ]
-    }
+    row.delete <- ipFilter(dat0, multi.core = FALSE)
+    ip.filtered <- sum(!row.names(dat) %in% row.delete)
+    out <- out[!row.names(out) %in% row.delete, ]
 
     # Small Filter #
     small.filtered <- nrow(smallFilter0(dat))
     if (nrow(out) != 0) out <- smallFilter0(out)
 
     # Sequence Filter #
-    sequence.filtered <- nrow(sequenceFilter(dat))
-    out <- sequenceFilter(out)
+    pkg.history <- packageRank::blog.data$pkg.history
+    p.hist <- pkg.history[[pkg]]
+    sel <- p.hist$Date <= as.Date(date) & p.hist$Repository == "Archive"
+    arch.pkg.history <- p.hist[sel, ]
 
+    pre.filter <- nrow(dat) - nrow(out)
+    out <- sequenceFilter(out, arch.pkg.history)
+    sequence.filtered <- nrow(out) + pre.filter
+
+    # Output #
     data.frame(package = pkg, ct = nrow(dat), triplet = triplet.filtered,
       ip = ip.filtered, small = small.filtered, sequence = sequence.filtered,
       all = nrow(out))
+
   } else {
     data.frame(package = pkg, ct = nrow(dat), triplet = 0, ip = 0, small = 0,
       sequence = 0, all = 0)
@@ -147,7 +155,7 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
   median = FALSE, legend.loc = "topleft", ...) {
 
   dat <- x$data
-  dates <- as.Date(row.names(dat))
+  dates <- as.Date(x$dates)
   wed.id <- which(weekdays(dates, abbreviate = TRUE) == "Wed")
 
   plot(dates, dat$ct, pch = NA, ylim = range(dat[, -1]), xlab = "Date",
@@ -205,7 +213,7 @@ cranFilterCounts <- function(lst, multi.core = TRUE) {
     cran_log <- cleanLog(x)
     u.ct <- length(unique(cran_log$package))
 
-    row.delete <- campaigns2(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
     ip.ct <- length(unique(tmp$package))
 
