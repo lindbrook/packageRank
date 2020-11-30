@@ -1,7 +1,7 @@
 packageRank 0.3.5.9107
 ==================
 
-- temporarily set timeout = 300L for fetchCranLog() with R v4.0.3.
+- temporarily set options(timeout = 300L) for fetchCranLog() with R v4.0.3.
 
 
 packageRank 0.3.5.9106
