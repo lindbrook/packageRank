@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipPackage.R
 \name{ipPackage}
 \alias{ipPackage}
-\title{Tabulate an IP's package downloads (prototype).}
+\title{Tabulate an IP's package downloads.}
 \usage{
 ipPackage(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,

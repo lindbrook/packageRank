@@ -1,4 +1,4 @@
-#' Tabulate an IP's package downloads (prototype).
+#' Tabulate an IP's package downloads.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param ip Numeric. ip_id.
@@ -22,6 +22,7 @@ ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
+  cran_log <- cran_log[cran_log$ip_id == ip, ]
 
   if (triplet.filter) {
     filtered <- parallel::mclapply(unique(cran_log$package), function(p) {
