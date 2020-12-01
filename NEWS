@@ -1,3 +1,9 @@
+packageRank 0.3.5.9107
+==================
+
+- temporarily set options(timeout = 300L) for fetchCranLog() with R v4.0.3.
+
+
 packageRank 0.3.5.9106
 ==================
 
@@ -39,7 +45,7 @@ packageRank 0.3.5.9101
 ==================
 
 - add packageRank0().
-- remove cranLog(). 
+- remove cranLog().
 - add packageLog0().
 - amend fetchLogBase() without memoization.
 
@@ -100,7 +106,7 @@ packageRank 0.3.5.9093
 packageRank 0.3.5.9092
 ==================
 
-- amend packageHistory(): scrape CRAN for new and "missing" packages and remove 
+- amend packageHistory(): scrape CRAN for new and "missing" packages and remove
   short.date argument.
 
 

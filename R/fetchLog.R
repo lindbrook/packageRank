@@ -10,6 +10,10 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
   year <- as.POSIXlt(date)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
+  
+  # R default is 60
+  orig.timeout <- getOption("timeout")
+  if (orig.timeout < 300L) options(timeout = 300L)
 
   if (RCurl::url.exists(log.url)) {
     if (dev.mode) {
@@ -25,6 +29,8 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
     msg <- "Check your internet connection or try the previous day."
     stop("Log for ", date, " not (yet) available. ", msg, call. = FALSE)
   }
+  
+  options(timeout = orig.timeout)
   cran_log
 }
 
