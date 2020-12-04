@@ -30,27 +30,31 @@ kmeansCutpointPlot <- function(lst, i = 1, centers = 2L, nstart = 25L) {
                     max(out[out$group == 2, "ct"])) / 2
   }
 
+  midpt2 <- (cutpoint + max(out$ct)) / 2
+
   plot(d2, rep(1, length(d2)), yaxt = "n", xlab = "Unique Packages Downloaded",
     ylab = NA, pch = NA)
   abline(v = cutpoint, col = "red")
   axis(3, at = cutpoint, labels = format(cutpoint, big.mark = ","), col = "red",
-    col.axis = "red")
+    col.axis = "red", padj = 0.9)
 
   if (LR == 1) {
     points(out[out$group == 1, "ct"], rep(1, sum(out$group == 1)))
     points(out[out$group == 2, "ct"], rep(1, sum(out$group == 2)), col = "red")
-    text(cutpoint / 2, 1.2, labels = sum(out$group == 1), cex = 1.5)
-    text(cutpoint * 1.5, 1.2, labels = sum(out$group == 2), cex = 1.5,
-      col = "red")
+    text(cutpoint / 2, 0.65, labels = paste("N =", sum(out$group == 1)))
+    text(midpt2, 0.65, labels = paste("N = ", sum(out$group == 2)), col = "red")
+    min.outlier <- min(out[out$group == 2, "ct"])
   } else {
     points(out[out$group == 2, "ct"], rep(1, sum(out$group == 2)))
     points(out[out$group == 1, "ct"], rep(1, sum(out$group == 1)), col = "red")
-    text(cutpoint / 2, 1.2, labels = sum(out$group == 2), cex = 1.5)
-    text(cutpoint * 1.5, 1.2, labels = sum(out$group == 1), cex = 1.5,
-      col = "red")
+    text(cutpoint / 2, 0.65, labels = paste("N =", sum(out$group == 2)))
+    text(midpt2, 0.65, labels = paste("N =", sum(out$group == 1)), col = "red")
+    min.outlier <- min(out[out$group == 1, "ct"])
   }
 
+  text(min.outlier, 1, labels = format(min.outlier, big.mark = ","), pos = 3,
+    cex = 0.75, col = "red")
   date <- as.Date(names(lst[i]))
   wday <- weekdays(date)
-  title(sub = paste(wday, date))
+  title(main = paste(wday, date))
 }
