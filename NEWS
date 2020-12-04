@@ -1,6 +1,7 @@
 packageRank 0.3.5.9108
 ==================
 
+- replace kmeansCutpointPlot() with kmeansCutpoint() and plot.kmeansCutpoint.
 - add kmeansCutpointPlot().
 
 

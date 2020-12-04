@@ -1,4 +1,4 @@
-#' Plot k-means cutpoint.
+#' k-means cutpoint.
 #'
 #' @param lst Object. List of download log dataframes.
 #' @param i Numeric. Day/ID.
@@ -6,7 +6,7 @@
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-kmeansCutpointPlot <- function(lst, i = 1, centers = 2L, nstart = 25L) {
+kmeansCutpoint <- function(lst, i = 1, centers = 2L, nstart = 25L) {
   cran_log <- cleanLog(lst[[i]])
   cran_log <- smallFilter0(cran_log)
 
@@ -23,18 +23,40 @@ kmeansCutpointPlot <- function(lst, i = 1, centers = 2L, nstart = 25L) {
   LR <- which.min(c(group.one, group.two))
 
   if (LR == 1) {
-    cutpoint <- sum(min(out[out$group == 2, "ct"]),
-                    max(out[out$group == 1, "ct"])) / 2
+    L.max <- max(out[out$group == 1, "ct"])
+    R.min <- min(out[out$group == 2, "ct"])
   } else {
-    cutpoint <- sum(min(out[out$group == 1, "ct"]),
-                    max(out[out$group == 2, "ct"])) / 2
+    L.max <- max(out[out$group == 2, "ct"])
+    R.min <- min(out[out$group == 1, "ct"])
   }
 
+  cutpoint <- sum(L.max, R.min) / 2
   midpt2 <- (cutpoint + max(out$ct)) / 2
+
+  k.data <- list(d2 = d2, LR = LR, L.max = L.max, R.min = R.min,
+    cutpoint = cutpoint, out = out, midpt2 = midpt2, lst = lst, i = i)
+  class(k.data) <- "kmeansCutpoint"
+  k.data
+}
+
+#' Plot method for kmeansCutpoint().
+#' @param x An object of class "kmeansCutpoint" created by \code{kmeansCutpoint()}.
+#' @param ... Additional plotting parameters.
+#' @export
+
+plot.kmeansCutpoint <- function(x, ...) {
+  d2 <- x$d2
+  LR <- x$LR
+  cutpoint <- x$cutpoint
+  out <- x$out
+  midpt2 <- x$midpt2
+  lst <- x$lst
+  i <- x$i
 
   plot(d2, rep(1, length(d2)), yaxt = "n", xlab = "Unique Packages Downloaded",
     ylab = NA, pch = NA)
   abline(v = cutpoint, col = "red")
+  abline(v = 10000L, col = "gray", lty = "dotted")
   axis(3, at = cutpoint, labels = format(cutpoint, big.mark = ","), col = "red",
     col.axis = "red", padj = 0.9)
 
