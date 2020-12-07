@@ -4,7 +4,7 @@
 \alias{dateTime}
 \title{Nominal time to clock time}
 \usage{
-dateTime(date = "2020-08-14", time = "09:00:00", tz = "Europe/Vienna")
+dateTime(date = "2020-08-14", time = "09:00:00", tz = "GMT")
 }
 \arguments{
 \item{date}{Character. "yyyy-mm-dd".}

@@ -62,7 +62,7 @@ packageMRAN <- function(package = "cholera", date = Sys.Date() - 1,
   dt <- unlist(strsplit(pkg.data[2], "-"))
   dt[2] <- mo
   dt <- paste(rev(dt), collapse = "-")
-  dt <- as.POSIXlt(dt, tz = "Europe/Vienna")
+  dt <- as.POSIXlt(dt, tz = "GMT")
 
   data.frame(package = nm.ver[1], version = nm.ver[2],
     size = as.numeric(pkg.data[4]), timestamp = dt, snapshot = as.Date(date),

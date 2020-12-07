@@ -13,13 +13,13 @@ ipFilter <- function(cran_log, rle.depth = 100, case.sensitive = FALSE,
 
   cores <- multiCore(multi.core)
   cran_log <- smallFilter0(cran_log)
-  greedy.ips <- ip_filter(cran_log, "ip") # IPs w/ >= 10K unique packages
+  greedy.ips <- ip_filter(cran_log, "ip")
 
   # candidate data #
 
   candidate.data <- parallel::mclapply(greedy.ips, function(ip) {
     tmp <- cran_log[cran_log$ip_id == ip, ]
-    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "Europe/Vienna")
+    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
     tmp[order(tmp$t2, tmp$package), ]
   }, mc.cores = cores)
 

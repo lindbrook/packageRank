@@ -112,7 +112,7 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 
       id.adj <- strsplit(out[sel, "id"], "-")
       id.adj <- lapply(id.adj, function(x) x[-1])
-      t.fix <- strftime(t.adj, format = "%H:%M:%S", tz = "Europe/Vienna")
+      t.fix <- strftime(t.adj, format = "%H:%M:%S", tz = "GMT")
 
       id2 <- vapply(seq_along(id.adj), function(i) {
         paste0(t.fix[i], "-", paste(id.adj[[i]], collapse = "-"))
@@ -134,7 +134,7 @@ timeFix <- function(potential.triplets, v.data, time.window) {
     obs.time <- dateTime(obs.data$date, obs.data$time)
     tm.window <- c(obs.time + 1:time.window, obs.time - 1:time.window)
     candidate.hms <- strftime(tm.window, format = "%H:%M:%S",
-      tz = "Europe/Vienna")
+      tz = "GMT")
     candidate.id <- paste0(candidate.hms, "-", obs.data$machine)
     candidate <- v.data$id %in% candidate.id
 
@@ -165,8 +165,7 @@ fixDuplicates <- function(time.fix, v.data) {
   time.fix[!row.names(time.fix) %in% soln, ]
 }
 
-str2Time <- function(tmp, time.fix, v.data, var = "minority",
-  tz = "Europe/Vienna") {
+str2Time <- function(tmp, time.fix, v.data, var = "minority", tz = "GMT") {
   data.time <- vapply(strsplit(tmp[, var], "-"), function(x) {
     paste(v.data$date[1], x[1])
   }, character(1L))

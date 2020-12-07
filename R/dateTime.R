@@ -6,7 +6,6 @@
 #' @param tz Character. Time zone.
 #' @export
 
-dateTime <- function(date = "2020-08-14", time = "09:00:00", 
-  tz = "Europe/Vienna") {
+dateTime <- function(date = "2020-08-14", time = "09:00:00", tz = "GMT") {
  as.POSIXlt(paste(date, time), tz = tz)
 }

@@ -43,7 +43,7 @@ mranPackages <- function(date = Sys.Date() - 1, type = "source") {
     dt <- unlist(strsplit(x[2], "-"))
     dt[2] <- mo
     dt <- paste(rev(dt), collapse = "-")
-    dt <- as.POSIXlt(dt, tz = "Europe/Vienna")
+    dt <- as.POSIXlt(dt, tz = "GMT")
 
     data.frame(package = nm.ver[1], version = nm.ver[2],
       size = as.numeric(x[4]), timestamp = dt, snapshot = as.Date(date),

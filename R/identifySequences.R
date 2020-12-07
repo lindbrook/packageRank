@@ -9,7 +9,7 @@
 
 identifySequences <- function(pkg.data, arch.pkg.history, download.time = 30) {
   pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",
-    tz = "Europe/Vienna")
+    tz = "GMT")
   pkg.data <- pkg.data[order(pkg.data$t0), ]
 
   rle.data <- rle(pkg.data$ver)
@@ -31,7 +31,7 @@ identifySequences <- function(pkg.data, arch.pkg.history, download.time = 30) {
     })
 
     candidate.seqs <- candidate.seqs[!is.na(candidate.seqs)]
-    
+
     candidate.check <- unlist(lapply(candidate.seqs, function(sel) {
       dat <- rle.out[sel, ]
       elements.check <- identical(sort(dat$values), arch.pkg.history$Version)

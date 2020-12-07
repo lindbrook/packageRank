@@ -27,7 +27,7 @@ identifySequences0 <- function(package = "cholera", date = Sys.Date() - 1,
 
   pkg.data <- cran_log[cran_log$package == package, ]
   pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",
-    tz = "Europe/Vienna")
+    tz = "GMT")
   pkg.data <- pkg.data[order(pkg.data$t0), ]
 
   if (triplet.filter) pkg.data <- tripletFilter(pkg.data)
