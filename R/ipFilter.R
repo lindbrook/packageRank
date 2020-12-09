@@ -143,6 +143,40 @@ firstLetter <- function(x, case.sensitive = FALSE) {
   else tolower(substring(x, 1, 1))
 }
 
+kmeanClassifier <- function(var = "packages", idp, centers = centers,
+  nstart = nstart, tol = 0.001) {
+
+  # methodological convenience for stats::kmeans()
+  dat <- idp[!duplicated(idp[, var]), ]
+
+  # outlier test
+  orders.magnitude <- trunc(log10(dat[, var]))
+
+  # remove extreme outlier
+  extreme.outlier <- mean(orders.magnitude == max(orders.magnitude)) <= tol
+
+  if (extreme.outlier) {
+    dat.extreme <- dat[orders.magnitude == max(orders.magnitude), ]
+    dat <- dat[orders.magnitude != max(orders.magnitude), ]
+  }
+
+  km <- stats::kmeans(stats::dist(dat[, var]), centers = centers,
+    nstart = nstart)
+
+  tmp <- data.frame(dat[, var], group = km$cluster)
+  names(tmp)[1] <- var
+  out <- merge(idp, tmp, by = var)
+
+  if (extreme.outlier) {
+    max.grp.id <- which.max(tapply(out[, var], out$group, mean))
+    extreme.tmp <- data.frame(dat.extreme, group = max.grp.id)
+    out <- rbind(extreme.tmp, out)
+    row.names(out) <- NULL
+  }
+  out
+}
+
+
 #' Run Length Encoding of First Letter of Packages Downloaded.
 #'
 #' Uses rle().
