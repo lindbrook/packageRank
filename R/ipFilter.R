@@ -194,13 +194,9 @@ campaignRLE <- function(ip, cran_log, case.sensitive = FALSE,
   concatenate = TRUE) {
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
-  cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
-    tz = "Europe/Vienna")
+  cran_log$t2 <- dateTime(cran_log$date, cran_log$time)
   cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
   rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
-  if (concatenate) {
-    paste(rle.data$letter, collapse = "")
-  } else {
-    rle.data$letter
-  }
+  if (concatenate) paste(rle.data$letter, collapse = "")
+  else rle.data$letter
 }
