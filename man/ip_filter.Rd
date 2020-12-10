@@ -4,14 +4,10 @@
 \alias{ip_filter}
 \title{Identify IP's that are mirroring CRAN (k-means helper prototype).}
 \usage{
-ip_filter(cran_log, output = "ip", floor = 10000L, centers = 2L, nstart = 25L)
+ip_filter(cran_log, centers = 2L, nstart = 25L)
 }
 \arguments{
 \item{cran_log}{Object. cran log.}
-
-\item{output}{Character. "ip" vector of ip address; "df" data frame.}
-
-\item{floor}{Numeric. If specified, the minimum number of unique packages downloaded by an IP address to use k-means clustering.}
 
 \item{centers}{Numeric. Number of k's for k-means clustering.}
 

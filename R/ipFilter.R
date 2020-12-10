@@ -1,133 +1,109 @@
 #' Filter Out A-Z Campaigns from IPs with many unique package downloads.
 #'
-#' Uses run length encoding rle().
+#' Uses run length encoding, rle(), and k-means clustering, stats::kmeans().
 #' @param cran_log Object. Package log entries.
-
+#' @param campaigns Logical. Filter A-Z campaigns when checking IPs with high unique package download counts.
 #' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs
 #' @param case.sensitive Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-ipFilter <- function(cran_log, rle.depth = 100, case.sensitive = FALSE,
-  multi.core = TRUE) {
+ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
+  case.sensitive = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   cran_log <- smallFilter0(cran_log)
-  greedy.ips <- ip_filter(cran_log, "ip")
+  greedy.ips <- ip_filter(cran_log)
 
-  # candidate data #
+  if (campaigns) {
+    candidate.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
+      tmp <- cran_log[cran_log$ip_id == ip, ]
+      tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
+      tmp[order(tmp$t2, tmp$package), ]
+    }, mc.cores = cores)
 
-  candidate.data <- parallel::mclapply(greedy.ips, function(ip) {
-    tmp <- cran_log[cran_log$ip_id == ip, ]
-    tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
-    tmp[order(tmp$t2, tmp$package), ]
-  }, mc.cores = cores)
-
-  rle.data <- parallel::mclapply(candidate.data, function(x) {
-    runLengthEncoding(x, case.sensitive = case.sensitive)
-  }, mc.cores = cores)
-
-  rle.ct <- vapply(rle.data, nrow, integer(1L))
-  candidate.ids <- which(rle.ct <= rle.depth)
-
-  # check for campaigns #
-
-  rows.delete <- parallel::mclapply(seq_along(candidate.ids), function(i) {
-    tmp <- rle.data[[candidate.ids[i]]]
-    A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
-    start <- as.numeric(row.names(A))
-    end <- as.numeric(row.names(A)) + length(letters) - 1
-
-    data.select <- lapply(seq_along(start), function(i) {
-      audit.data <- tmp[start[i]:end[i], ]
-      if (all(!is.na(audit.data))) {
-        data.frame(ip = greedy.ips[candidate.ids[i]],
-                   start = audit.data[1, "start"],
-                   end = audit.data[nrow(audit.data), "end"])
-      }
+    rle.data <- lapply(candidate.data, function(x) {
+      runLengthEncoding(x, case.sensitive = case.sensitive)
     })
 
-    data.select <- do.call(rbind, data.select)
-    c.data <- candidate.data[[candidate.ids[i]]]
+    rle.ct <- vapply(rle.data, nrow, integer(1L))
+    candidate.ids <- which(rle.ct <= rle.depth)
 
-    if (!is.null(data.select)) {
-      unlist(lapply(seq_len(nrow(data.select)), function(i) {
-        row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
-      }))
-    } else NULL
-  }, mc.cores = cores)
+    # check for campaigns #
 
-  unlist(rows.delete)
+    campaign.row.delete <- parallel::mclapply(candidate.ids, function(x) {
+      tmp <- rle.data[[x]]
+      A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
+      start <- as.numeric(row.names(A))
+      end <- as.numeric(row.names(A)) + length(letters) - 1
+
+      data.select <- lapply(seq_along(start), function(i) {
+        audit.data <- tmp[start[i]:end[i], ]
+        if (all(!is.na(audit.data))) {
+          data.frame(ip = greedy.ips$package.ip[x],
+                     start = audit.data[1, "start"],
+                     end = audit.data[nrow(audit.data), "end"])
+        }
+      })
+
+      data.select <- do.call(rbind, data.select)
+      c.data <- candidate.data[[x]]
+
+      if (!is.null(data.select)) {
+        unlist(lapply(seq_len(nrow(data.select)), function(i) {
+          row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
+        }))
+      } else NULL
+    }, mc.cores = cores)
+
+    row.sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
+    ratio.row.delete <- row.names(cran_log[row.sel, ])
+    rows.delete <- c(unlist(campaign.row.delete), ratio.row.delete)
+
+  } else {
+    row.sel <- cran_log$ip_id %in% unlist(greedy.ips)
+    rows.delete <- row.names(cran_log[row.sel, ])
+  }
+
+  rows.delete
 }
 
 #' Identify IP's that are mirroring CRAN (k-means helper prototype).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param cran_log Object. cran log.
-#' @param output Character. "ip" vector of ip address; "df" data frame.
-#' @param floor Numeric. If specified, the minimum number of unique packages downloaded by an IP address to use k-means clustering.
 #' @param centers Numeric. Number of k's for k-means clustering.
 #' @param nstart Numeric. Number of random sets.
 #' @export
 
-ip_filter <- function(cran_log, output = "ip", floor = 10000L, centers = 2L,
-  nstart = 25L) {
-
-  if (!output %in% c("df", "ip")) stop('"output" must be "ip" or "df".')
-
-  freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
+ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
+  pkgs <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
 
-  df <- data.frame(ip = names(freqtab), count = c(freqtab), row.names = NULL)
+  pkgs <- data.frame(ip = as.integer(names(pkgs)), packages = pkgs,
+    row.names = NULL)
 
-  if (is.null(floor)) {
-    df <- df[!duplicated(df$count), ]
-    cran.max <- nrow(utils::available.packages()) / 2
-    # cran.max <- 8056L  # 2020-08-16
+  dwnlds <- as.data.frame(table(cran_log$ip_id), stringsAsFactors = FALSE)
+  names(dwnlds) <- c("ip", "downloads")
+  dwnlds$ip <- as.integer(dwnlds$ip)
 
-    if (max(freqtab) >= cran.max) {
-      km <- stats::kmeans(stats::dist(df$count), centers = centers,
-        nstart = nstart)
-      out <- data.frame(ip = df$ip, packages = df$count, group = km$cluster)
-    } else {
-      out <- data.frame(ip = df$ip, packages = df$count, group = 1)
-    }
+  idp <- merge(dwnlds, pkgs, by = "ip")
+  idp$ratio <- idp$downloads / idp$packages
 
-    ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]
-    out <- merge(out, ip.country, by.x = "ip", by.y = "ip_id")
-    out <- out[, c("ip", "country", "packages", "group")]
+  p.classified <- kmeanClassifier("packages", idp, centers, nstart)
+  r.classified <- kmeanClassifier("ratio", idp, centers, nstart)
 
-    if (output == "ip") {
-      grp <- as.numeric(names(which.min(table(out$group))))
-      out <- out[out$group == grp, ]
-      out <- out[order(out$packages, decreasing = TRUE), ]
-      out <- as.numeric(out$ip)
-    } else if (output == "df") {
-      out <- out[order(out$packages, decreasing = TRUE), ]
-      row.names(out) <- NULL
-    }
+  p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
+  r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
 
-  } else {
-    if (!is.numeric(floor)) stop('"floor" must be a number.')
-    else if (floor < 0) stop('"floor" must be a positive number.')
+  p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
+  r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
 
-    if (output == "ip") {
-      out <- names(sort(freqtab[freqtab >= floor], decreasing = TRUE))
-      out <- as.numeric(out)
-    } else if (output == "df") {
-      out <- data.frame(ip = names(freqtab), packages = c(freqtab),
-        row.names = NULL)
-      out$group <- ifelse(out$packages >= floor, 1, 2)
-      ip.country <- cran_log[!duplicated(cran_log$ip), c("ip_id", "country")]
-      out <- merge(out, ip.country, by.x = "ip", by.y = "ip_id")
-      out <- out[, c("ip", "country", "packages", "group")]
-      out <- out[order(out$packages, decreasing = TRUE), ]
-      row.names(out) <- NULL
-    }
-  }
+  p.ip <- idp[idp$packages %in% p.data$packages, "ip"]
+  r.ip <- idp[idp$ratio %in% r.data$ratio, "ip"]
 
-  out
+  list(package.ip = p.ip, ratio.ip = r.ip)
 }
 
 runLengthEncoding <- function(x, case.sensitive = FALSE) {
@@ -141,6 +117,39 @@ runLengthEncoding <- function(x, case.sensitive = FALSE) {
 firstLetter <- function(x, case.sensitive = FALSE) {
   if (case.sensitive) substring(x, 1, 1)
   else tolower(substring(x, 1, 1))
+}
+
+kmeanClassifier <- function(var = "packages", idp, centers = centers,
+  nstart = nstart, tol = 0.001) {
+
+  # methodological convenience for stats::kmeans()
+  dat <- idp[!duplicated(idp[, var]), ]
+
+  # outlier test
+  orders.magnitude <- trunc(log10(dat[, var]))
+
+  # remove extreme outlier
+  extreme.outlier <- mean(orders.magnitude == max(orders.magnitude)) <= tol
+
+  if (extreme.outlier) {
+    dat.extreme <- dat[orders.magnitude == max(orders.magnitude), ]
+    dat <- dat[orders.magnitude != max(orders.magnitude), ]
+  }
+
+  km <- stats::kmeans(stats::dist(dat[, var]), centers = centers,
+    nstart = nstart)
+
+  tmp <- data.frame(dat[, var], group = km$cluster)
+  names(tmp)[1] <- var
+  out <- merge(idp, tmp, by = var)
+
+  if (extreme.outlier) {
+    max.grp.id <- which.max(tapply(out[, var], out$group, mean))
+    extreme.tmp <- data.frame(dat.extreme, group = max.grp.id)
+    out <- rbind(extreme.tmp, out)
+    row.names(out) <- NULL
+  }
+  out
 }
 
 #' Run Length Encoding of First Letter of Packages Downloaded.
@@ -160,13 +169,9 @@ campaignRLE <- function(ip, cran_log, case.sensitive = FALSE,
   concatenate = TRUE) {
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
-  cran_log$t2 <- as.POSIXlt(paste(cran_log$date, cran_log$time),
-    tz = "Europe/Vienna")
+  cran_log$t2 <- dateTime(cran_log$date, cran_log$time)
   cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
   rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
-  if (concatenate) {
-    paste(rle.data$letter, collapse = "")
-  } else {
-    rle.data$letter
-  }
+  if (concatenate) paste(rle.data$letter, collapse = "")
+  else rle.data$letter
 }
