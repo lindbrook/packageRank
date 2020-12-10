@@ -2,6 +2,7 @@ packageRank 0.3.5.9110
 ==================
 
 - add kmeanClassifier().
+- add new ipFilter() prototype.
 
 
 packageRank 0.3.5.9109
