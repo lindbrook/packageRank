@@ -21,6 +21,7 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @param i Numeric. Day/ID.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
+#' @param ip.campaigns Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param pkg Character.
@@ -29,23 +30,23 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @export
 
 pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, pkg = "cholera",
-  multi.core = TRUE, clean.output = TRUE) {
+  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  pkg = "cholera", multi.core = TRUE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
   cran_log <- cleanLog(lst[[i]])
+
+  if (ip.filter) {
+    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
+      multi.core = cores)
+    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+  }
+
   tmp <- cran_log[cran_log$package == pkg, ]
 
   if (nrow(tmp) != 0) {
     if (triplet.filter) tmp <- tripletFilter(tmp)
-
-    if (ip.filter) {
-      row.delete <- ipFilter(cran_log, multi.core = cores)
-      tmp <- tmp[!row.names(tmp) %in% row.delete, ]
-    }
-
     if (small.filter) tmp <- smallFilter0(tmp)
-
     if (sequence.filter) {
       pkg.history <- packageRank::blog.data$pkg.history
       p.hist <- pkg.history[[pkg]]

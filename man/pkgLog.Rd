@@ -5,8 +5,8 @@
 \title{Extract Package Logs.}
 \usage{
 pkgLog(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, pkg = "cholera",
-  multi.core = TRUE, clean.output = TRUE)
+  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  pkg = "cholera", multi.core = TRUE, clean.output = TRUE)
 }
 \arguments{
 \item{lst}{Object. List of logs.}
@@ -16,6 +16,8 @@ pkgLog(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{small.filter}{Logical.}
 
