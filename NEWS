@@ -1,3 +1,9 @@
+packageRank 0.3.5.9112
+==================
+
+- remove smallFilter0(cran_log) from ipFilter().
+
+
 packageRank 0.3.5.9111
 ==================
 

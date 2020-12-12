@@ -12,7 +12,6 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  cran_log <- smallFilter0(cran_log)
   greedy.ips <- ip_filter(cran_log)
 
   if (campaigns) {
@@ -56,13 +55,13 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       } else NULL
     }, mc.cores = cores)
 
-    row.sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
-    ratio.row.delete <- row.names(cran_log[row.sel, ])
+    sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
+    ratio.row.delete <- row.names(cran_log[sel, ])
     rows.delete <- c(unlist(campaign.row.delete), ratio.row.delete)
 
   } else {
-    row.sel <- cran_log$ip_id %in% unlist(greedy.ips)
-    rows.delete <- row.names(cran_log[row.sel, ])
+    sel <- cran_log$ip_id %in% unlist(greedy.ips)
+    rows.delete <- row.names(cran_log[sel, ])
   }
 
   rows.delete
