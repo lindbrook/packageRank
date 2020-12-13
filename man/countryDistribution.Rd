@@ -5,13 +5,15 @@
 \title{Tabulate package downloads by country.}
 \usage{
 countryDistribution(date = Sys.Date() - 1, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE,
-  multi.core = TRUE)
+  ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
+  dev.mode = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{date}{Character. Date. yyyy-mm-dd.}
 
 \item{ip.filter}{Logical.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
 

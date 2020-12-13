@@ -5,9 +5,10 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog(packages = "cholera", date = Sys.Date() - 1,
-  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE)
+  triplet.filter = TRUE, ip.filter = TRUE, ip.campaigns = TRUE,
+  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -17,6 +18,8 @@ packageLog(packages = "cholera", date = Sys.Date() - 1,
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{small.filter}{Logical.}
 

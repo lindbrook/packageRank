@@ -6,7 +6,8 @@
 \usage{
 countryPackage(country = "HK", date = Sys.Date() - 1, memoization = TRUE,
   sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = FALSE, multi.core = TRUE)
+  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -20,6 +21,8 @@ countryPackage(country = "HK", date = Sys.Date() - 1, memoization = TRUE,
 \item{triplet.filter}{Logical.}
 
 \item{ip.filter}{Logical.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{small.filter}{Logical.}
 

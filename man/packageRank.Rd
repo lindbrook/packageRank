@@ -5,8 +5,9 @@
 \title{Package download counts and rank percentiles.}
 \usage{
 packageRank(packages = "HistData", date = Sys.Date() - 1,
-  ip.filter = TRUE, small.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE)
+  ip.filter = TRUE, ip.campaigns = TRUE, small.filter = TRUE,
+  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -14,6 +15,8 @@ packageRank(packages = "HistData", date = Sys.Date() - 1,
 \item{date}{Character. Date. "yyyy-mm-dd".}
 
 \item{ip.filter}{Logical.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
 

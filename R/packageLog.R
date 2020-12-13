@@ -5,6 +5,7 @@
 #' @param date Character. Date.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
+#' @param ip.campaigns Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
@@ -16,7 +17,8 @@
 #' @export
 
 packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
-  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
+  triplet.filter = TRUE, ip.filter = TRUE, ip.campaigns = TRUE,
+  small.filter = TRUE,
   sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
@@ -41,6 +43,12 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
     out <- out[!zero.sel]
   }
 
+  if (ip.filter) {
+    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
+      multi.core = cores)
+    out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
+  }
+
   if (triplet.filter) {
     if (length(packages) == 1) {
       out <- lapply(out, tripletFilter)
@@ -49,10 +57,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
     }
   }
 
-  if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
-    out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
-  }
+
 
   if (small.filter) {
     out <- parallel::mclapply(out, smallFilter0, mc.cores = cores)

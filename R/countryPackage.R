@@ -6,6 +6,7 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
 #' @param ip.filter Logical.
+#' @param ip.campaigns Logical.
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
@@ -15,7 +16,8 @@
 
 countryPackage <- function(country = "HK", date = Sys.Date() - 1,
   memoization = TRUE, sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = FALSE, multi.core = TRUE) {
+  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   date <- check10CharDate(date)
@@ -24,7 +26,8 @@ countryPackage <- function(country = "HK", date = Sys.Date() - 1,
   cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
+      multi.core = cores)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
