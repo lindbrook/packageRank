@@ -18,9 +18,9 @@
 
 packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
   triplet.filter = TRUE, ip.filter = TRUE, ip.campaigns = TRUE,
-  small.filter = TRUE,
-  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
+  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   pkg.order <- packages
@@ -56,8 +56,6 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
       out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
     }
   }
-
-
 
   if (small.filter) {
     out <- parallel::mclapply(out, smallFilter0, mc.cores = cores)
