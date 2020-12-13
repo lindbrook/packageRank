@@ -68,16 +68,18 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #'
 #' @param lst Object. cran_log list of data frames.
 #' @param pkg Character.
+#' @param ip.campaigns Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-packageFilterCounts <- function(lst, pkg = "cholera", multi.core = TRUE) {
-  cores <- multiCore(multi.core)
+packageFilterCounts <- function(lst, pkg = "cholera", ip.campaigns = TRUE,
+  multi.core = TRUE) {
 
+  cores <- multiCore(multi.core)
   dates <- names(lst)
 
   out <- parallel::mclapply(seq_along(lst), function(i) {
-    filter_counts(lst[[i]], pkg = pkg, date = dates[i])
+    filter_counts(lst[[i]], pkg, dates[i], ip.campaigns)
   }, mc.cores = cores)
 
   versions <- parallel::mclapply(lst, function(x)  {
@@ -101,21 +103,22 @@ packageFilterCounts <- function(lst, pkg = "cholera", multi.core = TRUE) {
 #' @param dat Object. cran_log data frame.
 #' @param pkg Character.
 #' @param date Character.
+#' @param ip.campaigns Logical.
 #' @noRd
 
-filter_counts <- function(dat, pkg = "cholera", date) {
+filter_counts <- function(dat, pkg = "cholera", date, ip.campaigns) {
   dat0 <- cleanLog(dat)
   dat <- dat0[dat0$package == pkg, ]
 
   if (nrow(dat) != 0) {
+    # IP filter #
+    row.delete <- ipFilter(dat0, campaigns = ip.campaigns, multi.core = FALSE)
+    ip.filtered <- sum(!row.names(dat) %in% row.delete)
+    out <- dat[!row.names(dat) %in% row.delete, ]
+
     # Triplet filter #
     out <- tripletFilter(dat)
     triplet.filtered <- nrow(out)
-
-    # IP filter #
-    row.delete <- ipFilter(dat0, multi.core = FALSE)
-    ip.filtered <- sum(!row.names(dat) %in% row.delete)
-    out <- out[!row.names(out) %in% row.delete, ]
 
     # Small Filter #
     small.filtered <- nrow(smallFilter0(dat))
@@ -205,16 +208,18 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
 #' CRAN Filter Counts.
 #'
 #' @param lst Object. cran_log list of data frames.
+#' @param ip.campaigns Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-cranFilterCounts <- function(lst, multi.core = TRUE) {
+cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   out <- parallel::mclapply(lst, function(x) {
     cran_log <- cleanLog(x)
     u.ct <- length(unique(cran_log$package))
 
-    row.delete <- ipFilter(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
+      multi.core = cores)
     tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
     ip.ct <- length(unique(tmp$package))
 

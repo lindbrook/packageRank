@@ -4,12 +4,15 @@
 \alias{packageFilterCounts}
 \title{Package Filter Counts.}
 \usage{
-packageFilterCounts(lst, pkg = "cholera", multi.core = TRUE)
+packageFilterCounts(lst, pkg = "cholera", ip.campaigns = TRUE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{lst}{Object. cran_log list of data frames.}
 
 \item{pkg}{Character.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

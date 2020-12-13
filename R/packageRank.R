@@ -4,6 +4,7 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @param ip.filter Logical.
+#' @param ip.campaigns Logical.
 #' @param small.filter Logical TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
@@ -18,8 +19,9 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
-  ip.filter = TRUE, small.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE) {
+  ip.filter = TRUE, ip.campaigns = TRUE, small.filter = TRUE,
+  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
@@ -31,7 +33,8 @@ packageRank <- function(packages = "HistData", date = Sys.Date() - 1,
   cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
+      multi.core = cores)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 

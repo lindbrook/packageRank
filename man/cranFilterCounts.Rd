@@ -4,10 +4,12 @@
 \alias{cranFilterCounts}
 \title{CRAN Filter Counts.}
 \usage{
-cranFilterCounts(lst, multi.core = TRUE)
+cranFilterCounts(lst, ip.campaigns = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{lst}{Object. cran_log list of data frames.}
+
+\item{ip.campaigns}{Logical.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
