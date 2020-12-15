@@ -4,17 +4,17 @@
 \alias{packageMRAN}
 \title{Extract package data from MRAN (protoype).}
 \usage{
-packageMRAN(package = "cholera", date = Sys.Date() - 1, type = "source",
-  check.package = TRUE)
+packageMRAN(package = "cholera", date = Sys.Date() - 1,
+  check.package = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
 
 \item{date}{Character.}
 
-\item{type}{Character. "source", "mac", or "win".}
-
 \item{check.package}{Logical. Validate and "spell check" package.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 Binary or source size.
