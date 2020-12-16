@@ -2,6 +2,7 @@ packageRank 0.3.5.9114
 ==================
 
 - parallelize packageMRAN().
+- archive mranPackages(); replace with packageMRAN(package = NULL).
 
 
 packageRank 0.3.5.9113
