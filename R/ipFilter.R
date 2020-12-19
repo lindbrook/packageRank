@@ -101,7 +101,7 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
 
   p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
   r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
-  t.class.id  <- tapply(t.classified$downloads, t.classified$group, mean)
+  t.class.id <- tapply(t.classified$downloads, t.classified$group, mean)
 
   p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
   r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
@@ -110,7 +110,7 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   p.ip <- idp[idp$packages %in% p.data$packages, "ip"]
   r.ip <- idp[idp$ratio %in% r.data$ratio, "ip"]
 
-  list(package.ip = p.ip, ratio.ip = c(r.ip, t.data$ip))
+  list(package.ip = p.ip, ratio.ip = union(r.ip, t.data$ip))
 }
 
 runLengthEncoding <- function(x, case.sensitive = FALSE) {
