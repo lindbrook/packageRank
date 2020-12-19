@@ -93,16 +93,24 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   p.classified <- kmeanClassifier("packages", idp, centers, nstart)
   r.classified <- kmeanClassifier("ratio", idp, centers, nstart)
 
+  pkg.tests <- idp[idp$packages == 1 & idp$downloads != 1, ]
+  km <- stats::kmeans(stats::dist(pkg.tests$downloads), centers = centers,
+    nstart = nstart)
+  t.classified <- data.frame(ip = pkg.tests$ip, downloads = pkg.tests$downloads,
+    group = km$cluster)
+
   p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
   r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
+  t.class.id  <- tapply(t.classified$downloads, t.classified$group, mean)
 
   p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
   r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
+  t.data <- t.classified[t.classified$group == which.max(t.class.id), ]
 
   p.ip <- idp[idp$packages %in% p.data$packages, "ip"]
   r.ip <- idp[idp$ratio %in% r.data$ratio, "ip"]
 
-  list(package.ip = p.ip, ratio.ip = r.ip)
+  list(package.ip = p.ip, ratio.ip = c(r.ip, t.data$ip))
 }
 
 runLengthEncoding <- function(x, case.sensitive = FALSE) {
