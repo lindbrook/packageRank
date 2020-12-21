@@ -2,6 +2,7 @@ packageRank 0.3.5.9117
 ==================
 
 - amend argument order for ip.campaigns in packageLog().
+- move check10CharDate() to own file and @export.
 
 
 packageRank 0.3.5.9116
