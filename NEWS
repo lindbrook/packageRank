@@ -1,3 +1,9 @@
+packageRank 0.3.5.9117
+==================
+
+- amend argument order for ip.campaigns in packageLog().
+
+
 packageRank 0.3.5.9116
 ==================
 

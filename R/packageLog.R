@@ -3,9 +3,9 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date.
-#' @param triplet.filter Logical.
 #' @param ip.filter Logical.
 #' @param ip.campaigns Logical.
+#' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
@@ -17,7 +17,7 @@
 #' @export
 
 packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
-  triplet.filter = TRUE, ip.filter = TRUE, ip.campaigns = TRUE,
+  ip.filter = TRUE, ip.campaigns = TRUE, triplet.filter = TRUE,
   small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
   check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
   multi.core = TRUE) {
