@@ -5,7 +5,7 @@
 \title{Scrape package data from CRAN.}
 \usage{
 packageCRAN2(package = "cholera", check.package = TRUE, size = TRUE,
-  r.ver = "4.0", multi.core = TRUE)
+  r.ver = "4.0", bytes = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
@@ -15,6 +15,8 @@ packageCRAN2(package = "cholera", check.package = TRUE, size = TRUE,
 \item{size}{Logical. Include size of source file.}
 
 \item{r.ver}{Character. Current R version; used in directory path.}
+
+\item{bytes}{Logical. Compute approximate file size (bytes).}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

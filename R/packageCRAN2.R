@@ -5,12 +5,13 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param size Logical. Include size of source file.
 #' @param r.ver Character. Current R version; used in directory path.
+#' @param bytes Logical. Compute approximate file size (bytes).
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame or NULL.
 #' @export
 
 packageCRAN2 <- function(package = "cholera", check.package = TRUE,
-  size = TRUE, r.ver = "4.0", multi.core = TRUE) {
+  size = TRUE, r.ver = "4.0", bytes = FALSE, multi.core = TRUE) {
 
   # R default is 60
   orig.timeout <- getOption("timeout")
@@ -59,6 +60,7 @@ packageCRAN2 <- function(package = "cholera", check.package = TRUE,
   out <- do.call(rbind, out)
   out$type <- row.names(out)
   row.names(out) <- NULL
+  if (bytes) out$bytes <- computeFileSize(tmp$size)
   out
 }
 
