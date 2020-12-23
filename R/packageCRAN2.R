@@ -78,9 +78,9 @@ computeFileSize <- function(x) {
   kB.test <- grepl("K", x)
   MB.test <- grepl("M", x)
   out <- rep(NA, length(x))
-  if (kB.test) {
+  if (any(kB.test)) {
     out[kB.test] <- as.numeric(unlist(strsplit(x[kB.test], "K"))) * 10^3
-  } else if (MB.test) {
+  } else if (any(MB.test)) {
     out[MB.test] <- as.numeric(unlist(strsplit(x[MB.test], "M"))) * 10^6
   }
   out
