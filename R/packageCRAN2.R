@@ -60,7 +60,7 @@ packageCRAN2 <- function(package = "cholera", check.package = TRUE,
   out <- do.call(rbind, out)
   out$type <- row.names(out)
   row.names(out) <- NULL
-  if (bytes) out$bytes <- computeFileSize(tmp$size)
+  if (bytes) out$bytes <- computeFileSize(out$size)
   out
 }
 
