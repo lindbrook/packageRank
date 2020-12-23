@@ -56,7 +56,10 @@ packageCRAN2 <- function(package = "cholera", check.package = TRUE,
   }, mc.cores = cores)
 
   options(timeout = orig.timeout)
-  do.call(rbind, out)
+  out <- do.call(rbind, out)
+  out$type <- row.names(out)
+  row.names(out) <- NULL
+  out
 }
 
 package_info2 <- function(pkg.data, ext, repository = "CRAN") {
