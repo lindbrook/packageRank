@@ -4,6 +4,7 @@ packageRank 0.3.5.9119
 - add logDate().
 - replace check10CharDate() with checkDate().
 - use checkDate() and logDate().
+- amend fixDate_2012().
 
 
 packageRank 0.3.5.9118
