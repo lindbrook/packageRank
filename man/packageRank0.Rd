@@ -4,14 +4,13 @@
 \alias{packageRank0}
 \title{Package download counts and rank percentiles.}
 \usage{
-packageRank0(packages = "HistData", date = Sys.Date() - 1,
-  memoization = TRUE, check.package = FALSE, dev.mode = FALSE,
-  multi.core = TRUE)
+packageRank0(packages = "HistData", date = NULL, memoization = TRUE,
+  check.package = FALSE, dev.mode = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date. "yyyy-mm-dd".}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

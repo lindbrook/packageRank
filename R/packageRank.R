@@ -93,7 +93,7 @@ packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date. "yyyy-mm-dd".
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
@@ -101,7 +101,7 @@ packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
 #' @return An R data frame.
 #' @export
 
-packageRank0 <- function(packages = "HistData", date = Sys.Date() - 1,
+packageRank0 <- function(packages = "HistData", date = NULL,
   memoization = TRUE, check.package = FALSE, dev.mode = FALSE,
   multi.core = TRUE) {
 
