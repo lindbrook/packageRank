@@ -4,11 +4,10 @@
 \alias{ipCount}
 \title{Count number of IP addresses.}
 \usage{
-ipCount(date = Sys.Date() - 1, memoization = TRUE, sort = TRUE,
-  dev.mode = FALSE)
+ipCount(date = NULL, memoization = TRUE, sort = TRUE, dev.mode = FALSE)
 }
 \arguments{
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

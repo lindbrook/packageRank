@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9118-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9119-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -21,10 +21,10 @@ an active internet connection, and relies on the
 and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter
 record traffic to what was previously called RStudio’s [CRAN
 mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud”
-mirror](http://cloud.r-project.org) “sponsored by RStudio”. The logs for
-the previous day are generally posted the following day at 18:00 (GMT+1)
-or 17:00 UTC (GMT+2) (daylight saving time). Results for functions that
-rely on ‘cranlogs’ are generally available soon thereafter.
+mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the
+previous day are generally posted around 17:00 (UTC). Updated results
+for functions that rely on ‘cranlogs’ are generally available soon
+thereafter.
 
 ### I - getting started
 

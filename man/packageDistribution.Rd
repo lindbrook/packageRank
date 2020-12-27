@@ -4,14 +4,14 @@
 \alias{packageDistribution}
 \title{Package Download Distribution.}
 \usage{
-packageDistribution(package = "HistData", date = Sys.Date() - 1,
+packageDistribution(package = "HistData", date = NULL,
   size.filter = FALSE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE)
 }
 \arguments{
 \item{package}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date. "yyyy-mm-dd".}
+\item{date}{Character. Date. "yyyy-mm-dd".  NULL uses latest available log.}
 
 \item{size.filter}{Logical. If Logical, TRUE filters out downloads less than 1000 bytes.}
 

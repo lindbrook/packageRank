@@ -4,7 +4,7 @@
 \alias{packageLog}
 \title{Get Package Download Logs.}
 \usage{
-packageLog(packages = "cholera", date = Sys.Date() - 1, ip.filter = TRUE,
+packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
   ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
   sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
   dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE)
@@ -12,7 +12,7 @@ packageLog(packages = "cholera", date = Sys.Date() - 1, ip.filter = TRUE,
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{ip.filter}{Logical.}
 

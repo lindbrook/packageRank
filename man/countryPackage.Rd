@@ -4,7 +4,7 @@
 \alias{countryPackage}
 \title{Tabulate a country's package downloads.}
 \usage{
-countryPackage(country = "HK", date = Sys.Date() - 1, memoization = TRUE,
+countryPackage(country = "HK", date = NULL, memoization = TRUE,
   sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
   multi.core = TRUE)
@@ -12,7 +12,7 @@ countryPackage(country = "HK", date = Sys.Date() - 1, memoization = TRUE,
 \arguments{
 \item{country}{Character. country abbreviation.}
 
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

@@ -4,14 +4,14 @@
 \alias{identifySequences0}
 \title{Extract Archive sequences from logs (prototype).}
 \usage{
-identifySequences0(package = "cholera", date = Sys.Date() - 1,
-  download.time = 30, triplet.filter = TRUE, small.filter = TRUE,
-  memoization = TRUE, dev.mode = FALSE)
+identifySequences0(package = "cholera", date = NULL, download.time = 30,
+  triplet.filter = TRUE, small.filter = TRUE, memoization = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{package}{Character. Package name.}
 
-\item{date}{Character. Date.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{download.time}{Numeric. Package download time allowance (seconds).}
 

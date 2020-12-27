@@ -2,7 +2,7 @@
 #'
 #' triplet, ip and small filters.
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param triplet.filter Logical.
 #' @param ip.filter Logical.
@@ -12,14 +12,16 @@
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
-cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
+cranDownloadsB <- function(packages = "HistData", date = NULL,
   check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
   small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
   dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
+
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
 
   cran_log <- packageLog0(packages = packages, date = ymd,
     memoization = memoization)
@@ -43,7 +45,6 @@ cranDownloadsB <- function(packages = "HistData", date = Sys.Date() - 1,
 
   inflation <- round(100 * (ct - f.ct) / f.ct, 2)
 
-  data.frame(date = date, package = packages, downloads = ct,
+  data.frame(date = ymd, package = packages, downloads = ct,
     filtered.downloads = f.ct, inflation = inflation, row.names = NULL)
-
 }

@@ -4,15 +4,14 @@
 \alias{cranDownloadsB}
 \title{Filtered package downloads from the RStudio CRAN mirror (protoype).}
 \usage{
-cranDownloadsB(packages = "HistData", date = Sys.Date() - 1,
-  check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
-  dev.mode = FALSE)
+cranDownloadsB(packages = "HistData", date = NULL, check.package = TRUE,
+  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
+  sequence.filter = TRUE, memoization = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
