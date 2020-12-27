@@ -4,14 +4,14 @@
 \alias{ipPackage}
 \title{Tabulate an IP's package downloads.}
 \usage{
-ipPackage(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
-  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
-  dev.mode = FALSE, multi.core = TRUE)
+ipPackage(ip = 10, date = NULL, memoization = TRUE, sort = TRUE,
+  small.filter = FALSE, triplet.filter = FALSE, dev.mode = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id.}
 
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

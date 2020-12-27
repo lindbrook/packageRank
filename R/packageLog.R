@@ -2,7 +2,7 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param ip.filter Logical.
 #' @param ip.campaigns Logical.
 #' @param triplet.filter Logical.
@@ -16,18 +16,20 @@
 #' @return An R data frame.
 #' @export
 
-packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
-  ip.filter = TRUE, ip.campaigns = TRUE, triplet.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
-  multi.core = TRUE) {
+packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
+  ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
+  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
+
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
+
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
@@ -104,7 +106,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param dev.mode Logical.
@@ -113,7 +115,7 @@ packageLog <- function(packages = "cholera", date = Sys.Date() - 1,
 #' @return An R data frame.
 #' @export
 
-packageLog0 <- function(packages = "cholera", date = Sys.Date() - 1,
+packageLog0 <- function(packages = "cholera", date = NULL,
   check.package = TRUE, memoization = TRUE, dev.mode = FALSE,
   clean.output = FALSE, multi.core = TRUE) {
 

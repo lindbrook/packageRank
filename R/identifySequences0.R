@@ -2,7 +2,7 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param package Character. Package name.
-#' @param date Character. Date.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param download.time Numeric. Package download time allowance (seconds).
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
@@ -10,7 +10,7 @@
 #' @param dev.mode Logical.
 #' @export
 
-identifySequences0 <- function(package = "cholera", date = Sys.Date() - 1,
+identifySequences0 <- function(package = "cholera", date = NULL,
   download.time = 30, triplet.filter = TRUE, small.filter = TRUE,
   memoization = TRUE, dev.mode = FALSE) {
 
@@ -19,8 +19,10 @@ identifySequences0 <- function(package = "cholera", date = Sys.Date() - 1,
   pkg.hist <- pkg.hist[pkg.hist$Date <= as.Date(date), ]
   arch.pkg.hist <- pkg.hist[pkg.hist$Repository == "Archive", ]
 
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
+
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)

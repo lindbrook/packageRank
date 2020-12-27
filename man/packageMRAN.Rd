@@ -4,13 +4,13 @@
 \alias{packageMRAN}
 \title{Extract package data from MRAN (protoype).}
 \usage{
-packageMRAN(package = "cholera", date = Sys.Date() - 1,
-  check.package = TRUE, multi.core = TRUE)
+packageMRAN(package = "cholera", date = NULL, check.package = TRUE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
 
-\item{date}{Character.}
+\item{date}{Character. NULL uses latest available log.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 

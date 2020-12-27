@@ -2,7 +2,7 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param ip Numeric. ip_id.
-#' @param date Character. Date. yyyy-mm-dd.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
 #' @param small.filter Logical.
@@ -12,13 +12,16 @@
 #' @note ip = 10 is a tw top-level domain on 2020-07-09.
 #' @export
 
-ipPackage <- function(ip = 10, date = Sys.Date() - 1, memoization = TRUE,
+ipPackage <- function(ip = 10, date = NULL, memoization = TRUE,
   sort = TRUE, small.filter = FALSE, triplet.filter = FALSE, dev.mode = FALSE,
   multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
+
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
+
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)

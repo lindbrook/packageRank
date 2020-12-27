@@ -1,7 +1,7 @@
 #' Tabulate package downloads by country.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param date Character. Date. yyyy-mm-dd.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param ip.filter Logical.
 #' @param ip.campaigns Logical.
 #' @param small.filter Logical TRUE filters out downloads less than 1000 bytes.
@@ -11,13 +11,16 @@
 #' @return An R data frame.
 #' @export
 
-countryDistribution <- function(date = Sys.Date() - 1, ip.filter = TRUE,
+countryDistribution <- function(date = NULL, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
   dev.mode = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  date <- check10CharDate(date)
-  ymd <- fixDate_2012(date)
+
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
+
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)

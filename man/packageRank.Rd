@@ -4,15 +4,14 @@
 \alias{packageRank}
 \title{Package download counts and rank percentiles.}
 \usage{
-packageRank(packages = "HistData", date = Sys.Date() - 1,
-  ip.filter = TRUE, ip.campaigns = TRUE, small.filter = TRUE,
-  memoization = TRUE, check.package = TRUE, dev.mode = FALSE,
-  multi.core = TRUE)
+packageRank(packages = "HistData", date = NULL, ip.filter = TRUE,
+  ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date. "yyyy-mm-dd".}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{ip.filter}{Logical.}
 

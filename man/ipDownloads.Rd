@@ -4,10 +4,10 @@
 \alias{ipDownloads}
 \title{Unique package download counts by IP address.}
 \usage{
-ipDownloads(date = Sys.Date() - 1, memoization = TRUE, dev.mode = FALSE)
+ipDownloads(date = NULL, memoization = TRUE, dev.mode = FALSE)
 }
 \arguments{
-\item{date}{Character. Date.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

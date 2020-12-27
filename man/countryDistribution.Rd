@@ -4,12 +4,12 @@
 \alias{countryDistribution}
 \title{Tabulate package downloads by country.}
 \usage{
-countryDistribution(date = Sys.Date() - 1, ip.filter = TRUE,
-  ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
-  dev.mode = FALSE, multi.core = TRUE)
+countryDistribution(date = NULL, ip.filter = TRUE, ip.campaigns = TRUE,
+  small.filter = TRUE, memoization = TRUE, dev.mode = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{ip.filter}{Logical.}
 
