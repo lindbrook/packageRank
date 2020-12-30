@@ -4,15 +4,14 @@
 \alias{packageCountry}
 \title{Package download counts by country.}
 \usage{
-packageCountry(packages = "cholera", date = Sys.Date() - 1,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE,
-  triplet.filter = TRUE, ip.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, check.package = TRUE)
+packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
+  sort = TRUE, na.rm = FALSE, triplet.filter = TRUE, ip.filter = TRUE,
+  small.filter = TRUE, sequence.filter = TRUE, check.package = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
-\item{date}{Character. Date. yyyy-mm-dd.}
+\item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

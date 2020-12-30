@@ -2,7 +2,7 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
-#' @param date Character. Date. yyyy-mm-dd.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param sort Logical. Sort by download count.
 #' @param na.rm Logical. Remove NAs.
 #' @param triplet.filter Logical.
@@ -13,12 +13,16 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
-packageCountry <- function(packages = "cholera", date = Sys.Date() - 1,
+packageCountry <- function(packages = "cholera", date = NULL,
   memoization = TRUE, sort = TRUE, na.rm = FALSE, triplet.filter = TRUE,
   ip.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
   check.package = TRUE) {
 
-  p.log <- packageLog(packages = packages, date = date,
+  if (is.null(date)) ymd <- logDate()
+  else ymd <- checkDate(date)
+  ymd <- fixDate_2012(ymd)
+
+  p.log <- packageLog(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
     memoization = memoization, check.package = check.package)
