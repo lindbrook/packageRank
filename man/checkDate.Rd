@@ -4,12 +4,14 @@
 \alias{checkDate}
 \title{Check and validate "yyyy-mm-dd" date.}
 \usage{
-checkDate(date, repository = "CRAN")
+checkDate(date, repository = "CRAN", upload.time = "17:00:00")
 }
 \arguments{
 \item{date}{Character. \code{"yyyy-mm-dd"}.}
 
 \item{repository}{Character. "CRAN" or "MRAN".}
+
+\item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".}
 }
 \description{
 Check and validate "yyyy-mm-dd" date.

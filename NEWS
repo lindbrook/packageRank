@@ -4,6 +4,7 @@ packageRank 0.3.5.9120
 - use international date line as reference point in logDate().
 - packageCountry(): use checkDate() and logDate().
 - add/set logDate(stop.msg = TRUE).
+- use UTC in checkDate().
 
 
 packageRank 0.3.5.9119
