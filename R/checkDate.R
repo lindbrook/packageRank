@@ -59,7 +59,7 @@ checkDate <- function(date, repository = "CRAN", upload.time = "17:00:00") {
           paste(Time, Unit), " at ", local.upload, ".")
       } else {
         Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
-        msg <- paste0("Log for ", effective.date, " in future! Available in ",
+        msg <- paste0(effective.date, " in future! Log available in ",
           paste(Time, Unit), ".")
       }
       stop(msg, call. = FALSE)
