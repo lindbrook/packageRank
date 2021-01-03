@@ -22,9 +22,9 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  pkg.order <- packages
 
   if (check.package) packages <- checkPackage(packages)
+  pkg.order <- packages
 
   if (is.null(date)) ymd <- logDate()
   else ymd <- checkDate(date)

@@ -5,7 +5,7 @@
 \title{Compute Effective CRAN Log Date Based on Local and UTC Time (manual prototype).}
 \usage{
 logDate0(date = Sys.Date() + 1, tz.time = "16:05:00",
-  tz = "Australia/Sydney", upload.time = "17:00:00")
+  tz = "Australia/Sydney", upload.time = "17:00:00", warning.msg = TRUE)
 }
 \arguments{
 \item{date}{Character. Local date "yyyy-mm-dd".}
@@ -15,6 +15,8 @@ logDate0(date = Sys.Date() + 1, tz.time = "16:05:00",
 \item{tz}{Character. Local time zone.}
 
 \item{upload.time}{Character. UTC upload time "hh:mm" or "hh:mm:dd".}
+
+\item{warning.msg}{Logical. TRUE uses warning() if the fuction returns the previous available date.}
 }
 \value{
 An R date object.

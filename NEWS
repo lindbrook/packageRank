@@ -1,8 +1,12 @@
 packageRank 0.3.5.9120
 ==================
 
-- use international date line as reference point in logDate().
+- use international date line and UTC in checkDate() and logDate().
 - packageCountry(): use checkDate() and logDate().
+- add/set logDate(warning.msg = TRUE).
+- logDate(): amend warning(); remove date test and stop().
+- revise checkDate() prototype.
+- add utc() and currentTime().
 
 
 packageRank 0.3.5.9119

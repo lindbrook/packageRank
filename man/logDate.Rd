@@ -4,10 +4,12 @@
 \alias{logDate}
 \title{Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).}
 \usage{
-logDate(upload.time = "17:00:00")
+logDate(upload.time = "17:00:00", warning.msg = TRUE)
 }
 \arguments{
-\item{upload.time}{Character. UTC upload time "hh:mm" or "hh:mm:dd".}
+\item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".}
+
+\item{warning.msg}{Logical. TRUE uses warning() if the fuction returns the previous available date.}
 }
 \value{
 An R date object.

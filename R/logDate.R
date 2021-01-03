@@ -1,41 +1,48 @@
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).
 #'
 #' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
-#' @param upload.time Character. UTC upload time "hh:mm" or "hh:mm:dd".
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".
+#' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
 #' @return An R date object.
 #' @export
 
-logDate <- function(upload.time = "17:00:00") {
+logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
   local.time <- Sys.time()
   local.date <- as.Date(format(local.time, "%Y-%m-%d"))
   local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
     tz = "GMT")
 
-  # Info for yesterday's log
+  # Info for available log
   east.of.dateline <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
     tz = "Etc/GMT+12")
   intl.dateline.date <- as.Date(format(east.of.dateline, "%Y-%m-%d"))
   upload.utc <- dateTime(intl.dateline.date, upload.time)
   local.upload <- as.POSIXlt(as.numeric(upload.utc), origin = "1970-01-01",
     tz = Sys.timezone())
-  local.upload <- format(local.upload, format = "%H:%M:%S %Z")
+  local.upload <- format(local.upload, format = "%d %b %H:%M %Z")
 
   available.date <- intl.dateline.date - 1
   delta <- difftime(local.utc, upload.utc)
 
-  date.test <- identical(local.date, intl.dateline.date) |
-               local.date - intl.dateline.date == 1
+  if (delta < 0) {
+    Time <- -round(unclass(delta)[1])
+    Unit <- attributes(delta)$units
 
-  if (date.test) {
-    if (delta < 0) {
-      Time <- -round(unclass(delta)[1])
-      Unit <- attributes(delta)$units
-      Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
-      msg <- paste0("Log for ", available.date, " should be available in ",
-        paste(Time, Unit), " at ", local.upload, ".")
-      stop(msg, call. = FALSE)
-    } else available.date
-  }
+    if (Unit %in% c("secs", "mins")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
+    }
+    
+    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+
+    if (warning.msg) {
+      msg <- paste0(available.date, " log should be available in ",
+        paste(Time, Unit), " at ", local.upload, ". Using previous!")
+      warning(msg, call. = FALSE)
+      available.date - 1
+    } else available.date - 1
+  } else available.date
 }
 
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (manual prototype).
@@ -45,40 +52,47 @@ logDate <- function(upload.time = "17:00:00") {
 #' @param tz.time Character. Local time ime "hh:mm" or "hh:mm:dd".
 #' @param tz Character. Local time zone.
 #' @param upload.time Character. UTC upload time "hh:mm" or "hh:mm:dd".
+#' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
 #' @return An R date object.
 #' @export
 
 logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05:00",
-   tz = "Australia/Sydney", upload.time = "17:00:00") {
+   tz = "Australia/Sydney", upload.time = "17:00:00", warning.msg = TRUE) {
 
   local.time <- dateTime(date, tz.time, tz = tz)
   local.date <- as.Date(format(local.time, "%Y-%m-%d"))
   local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
     tz = "GMT")
 
-  # Info for yesterday's log
+  # Info for available log
   east.of.dateline <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
     tz = "Etc/GMT+12")
   intl.dateline.date <- as.Date(format(east.of.dateline, "%Y-%m-%d"))
   upload.utc <- dateTime(intl.dateline.date, upload.time)
   local.upload <- as.POSIXlt(as.numeric(upload.utc), origin = "1970-01-01",
-    tz = Sys.timezone())
-  local.upload <- format(local.upload, format = "%H:%M:%S %Z")
+    tz = tz)
+  local.upload <- format(local.upload, format = "%d %b %H:%M %Z")
 
   available.date <- intl.dateline.date - 1
   delta <- difftime(local.utc, upload.utc)
 
-  date.test <- identical(local.date, intl.dateline.date) |
-               local.date - intl.dateline.date == 1
+  if (delta < 0) {
+    Time <- -unclass(delta)[1]
+    Unit <- attributes(delta)$units
 
-  if (date.test) {
-    if (delta < 0) {
-      Time <- -round(unclass(delta)[1])
-      Unit <- attributes(delta)$units
-      Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
-      msg <- paste0("Log for ", available.date, " should be available in ",
-        paste(Time, Unit), " at ", local.upload, ".")
-      stop(msg, call. = FALSE)
-    } else available.date
-  }
+    if (Unit %in% c("secs", "mins", "days")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
+    }
+
+    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+
+    if (warning.msg) {
+      msg <- paste0(available.date, " log should be available in ",
+        paste(Time, Unit), " at ", local.upload, ". Using previous!")
+      warning(msg, call. = FALSE)
+      available.date - 1
+    } else available.date - 1
+  } else available.date
 }
