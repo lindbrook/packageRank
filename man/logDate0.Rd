@@ -16,7 +16,7 @@ logDate0(date = Sys.Date() + 1, tz.time = "16:05:00",
 
 \item{upload.time}{Character. UTC upload time "hh:mm" or "hh:mm:dd".}
 
-\item{warning.msg}{Logical. TRUE uses stop(); FALSE uses warning() and returns previous available date.}
+\item{warning.msg}{Logical. TRUE uses warning() if the fuction returns the previous available date.}
 }
 \value{
 An R date object.

@@ -28,8 +28,12 @@ logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
     Time <- -round(unclass(delta)[1])
     Unit <- attributes(delta)$units
 
-    if (Unit %in% c("secs", "mins")) Time <- round(Time)
-    else if (Unit == "hours") Time <- round(Time, 1)
+    if (Unit %in% c("secs", "mins")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
+    }
+    
     Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
 
     if (warning.msg) {
@@ -48,7 +52,7 @@ logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
 #' @param tz.time Character. Local time ime "hh:mm" or "hh:mm:dd".
 #' @param tz Character. Local time zone.
 #' @param upload.time Character. UTC upload time "hh:mm" or "hh:mm:dd".
-#' @param warning.msg Logical. TRUE uses stop(); FALSE uses warning() and returns previous available date.
+#' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
 #' @return An R date object.
 #' @export
 
@@ -76,8 +80,12 @@ logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05:00",
     Time <- -unclass(delta)[1]
     Unit <- attributes(delta)$units
 
-    if (Unit %in% c("secs", "mins")) Time <- round(Time)
-    else if (Unit == "hours") Time <- round(Time, 1)
+    if (Unit %in% c("secs", "mins", "days")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
+    }
+
     Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
 
     if (warning.msg) {
