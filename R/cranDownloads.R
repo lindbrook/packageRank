@@ -45,8 +45,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
-  # first.log <- as.Date("2012-10-01") # resolveDate() checks this.
-  cal.date <- Sys.Date() - 1
+  cal.date <- logDate(warning.msg = FALSE)
 
   if (is.null(when) & is.null(from) & is.null(to)) {
     args <- list(packages = packages, from = cal.date, to = cal.date)
