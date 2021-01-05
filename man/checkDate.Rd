@@ -5,7 +5,7 @@
 \title{Check and validate "yyyy-mm-dd" date.}
 \usage{
 checkDate(date, repository = "CRAN", upload.time = "17:00",
-  tz = Sys.timezone(), use.warning = TRUE)
+  tz = Sys.timezone(), warning.msg = TRUE)
 }
 \arguments{
 \item{date}{Character. Date of desired log \code{"yyyy-mm-dd"}.}
@@ -16,7 +16,7 @@ checkDate(date, repository = "CRAN", upload.time = "17:00",
 
 \item{tz}{Character. Local time zone. See OlsonNames().}
 
-\item{use.warning}{Logical. Local time zone. See OlsonNames().}
+\item{warning.msg}{Logical. Local time zone. See OlsonNames().}
 }
 \description{
 Check and validate "yyyy-mm-dd" date.

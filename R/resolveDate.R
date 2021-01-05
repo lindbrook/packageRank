@@ -58,7 +58,7 @@ resolveDate <- function(date, type = "from") {
     stop(msg, call. = FALSE)
   } else x.date
 
-  checkDate(x.date, use.warning = FALSE)
+  checkDate(x.date, warning.msg = FALSE)
 }
 
 dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
