@@ -1,12 +1,12 @@
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).
 #'
 #' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
-#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
 #' @return An R date object.
 #' @export
 
-logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
+logDate <- function(upload.time = "17:00", warning.msg = TRUE) {
   local.time <- Sys.time()
   local.date <- as.Date(format(local.time, "%Y-%m-%d"))
   local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
@@ -33,7 +33,7 @@ logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
     } else if (Unit == "hours") {
       Time <- round(Time, 1)
     }
-    
+
     Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
 
     if (warning.msg) {
@@ -56,8 +56,8 @@ logDate <- function(upload.time = "17:00:00", warning.msg = TRUE) {
 #' @return An R date object.
 #' @export
 
-logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05:00",
-   tz = "Australia/Sydney", upload.time = "17:00:00", warning.msg = TRUE) {
+logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05",
+   tz = "Australia/Sydney", upload.time = "17:00", warning.msg = TRUE) {
 
   local.time <- dateTime(date, tz.time, tz = tz)
   local.date <- as.Date(format(local.time, "%Y-%m-%d"))

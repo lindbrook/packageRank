@@ -2,7 +2,7 @@
 #'
 #' @param date Character. Date of desired log \code{"yyyy-mm-dd"}.
 #' @param repository Character. "CRAN" or "MRAN".
-#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param tz Character. Local time zone. See OlsonNames().
 #' @param warning.msg Logical. Local time zone. See OlsonNames().
 #' @export

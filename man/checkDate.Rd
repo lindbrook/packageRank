@@ -12,7 +12,7 @@ checkDate(date, repository = "CRAN", upload.time = "17:00",
 
 \item{repository}{Character. "CRAN" or "MRAN".}
 
-\item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".}
+\item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".}
 
 \item{tz}{Character. Local time zone. See OlsonNames().}
 

@@ -12,7 +12,7 @@ utc(local.time = TRUE, date = "2020-01-01", time = "12:00:00",
 
 \item{date}{Character. Date "yyyy-mm-dd".}
 
-\item{time}{Character. Local time ime "hh:mm" or "hh:mm:dd".}
+\item{time}{Character. Local time ime "hh:mm" or "hh:mm:ss".}
 
 \item{tz}{Character. Local time zone. See OlsonNames().}
 }
