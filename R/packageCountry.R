@@ -18,8 +18,8 @@ packageCountry <- function(packages = "cholera", date = NULL,
   ip.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
   check.package = TRUE) {
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  if (is.null(date)) ymd <- logDate(warning.msg = FALSE)
+  else ymd <- checkDate(date, warning.msg = FALSE)
   ymd <- fixDate_2012(ymd)
 
   p.log <- packageLog(packages = packages, date = ymd,
