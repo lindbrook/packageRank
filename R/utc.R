@@ -2,7 +2,7 @@
 #'
 #' @param local.time Logical. Use current local time.
 #' @param date Character. Date "yyyy-mm-dd".
-#' @param time Character. Local time ime "hh:mm" or "hh:mm:dd".
+#' @param time Character. Local time ime "hh:mm" or "hh:mm:ss".
 #' @param tz Character. Local time zone. See OlsonNames().
 #' @export
 

@@ -19,7 +19,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
   check.package = TRUE) {
 
   if (is.null(date)) ymd <- logDate(warning.msg = FALSE)
-  else ymd <- checkDate(date)
+  else ymd <- checkDate(date, warning.msg = FALSE)
   ymd <- fixDate_2012(ymd)
 
   p.log <- packageLog(packages = packages, date = ymd,

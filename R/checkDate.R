@@ -2,12 +2,13 @@
 #'
 #' @param date Character. Date of desired log \code{"yyyy-mm-dd"}.
 #' @param repository Character. "CRAN" or "MRAN".
-#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:dd".
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param tz Character. Local time zone. See OlsonNames().
+#' @param warning.msg Logical. Local time zone. See OlsonNames().
 #' @export
 
 checkDate <- function(date, repository = "CRAN", upload.time = "17:00",
-  tz = Sys.timezone()) {
+  tz = Sys.timezone(), warning.msg = TRUE) {
 
   date <- as.Date(date, optional = TRUE)
 
@@ -64,14 +65,15 @@ checkDate <- function(date, repository = "CRAN", upload.time = "17:00",
         origin = "1970-01-01", tz = tz)
       local.upload <- format(local.upload, format = "%H:%M %Z")
 
-      msg <- paste0(date, " log should be available in ", paste(Time, Unit),
-        " at ", local.upload, ". Using previous log.")
-      warning(msg, call. = FALSE)
+      if (warning.msg) {
+        msg <- paste0(date, " log should be available in ", paste(Time, Unit),
+          " at ", local.upload, ". Using previous log.")
+        warning(msg, call. = FALSE)
+      }
       available.date
     } else if (local.date <= available.date) {
       available.date
     }
-
   } else if (local.utc >= today.utc & local.utc < tomorrow.utc) {
     delta <- -difftime(local.utc, tomorrow.utc)
 
@@ -90,9 +92,11 @@ checkDate <- function(date, repository = "CRAN", upload.time = "17:00",
       origin = "1970-01-01", tz = tz)
     local.upload <- format(local.upload, format = "%H:%M %Z")
 
-    msg <- paste0(date, " log should be available in ", paste(Time, Unit),
-      " at ", local.upload, ". Using previous log.")
-    warning(msg, call. = FALSE)
+    if (warning.msg) {
+      msg <- paste0(date, " log should be available in ", paste(Time, Unit),
+        " at ", local.upload, ". Using previous log.")
+      warning(msg, call. = FALSE)
+    }
     available.date
 
   } else if (local.utc >= tomorrow.utc & local.utc < day_after.utc) {
