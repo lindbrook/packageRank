@@ -134,7 +134,7 @@ cranlogs::cran_downloads(packages = "HistData", from = "2020-02-01",
 cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 ```
 
-##### “yyyy”
+##### “yyyy” or yyyy
 
 Let’s say you want the year-to-date download counts for
 [‘rstan’](https://CRAN.R-project.org/package=rstan). With
@@ -145,10 +145,16 @@ cranlogs::cran_downloads(packages = "rstan", from = "2020-01-01",
   to = Sys.Date() - 1)
 ```
 
-<br/> With `cranDownloads()`, you can just type:
+<br/> With `cranDownloads()`, you can use:
 
 ``` r
-cranDownloads(packages = "rstan", from = "2020")
+cranDownloads(packages = "rstan", from = "2021")
+```
+
+or
+
+``` r
+cranDownloads(packages = "rstan", from = 2021)
 ```
 
 <br/>
