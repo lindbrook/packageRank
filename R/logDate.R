@@ -37,31 +37,36 @@ logDate <- function(upload.time = "17:00", warning.msg = TRUE) {
   available.date <- possible.dates[delta.times >= 0]
   available.date <- available.date[length(available.date)] - 1
 
-  delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
-  next.log <- delta.nms[delta.times < 0][1]
-  next.date <- possible.dates[delta.times < 0][1] - 1
-  next.delta <- get(next.log)
+  year <- as.POSIXlt(available.date)$year + 1900
+  rstudio.url <- "http://cran-logs.rstudio.com/"
+  log.url <- paste0(rstudio.url, year, '/', available.date, ".csv.gz")
 
-  Time <- -unclass(next.delta)[1]
-  Unit <- attributes(next.delta)$units
+  if (!RCurl::url.exists(log.url)) {
+    delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
+    next.log <- delta.nms[delta.times < 0][1]
+    next.date <- possible.dates[delta.times < 0][1] - 1
+    next.delta <- get(next.log)
 
-  if (Unit %in% c("secs", "mins", "days")) {
-    Time <- round(Time)
-  } else if (Unit == "hours") {
-    Time <- round(Time, 1)
-  }
+    Time <- -unclass(next.delta)[1]
+    Unit <- attributes(next.delta)$units
 
-  Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
-
-  if (delta.times[2] < 0) {
-    if (warning.msg) {
-      msg <- paste0(next.date, " log should be available in ",
-        paste(Time, Unit), " at ", local.upload, ". Using previous!")
-      warning(msg, call. = FALSE)
+    if (Unit %in% c("secs", "mins", "days")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
     }
-  }
 
-  available.date
+    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+
+    if (delta.times[2] < 0) {
+      if (warning.msg) {
+        msg <- paste0(next.date, " log should be available in ",
+          paste(Time, Unit), " at ", local.upload, ". Using previous!")
+        warning(msg, call. = FALSE)
+      }
+    }
+    available.date
+  } else available.date
 }
 
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (manual prototype).
@@ -72,11 +77,13 @@ logDate <- function(upload.time = "17:00", warning.msg = TRUE) {
 #' @param tz Character. Local time zone.
 #' @param upload.time Character. UTC upload time "hh:mm" or "hh:mm:dd".
 #' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
+#' @param check.url Logical.
 #' @return An R date object.
 #' @export
 
 logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05",
-   tz = "Australia/Sydney", upload.time = "17:00", warning.msg = TRUE) {
+   tz = "Australia/Sydney", upload.time = "17:00", warning.msg = TRUE,
+   check.url = FALSE) {
 
   local.time <- dateTime(date, tz.time, tz = tz)
   local.date <- as.Date(format(local.time, "%Y-%m-%d"))
@@ -108,29 +115,63 @@ logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05",
   available.date <- possible.dates[delta.times >= 0]
   available.date <- available.date[length(available.date)] - 1
 
-  delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
-  next.log <- delta.nms[delta.times < 0][1]
-  next.date <- possible.dates[delta.times < 0][1] - 1
-  next.delta <- get(next.log)
+  year <- as.POSIXlt(available.date)$year + 1900
+  rstudio.url <- "http://cran-logs.rstudio.com/"
+  log.url <- paste0(rstudio.url, year, '/', available.date, ".csv.gz")
 
-  Time <- -unclass(next.delta)[1]
-  Unit <- attributes(next.delta)$units
+  if (check.url) {
+    if (!RCurl::url.exists(log.url)) {
+      delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
+      next.log <- delta.nms[delta.times < 0][1]
+      next.date <- possible.dates[delta.times < 0][1] - 1
+      next.delta <- get(next.log)
 
-  if (Unit %in% c("secs", "mins", "days")) {
-    Time <- round(Time)
-  } else if (Unit == "hours") {
-    Time <- round(Time, 1)
-  }
+      Time <- -unclass(next.delta)[1]
+      Unit <- attributes(next.delta)$units
 
-  Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+      if (Unit %in% c("secs", "mins", "days")) {
+        Time <- round(Time)
+      } else if (Unit == "hours") {
+        Time <- round(Time, 1)
+      }
 
-  if (delta.times[2] < 0) {
-    if (warning.msg) {
-      msg <- paste0(next.date, " log should be available in ",
-        paste(Time, Unit), " at ", local.upload, ". Using previous!")
-      warning(msg, call. = FALSE)
+      Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+
+      if (delta.times[2] < 0) {
+        if (warning.msg) {
+          msg <- paste0(next.date, " log should be available in ",
+            paste(Time, Unit), " at ", local.upload, ". Using previous!")
+          warning(msg, call. = FALSE)
+        }
+      }
+      available.date
+    } else available.date
+  } else {
+    delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
+    next.log <- delta.nms[delta.times < 0][1]
+    next.date <- possible.dates[delta.times < 0][1] - 1
+    next.delta <- get(next.log)
+
+    Time <- -unclass(next.delta)[1]
+    Unit <- attributes(next.delta)$units
+
+    if (Unit %in% c("secs", "mins", "days")) {
+      Time <- round(Time)
+    } else if (Unit == "hours") {
+      Time <- round(Time, 1)
     }
+
+    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+
+    if (delta.times[2] < 0) {
+      if (warning.msg) {
+        msg <- paste0(next.date, " log should be available in ",
+          paste(Time, Unit), " at ", local.upload, ". Using previous!")
+        warning(msg, call. = FALSE)
+      }
+    }
+
+    available.date
   }
 
-  available.date
 }
