@@ -4,9 +4,16 @@
 \alias{logDate}
 \title{Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).}
 \usage{
-logDate(upload.time = "17:00", warning.msg = TRUE)
+logDate(date = NULL, check.url = TRUE, repository = "CRAN",
+  upload.time = "17:00", warning.msg = TRUE)
 }
 \arguments{
+\item{date}{Character. Date of desired log \code{"yyyy-mm-dd"}.}
+
+\item{check.url}{Logical.}
+
+\item{repository}{Character. "CRAN" or "MRAN". RStudio CRAN mirror log or Microsoft MRAN snapshot.}
+
 \item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".}
 
 \item{warning.msg}{Logical. TRUE uses warning() if the function returns the date of the previous available log.}

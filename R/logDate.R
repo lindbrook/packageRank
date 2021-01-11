@@ -1,135 +1,75 @@
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).
 #'
 #' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
+#' @param date Character. Date of desired log \code{"yyyy-mm-dd"}.
+#' @param check.url Logical.
+#' @param repository Character. "CRAN" or "MRAN". RStudio CRAN mirror log or Microsoft MRAN snapshot.
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param warning.msg Logical. TRUE uses warning() if the function returns the date of the previous available log.
 #' @return An R date object.
 #' @export
 
-logDate <- function(upload.time = "17:00", warning.msg = TRUE) {
-  local.time <- Sys.time()
-  local.date <- as.Date(format(local.time, "%Y-%m-%d"))
-  local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
-    tz = "GMT")
+logDate <- function(date = NULL, check.url = TRUE,
+  repository = "CRAN", upload.time = "17:00", warning.msg = TRUE) {
 
-  # Info for available log (earliest date time)
-  east.of.dateline <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
-    tz = "Etc/GMT+12")
-  intl.dateline.date <- as.Date(format(east.of.dateline, "%Y-%m-%d"))
-  upload.utc <- dateTime(intl.dateline.date, upload.time)
-  local.upload <- as.POSIXlt(as.numeric(upload.utc), origin = "1970-01-01",
-    tz = Sys.timezone())
-  local.upload <- format(local.upload, format = "%d %b %H:%M %Z")
-
-  possible.dates <- c(intl.dateline.date - 1,
-                      intl.dateline.date,
-                      intl.dateline.date + 1)
-
-  upload.yesterday <- dateTime(intl.dateline.date - 1, upload.time)
-  upload.today <- dateTime(intl.dateline.date, upload.time)
-  upload.tomorrow <- dateTime(intl.dateline.date + 1, upload.time)
-
-  delta.yesterday <- difftime(local.utc, upload.yesterday)
-  delta.today <- difftime(local.utc, upload.today)
-  delta.tomorrow <- difftime(local.utc, upload.tomorrow)
-
-  delta.times <- c(delta.yesterday, delta.today, delta.tomorrow)
-  available.date <- possible.dates[delta.times >= 0]
-  available.date <- available.date[length(available.date)] - 1
-
-  year <- as.POSIXlt(available.date)$year + 1900
-  rstudio.url <- "http://cran-logs.rstudio.com/"
-  log.url <- paste0(rstudio.url, year, '/', available.date, ".csv.gz")
-
-  if (!RCurl::url.exists(log.url)) {
-    delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
-    next.log <- delta.nms[delta.times < 0][1]
-    next.date <- possible.dates[delta.times < 0][1] - 1
-    next.delta <- get(next.log)
-
-    Time <- -unclass(next.delta)[1]
-    Unit <- attributes(next.delta)$units
-
-    if (Unit %in% c("secs", "mins", "days")) {
-      Time <- round(Time)
-    } else if (Unit == "hours") {
-      Time <- round(Time, 1)
+  if (is.null(date)) {
+    local.time <- Sys.time()
+    local.date <- as.Date(format(local.time, "%Y-%m-%d"))
+  } else {
+    local.date <- as.Date(date, optional = TRUE)
+    if (is.na(local.date)) {
+      stop('Invalid date or format "yyyy-mm-dd".', call. = FALSE)
     }
+  }
 
-    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
+  if (repository == "CRAN") {
+    first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
+  } else if (repository == "MRAN") {
+     first.log <- as.Date("2014-09-17") # first MRAN snapshot.
+  } else stop('repository must be "CRAN" or "MRAN".', call. = FALSE)
 
-    if (delta.times[2] < 0) {
-      if (warning.msg) {
-        msg <- paste0(next.date, " log should be available in ",
-          paste(Time, Unit), " at ", local.upload, ". Using previous!")
-        warning(msg, call. = FALSE)
-      }
+  if (local.date < first.log) {
+    if (repository == "CRAN") {
+      txt <- 'RStudio CRAN logs begin on '
+      stop(paste0(txt, first.log, "."), call. = FALSE)
+    } else if (repository == "MRAN") {
+      txt <- 'MRAN snapshots begin on '
+      stop(paste0(txt, first.log, "."), call. = FALSE)
     }
-    available.date
-  } else available.date
-}
-
-#' Compute Effective CRAN Log Date Based on Local and UTC Time (manual prototype).
-#'
-#' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
-#' @param date Character. Local date "yyyy-mm-dd".
-#' @param tz.time Character. Local time ime "hh:mm" or "hh:mm:dd".
-#' @param tz Character. Local time zone.
-#' @param upload.time Character. UTC upload time "hh:mm" or "hh:mm:dd".
-#' @param warning.msg Logical. TRUE uses warning() if the fuction returns the previous available date.
-#' @param check.url Logical.
-#' @return An R date object.
-#' @export
-
-logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05",
-   tz = "Australia/Sydney", upload.time = "17:00", warning.msg = TRUE,
-   check.url = FALSE) {
-
-  local.time <- dateTime(date, tz.time, tz = tz)
-  local.date <- as.Date(format(local.time, "%Y-%m-%d"))
-  local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
-    tz = "GMT")
-
-  # Info for available log
-  east.of.dateline <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
-    tz = "Etc/GMT+12")
-  intl.dateline.date <- as.Date(format(east.of.dateline, "%Y-%m-%d"))
-  upload.utc <- dateTime(intl.dateline.date, upload.time)
-  local.upload <- as.POSIXlt(as.numeric(upload.utc), origin = "1970-01-01",
-    tz = tz)
-  local.upload <- format(local.upload, format = "%d %b %H:%M %Z")
-
-  possible.dates <- c(intl.dateline.date - 1,
-                      intl.dateline.date,
-                      intl.dateline.date + 1)
-
-  upload.yesterday <- dateTime(intl.dateline.date - 1, upload.time)
-  upload.today <- dateTime(intl.dateline.date, upload.time)
-  upload.tomorrow <- dateTime(intl.dateline.date + 1, upload.time)
-
-  delta.yesterday <- difftime(local.utc, upload.yesterday)
-  delta.today <- difftime(local.utc, upload.today)
-  delta.tomorrow <- difftime(local.utc, upload.tomorrow)
-
-  delta.times <- c(delta.yesterday, delta.today, delta.tomorrow)
-  available.date <- possible.dates[delta.times >= 0]
-  available.date <- available.date[length(available.date)] - 1
-
-  year <- as.POSIXlt(available.date)$year + 1900
-  rstudio.url <- "http://cran-logs.rstudio.com/"
-  log.url <- paste0(rstudio.url, year, '/', available.date, ".csv.gz")
+  }
 
   if (check.url) {
-    if (!RCurl::url.exists(log.url)) {
-      delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
-      next.log <- delta.nms[delta.times < 0][1]
-      next.date <- possible.dates[delta.times < 0][1] - 1
-      next.delta <- get(next.log)
+    year <- as.POSIXlt(local.date)$year + 1900
+    rstudio.url <- "http://cran-logs.rstudio.com/"
+    log.url <- paste0(rstudio.url, year, '/', local.date, ".csv.gz")
+    if (RCurl::url.exists(log.url)) {
+      out <- local.date
+    } else out <- available_date(local.date, upload.time, warning.msg)
+  } else out <- available_date(local.date, upload.time, warning.msg)
+  out
+}
 
-      Time <- -unclass(next.delta)[1]
-      Unit <- attributes(next.delta)$units
+available_date <- function(local.date, upload.time, warning.msg) {
+  candidate.days <- seq.Date(local.date - 1, local.date + 1, by = "days")
+  uploads <- lapply(candidate.days, function(x) dateTime(x, upload.time))
+  local.time <- Sys.time()
+  local.utc <- as.POSIXlt(local.time, tz = "GMT")
+  deltas <- lapply(uploads, function(x) difftime(local.utc, x))
+  pos <- vapply(deltas, function(x) x >= 0, logical(1L))
 
-      if (Unit %in% c("secs", "mins", "days")) {
+  if (all(pos)) {
+    out <- date
+  } else if (all(!pos)) {
+    stop("Date in future!", call. = FALSE)
+  } else {
+    out <- candidate.days[pos][sum(pos)]
+    next.date <- candidate.days[!pos][1]
+
+    if (identical(date, next.date)) {
+      Time <- -unlist(deltas[!pos][1])
+      Unit <- attributes(deltas[!pos][1][[1]])$units
+
+      if (Unit %in% c("secs", "mins", "days", "weeks")) {
         Time <- round(Time)
       } else if (Unit == "hours") {
         Time <- round(Time, 1)
@@ -137,41 +77,65 @@ logDate0 <- function(date = Sys.Date() + 1, tz.time = "16:05",
 
       Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
 
-      if (delta.times[2] < 0) {
-        if (warning.msg) {
-          msg <- paste0(next.date, " log should be available in ",
-            paste(Time, Unit), " at ", local.upload, ". Using previous!")
-          warning(msg, call. = FALSE)
-        }
-      }
-      available.date
-    } else available.date
-  } else {
-    delta.nms <-  c("delta.yesterday", "delta.today", "delta.tomorrow")
-    next.log <- delta.nms[delta.times < 0][1]
-    next.date <- possible.dates[delta.times < 0][1] - 1
-    next.delta <- get(next.log)
+      utc.upload <- as.numeric(uploads[!pos][1][[1]])
+      local.upload <- as.POSIXlt(utc.upload, origin = "1970-01-01",
+        tz = Sys.timezone())
+      local.upload <- format(local.upload, format = "%d %b %H:%M %Z")
 
-    Time <- -unclass(next.delta)[1]
-    Unit <- attributes(next.delta)$units
-
-    if (Unit %in% c("secs", "mins", "days")) {
-      Time <- round(Time)
-    } else if (Unit == "hours") {
-      Time <- round(Time, 1)
-    }
-
-    Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
-
-    if (delta.times[2] < 0) {
       if (warning.msg) {
         msg <- paste0(next.date, " log should be available in ",
           paste(Time, Unit), " at ", local.upload, ". Using previous!")
         warning(msg, call. = FALSE)
       }
     }
-
-    available.date
   }
-
+  out
 }
+
+#' Compute Effective CRAN Log Date Based on Local and UTC Time (manual prototype).
+#'
+#' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
+#' @param date Character. Local date "yyyy-mm-dd".
+#' @param time Character. Local time ime "hh:mm" or "hh:mm:dd".
+#' @param tz Character. Local time zone.
+#' @param check.url Logical.
+#' @param warning.msg Logical. TRUE uses warning() if the function returns the date of the previous available log.
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
+#' @return An R date object.
+#' @noRd 
+
+# logDate0 <- function(date = Sys.Date() + 1, time = "00:21",
+#   tz = "Australia/Sydney", check.url = FALSE, warning.msg = TRUE,
+#   upload.time = "17:00") {
+#
+#   date <- as.Date(date, optional = TRUE)
+#   if (is.na(date)) stop('Invalid date or format "yyyy-mm-dd".', call. = FALSE)
+#   local.time <- dateTime(date, time, tz = tz)
+#   local.date <- as.Date(format(local.time, "%Y-%m-%d"))
+#   local.utc <- as.POSIXlt(as.numeric(local.time), origin = "1970-01-01",
+#     tz = "GMT")
+#
+#   east.of.dateline <- as.POSIXlt(Sys.time(), tz = "Etc/GMT+12")
+#   intl.dateline.date <- as.Date(format(east.of.dateline, "%Y-%m-%d"))
+#   upload.utc <- dateTime(intl.dateline.date, upload.time)
+#   delta <- difftime(local.utc, upload.utc, units = "days")
+#
+#   if (delta > 1) {
+#     stop("Date in future!", call. = FALSE)
+#   } else {
+#     if (check.url) {
+#       year <- as.POSIXlt(date)$year + 1900
+#       rstudio.url <- "http://cran-logs.rstudio.com/"
+#       log.url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
+#       if (RCurl::url.exists(log.url)) out <- date
+#       else {
+#         out <- available_date(local.time, local.date, local.utc, tz,
+#           upload.time, warning.msg)
+#       }
+#     } else {
+#       out <- available_date(local.time, local.date, local.utc, tz,
+#         upload.time, warning.msg)
+#     }
+#   }
+#   out
+# }
