@@ -58,7 +58,7 @@ available_date <- function(local.date, upload.time, warning.msg) {
   pos <- vapply(deltas, function(x) x >= 0, logical(1L))
 
   if (all(pos)) {
-    out <- date
+    out <- local.date
   } else if (all(!pos)) {
     stop("Date in future!", call. = FALSE)
   } else {
