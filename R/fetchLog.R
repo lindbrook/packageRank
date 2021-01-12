@@ -25,8 +25,8 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
       }
     }
   } else {
-    msg <- "Check your internet connection or try the previous day."
-    stop("Log for ", date, " not (yet) available. ", msg, call. = FALSE)
+    msg <- " should be available but not on server."
+    stop("Log for ", date, msg, call. = FALSE)
   }
 
   options(timeout = orig.timeout)
