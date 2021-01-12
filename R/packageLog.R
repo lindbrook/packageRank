@@ -26,8 +26,7 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   if (check.package) packages <- checkPackage(packages)
   pkg.order <- packages
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date)
   ymd <- fixDate_2012(ymd)
 
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,

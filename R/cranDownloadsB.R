@@ -19,8 +19,7 @@ cranDownloadsB <- function(packages = "HistData", date = NULL,
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date)
   ymd <- fixDate_2012(ymd)
 
   cran_log <- packageLog0(packages = packages, date = ymd,
