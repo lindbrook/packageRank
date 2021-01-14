@@ -4,12 +4,12 @@
 \alias{dateTime}
 \title{Nominal time to clock time}
 \usage{
-dateTime(date = "2020-08-14", time = "09:00:00", tz = "GMT")
+dateTime(date = "2021-01-01", time = "09:00", tz = "GMT")
 }
 \arguments{
 \item{date}{Character. "yyyy-mm-dd".}
 
-\item{time}{Character. "hh:mmm:ss".}
+\item{time}{Character. "hh:mmm" or "hh:mmm:ss".}
 
 \item{tz}{Character. Time zone.}
 }
