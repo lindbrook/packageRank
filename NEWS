@@ -1,7 +1,7 @@
 packageRank 0.3.5.9122
 ==================
 
-- incorporate checkDate() in logDate() and add available_date().
+- add logDate() with available_log(); deprecate checkDate().
 
 
 packageRank 0.3.5.9121
