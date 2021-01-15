@@ -23,5 +23,5 @@ utc <- function(local.time = TRUE, date = "2020-01-01", time = "12:00:00",
 
 currentTime <- function(tz = "Australia/Sydney") {
   x <- Sys.time()
-  as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
+  as.POSIXct(as.numeric(x), origin = "1970-01-01", tz = tz)
 }

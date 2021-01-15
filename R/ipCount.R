@@ -10,8 +10,7 @@
 ipCount <- function(date = NULL, memoization = TRUE, sort = TRUE,
   dev.mode = FALSE) {
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date)
   ymd <- fixDate_2012(ymd)
 
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,

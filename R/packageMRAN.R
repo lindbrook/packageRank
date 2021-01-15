@@ -14,8 +14,7 @@ packageMRAN <- function(package = "cholera", date = NULL, check.package = TRUE,
   cores <- multiCore(multi.core)
   if (check.package) package <- checkPackage(package)
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date, repository = "MRAN")
 
   mran.url <- "https://cran.microsoft.com/snapshot/"
   root.url <- paste0(mran.url, ymd)

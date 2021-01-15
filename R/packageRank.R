@@ -26,8 +26,7 @@ packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
 
   if (check.package) packages <- checkPackage(packages)
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date)
   ymd <- fixDate_2012(ymd)
 
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,

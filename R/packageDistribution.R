@@ -14,8 +14,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
 
   if (check.package) packages <- checkPackage(package)
 
-  if (is.null(date)) ymd <- logDate()
-  else ymd <- checkDate(date)
+  ymd <- logDate(date)
   ymd <- fixDate_2012(ymd)
 
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
