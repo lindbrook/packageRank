@@ -8,7 +8,7 @@ logDate(date = NULL, check.url = TRUE, repository = "CRAN",
   upload.time = "17:00", warning.msg = TRUE)
 }
 \arguments{
-\item{date}{Character. Date of desired log \code{"yyyy-mm-dd"}.}
+\item{date}{Character. Date of desired log \code{"yyyy-mm-dd"}. NULL returns date of latest available log.}
 
 \item{check.url}{Logical.}
 

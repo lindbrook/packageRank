@@ -1,7 +1,7 @@
 #' Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).
 #'
 #' RStudio CRAN Mirror Logs for previous day are posted at 17:00:00 UTC.
-#' @param date Character. Date of desired log \code{"yyyy-mm-dd"}.
+#' @param date Character. Date of desired log \code{"yyyy-mm-dd"}. NULL returns date of latest available log.
 #' @param check.url Logical.
 #' @param repository Character. "CRAN" or "MRAN". RStudio CRAN mirror log or Microsoft MRAN snapshot.
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
