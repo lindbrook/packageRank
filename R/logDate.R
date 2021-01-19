@@ -17,6 +17,7 @@ logDate <- function(date = NULL, check.url = TRUE,
   if (is.null(date)) {
     local.time <- Sys.time()
     local.date <- as.Date(format(local.time, "%Y-%m-%d"))
+    warning.msg <- FALSE
   } else {
     local.date <- as.Date(date, optional = TRUE)
     if (is.na(local.date)) {
