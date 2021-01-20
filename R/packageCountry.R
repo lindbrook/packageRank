@@ -19,7 +19,6 @@ packageCountry <- function(packages = "cholera", date = NULL,
   check.package = TRUE) {
 
   ymd <- logDate(date, warning.msg = FALSE)
-  ymd <- fixDate_2012(ymd)
 
   p.log <- packageLog(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,

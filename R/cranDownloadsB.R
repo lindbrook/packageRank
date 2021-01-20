@@ -20,8 +20,6 @@ cranDownloadsB <- function(packages = "HistData", date = NULL,
   if (check.package) packages <- checkPackage(packages, dev.mode)
 
   ymd <- logDate(date)
-  ymd <- fixDate_2012(ymd)
-
   cran_log <- packageLog0(packages = packages, date = ymd,
     memoization = memoization)
 
