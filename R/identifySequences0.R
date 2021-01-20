@@ -20,8 +20,6 @@ identifySequences0 <- function(package = "cholera", date = NULL,
   arch.pkg.hist <- pkg.hist[pkg.hist$Repository == "Archive", ]
 
   ymd <- logDate(date, warning.msg = FALSE)
-  ymd <- fixDate_2012(ymd)
-
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)

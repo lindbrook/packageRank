@@ -11,8 +11,6 @@ ipCount <- function(date = NULL, memoization = TRUE, sort = TRUE,
   dev.mode = FALSE) {
 
   ymd <- logDate(date)
-  ymd <- fixDate_2012(ymd)
-
   cran_log <- fetchCranLog(date = ymd, memoization = memoization,
     dev.mode = dev.mode)
   cran_log <- cleanLog(cran_log)
