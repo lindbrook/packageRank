@@ -54,3 +54,55 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
   }
   log.date
 }
+
+available_log <- function(local.date, tz, upload.time, warning.msg) {
+  current.date_time <- Sys.time()
+  current.time <- format(current.date_time, "%H:%M:%S")
+  current.date <- as.Date(format(current.date_time, format = "%Y-%m-%d"))
+
+  current.utc <- as.POSIXlt(as.numeric(current.date_time),
+    origin = "1970-01-01", tz = "GMT")
+  current.utc.date <- as.Date(format(current.utc, format = "%Y-%m-%d"))
+  current.utc.upload <- dateTime(current.utc.date, upload.time)
+
+  nominal.date_time <- dateTime(local.date, current.time, tz = tz)
+  nominal.utc <- as.POSIXlt(as.numeric(nominal.date_time),
+    origin = "1970-01-01", tz = "GMT")
+
+  delta.days <- difftime(nominal.utc, current.utc.upload,  units = "days")
+
+  if (delta.days > 1) {
+    stop("Date in future!", call. = FALSE)
+  } else {
+    delta.time <- difftime(nominal.utc, current.utc.upload)
+
+    if (delta.time < 0) {
+      time.data <- timeUnit(delta.time)
+      current.upload <- as.POSIXlt(current.utc.upload, origin = "1970-01-01",
+        tz = tz)
+      current.upload <- format(current.upload, format = "%d %b %H:%M %Z")
+      if (warning.msg) {
+        msg <- paste0(current.utc.date - 1, " log should be available in ",
+          paste(time.data$Time, time.data$Unit), " at ", current.upload,
+          ". Using previous!")
+        warning(msg, call. = FALSE)
+      }
+      log.date <- current.utc.date - 1
+    } else {
+      next.utc.upload <- dateTime(current.utc.date + 1, upload.time)
+      next.delta.time <- difftime(nominal.utc, next.utc.upload)
+      time.data <- timeUnit(next.delta.time)
+      next.upload <- as.POSIXlt(next.utc.upload, origin = "1970-01-01",
+        tz = tz)
+      next.upload <- format(next.upload, format = "%d %b %H:%M %Z")
+      if (warning.msg) {
+        msg <- paste0(current.utc.date, " log should be available in ",
+          paste(time.data$Time, time.data$Unit), " at ", next.upload,
+          ". Using previous!")
+        warning(msg, call. = FALSE)
+      }
+      log.date <- current.utc.date - 1
+    }
+  }
+  log.date
+}
