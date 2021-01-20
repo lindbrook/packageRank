@@ -2,6 +2,7 @@ packageRank 0.3.5.9122
 ==================
 
 - add logDate() with available_log(); deprecate checkDate().
+- add timeUnit().
 
 
 packageRank 0.3.5.9121
