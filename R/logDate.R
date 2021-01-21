@@ -112,7 +112,7 @@ timeUnit <- function(x) {
   Unit <- attributes(x)$units
   if (Unit %in% c("secs", "mins")) {
     Time <- round(Time)
-  } else if (Unit == "hours") {
+  } else if (Unit %in% c("hours", "days")) {
     Time <- round(Time, 1)
   } else stop("Error!")
   Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
