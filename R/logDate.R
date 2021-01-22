@@ -87,7 +87,7 @@ available_log <- function(local.date, tz, upload.time, warning.msg) {
           ". Using previous!")
         warning(msg, call. = FALSE)
       }
-      log.date <- current.utc.date - 1
+      log.date <- current.utc.date - 2
     } else {
       next.utc.upload <- dateTime(current.utc.date + 1, upload.time)
       next.delta.time <- difftime(nominal.utc, next.utc.upload)
