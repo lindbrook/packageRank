@@ -25,10 +25,9 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
     }
   }
 
-  local.date <- fixDate_2012(local.date)
-
   if (repository == "CRAN") {
     first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
+    local.date <- fixDate_2012(local.date)
   } else if (repository == "MRAN") {
      first.log <- as.Date("2014-09-17") # first MRAN snapshot.
   } else stop('repository must be "CRAN" or "MRAN".', call. = FALSE)
