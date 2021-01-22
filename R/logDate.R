@@ -42,15 +42,16 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
     }
   }
 
-  year <- as.POSIXlt(local.date)$year + 1900
-  rstudio.url <- "http://cran-logs.rstudio.com/"
-  log.url <- paste0(rstudio.url, year, '/', local.date, ".csv.gz")
-
-  if (RCurl::url.exists(log.url)) {
+  if (repository == "CRAN") {
+    year <- as.POSIXlt(local.date)$year + 1900
+    rstudio.url <- "http://cran-logs.rstudio.com/"
+    log.url <- paste0(rstudio.url, year, '/', local.date, ".csv.gz")
+    if (RCurl::url.exists(log.url)) log.date <- local.date
+    else log.date <- available_log(local.date, tz, upload.time, warning.msg)
+  } else if (repository == "MRAN") {
     log.date <- local.date
-  } else {
-    log.date <- available_log(local.date, tz, upload.time, warning.msg)
   }
+
   log.date
 }
 
