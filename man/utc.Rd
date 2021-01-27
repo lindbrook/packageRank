@@ -2,20 +2,10 @@
 % Please edit documentation in R/utc.R
 \name{utc}
 \alias{utc}
-\title{Compute Coordinated Universal Time (UTC/GMT) for your local time.}
+\title{Compute Coordinated Universal Time (UTC/GMT) for Your Local Time.}
 \usage{
-utc(local.time = TRUE, date = "2020-01-01", time = "12:00:00",
-  tz = "Europe/Vienna")
-}
-\arguments{
-\item{local.time}{Logical. Use current local time.}
-
-\item{date}{Character. Date "yyyy-mm-dd".}
-
-\item{time}{Character. Local time ime "hh:mm" or "hh:mm:ss".}
-
-\item{tz}{Character. Local time zone. See OlsonNames().}
+utc()
 }
 \description{
-Compute Coordinated Universal Time (UTC/GMT) for your local time.
+Compute Coordinated Universal Time (UTC/GMT) for Your Local Time.
 }
