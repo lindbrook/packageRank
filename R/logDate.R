@@ -56,52 +56,85 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
 }
 
 available_log <- function(local.date, tz, upload.time, warning.msg) {
-  current.date_time <- Sys.time()
-  current.time <- format(current.date_time, "%H:%M:%S")
-  current.date <- as.Date(format(current.date_time, format = "%Y-%m-%d"))
+  nominal.date <- local.date
+  effective.utc <- dateTime(nominal.date + 1, upload.time)
 
+  current.date_time <- Sys.time()
   current.utc <- as.POSIXlt(as.numeric(current.date_time),
     origin = "1970-01-01", tz = "GMT")
-  current.utc.date <- as.Date(format(current.utc, format = "%Y-%m-%d"))
-  current.utc.upload <- dateTime(current.utc.date, upload.time)
 
-  nominal.date_time <- dateTime(local.date, current.time, tz = tz)
-  nominal.utc <- as.POSIXlt(as.numeric(nominal.date_time),
-    origin = "1970-01-01", tz = "GMT")
+  delta.days <- difftime(current.utc, effective.utc, units = "days")
 
-  delta.days <- difftime(nominal.utc, current.utc.upload,  units = "days")
+  if (delta.days >= 0) {
+    log.date <- nominal.date
 
-  if (delta.days > 1) {
-    stop("Date in future!", call. = FALSE)
+  } else if (delta.days <= -2) {
+    stop("Date in future. Log not yet available.", call. = FALSE)
+
+  } else if (delta.days > -2 & delta.days <= -1) {
+    delta.time <- difftime(current.utc, effective.utc)
+    effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
+
+    effective.utc.b <- dateTime(nominal.date, upload.time)
+    delta.time.b <- difftime(current.utc, effective.utc.b)
+
+    if (delta.time.b < 0) {
+      effective.date <- as.Date(format(effective.utc.b, "%Y-%m-%d")) - 1
+    }
+
+   if (delta.time < 0) {
+     if (identical(nominal.date, effective.date)) {
+       log.date <- effective.date
+     } else {
+       t.minus <- timeUnit(delta.time)
+       next.upload <- as.POSIXlt(effective.utc, tz = tz)
+       next.upload <- format(next.upload, "%d %b %H:%M %Z")
+       if (warning.msg) {
+         msg <- paste0(nominal.date, " log arrives in appox. ",
+           paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+           ". Using last available!")
+         warning(msg, call. = FALSE)
+       }
+       log.date <- effective.date - 1
+     }
+   }
+
   } else {
-    delta.time <- difftime(nominal.utc, current.utc.upload)
+    delta.time <- difftime(current.utc, effective.utc)
+    effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
 
-    if (delta.time < 0) {
-      time.data <- timeUnit(delta.time)
-      current.upload <- as.POSIXlt(current.utc.upload, origin = "1970-01-01",
-        tz = tz)
-      current.upload <- format(current.upload, format = "%d %b %H:%M %Z")
-      if (warning.msg) {
-        msg <- paste0(current.utc.date - 1, " log should be available in ",
-          paste(time.data$Time, time.data$Unit), " at ", current.upload,
-          ". Using previous!")
-        warning(msg, call. = FALSE)
+    if (delta.time >= 0) {
+      if (identical(nominal.date, effective.date)) {
+        log.date <- effective.date
+      } else {
+        next.date <- effective.date + 1
+        next.utc <- dateTime(next.date, upload.time)
+        t.minus <- timeUnit(difftime(current.utc, next.utc))
+        next.upload <- as.POSIXlt(next.utc, tz = tz)
+        next.upload <- format(next.upload, "%d %b %H:%M %Z")
+        if (warning.msg) {
+          msg <- paste0(nominal.date, " log arrives in appox. ",
+            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+            ". Using last available!")
+          warning(msg, call. = FALSE)
+        }
+        log.date <- effective.date - 1
       }
-      log.date <- current.utc.date - 2
     } else {
-      next.utc.upload <- dateTime(current.utc.date + 1, upload.time)
-      next.delta.time <- difftime(nominal.utc, next.utc.upload)
-      time.data <- timeUnit(next.delta.time)
-      next.upload <- as.POSIXlt(next.utc.upload, origin = "1970-01-01",
-        tz = tz)
-      next.upload <- format(next.upload, format = "%d %b %H:%M %Z")
-      if (warning.msg) {
-        msg <- paste0(current.utc.date, " log should be available in ",
-          paste(time.data$Time, time.data$Unit), " at ", next.upload,
-          ". Using previous!")
-        warning(msg, call. = FALSE)
+      if (identical(nominal.date, effective.date)) {
+        log.date <- effective.date
+      } else {
+        t.minus <- timeUnit(delta.time)
+        next.upload <- as.POSIXlt(effective.utc, tz = tz)
+        next.upload <- format(next.upload, "%d %b %H:%M %Z")
+        if (warning.msg) {
+          msg <- paste0(nominal.date, " log arrives in appox. ",
+            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+            ". Using last available!")
+          warning(msg, call. = FALSE)
+        }
       }
-      log.date <- current.utc.date - 1
+      log.date <- effective.date - 2
     }
   }
   log.date
@@ -117,4 +150,104 @@ timeUnit <- function(x) {
   } else stop("Error!")
   Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
   data.frame(Time = Time, Unit = Unit)
+}
+
+#' Compute Effective CRAN Log Date Based on Local and UTC Time (prototype).
+#'
+#' @param local.date Character. Date of desired log \code{"yyyy-mm-dd"}.
+#' @param current.date Character. \code{"yyyy-mm-dd"}.
+#' @param current.time Character. \code{"hh-mm-ss"} \code{"hh-mm"}.
+#' @param tz Character. Time zone. See OlsonNames().
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
+#' @param warning.msg Logical. TRUE uses warning() if the function returns the date of the previous available log.
+#' @export
+
+available_log0 <- function(local.date = "2021-01-25",
+  current.date = Sys.Date(), current.time = "09:51", tz = Sys.timezone(),
+  upload.time = "17:00", warning.msg = TRUE) {
+
+  nominal.date <- as.Date(local.date)
+  effective.utc <- dateTime(nominal.date + 1, upload.time)
+
+  current.date_time <- dateTime(current.date, current.time, tz = tz)
+  current.utc <- as.POSIXlt(as.numeric(current.date_time),
+    origin = "1970-01-01", tz = "GMT")
+
+  delta.days <- difftime(current.utc, effective.utc, units = "days")
+
+  if (delta.days >= 0) {
+    log.date <- nominal.date
+
+  } else if (delta.days < -1) {
+    stop("Date in future. Log not yet available.", call. = FALSE)
+
+  } else if (delta.days > -2 & delta.days <= -1) {
+    delta.time <- difftime(current.utc, effective.utc)
+    effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
+
+    effective.utc.b <- dateTime(nominal.date, upload.time)
+    delta.time.b <- difftime(current.utc, effective.utc.b)
+
+    if (delta.time.b < 0) {
+      effective.date <- as.Date(format(effective.utc.b, "%Y-%m-%d")) - 1
+    }
+
+   if (delta.time < 0) {
+     if (identical(nominal.date, effective.date)) {
+       log.date <- effective.date
+     } else {
+       t.minus <- timeUnit(delta.time)
+       next.upload <- as.POSIXlt(effective.utc, tz = tz)
+       next.upload <- format(next.upload, "%d %b %H:%M %Z")
+       if (warning.msg) {
+         msg <- paste0(nominal.date, " log arrives in appox. ",
+           paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+           ". Using last available!")
+         warning(msg, call. = FALSE)
+       }
+       log.date <- effective.date - 1
+     }
+   }
+
+  } else {
+    delta.time <- difftime(current.utc, effective.utc)
+    effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
+
+    if (delta.time >= 0) {
+      if (identical(nominal.date, effective.date)) {
+        log.date <- effective.date
+      } else {
+        next.date <- effective.date + 1
+        next.utc <- dateTime(next.date, upload.time)
+        t.minus <- timeUnit(difftime(current.utc, next.utc))
+        next.upload <- as.POSIXlt(next.utc, tz = tz)
+        next.upload <- format(next.upload, "%d %b %H:%M %Z")
+        if (warning.msg) {
+          msg <- paste0(nominal.date, " log arrives in appox. ",
+            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+            ". Using last available!")
+          warning(msg, call. = FALSE)
+        }
+        log.date <- effective.date - 1
+      }
+    } else {
+      if (identical(nominal.date, effective.date)) {
+        log.date <- effective.date
+      } else {
+        t.minus <- timeUnit(delta.time)
+        next.upload <- as.POSIXlt(effective.utc, tz = tz)
+        next.upload <- format(next.upload, "%d %b %H:%M %Z")
+        if (warning.msg) {
+          msg <- paste0(nominal.date, " log arrives in appox. ",
+            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+            ". Using last available!")
+          warning(msg, call. = FALSE)
+        }
+      }
+      log.date <- effective.date - 2
+    }
+  }
+
+  list(nominal.date = nominal.date, log.date = log.date,
+    identical(nominal.date, log.date))
 }
