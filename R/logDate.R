@@ -177,8 +177,38 @@ available_log0 <- function(local.date = "2021-01-25",
 
   if (delta.days >= 0) {
     log.date <- nominal.date
+
   } else if (delta.days < -1) {
     stop("Date in future. Log not yet available.", call. = FALSE)
+
+  } else if (delta.days > -2 & delta.days <= -1) {
+    delta.time <- difftime(current.utc, effective.utc)
+    effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
+
+    effective.utc.b <- dateTime(nominal.date, upload.time)
+    delta.time.b <- difftime(current.utc, effective.utc.b)
+
+    if (delta.time.b < 0) {
+      effective.date <- as.Date(format(effective.utc.b, "%Y-%m-%d")) - 1
+    }
+
+   if (delta.time < 0) {
+     if (identical(nominal.date, effective.date)) {
+       log.date <- effective.date
+     } else {
+       t.minus <- timeUnit(delta.time)
+       next.upload <- as.POSIXlt(effective.utc, tz = tz)
+       next.upload <- format(next.upload, "%d %b %H:%M %Z")
+       if (warning.msg) {
+         msg <- paste0(nominal.date, " log arrives in appox. ",
+           paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+           ". Using last available!")
+         warning(msg, call. = FALSE)
+       }
+       log.date <- effective.date - 1
+     }
+   }
+
   } else {
     delta.time <- difftime(current.utc, effective.utc)
     effective.date <- as.Date(format(effective.utc, "%Y-%m-%d"))
@@ -193,9 +223,9 @@ available_log0 <- function(local.date = "2021-01-25",
         next.upload <- as.POSIXlt(next.utc, tz = tz)
         next.upload <- format(next.upload, "%d %b %H:%M %Z")
         if (warning.msg) {
-          msg <- paste0(nominal.date, " log available in appox. ",
+          msg <- paste0(nominal.date, " log arrives in appox. ",
             paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
-            ". Using previous!")
+            ". Using last available!")
           warning(msg, call. = FALSE)
         }
         log.date <- effective.date - 1
@@ -208,9 +238,9 @@ available_log0 <- function(local.date = "2021-01-25",
         next.upload <- as.POSIXlt(effective.utc, tz = tz)
         next.upload <- format(next.upload, "%d %b %H:%M %Z")
         if (warning.msg) {
-          msg <- paste0(nominal.date, " log available in appox. ",
+          msg <- paste0(nominal.date, " log arrives in appox. ",
             paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
-            ". Using previous!")
+            ". Using last available!")
           warning(msg, call. = FALSE)
         }
       }
