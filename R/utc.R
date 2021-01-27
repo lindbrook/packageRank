@@ -10,7 +10,7 @@ utc <- function() {
 #'
 #' @param date Character. Date "yyyy-mm-dd".
 #' @param time Character. Local time "hh:mm" or "hh:mm:ss".
-#' @param tz Character. Local time zone. Use OlsonNames() or Sys.timezone().
+#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @export
 
 utc0 <- function(date = "2020-01-01", time = "12:00:00", tz = "Europe/Vienna") {
@@ -20,16 +20,16 @@ utc0 <- function(date = "2020-01-01", time = "12:00:00", tz = "Europe/Vienna") {
 
 #' Compute Current Local Time in Selected Time Zone.
 #'
-#' @param tz Character. Local time zone. Use OlsonNames() or Sys.timezone().
+#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @export
 
 currentTime <- function(tz = "Australia/Sydney") {
   as.POSIXct(as.numeric(Sys.time()), origin = "1970-01-01", tz = tz)
 }
 
-#' Compute Date of log, GMT and Local Posing Time.
+#' Compute Date of Log, GMT and Local Posting Time.
 #'
-#' @param tz Character. Local time zone. Use OlsonNames() or Sys.timezone().
+#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @export
 
 logPostInfo <- function(tz = Sys.timezone()) {

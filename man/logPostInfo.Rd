@@ -2,13 +2,13 @@
 % Please edit documentation in R/utc.R
 \name{logPostInfo}
 \alias{logPostInfo}
-\title{Compute Date of log, GMT and Local Posing Time.}
+\title{Compute Date of Log, GMT and Local Posting Time.}
 \usage{
 logPostInfo(tz = Sys.timezone())
 }
 \arguments{
-\item{tz}{Character. Local time zone. Use OlsonNames() or Sys.timezone().}
+\item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 }
 \description{
-Compute Date of log, GMT and Local Posing Time.
+Compute Date of Log, GMT and Local Posting Time.
 }

@@ -7,7 +7,7 @@
 currentTime(tz = "Australia/Sydney")
 }
 \arguments{
-\item{tz}{Character. Local time zone. Use OlsonNames() or Sys.timezone().}
+\item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 }
 \description{
 Compute Current Local Time in Selected Time Zone.
