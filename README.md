@@ -22,8 +22,8 @@ and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter
 record traffic to what was previously called RStudio’s [CRAN
 mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud”
 mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the
-previous day are generally posted around 17:00 (UTC). Updated results
-for functions that rely on ‘cranlogs’ are generally available soon
+previous day are generally posted by 17:00 UTC. Updated results for
+functions that rely on ‘cranlogs’ are generally available soon
 thereafter.
 
 ### I - getting started
@@ -141,7 +141,7 @@ Let’s say you want the year-to-date download counts for
 `cranlogs::cran_downloads()`, you’d type something like:
 
 ``` r
-cranlogs::cran_downloads(packages = "rstan", from = "2020-01-01",
+cranlogs::cran_downloads(packages = "rstan", from = "2021-01-01",
   to = Sys.Date() - 1)
 ```
 

@@ -20,7 +20,7 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a `plot()` method and a more user-friendly interface. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other [CRAN](https://CRAN.R-project.org/) packages.
 
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the previous day are generally posted around 17:00 (UTC). Updated results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
 
 ### I - getting started
 
@@ -124,7 +124,7 @@ cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 Let's say you want the year-to-date download counts for ['rstan'](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
 
 ```{r yyyy_1, eval = FALSE}
-cranlogs::cran_downloads(packages = "rstan", from = "2020-01-01",
+cranlogs::cran_downloads(packages = "rstan", from = "2021-01-01",
   to = Sys.Date() - 1)
 ```
 
