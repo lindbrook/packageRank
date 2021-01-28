@@ -499,7 +499,85 @@ dotted vertical lines. The package with the most downloads,
 cases, is at top left (in blue). The total number of downloads is at the
 top right (in blue).
 
-### VI - memoization
+### VI - time zones
+
+For ‘packageRank’ functions, the calendar date (e.g. “2021-01-01”) is
+the unit of observation. However, because the typical use case involves
+getting the most recent data (i.e., the *latest* log), time zone
+differences can come into play.
+
+Let’s say that it’s 09:01 on 01 January 2021 and you want to compute the
+rank percentile for the ‘ergm’ package for 31 December 2020. You might
+enter the following expression:
+
+``` r
+packageRank(packages = "ergm")
+```
+
+However, depending on *where* you make this request, you may not get the
+data you expect. If you’re in Honolulu, USA, you will. If you’re in
+Sydney, Australia, you won’t. The reason is that you’ve somehow
+forgotten a key piece of trivia: RStudio typically posts yesterday’s log
+by 17:00 UTC the following day.
+
+The expression works in Honolulu because 09:01 HST on 01 January 2021 is
+19:01 UTC 01 January 2021: the log you want has been available for 2
+hours. The expression fails in Sydney because 09:01 AEDT on 01 January
+2021 is 31 December 2020 22:00 UTC: the log you want won’t actually be
+posted for another 19 hours.
+
+To make life a little easier, ‘packgeRank’ does two things. First, when
+the date of the log you want is not available (due to timezone rather
+than server issues), you’ll get the last available log as a substitute
+and a warning that provides an estimate of when that log should be
+available.
+
+For the Sydney example, you’ll get the log for 30 December 2020 and the
+following message:
+
+    Warning message:
+    2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
+
+Second, to help you remember when logs are posted in your locale,
+there’s logPostInfo(). It gives you the date of the latest available
+log along with the local and UTC time when that log is posted to
+RStudio’s server.
+
+``` r
+logPostInfo()
+```
+
+    > $log.date
+    > [1] "2021-01-27"
+    > 
+    > $GMT
+    > [1] "2021-01-28 17:00:00 GMT"
+    > 
+    > $local
+    > [1] "2021-01-28 07:00:00 HST"
+
+The default is to use your local time zone, via Sys.timezone(). You can
+use specific time zones by passing the zones names listed in
+OlsonNames() to the *tz* argument:
+
+``` r
+logPostInfo(tz = "Australia/Sydney")
+```
+
+    > $log.date
+    > [1] "2021-01-27"
+    > 
+    > $GMT
+    > [1] "2021-01-28 17:00:00 GMT"
+    > 
+    > $local
+    > [1] "2021-01-29 04:00:00 AEDT"
+
+Note that this functionality depends on R’s ability to to compute your
+clock time/time zone (e.g., Sys.time()). My understanding is that there
+may be issues related to your operating system or platform.
+
+### VII - memoization
 
 To avoid the bottleneck of downloading multiple log files,
 `packageRank()` is currently limited to individual days. However, to

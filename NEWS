@@ -4,6 +4,7 @@ packageRank 0.3.5.9123
 - amend available_log().
 - add available_log0().
 - add/amend utc(), utc0(), currentTime(), and logPostInfo().
+- add time zone section to README.
 
 
 packageRank 0.3.5.9122
