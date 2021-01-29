@@ -5,7 +5,7 @@
 \title{Visualize a Package's Downloads Relative to "All" CRAN packages over Time.}
 \usage{
 populationPlot(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
-  sample.smooth = TRUE, f = 1/3, sample.pct = 5,
+  sample.smooth = TRUE, f = 1/3, sample.pct = 2.5,
   population.seed = as.numeric(Sys.Date()), multi.core = TRUE)
 }
 \arguments{

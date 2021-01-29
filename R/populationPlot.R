@@ -12,8 +12,8 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @export
 
-populationPlot <- function(x, graphics = NULL, log.count = TRUE,
-  smooth = TRUE, sample.smooth = TRUE, f = 1/3, sample.pct = 5,
+populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
+  sample.smooth = TRUE, f = 1/3, sample.pct = 2.5,
   population.seed = as.numeric(Sys.Date()), multi.core = TRUE) {
 
   pkg.data <- x$cranlogs.data
