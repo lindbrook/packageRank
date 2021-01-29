@@ -508,9 +508,8 @@ most recent data (i.e., the *latest* log), time zone differences can
 come into play.
 
 Let’s say that it’s 09:01 on 01 January 2021 and you want to compute the
-rank percentile for the
-[‘ergm’](https://CRAN.R-project.org/package=ergm) package for 31
-December 2020. You might enter the following expression:
+rank percentile for [‘ergm’](https://CRAN.R-project.org/package=ergm)
+for 31 December 2020. You might enter the following expression:
 
 ``` r
 packageRank(packages = "ergm")
@@ -531,7 +530,7 @@ posted for another 19 hours.
 To make life a little easier,
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) does
 two things. First, when the date of the log you want is not available
-(due to timezone rather than server issues), you’ll get the last
+(due to time zone rather than server issues), you’ll get the last
 available log as a substitute and a warning that provides an estimate of
 when that log should be available.
 
@@ -540,8 +539,8 @@ For the Honolulu example, you’d get the following:
     >         date packages downloads          rank percentile
     > 1 2020-12-31     ergm       190 990 of 18,123       94.5
 
-For the Sydney example, you’ll get the log for 30 December 2020 and the
-following message:
+For the Sydney example, you’ll get the results for 30 December 2020 and
+the following message:
 
     >         date packages downloads          rank percentile
     > 1 2020-12-30     ergm       292 873 of 20,077       95.6
