@@ -49,7 +49,9 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
     if (RCurl::url.exists(log.url)) log.date <- local.date
     else log.date <- available_log(local.date, tz, upload.time, warning.msg)
   } else if (repository == "MRAN") {
-    log.date <- local.date
+    # MRAN fixed snapshot time?
+    if (local.date <= Sys.Date()) log.date <- local.date
+    else stop("Date in future. Snapshot not yet available.", call. = FALSE)
   }
 
   log.date
