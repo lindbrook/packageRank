@@ -20,10 +20,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
   start.date <- pkg.data$date[1]
   end.date <- pkg.data$date[nrow(pkg.data)]
 
-  year <- as.POSIXlt(start.date)$year + 1900
-  rstudio.url <- "http://cran-logs.rstudio.com/"
-  url <- paste0(rstudio.url, year, '/', start.date, ".csv.gz")
-  cran_log <- mfetchLog(url)
+  cran_log <- fetchCranLog(start.date)
   init.pkgs <- unique(cran_log$package) # remove duplicated pkgs (diff versions)
   init.pkgs <- stats::na.omit(init.pkgs)
 
