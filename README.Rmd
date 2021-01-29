@@ -541,30 +541,39 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 
 These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
-### VI - time zones 
+### VI - time zones
 
-For 'packageRank' functions, the calendar date (e.g. "2021-01-01") is the unit of observation. However, because the typical use case involves getting the most recent data (i.e., the _latest_ log), time zone differences can come into play. 
+For ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions, the calendar date (e.g. "2021-01-01") is the unit of observation. However, because the typical use case involves getting the most recent data (i.e., the _latest_ log), time zone differences can come into play.
 
-Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for the 'ergm' package for 31 December 2020. You might enter the following expression:
+Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for the ['ergm'](https://CRAN.R-project.org/package=ergm) package for 31 December 2020. You might enter the following expression:
 
 ```{r timezone, eval = FALSE}
 packageRank(packages = "ergm")
 ```
 
-However, depending on _where_ you make this request, you may not get the data you expect. If you're in Honolulu, USA, you will. If you're in Sydney, Australia, you won't. The reason is that you've somehow forgotten a key piece of trivia: RStudio typically posts yesterday's log by 17:00 UTC the following day. 
+However, depending on _where_ you make this request, you may not get the data you expect. If you're in Honolulu, USA, you will. If you're in Sydney, Australia, you won't. The reason is that you've somehow forgotten a key piece of trivia: RStudio typically posts yesterday's log by 17:00 UTC the following day.
 
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021: the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC: the log you want won't actually be posted for another 19 hours.
 
-To make life a little easier, 'packgeRank' does two things. First, when the date of the log you want is not available (due to timezone rather than server issues), you'll get the last available log as a substitute and a warning that provides an estimate of when that log should be available.
+To make life a little easier, ['packageRank'](https://CRAN.R-project.org/package=packageRank) does two things. First, when the date of the log you want is not available (due to timezone rather than server issues), you'll get the last available log as a substitute and a warning that provides an estimate of when that log should be available.
+
+For the Honolulu example, you'd get the following:
+
+```{r honolulu, echo = FALSE}
+packageRank0(packages = "ergm", date = "2020-12-31")
+```
 
 For the Sydney example, you'll get the log for 30 December 2020 and the following message:
 
+```{r sydney, echo = FALSE}
+packageRank0(packages = "ergm", date = "2020-12-30")
+```
 ```
 Warning message:
 2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 ```
 
-Second, to help you remember when logs are posted in your locale, there's logPostInfo(). It gives you the date of the latest available log along with the local and UTC time when that log is posted to RStudio's server. 
+Second, to help you remember when logs are posted in your locale, there's `logPostInfo()`. It gives you the date of the latest available log along with the local and UTC time when that log is posted to RStudio's server. Here's what you'd see in Honoloulu:
 
 ```{r logPostInfo, eval = FALSE}
 logPostInfo()
@@ -574,7 +583,7 @@ logPostInfo()
 logPostInfo(tz = "Pacific/Honolulu")
 ```
 
-The default is to use your local time zone, via Sys.timezone(). You can use specific time zones by passing the zones names listed in OlsonNames() to the _tz_ argument:
+The default is to use your local time zone, via Sys.timezone(). To use a specific time zone, pass the desired zone name from the list in OlsonNames() to the `tz` argument:
 
 ```{r logPostInfo2, eval = FALSE}
 logPostInfo(tz = "Australia/Sydney")
@@ -584,7 +593,7 @@ logPostInfo(tz = "Australia/Sydney")
 logPostInfo(tz = "Australia/Sydney")
 ```
 
-Note that this functionality depends on R's ability to to compute your clock time/time zone (e.g., Sys.time()). My understanding is that there may be issues related to your operating system or platform.
+Note that this functionality depends on R's ability to to compute your clock time and time zone (e.g., Sys.time()). My understanding is that there may be operating system or platform related issues.
 
 ### VII - memoization
 

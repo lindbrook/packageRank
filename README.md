@@ -501,14 +501,16 @@ top right (in blue).
 
 ### VI - time zones
 
-For ‘packageRank’ functions, the calendar date (e.g. “2021-01-01”) is
-the unit of observation. However, because the typical use case involves
-getting the most recent data (i.e., the *latest* log), time zone
-differences can come into play.
+For [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+functions, the calendar date (e.g. “2021-01-01”) is the unit of
+observation. However, because the typical use case involves getting the
+most recent data (i.e., the *latest* log), time zone differences can
+come into play.
 
 Let’s say that it’s 09:01 on 01 January 2021 and you want to compute the
-rank percentile for the ‘ergm’ package for 31 December 2020. You might
-enter the following expression:
+rank percentile for the
+[‘ergm’](https://CRAN.R-project.org/package=ergm) package for 31
+December 2020. You might enter the following expression:
 
 ``` r
 packageRank(packages = "ergm")
@@ -526,56 +528,65 @@ hours. The expression fails in Sydney because 09:01 AEDT on 01 January
 2021 is 31 December 2020 22:00 UTC: the log you want won’t actually be
 posted for another 19 hours.
 
-To make life a little easier, ‘packgeRank’ does two things. First, when
-the date of the log you want is not available (due to timezone rather
-than server issues), you’ll get the last available log as a substitute
-and a warning that provides an estimate of when that log should be
-available.
+To make life a little easier,
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) does
+two things. First, when the date of the log you want is not available
+(due to timezone rather than server issues), you’ll get the last
+available log as a substitute and a warning that provides an estimate of
+when that log should be available.
+
+For the Honolulu example, you’d get the following:
+
+    >         date packages downloads          rank percentile
+    > 1 2020-12-31     ergm       190 990 of 18,123       94.5
 
 For the Sydney example, you’ll get the log for 30 December 2020 and the
 following message:
+
+    >         date packages downloads          rank percentile
+    > 1 2020-12-30     ergm       292 873 of 20,077       95.6
 
     Warning message:
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you remember when logs are posted in your locale,
-there’s logPostInfo(). It gives you the date of the latest available
+there’s `logPostInfo()`. It gives you the date of the latest available
 log along with the local and UTC time when that log is posted to
-RStudio’s server.
+RStudio’s server. Here’s what you’d see in Honoloulu:
 
 ``` r
 logPostInfo()
 ```
 
     > $log.date
-    > [1] "2021-01-27"
+    > [1] "2021-01-28"
     > 
     > $GMT
-    > [1] "2021-01-28 17:00:00 GMT"
+    > [1] "2021-01-29 17:00:00 GMT"
     > 
     > $local
-    > [1] "2021-01-28 07:00:00 HST"
+    > [1] "2021-01-29 07:00:00 HST"
 
-The default is to use your local time zone, via Sys.timezone(). You can
-use specific time zones by passing the zones names listed in
-OlsonNames() to the *tz* argument:
+The default is to use your local time zone, via Sys.timezone(). To use a
+specific time zone, pass the desired zone name from the list in
+OlsonNames() to the `tz` argument:
 
 ``` r
 logPostInfo(tz = "Australia/Sydney")
 ```
 
     > $log.date
-    > [1] "2021-01-27"
+    > [1] "2021-01-28"
     > 
     > $GMT
-    > [1] "2021-01-28 17:00:00 GMT"
+    > [1] "2021-01-29 17:00:00 GMT"
     > 
     > $local
-    > [1] "2021-01-29 04:00:00 AEDT"
+    > [1] "2021-01-30 04:00:00 AEDT"
 
 Note that this functionality depends on R’s ability to to compute your
-clock time/time zone (e.g., Sys.time()). My understanding is that there
-may be issues related to your operating system or platform.
+clock time and time zone (e.g., Sys.time()). My understanding is that
+there may be operating system or platform related issues.
 
 ### VII - memoization
 
