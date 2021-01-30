@@ -5,7 +5,7 @@
 \title{Scrape package data from CRAN.}
 \usage{
 packageCRAN2(package = "cholera", check.package = TRUE, size = TRUE,
-  r.ver = "4.0", bytes = FALSE, multi.core = TRUE)
+  r.ver = "4.0", bytes = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
