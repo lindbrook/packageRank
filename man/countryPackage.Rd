@@ -7,7 +7,7 @@
 countryPackage(country = "HK", date = NULL, memoization = TRUE,
   sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
-  multi.core = TRUE)
+  size.filter = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -27,6 +27,8 @@ countryPackage(country = "HK", date = NULL, memoization = TRUE,
 \item{small.filter}{Logical.}
 
 \item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
