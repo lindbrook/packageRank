@@ -9,6 +9,7 @@
 #' @param ip.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
+#' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
@@ -16,14 +17,15 @@
 packageCountry <- function(packages = "cholera", date = NULL,
   memoization = TRUE, sort = TRUE, na.rm = FALSE, triplet.filter = TRUE,
   ip.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  check.package = TRUE) {
+  size.filter = TRUE, check.package = TRUE) {
 
   ymd <- logDate(date, warning.msg = FALSE)
 
   p.log <- packageLog(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
-    memoization = memoization, check.package = check.package)
+    size.filter = FALSE, memoization = memoization,
+    check.package = check.package)
 
   if (na.rm) {
     if (is.data.frame(p.log)) {

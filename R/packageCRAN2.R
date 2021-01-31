@@ -11,7 +11,7 @@
 #' @export
 
 packageCRAN2 <- function(package = "cholera", check.package = TRUE,
-  size = TRUE, r.ver = "4.0", bytes = FALSE, multi.core = TRUE) {
+  size = TRUE, r.ver = "4.0", bytes = TRUE, multi.core = TRUE) {
 
   # R default is 60
   orig.timeout <- getOption("timeout")

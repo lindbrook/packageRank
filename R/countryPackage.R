@@ -10,6 +10,7 @@
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
+#' @param size.filter Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @note "US" outlier 10 min with all filters!
 #' @export
@@ -17,7 +18,7 @@
 countryPackage <- function(country = "HK", date = NULL,
   memoization = TRUE, sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
-  multi.core = TRUE) {
+  size.filter = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
@@ -46,6 +47,8 @@ countryPackage <- function(country = "HK", date = NULL,
   if (sequence.filter) {
     out <- parallel::mclapply(out, sequenceFilter, mc.cores = cores)
   }
+
+  if (size.filter) out <- sizeFilter(out, unique(cran_log$package))
 
   out <- do.call(rbind, out)
   tab <- table(out$package)
