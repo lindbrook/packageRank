@@ -8,14 +8,15 @@
 #' @param ip.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
+#' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 cranDownloadsB <- function(packages = "HistData", date = NULL,
   check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, memoization = TRUE,
-  dev.mode = FALSE) {
+  small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
+  memoization = TRUE, dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages, dev.mode)
 
@@ -32,7 +33,7 @@ cranDownloadsB <- function(packages = "HistData", date = NULL,
   f.cran_log <- packageLog(packages = packages, date = ymd,
     triplet.filter = triplet.filter, ip.filter = ip.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
-    memoization = memoization)
+    size.filter = size.filter, memoization = memoization)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)

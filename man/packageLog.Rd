@@ -6,8 +6,9 @@
 \usage{
 packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
   ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE)
+  sequence.filter = TRUE, size.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -23,6 +24,8 @@ packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
 \item{small.filter}{Logical.}
 
 \item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

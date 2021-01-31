@@ -8,6 +8,7 @@
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
+#' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical.
@@ -18,8 +19,9 @@
 
 packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE, clean.output = FALSE, multi.core = TRUE) {
+  sequence.filter = TRUE, size.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
+  multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
@@ -71,6 +73,8 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
     }, mc.cores = cores)
   }
 
+  if (size.filter) out <- sizeFilter(out, packages)
+
   if (any(zero.downloads == 0)) {
     packages <- c(packages, zero.packages)
     out <- c(out, zero.out)
@@ -118,7 +122,7 @@ packageLog0 <- function(packages = "cholera", date = NULL,
 
   packageLog(packages = packages, date = date,
     triplet.filter = FALSE, ip.filter = FALSE, small.filter = FALSE,
-    sequence.filter = FALSE, memoization = memoization,
+    sequence.filter = FALSE, size.filter = FALSE, memoization = memoization,
     check.package = check.package, dev.mode = dev.mode,
     clean.output = clean.output, multi.core = multi.core)
 }

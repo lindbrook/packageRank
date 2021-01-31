@@ -6,7 +6,8 @@
 \usage{
 packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
   sort = TRUE, na.rm = FALSE, triplet.filter = TRUE, ip.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, check.package = TRUE)
+  small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
+  check.package = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -26,6 +27,8 @@ packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
 \item{small.filter}{Logical.}
 
 \item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 }
