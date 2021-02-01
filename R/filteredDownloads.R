@@ -13,7 +13,7 @@
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
-cranDownloadsB <- function(packages = "HistData", date = NULL,
+filteredDownloads <- function(packages = "HistData", date = NULL,
   check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
   small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
   memoization = TRUE, dev.mode = FALSE) {
