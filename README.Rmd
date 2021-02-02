@@ -18,9 +18,17 @@ library(packageRank)
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`. `cranDownloads()` extends [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a `plot()` method and a more user-friendly interface. `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing compared to all other [CRAN](https://CRAN.R-project.org/) packages.
+['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context.
 
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and on [RStudio’s logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now called the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
+It does so via two functions, `cranDownloads()` and `packageRank()`, and a set of filters that clean log files.
+
+`cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and providing a generic R `plot()` method to makes visualization easy.
+
+`packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer counts (i.e., downloads), to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
+
+The filters try to remove software artifacts (e.g., downloads that are too "small") and behavioral artifacts (e.g., efforts to download all of [CRAN](https://CRAN.R-project.org/)) that inflate the package download count
+
+Note that [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now listed as the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
 
 ### I - getting started
 
@@ -48,21 +56,9 @@ cranlogs::cran_downloads(packages = "HistData")
 cranlogs::cran_downloads(packages = "HistData", from = "2020-05-01", to = "2020-05-01")
 ```
 
-
 The only difference is that `cranDownloads()` adds four features:
 
-
-#### i) computes cumulative count
-
-```{r cranDownloads_cumulative, eval = FALSE}
-cranDownloads(packages = "HistData", when = "last-week")
-```
-
-```{r cranDownloads_cumulative_code, echo = FALSE}
-cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
-```
-
-#### ii) spell checks package names
+#### i) "spell check" for package names
 
 ```{r spell_check_fail, eval = FALSE}
 cranDownloads(packages = "GGplot2")
@@ -101,7 +97,7 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 
 <br/>
 
-#### iii) adds two date formats
+#### ii) two additional date formats
 
 With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
 
@@ -143,7 +139,7 @@ cranDownloads(packages = "rstan", from = 2021)
 
 <br/>
 
-#### iv) checks for valid date
+#### iii) check date validity
 
 ```{r check_date, eval = FALSE}
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -152,6 +148,17 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ```
 ## Error in resolveDate(to, type = "to") : Not a valid date.
 ```
+
+#### iv) cumulative count
+
+```{r cranDownloads_cumulative, eval = FALSE}
+cranDownloads(packages = "HistData", when = "last-week")
+```
+
+```{r cranDownloads_cumulative_code, echo = FALSE}
+cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
+```
+
 
 <br/>
 
@@ -290,47 +297,9 @@ plot(cranDownloads(packages = "cholera", from = "2020-03-01",
 par(mar = c(5, 4, 4, 2))
 ```
 
-Do Wednesday and Saturday reflect surges of interest in the package or surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it differently, how can we know if a given download count is typical or unusual?
+Do Wednesday and Saturday reflect surges of interest in the package or surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it differently, how can we know if a given download count is typical or unusual? One way to answer these questions is to locate your package in the frequency distribution of download counts.
 
-One way to answer these questions is to locate your package in the frequency distribution of download counts. Below are the distributions for Wednesday and Saturday with the location of ['cholera'](https://CRAN.R-project.org/package=cholera) highlighted:
-
-```{r skew_wed, fig.align = "center", echo = FALSE}
-x <- lapply(c("2020-03-04", "2020-03-07"), function(date) packageDistribution("cholera", date = date))
-
-freq.dist1 <- x[[1]]$freq.dist
-freq.dist2 <- x[[2]]$freq.dist
-xlim <- range(freq.dist1$count, freq.dist2$count)
-ylim <- range(freq.dist1$frequency, freq.dist2$frequency)
-
-freqtab <- x[[1]]$freqtab
-plot(freq.dist1$count, freq.dist1$frequency, xlab = "Downloads",
-  ylab = "Frequency", xlim = xlim, ylim = ylim)
-pkg.ct <- freqtab[names(freqtab) == x[[1]]$package]
-pkg.bin <- freqtab[freqtab == pkg.ct]
-axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
-  cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
-day <- weekdays(as.Date(x[[1]]$date), abbreviate = TRUE)
-title(paste0(x[[1]]$package, " @ ", x[[1]]$date, " (", day, ")"))
-```
-
-```{r skew_sat, fig.align = "center", echo = FALSE}
-
-freqtab <- x[[2]]$freqtab
-plot(freq.dist2$count, freq.dist2$frequency, xlab = "Downloads",
-  ylab = "Frequency", xlim = xlim, ylim = ylim)
-pkg.ct <- freqtab[names(freqtab) == x[[2]]$package]
-pkg.bin <- freqtab[freqtab == pkg.ct]
-axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
-  cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
-day <- weekdays(as.Date(x[[2]]$date), abbreviate = TRUE)
-title(paste0(x[[2]]$package, " @ ", x[[2]]$date, " (", day, ")"))
-```
-
-As you can see, the frequency distribution of package downloads typically has a heavily skewed, exponential shape. On the Wednesday, the most "popular" package had 177,745 downloads while the least "popular" package(s) had just one. This is why the left side of the distribution, where packages with fewer downloads are located, _looks_ like a vertical line.
-
-To see what's going on, I take the log of download counts (x-axis) and redraw the graph. In these plots, the location of a vertical segment along the x-axis represents a download count and its height represents a download count's frequency:
+Below are the distributions of logarithm of download counts for Wednesday and Saturday. The location of a vertical segment along the x-axis represents a download count and the height of a segment represents that download count's frequency. The location of ['cholera'](https://CRAN.R-project.org/package=cholera) in the distribution is highlighted in red.
 
 ```{r packageDistribution, echo = FALSE}
 plot_package_distribution <- function(dat, xlim, ylim) {
