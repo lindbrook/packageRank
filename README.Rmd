@@ -510,11 +510,46 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 
 These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
-### VI - time zones
+### VI - download count filters
 
-For ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions, the calendar date (e.g. "2021-01-01") is the unit of observation. However, because the typical use case involves getting the most recent data (i.e., the _latest_ log), time zone differences can come into play.
+#### smallFilter0() and tripletFilter()
 
-Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for ['ergm'](https://CRAN.R-project.org/package=ergm) for 31 December 2020. You might enter the following expression:
+"small" and "medium"
+singletons, pairs, triplets
+
+#### ipFlter()
+
+#### sequenceFlter()
+
+#### sizeFlter()
+
+### VII - miscellanea
+
+#### memoization
+
+To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual calendar days. To reduce the bottleneck of re-downloading logs, 'packageRank' makes use of memoization via the 'memoise' package.
+
+Here's relevant code:
+
+```{r memoization, eval = FALSE}
+fetchLog <- function(url) data.table::fread(url)
+
+mfetchLog <- memoise::memoise(fetchLog)
+
+if (RCurl::url.exists(url)) {
+  cran_log <- mfetchLog(url)
+}
+
+# Note that data.table::fread() relies on R.utils::decompressFile().
+```
+
+If you use `fetchLog()`, the log file, which can be upwards of 50 MB, will be downloaded each time you call the function. But if you use `mfetchLog()`, the logs are intelligently cached; those that have already been downloaded, in your current R session, will not be downloaded again.
+
+#### time zones
+
+The calendar date (e.g. "2021-01-01") is the natural unit of observation for ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions. However, because the typical use case involves getting the most recent data (i.e., the _latest_ log), time zone differences can come into play.
+
+Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for the ['ergm'](https://CRAN.R-project.org/package=ergm) package for the last day of 2020. You might be tempted to enter the following expression:
 
 ```{r timezone, eval = FALSE}
 packageRank(packages = "ergm")
@@ -564,22 +599,9 @@ logPostInfo(tz = "Australia/Sydney")
 
 Note that this functionality depends on R's ability to to compute your clock time and time zone (e.g., Sys.time()). My understanding is that there may be operating system or platform related issues.
 
-### VII - memoization
+#### timeout
 
-To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual days. However, to reduce the need to re-download logs, 'packageRank' makes use of memoization via the 'memoise' package.
-
-Here's relevant code:
-
-```{r memoization, eval = FALSE}
-fetchLog <- function(url) data.table::fread(url)
-
-mfetchLog <- memoise::memoise(fetchLog)
-
-if (RCurl::url.exists(url)) {
-  cran_log <- mfetchLog(url)
-}
-
-# Note that data.table::fread() relies on R.utils::decompressFile().
+R 4.0.3
 ```
-
-If you use `fetchLog()`, the log file, which can be upwards of 50 MB, will be downloaded each time you call the function. But if you use `mfetchLog()`, the logs are intelligently cached; those that have already been downloaded, in your current R session, will not be downloaded again.
+The default value for options("timeout") can be set from enviromnent variable R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set or invalid. 
+```

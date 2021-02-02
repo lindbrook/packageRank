@@ -598,13 +598,13 @@ logPostInfo()
 ```
 
     > $log.date
-    > [1] "2021-01-28"
+    > [1] "2021-02-01"
     > 
     > $GMT
-    > [1] "2021-01-29 17:00:00 GMT"
+    > [1] "2021-02-02 17:00:00 GMT"
     > 
     > $local
-    > [1] "2021-01-29 07:00:00 HST"
+    > [1] "2021-02-02 07:00:00 HST"
 
 The default is to use your local time zone, via Sys.timezone(). To use a
 specific time zone, pass the desired zone name from the list in
@@ -615,41 +615,20 @@ logPostInfo(tz = "Australia/Sydney")
 ```
 
     > $log.date
-    > [1] "2021-01-28"
+    > [1] "2021-02-01"
     > 
     > $GMT
-    > [1] "2021-01-29 17:00:00 GMT"
+    > [1] "2021-02-02 17:00:00 GMT"
     > 
     > $local
-    > [1] "2021-01-30 04:00:00 AEDT"
+    > [1] "2021-02-03 04:00:00 AEDT"
 
 Note that this functionality depends on R’s ability to to compute your
 clock time and time zone (e.g., Sys.time()). My understanding is that
 there may be operating system or platform related issues.
 
-### VII - memoization
+#### timeout
 
-To avoid the bottleneck of downloading multiple log files,
-`packageRank()` is currently limited to individual days. However, to
-reduce the need to re-download logs, ‘packageRank’ makes use of
-memoization via the ‘memoise’ package.
+R 4.0.3
 
-Here’s relevant code:
-
-``` r
-fetchLog <- function(url) data.table::fread(url)
-
-mfetchLog <- memoise::memoise(fetchLog)
-
-if (RCurl::url.exists(url)) {
-  cran_log <- mfetchLog(url)
-}
-
-# Note that data.table::fread() relies on R.utils::decompressFile().
-```
-
-If you use `fetchLog()`, the log file, which can be upwards of 50 MB,
-will be downloaded each time you call the function. But if you use
-`mfetchLog()`, the logs are intelligently cached; those that have
-already been downloaded, in your current R session, will not be
-downloaded again.
+    The default value for options("timeout") can be set from enviromnent variable R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set or invalid. 
