@@ -32,7 +32,7 @@ ipPackage <- function(ip = 10, date = NULL, memoization = TRUE,
     cran_log <- do.call(rbind, filtered)
   }
 
-  if (small.filter) cran_log <- smallFilter0(cran_log)
+  if (small.filter) cran_log <- smallFilter(cran_log)
   freqtab <- table(cran_log$package)
   if (sort) sort(freqtab, decreasing = TRUE)
   else freqtab

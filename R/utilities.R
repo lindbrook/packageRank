@@ -46,7 +46,7 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 
   if (nrow(tmp) != 0) {
     if (triplet.filter) tmp <- tripletFilter(tmp)
-    if (small.filter) tmp <- smallFilter0(tmp)
+    if (small.filter) tmp <- smallFilter(tmp)
     if (sequence.filter) {
       pkg.history <- packageRank::blog.data$pkg.history
       p.hist <- pkg.history[[pkg]]
@@ -121,8 +121,8 @@ filter_counts <- function(dat, pkg = "cholera", date, ip.campaigns) {
     triplet.filtered <- nrow(out)
 
     # Small Filter #
-    small.filtered <- nrow(smallFilter0(dat))
-    if (nrow(out) != 0) out <- smallFilter0(out)
+    small.filtered <- nrow(smallFilter(dat))
+    if (nrow(out) != 0) out <- smallFilter(out)
 
     # Sequence Filter #
     pkg.history <- packageRank::blog.data$pkg.history
@@ -223,10 +223,10 @@ cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = TRUE) {
     tmp <- cran_log[!row.names(cran_log) %in% unlist(row.delete), ]
     ip.ct <- length(unique(tmp$package))
 
-    sm.tmp <- smallFilter0(cran_log)
+    sm.tmp <- smallFilter(cran_log)
     sm.ct <- length(unique(sm.tmp$package))
 
-    tmp <- smallFilter0(tmp)
+    tmp <- smallFilter(tmp)
     ip_sm.ct <- length(unique(tmp$package))
 
     data.frame(ct = u.ct, ip = ip.ct, small = sm.ct, all = ip_sm.ct)

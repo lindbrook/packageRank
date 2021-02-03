@@ -30,7 +30,7 @@ identifySequences0 <- function(package = "cholera", date = NULL,
   pkg.data <- pkg.data[order(pkg.data$t0), ]
 
   if (triplet.filter) pkg.data <- tripletFilter(pkg.data)
-  if (small.filter) pkg.data <- smallFilter0(pkg.data)
+  if (small.filter) pkg.data <- smallFilter(pkg.data)
 
   rle.data <- rle(pkg.data$ver)
   rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)

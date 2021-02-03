@@ -37,7 +37,7 @@ packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
-  if (small.filter) cran_log <- smallFilter0(cran_log)
+  if (small.filter) cran_log <- smallFilter(cran_log)
 
   if (all(packages %in% unique(cran_log$package) == FALSE)) {
     stop(packages, ": not in log (not downloaded).", call. = FALSE)

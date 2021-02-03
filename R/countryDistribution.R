@@ -30,7 +30,7 @@ countryDistribution <- function(date = NULL, ip.filter = TRUE,
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
-  if (small.filter) cran_log <- smallFilter0(cran_log)
+  if (small.filter) cran_log <- smallFilter(cran_log)
 
   freqtab <- sort(table(cran_log$country), decreasing = TRUE)
   out <- list(date = date, na.country = na.country, data = freqtab)

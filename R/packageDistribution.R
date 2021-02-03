@@ -26,7 +26,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
 package_distribution <- function(package, ymd, size.filter, memoization,
   check.package, cran_log) {
 
-  if (size.filter) cran_log <- smallFilter0(cran_log)
+  if (size.filter) cran_log <- smallFilter(cran_log)
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(freqtab))
   freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))

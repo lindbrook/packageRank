@@ -41,7 +41,7 @@ countryPackage <- function(country = "HK", date = NULL,
   }
 
   if (small.filter) {
-    out <- parallel::mclapply(out, smallFilter0, mc.cores = cores)
+    out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
   }
 
   if (sequence.filter) {

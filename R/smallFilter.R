@@ -4,6 +4,6 @@
 #' @param threshold Numeric. Bytes.
 #' @export
 
-smallFilter0 <- function(dat, threshold = 1000L) {
+smallFilter <- function(dat, threshold = 1000L) {
   dat[dat$size >= threshold, ]
 }

@@ -8,7 +8,7 @@
 
 kmeansCutpoint <- function(lst, i = 1, centers = 2L, nstart = 25L) {
   cran_log <- cleanLog(lst[[i]])
-  cran_log <- smallFilter0(cran_log)
+  cran_log <- smallFilter(cran_log)
 
   freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
