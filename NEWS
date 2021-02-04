@@ -3,6 +3,7 @@ packageRank 0.3.5.9125
 
 - rename cranDownloadsB() to filteredDownloads().
 - rename smallFilter0() to smallFilter(); archive HCA version of smallFilter().
+- archive kmeansCutpoint().
 
 
 packageRank 0.3.5.9124
