@@ -632,11 +632,12 @@ With R 4.0.3, the timeout value for internet connections became more
 explicit. Here’s the revelant details from this release’s [“New
 features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 
-    The default value for options("timeout") can be set from enviromnent variable R_DEFAULT_INTERNET_TIMEOUT,
-    still defaulting to 60 (seconds) if that is not set or invalid.
+    The default value for options("timeout") can be set from enviromnent variable
+    R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
+    or invalid.
 
 This change occasionally affected functions that download logs. This was
 especially true over slower internet connections and with larger log
 files. To fix this, relevant functions, which make use `fetchCranLog()`,
 will now temporarily change the timeout to 300 seconds and then reset
-the value to your configuration’s setting.
+the value back to your configuration’s original setting.
