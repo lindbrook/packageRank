@@ -5,8 +5,7 @@
 \title{Extract Archive sequences from logs (prototype).}
 \usage{
 identifySequences0(package = "cholera", date = NULL, download.time = 30,
-  triplet.filter = TRUE, small.filter = TRUE, memoization = TRUE,
-  dev.mode = FALSE)
+  triplet.filter = TRUE, small.filter = TRUE, memoization = TRUE)
 }
 \arguments{
 \item{package}{Character. Package name.}
@@ -20,8 +19,6 @@ identifySequences0(package = "cholera", date = NULL, download.time = 30,
 \item{small.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
-
-\item{dev.mode}{Logical.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

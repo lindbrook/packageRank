@@ -7,12 +7,11 @@
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical.
 #' @export
 
 identifySequences0 <- function(package = "cholera", date = NULL,
   download.time = 30, triplet.filter = TRUE, small.filter = TRUE,
-  memoization = TRUE, dev.mode = FALSE) {
+  memoization = TRUE) {
 
   packages <- checkPackage(package)
   pkg.hist <- packageHistory(package)
@@ -20,8 +19,7 @@ identifySequences0 <- function(package = "cholera", date = NULL,
   arch.pkg.hist <- pkg.hist[pkg.hist$Repository == "Archive", ]
 
   ymd <- logDate(date, warning.msg = FALSE)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   pkg.data <- cran_log[cran_log$package == package, ]

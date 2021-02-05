@@ -5,8 +5,7 @@
 \title{Package Download Distribution.}
 \usage{
 packageDistribution(package = "HistData", date = NULL,
-  size.filter = FALSE, memoization = TRUE, check.package = TRUE,
-  dev.mode = FALSE)
+  size.filter = FALSE, memoization = TRUE, check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Vector of package name(s).}
@@ -18,8 +17,6 @@ packageDistribution(package = "HistData", date = NULL,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
-
-\item{dev.mode}{Logical. Use fetchLogBase().}
 }
 \description{
 Package Download Distribution.
