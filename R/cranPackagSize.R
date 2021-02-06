@@ -10,7 +10,7 @@
 #' @return An R data frame or NULL.
 #' @export
 
-packageCRAN2 <- function(package = "cholera", check.package = TRUE,
+cranPackagSize <- function(package = "cholera", check.package = TRUE,
   size = TRUE, r.ver = "4.0", bytes = TRUE, multi.core = TRUE) {
 
   # R default is 60
@@ -41,10 +41,10 @@ packageCRAN2 <- function(package = "cholera", check.package = TRUE,
         }, character(1L)))
         if (package %in% multiple.matches) {
           pkg.data <- pkg.data[multiple.matches %in% package]
-          out <- package_info2(pkg.data, x$ext)
+          out <- cran_package_info(pkg.data, x$ext)
           } else out <- NULL
       } else if (length(pkg.data) == 1) {
-        out <- package_info2(pkg.data, x$ext)
+        out <- cran_package_info(pkg.data, x$ext)
       }
 
       if (!is.null(out)) {
@@ -64,7 +64,7 @@ packageCRAN2 <- function(package = "cholera", check.package = TRUE,
   out
 }
 
-package_info2 <- function(pkg.data, ext, repository = "CRAN") {
+cran_package_info <- function(pkg.data, ext, repository = "CRAN") {
   dat <- unlist(strsplit(pkg.data, ext))
   ptA <- unlist(strsplit(dat[1], "_"))
   ptB <- unlist(strsplit(dat[2], " "))

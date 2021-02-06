@@ -3,6 +3,7 @@ packageRank 0.3.5.9126
 
 - remove dev.mode argument: identifySequences0(), ipCount(), ipDownloads() and 
   packageDistribution().
+- rename packageCRAN2() to cranPackagSize().
 
 
 packageRank 0.3.5.9125
