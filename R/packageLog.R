@@ -65,7 +65,7 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   if (sequence.filter) {
     arch.pkg.history <- parallel::mclapply(packages, function(x) {
       tmp <- packageHistory(x)
-      tmp[tmp$Date <= as.Date(date) & tmp$Repository == "Archive", ]
+      tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
     }, mc.cores = cores)
 
     out <- parallel::mclapply(seq_along(out), function(i) {
