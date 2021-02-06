@@ -10,7 +10,7 @@
 #' @return An R data frame or NULL.
 #' @export
 
-cranPackagSize <- function(package = "cholera", check.package = TRUE,
+cranPackageSize <- function(package = "cholera", check.package = TRUE,
   size = TRUE, r.ver = "4.0", bytes = TRUE, multi.core = TRUE) {
 
   # R default is 60
