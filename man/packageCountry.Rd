@@ -5,7 +5,7 @@
 \title{Package download counts by country.}
 \usage{
 packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
-  sort = TRUE, na.rm = FALSE, triplet.filter = TRUE, ip.filter = TRUE,
+  sort = TRUE, na.rm = FALSE, ip.filter = TRUE, triplet.filter = TRUE,
   small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
   check.package = TRUE)
 }
@@ -20,9 +20,9 @@ packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
 
 \item{na.rm}{Logical. Remove NAs.}
 
-\item{triplet.filter}{Logical.}
-
 \item{ip.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical.}
 

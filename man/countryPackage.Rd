@@ -4,31 +4,29 @@
 \alias{countryPackage}
 \title{Tabulate a country's package downloads.}
 \usage{
-countryPackage(country = "HK", date = NULL, memoization = TRUE,
-  sort = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
-  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = FALSE,
-  size.filter = FALSE, multi.core = TRUE)
+countryPackage(country = "HK", date = NULL, ip.filter = TRUE,
+  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = FALSE,
+  size.filter = FALSE, sort = TRUE, memoization = TRUE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
-\item{memoization}{Logical. Use memoization when downloading logs.}
-
-\item{sort}{Logical. Sort by download count.}
+\item{ip.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
 
-\item{ip.filter}{Logical.}
-
-\item{ip.campaigns}{Logical.}
-
 \item{small.filter}{Logical.}
 
-\item{sequence.filter}{Logical.}
+\item{sequence.filter}{Logical. Set to FALSE.}
 
-\item{size.filter}{Logical.}
+\item{size.filter}{Logical. Set to FALSE.}
+
+\item{sort}{Logical. Sort by download count.}
+
+\item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

@@ -5,7 +5,7 @@
 \title{Package download counts and rank percentiles.}
 \usage{
 packageRank0(packages = "HistData", date = NULL, memoization = TRUE,
-  check.package = FALSE, dev.mode = FALSE, multi.core = TRUE)
+  check.package = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -15,8 +15,6 @@ packageRank0(packages = "HistData", date = NULL, memoization = TRUE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
-
-\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

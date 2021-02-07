@@ -4,7 +4,6 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param sort Logical. Sort by download count.
-
 #' @export
 
 ipCount <- function(date = NULL, memoization = TRUE, sort = TRUE) {

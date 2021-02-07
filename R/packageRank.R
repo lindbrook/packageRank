@@ -4,11 +4,11 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param ip.filter Logical.
-#' @param ip.campaigns Logical.
+
 #' @param small.filter Logical TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
@@ -19,21 +19,19 @@
 #' }
 
 packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
-  ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE) {
+  small.filter = TRUE, memoization = TRUE,
+  check.package = TRUE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
   if (check.package) packages <- checkPackage(packages)
 
   ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
-      multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
@@ -93,18 +91,17 @@ packageRank <- function(packages = "HistData", date = NULL, ip.filter = TRUE,
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 packageRank0 <- function(packages = "HistData", date = NULL,
-  memoization = TRUE, check.package = FALSE, dev.mode = FALSE,
-  multi.core = TRUE) {
+  memoization = TRUE, check.package = FALSE, multi.core = TRUE) {
 
   packageRank(packages = packages, date = date, memoization = memoization,
     ip.filter = FALSE, small.filter = FALSE, check.package = check.package,
-    dev.mode = dev.mode, multi.core = multi.core)
+    multi.core = multi.core)
 }
 
 #' Plot method for packageRank() and packageRank0().

@@ -6,8 +6,7 @@
 #' @export
 
 sizeFilter <- function(dat, packages) {
-  size.data <- lapply(packages, packageCRAN2)
-
+  size.data <- lapply(packages, cranPackageSize)
   lapply(seq_along(dat), function(i) {
     sz <- size.data[[i]]
     tmp <- dat[[i]]

@@ -4,24 +4,21 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param ip.filter Logical.
-#' @param ip.campaigns Logical.
 #' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param dev.mode Logical.
 #' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
-  ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, size.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
-  multi.core = TRUE) {
+  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  clean.output = FALSE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
@@ -29,8 +26,7 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   pkg.order <- packages
 
   ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
@@ -45,8 +41,7 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   }
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, campaigns = ip.campaigns,
-      multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores)
     out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
   }
 
@@ -108,19 +103,19 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical.
+
 #' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 packageLog0 <- function(packages = "cholera", date = NULL,
-  check.package = TRUE, memoization = TRUE, dev.mode = FALSE,
-  clean.output = FALSE, multi.core = TRUE) {
+  check.package = TRUE, memoization = TRUE, clean.output = FALSE,
+  multi.core = TRUE) {
 
   packageLog(packages = packages, date = date,
     triplet.filter = FALSE, ip.filter = FALSE, small.filter = FALSE,
     sequence.filter = FALSE, size.filter = FALSE, memoization = memoization,
-    check.package = check.package, dev.mode = dev.mode,
-    clean.output = clean.output, multi.core = multi.core)
+    check.package = check.package, clean.output = clean.output,
+    multi.core = multi.core)
 }

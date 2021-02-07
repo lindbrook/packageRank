@@ -3,24 +3,22 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param ip Numeric. ip_id.
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
-#' @param memoization Logical. Use memoization when downloading logs.
-#' @param sort Logical. Sort by download count.
-#' @param small.filter Logical.
 #' @param triplet.filter Logical.
-#' @param dev.mode Logical. Use fetchLogBase().
+#' @param small.filter Logical.
+#' @param sort Logical. Sort by download count.
+#' @param memoization Logical. Use memoization when downloading logs.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @note ip = 10 is a tw top-level domain on 2020-07-09.
 #' @export
 
 ipPackage <- function(ip = 10, date = NULL, memoization = TRUE,
-  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE, dev.mode = FALSE,
+  sort = TRUE, small.filter = FALSE, triplet.filter = FALSE,
   multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
 
   ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization,
-    dev.mode = dev.mode)
+  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
 
