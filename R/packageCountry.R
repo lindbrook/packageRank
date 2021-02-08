@@ -5,8 +5,8 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param sort Logical. Sort by download count.
 #' @param na.rm Logical. Remove NAs.
-#' @param triplet.filter Logical.
 #' @param ip.filter Logical.
+#' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
@@ -15,14 +15,14 @@
 #' @export
 
 packageCountry <- function(packages = "cholera", date = NULL,
-  memoization = TRUE, sort = TRUE, na.rm = FALSE, triplet.filter = TRUE,
-  ip.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  memoization = TRUE, sort = TRUE, na.rm = FALSE, ip.filter = TRUE,
+  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
   size.filter = TRUE, check.package = TRUE) {
 
   ymd <- logDate(date, warning.msg = FALSE)
 
   p.log <- packageLog(packages = packages, date = ymd,
-    triplet.filter = triplet.filter, ip.filter = ip.filter,
+    ip.filter = ip.filter, triplet.filter = triplet.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
     size.filter = FALSE, memoization = memoization,
     check.package = check.package)

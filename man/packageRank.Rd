@@ -5,8 +5,8 @@
 \title{Package download counts and rank percentiles.}
 \usage{
 packageRank(packages = "HistData", date = NULL, ip.filter = TRUE,
-  ip.campaigns = TRUE, small.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, multi.core = TRUE)
+  small.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -15,15 +15,11 @@ packageRank(packages = "HistData", date = NULL, ip.filter = TRUE,
 
 \item{ip.filter}{Logical.}
 
-\item{ip.campaigns}{Logical.}
-
 \item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
-
-\item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

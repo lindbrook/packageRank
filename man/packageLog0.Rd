@@ -5,8 +5,7 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog0(packages = "cholera", date = NULL, check.package = TRUE,
-  memoization = TRUE, dev.mode = FALSE, clean.output = FALSE,
-  multi.core = TRUE)
+  memoization = TRUE, clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -16,8 +15,6 @@ packageLog0(packages = "cholera", date = NULL, check.package = TRUE,
 \item{check.package}{Logical. Validate and "spell check" package.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
-
-\item{dev.mode}{Logical.}
 
 \item{clean.output}{Logical. NULL row names.}
 

@@ -5,10 +5,9 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
-  ip.campaigns = TRUE, triplet.filter = TRUE, small.filter = TRUE,
-  sequence.filter = TRUE, size.filter = TRUE, memoization = TRUE,
-  check.package = TRUE, dev.mode = FALSE, clean.output = FALSE,
-  multi.core = TRUE)
+  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
+  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
+  clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -16,8 +15,6 @@ packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{ip.filter}{Logical.}
-
-\item{ip.campaigns}{Logical.}
 
 \item{triplet.filter}{Logical.}
 
@@ -30,8 +27,6 @@ packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
-
-\item{dev.mode}{Logical.}
 
 \item{clean.output}{Logical. NULL row names.}
 

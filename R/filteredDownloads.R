@@ -4,21 +4,20 @@
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param triplet.filter Logical.
 #' @param ip.filter Logical.
+#' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @export
 
 filteredDownloads <- function(packages = "HistData", date = NULL,
-  check.package = TRUE, triplet.filter = TRUE, ip.filter = TRUE,
+  check.package = TRUE, ip.filter = TRUE, triplet.filter = TRUE,
   small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
-  memoization = TRUE, dev.mode = FALSE) {
+  memoization = TRUE) {
 
-  if (check.package) packages <- checkPackage(packages, dev.mode)
+  if (check.package) packages <- checkPackage(packages)
 
   ymd <- logDate(date)
   cran_log <- packageLog0(packages = packages, date = ymd,
@@ -31,7 +30,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   }
 
   f.cran_log <- packageLog(packages = packages, date = ymd,
-    triplet.filter = triplet.filter, ip.filter = ip.filter,
+    ip.filter = ip.filter, triplet.filter = triplet.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
     size.filter = size.filter, memoization = memoization)
 
