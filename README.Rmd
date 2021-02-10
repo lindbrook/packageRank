@@ -510,8 +510,21 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 
 These graphs, customized to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights a package's position in the distribution along with its rank percentile and download count (in red). In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
+### III - filtering package download counts
 
-### VII - miscellanea
+To compute a package's downloads, we simply count the number of log entries for that package. While straightforward, this metric will eventually run into problems because not all log entries are created equal. Some entries are, I would argue, self-evidently "invalid"; others are or debatably so. As a result, nominal package download counts are inflated, they suffer from a strictly positive, upwards bias.
+
+This inflation is a product of software and behavioral artifacts. The software artifacts are the result of client/user side software that create log entries that are smaller, often by orders of magnitude, than a package's actual binary or source file size. The behavioral artifacts are the result of efforts to essentially download all of the packages on [CRAN](https://cran.r-project.org/).
+
+#### software artifacts
+
+Beyond missing observations (e.g., NAs for package names or package sizes; package sizes of zero bytes), the most noticeable problem when looking at download logs is the presence of wrongly sized log entries. These come in two sizes: "small" and "medium". The "small" entries are the most noticeable: they are in the neighborhood of 500 bytes. The "medium" entries are a newer phenomenon. They are variable in size, falling anywhere between a "small" and a complete download ("small" <= "medium" <= full download).
+
+"Small" entries manifest themselves as standalone entries, paired with a full download, or as part of a triplet with a "medium" and full download. "Medium" entries manifest themselves as standalone entries, or as part of the aforementioned triplet. Incidentally, what makes a pair a pair or a triplet is that all member entries, at a minimum, have identical or adjacent timestamps (information about platform, R version, etc. are also identical).
+
+"Small" entries can be easily dealt with by filtering out entries below 1000 bytes (the smallest package appears to be 'source.gist' at 1200 bytes). "Medium" entries are harder to deal with. I use either a triplet-specific filter or a filter that looks up a package's real size.
+
+### IV - notes and miscellanea
 
 #### country codes (top level domains)
 
