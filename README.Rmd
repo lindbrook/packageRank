@@ -20,17 +20,17 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context.
 
-It does so via two functions, `cranDownloads()` and `packageRank()`, and a set of filters that clean log files.
+It does so via two functions, `cranDownloads()` and `packageRank()`, and a set of filters that remove "invalid" entries from the download logs.
 
 `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and providing a generic R `plot()` method to makes visualization easy.
 
 `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer counts (i.e., downloads), to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
 
-The filters try to remove software artifacts (e.g., downloads that are too "small") and behavioral artifacts (e.g., efforts to download all of [CRAN](https://CRAN.R-project.org/)) that inflate the package download count
+The filters attempt to remove software and behavioral artifacts (e.g., downloads that are too "small" and efforts to download all of [CRAN](https://CRAN.R-project.org/)) that inflate the package download count.
 
-Note that [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter record traffic to what was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com) and which is now listed as the [“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”. Logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on ‘cranlogs’ are generally available soon thereafter.
+Note that [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter record traffic to the [“0-Cloud” mirror “sponsored by RStudio”](http://cloud.r-project.org). This mirror was previously called RStudio’s [CRAN mirror](http://cran.rstudio.com). Logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on the ‘cranlogs’ package are generally available soon thereafter.
 
-### I - getting started
+### getting started
 
 To install 'packageRank' from CRAN:
 
@@ -45,7 +45,7 @@ To install the development version from GitHub:
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-### II - computing package download counts
+### I - computing package download counts
 
 `cranDownloads()` uses all the same arguments as `cranlogs::cran_downloads()`:
 
@@ -162,7 +162,7 @@ cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
 
 <br/>
 
-### III - visualizing package downloads
+### visualizing package download counts
 
 `cranDownloads()` makes visualizing package downloads easy. Just use `plot()`:
 
@@ -281,7 +281,7 @@ plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
 
 This longitudinal view of package downloads plots the date (x-axis) against the logarithm of a package's downloads (y-axis). In the background, the same variable are plotted (in gray) using a stratified random sample of packages: within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked. This graphically approximates the "typical" pattern of downloads on CRAN for the selected time period.
 
-### IV - computing package download rank percentiles
+### II - computing package download rank percentiles
 
 Looking at nominal download count data leads one to the "compared to what?" question. For instance, consider the data for the first week of March 2020:
 
@@ -399,7 +399,7 @@ which(names(downloads[downloads == 38]) == "cholera")
 length(downloads[downloads == 38])
 ```
 
-### V - visualizing package download rank percentiles
+### visualizing package download rank percentiles
 
 To visualize `packageRank()`, use `plot()`.
 
