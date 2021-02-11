@@ -518,9 +518,9 @@ This inflation is a product of software and behavioral artifacts. The software a
 
 #### software artifacts
 
-Beyond missing observations (e.g., NAs for package names or package sizes; package sizes of zero bytes), the most noticeable problem when looking at download logs is the presence of wrongly sized log entries. These come in two sizes: "small" and "medium". The "small" entries are the most noticeable: they are in the neighborhood of 500 bytes. The "medium" entries are a newer phenomenon. They are variable in size, falling anywhere between a "small" and a complete download ("small" <= "medium" <= full download).
+Beyond missing observations (e.g., NAs for package names or package sizes; package sizes of zero bytes), the most noticeable problem when looking at download logs are wrongly sized log entries. These come in two sizes: "small" and "medium". The "small" entries are the most noticeable: they are in the neighborhood of 500 bytes. The "medium" entries are a newer phenomenon. They are variable in size, falling anywhere between a "small" and a complete download ("small" <= "medium" <= full download).
 
-"Small" entries manifest themselves as standalone entries, paired with a full download, or as part of a triplet with a "medium" and full download. "Medium" entries manifest themselves as standalone entries, or as part of the aforementioned triplet. 
+"Small" entries manifest themselves as standalone entries, paired with a full download, or as part of a triplet with a "medium" and full download. "Medium" entries manifest themselves as standalone entries, or as part of the aforementioned triplet.
 
 Below is an excerpt from an abridged download log that illustrates a triplet:
 
