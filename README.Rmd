@@ -520,7 +520,18 @@ This inflation is a product of software and behavioral artifacts. The software a
 
 Beyond missing observations (e.g., NAs for package names or package sizes; package sizes of zero bytes), the most noticeable problem when looking at download logs is the presence of wrongly sized log entries. These come in two sizes: "small" and "medium". The "small" entries are the most noticeable: they are in the neighborhood of 500 bytes. The "medium" entries are a newer phenomenon. They are variable in size, falling anywhere between a "small" and a complete download ("small" <= "medium" <= full download).
 
-"Small" entries manifest themselves as standalone entries, paired with a full download, or as part of a triplet with a "medium" and full download. "Medium" entries manifest themselves as standalone entries, or as part of the aforementioned triplet. Incidentally, what makes a pair a pair or a triplet is that all member entries, at a minimum, have identical or adjacent timestamps (information about platform, R version, etc. are also identical).
+"Small" entries manifest themselves as standalone entries, paired with a full download, or as part of a triplet with a "medium" and full download. "Medium" entries manifest themselves as standalone entries, or as part of the aforementioned triplet. 
+
+Below is an excerpt from an abridged download log that illustrates a triplet:
+
+```
+              date     time    size package version country ip_id
+3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
+3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
+3999178 2020-07-01 07:56:15     536 cholera   0.7.0      US  4760
+```
+
+The observed full download, the second entry, is 4,161,948 bytes in size (the actual binary and source files of 'cholera' version 0.7.0 are 4.0 and 4.1 MB). The "small" entry is the last observation, 536 bytes. The "medium" entry is the first observation, 99,622 bytes. Incidentally, what makes a triplet a triplet (or a pair a pair) is that all member entries have identical or adjacent timestamps. actually, information about IP address, platform, R version, etc. are also used).
 
 "Small" entries can be easily dealt with by filtering out entries below 1000 bytes (the smallest package appears to be 'source.gist' at 1200 bytes). "Medium" entries are harder to deal with. I use either a triplet-specific filter or a filter that looks up a package's real size.
 
