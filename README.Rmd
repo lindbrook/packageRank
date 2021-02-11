@@ -535,6 +535,26 @@ The observed full download, the second entry, is 4,161,948 bytes in size (the ac
 
 "Small" entries can be easily dealt with by filtering out entries below 1000 bytes (the smallest package appears to be 'source.gist' at 1200 bytes). "Medium" entries are harder to deal with. I use either a triplet-specific filter or a filter that looks up a package's real size.
 
+#### behavioral artifacts
+
+Wrongly sized entries are fairly visible. Less obvious are "errors" that otherwise look "right". The issue, simply put, is that package downloads don't simply reflect an interest in your package _per se_, they can also reflect an interest in [CRAN](https://cran.r-project.org/) itself: when someone downloads all the packages on [CRAN](https://cran.r-project.org/), the fact that your package got downloaded along with all the other packages shouldn't or maybe doesn't really reflect an interest in your package.
+
+Consider the example below. It lists a bloc of downloads, in sequential time order, of the 'cholera' package:
+
+```{r, sequence_ex, echo = FALSE}
+packageLog0(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
+```
+
+Size-wise, there isn't a problem. But the fact that seven different versions were downloaded, in order, should attract our attention. This is especially true given that the bloc above represents _all_ the prior versions of 'cholera':
+
+```{r, cholera_history}
+packageHistory(package = "cholera")
+```
+
+While there are legitimate reasons for downloading prior versions (e.g., research, container-based software distribution, etc.), examples like the above probably happen more often than one would expect. The reason why is that people are literally downloading all packages from [CRAN](https://cran.r-project.org/).
+
+I try to filter these out these efforts in two ways. The first works at the level of the log session. Using a k-means classifier, I identify IP addresses that download "too many" packages. Then, to preserve entries from "legitimate" users at the same IP address, I filter out _campaigns_, blocs of package downloads done in (nearly) alphabetical order. The second works at the level of individual packages. Since some campaigns may be associated with less "greedy" IP addresses, I also filter out sequences of past versions downloaded in some narrowly defined time window.
+
 ### IV - notes and miscellanea
 
 #### country codes (top level domains)
