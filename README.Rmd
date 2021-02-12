@@ -533,7 +533,7 @@ Below is an excerpt from an abridged download log that illustrates a triplet:
 
 The observed full download, the second entry, is 4,161,948 bytes in size (the actual binary and source files of 'cholera' version 0.7.0 are 4.0 and 4.1 MB). The "small" entry is the last observation, 536 bytes. The "medium" entry is the first observation, 99,622 bytes. Incidentally, what makes a triplet a triplet (or a pair a pair) is that all member entries have identical or adjacent timestamps. actually, information about IP address, platform, R version, etc. are also used).
 
-"Small" entries can be easily dealt with by filtering out entries below 1000 bytes (the smallest package appears to be 'source.gist' at 1200 bytes). "Medium" entries are harder to deal with. I use either a triplet-specific filter or a filter that looks up a package's real size.
+"Small" entries can be easily dealt with by filtering out entries below 1000 bytes (the smallest package appears to be ['source.gist'](https://cran.r-project.org/package=source.gist) at 1200 bytes). "Medium" entries are harder to deal with. I use either a triplet-specific filter or a filter that looks up a package's real size.
 
 #### behavioral artifacts
 
