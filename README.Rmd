@@ -593,19 +593,25 @@ packageRank(packages = "ergm")
 
 However, depending on _where_ you make this request, you may not get the data you expect. If you're in Honolulu, USA, you will. If you're in Sydney, Australia, you won't. The reason is that you've somehow forgotten a key piece of trivia: RStudio typically posts yesterday's log by 17:00 UTC the following day.
 
-The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021: the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC: the log you want won't actually be posted for another 19 hours.
+The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021: the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC and the log you want won't actually be posted for another 19 hours.
 
-To make life a little easier, ['packageRank'](https://CRAN.R-project.org/package=packageRank) does two things. First, when the date of the log you want is not available (due to time zone rather than server issues), you'll get the last available log as a substitute and a warning that provides an estimate of when that log should be available.
+To make life a little easier, ['packageRank'](https://CRAN.R-project.org/package=packageRank) does two things. First, when the date of the log you want is not available (due to time zone rather than server issues), you'll just get the last available log as a substitute. If you specified a date in the future, you'll either get an error message or a warning that provides an estimate of when the log should be available.
 
-For the Honolulu example, you'd get the following:
+Using the Sydney example, if you'd used the expression above, you'd get the results for 30 December 2020:
 
-```{r honolulu, echo = FALSE}
-packageRank0(packages = "ergm", date = "2020-12-31")
+```{r sydney, eval = FALSE}
+packageRank0(packages = "ergm")
+```
+```{r sydney_code, echo = FALSE}
+packageRank0(packages = "ergm", date = "2020-12-30")
 ```
 
-For the Sydney example, you'll get the results for 30 December 2020 and the following message:
+If you had manually specified the date, you'd get an additional warning:
 
-```{r sydney, echo = FALSE}
+```{r sydneyB, eval = FALSE}
+packageRank(packages = "ergm", date = "2021-01-01")
+```
+```{r sydney_codeB, echo = FALSE}
 packageRank0(packages = "ergm", date = "2020-12-30")
 ```
 ```
@@ -613,7 +619,7 @@ Warning message:
 2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 ```
 
-Second, to help you remember when logs are posted in your locale, there's `logPostInfo()`. At the time it's run, it gives you the date of the latest available log along with the local and UTC time when that log should b posted to RStudio's server.
+Second, to help you check/remember when logs are posted in your location, there's `logPostInfo()`. At the time it's run, it gives you the date of the latest available log along with the local and UTC time when that log should be posted to RStudio's server.
 
 Here's what you'd see in Honoloulu:
 
@@ -636,7 +642,7 @@ logPostInfo(tz = "Pacific/Honolulu")
 > [1] "2021-02-02 07:00:00 HST"
 ```
 
-The default is to use your local time zone, via Sys.timezone(). To use a specific time zone, pass the desired zone name from the list in OlsonNames() to the `tz` argument:
+The default is to use your local time zone, via Sys.timezone(). To use a specific time zone, pass the desired zone name from OlsonNames() to the `tz` argument:
 
 ```{r logPostInfo2, eval = FALSE}
 logPostInfo(tz = "Australia/Sydney")
@@ -653,7 +659,7 @@ logPostInfo(tz = "Australia/Sydney")
 > [1] "2021-02-03 04:00:00 AEDT"
 ```
 
-This functionality depends on R's ability to to compute your clock time and time zone (e.g., Sys.time()). My understanding is that there may be operating system or platform related issues that could affect this.
+This functionality depends on R's ability to to compute your clock time and time zone (e.g., Sys.time()). My understanding is that there may be operating system or platform specific issues that could affect this functionality.
 
 #### timeout
 
