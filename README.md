@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9127-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9128-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context.
 
 It does so via two functions, `cranDownloads()` and `packageRank()`, and
-a set of filters that clean log files.
+a set of filters that remove “invalid” entries from the download logs.
 
 `cranDownloads()` extends the functionality of
 [`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by
@@ -20,24 +20,24 @@ tells you the percentage of observations (i.e., packages) with fewer
 counts (i.e., downloads), to help you see how your package is doing
 relative to *all* other [CRAN](https://CRAN.R-project.org/) packages.
 
-The filters try to remove software artifacts (e.g., downloads that are
-too “small”) and behavioral artifacts (e.g., efforts to download all of
+The filters attempt to remove software and behavioral artifacts (e.g.,
+downloads that are too “small” and efforts to download all of
 [CRAN](https://CRAN.R-project.org/)) that inflate the package download
-count
+count.
 
 Note that
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
 an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
 [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
-record traffic to what was previously called RStudio’s [CRAN
-mirror](http://cran.rstudio.com) and which is now listed as the
-[“0-Cloud” mirror](http://cloud.r-project.org) “sponsored by RStudio”.
-Logs for the previous day are generally posted by 17:00 UTC. Updated
-results for functions that rely on ‘cranlogs’ are generally available
-soon thereafter.
+record traffic to the [“0-Cloud” mirror “sponsored by
+RStudio”](http://cloud.r-project.org). This mirror was previously called
+RStudio’s [CRAN mirror](http://cran.rstudio.com). Logs for the previous
+day are generally posted by 17:00 UTC. Updated results for functions
+that rely on the ‘cranlogs’ package are generally available soon
+thereafter.
 
-### I - getting started
+### getting started
 
 To install ‘packageRank’ from CRAN:
 
@@ -52,7 +52,7 @@ To install the development version from GitHub:
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-### II - computing package download counts
+### I - computing package download counts
 
 `cranDownloads()` uses all the same arguments as
 `cranlogs::cran_downloads()`:
@@ -181,7 +181,7 @@ cranDownloads(packages = "HistData", when = "last-week")
 
 <br/>
 
-### III - visualizing package downloads
+### visualizing package download counts
 
 `cranDownloads()` makes visualizing package downloads easy. Just use
 `plot()`:
@@ -335,7 +335,7 @@ random sample of packages: within each 5% interval of rank percentiles
 packages is selected and tracked. This graphically approximates the
 “typical” pattern of downloads on CRAN for the selected time period.
 
-### IV - computing package download rank percentiles
+### II - computing package download rank percentiles
 
 Looking at nominal download count data leads one to the “compared to
 what?” question. For instance, consider the data for the first week of
@@ -469,7 +469,7 @@ length(downloads[downloads == 38])
 > [1] 263
 ```
 
-### V - visualizing package download rank percentiles
+### visualizing package download rank percentiles
 
 To visualize `packageRank()`, use `plot()`.
 
@@ -497,7 +497,118 @@ dotted vertical lines. The package with the most downloads,
 is at top left (in blue). The total number of downloads is at the top
 right (in blue).
 
-### VII - miscellanea
+### III - filtering package download counts
+
+To compute a package’s downloads, we simply count the number of log
+entries for that package. While straightforward, this metric will
+eventually run into problems because not all log entries are created
+equal. Some entries are, I would argue, self-evidently “invalid”; others
+are or debatably so. As a result, nominal package download counts are
+inflated, they suffer from a strictly positive, upwards bias.
+
+This inflation is a product of software and behavioral artifacts. The
+software artifacts are the result of client/user side software that
+create log entries that are smaller, often by orders of magnitude, than
+a package’s actual binary or source file size. The behavioral artifacts
+are the result of efforts to essentially download all of the packages on
+[CRAN](https://cran.r-project.org/).
+
+#### software artifacts
+
+Beyond missing observations (e.g., NAs for package names or package
+sizes; package sizes of zero bytes), the most noticeable problem when
+looking at download logs are wrongly sized log entries. These come in
+two sizes: “small” and “medium”. The “small” entries are the most
+noticeable: they are in the neighborhood of 500 bytes. The “medium”
+entries are a newer phenomenon. They are variable in size, falling
+anywhere between a “small” and a complete download (“small” &lt;=
+“medium” &lt;= full download).
+
+“Small” entries manifest themselves as standalone entries, paired with a
+full download, or as part of a triplet with a “medium” and full
+download. “Medium” entries manifest themselves as standalone entries, or
+as part of the aforementioned triplet.
+
+Below is an excerpt from an abridged download log that illustrates a
+triplet:
+
+                  date     time    size package version country ip_id
+    3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
+    3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
+    3999178 2020-07-01 07:56:15     536 cholera   0.7.0      US  4760
+
+The observed full download, the second entry, is 4,161,948 bytes in size
+(the actual binary and source files of ‘cholera’ version 0.7.0 are 4.0
+and 4.1 MB). The “small” entry is the last observation, 536 bytes. The
+“medium” entry is the first observation, 99,622 bytes. Incidentally,
+what makes a triplet a triplet (or a pair a pair) is that all member
+entries have identical or adjacent timestamps. actually, information
+about IP address, platform, R version, etc. are also used).
+
+“Small” entries can be easily dealt with by filtering out entries below
+1000 bytes (the smallest package appears to be
+[‘source.gist’](https://cran.r-project.org/package=source.gist) at 1200
+bytes). “Medium” entries are harder to deal with. I use either a
+triplet-specific filter or a filter that looks up a package’s real size.
+
+#### behavioral artifacts
+
+Wrongly sized entries are fairly visible. Less obvious are “errors” that
+otherwise look “right”. The issue, simply put, is that package downloads
+don’t simply reflect an interest in your package *per se*, they can also
+reflect an interest in [CRAN](https://cran.r-project.org/) itself: when
+someone downloads all the packages on
+[CRAN](https://cran.r-project.org/), the fact that your package got
+downloaded along with all the other packages shouldn’t or maybe doesn’t
+really reflect an interest in your package.
+
+Consider the example below. It lists a bloc of downloads, in sequential
+time order, of the ‘cholera’ package:
+
+    >              date     time    size package version country ip_id
+    > 132509 2020-07-31 21:03:06 3797776 cholera   0.2.1      US    14
+    > 132106 2020-07-31 21:03:07 4285678 cholera   0.4.0      US    14
+    > 132347 2020-07-31 21:03:07 4109051 cholera   0.3.0      US    14
+    > 133198 2020-07-31 21:03:08 3766514 cholera   0.5.0      US    14
+    > 132630 2020-07-31 21:03:09 3764848 cholera   0.5.1      US    14
+    > 133078 2020-07-31 21:03:11 4275831 cholera   0.6.0      US    14
+    > 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
+
+Size-wise, there isn’t a problem. But the fact that seven different
+versions were downloaded, in order, should attract our attention. This
+is especially true given that the bloc above represents *all* the prior
+versions of ‘cholera’:
+
+``` r
+packageHistory(package = "cholera")
+>   Package Version       Date Repository
+> 1 cholera   0.2.1 2017-08-10    Archive
+> 2 cholera   0.3.0 2018-01-26    Archive
+> 3 cholera   0.4.0 2018-04-01    Archive
+> 4 cholera   0.5.0 2018-07-16    Archive
+> 5 cholera   0.5.1 2018-08-15    Archive
+> 6 cholera   0.6.0 2019-03-08    Archive
+> 7 cholera   0.6.5 2019-06-11    Archive
+> 8 cholera   0.7.0 2019-08-28       CRAN
+```
+
+While there are legitimate reasons for downloading prior versions (e.g.,
+research, container-based software distribution, etc.), examples like
+the above probably happen more often than one would expect. The reason
+why is that people are literally downloading all packages from
+[CRAN](https://cran.r-project.org/).
+
+I try to filter these out these efforts in two ways. The first works at
+the level of the log session. Using a k-means classifier, I identify IP
+addresses that download “too many” packages. Then, to preserve entries
+from “legitimate” users at the same IP address, I filter out
+*campaigns*, blocs of package downloads done in (nearly) alphabetical
+order. The second works at the level of individual packages. Since some
+campaigns may be associated with less “greedy” IP addresses, I also
+filter out sequences of past versions downloaded in some narrowly
+defined time window.
+
+### IV - notes and miscellanea
 
 #### country codes (top level domains)
 
@@ -561,23 +672,32 @@ by 17:00 UTC the following day.
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is
 19:01 UTC 01 January 2021: the log you want has been available for 2
 hours. The expression fails in Sydney because 09:01 AEDT on 01 January
-2021 is 31 December 2020 22:00 UTC: the log you want won’t actually be
-posted for another 19 hours.
+2021 is 31 December 2020 22:00 UTC and the log you want won’t actually
+be posted for another 19 hours.
 
 To make life a little easier,
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) does two
 things. First, when the date of the log you want is not available (due
-to time zone rather than server issues), you’ll get the last available
-log as a substitute and a warning that provides an estimate of when that
-log should be available.
+to time zone rather than server issues), you’ll just get the last
+available log as a substitute. If you specified a date in the future,
+you’ll either get an error message or a warning that provides an
+estimate of when the log should be available.
 
-For the Honolulu example, you’d get the following:
+Using the Sydney example, if you’d used the expression above, you’d get
+the results for 30 December 2020:
+
+``` r
+packageRank0(packages = "ergm")
+```
 
     >         date packages downloads          rank percentile
-    > 1 2020-12-31     ergm       190 990 of 18,123       94.5
+    > 1 2020-12-30     ergm       292 873 of 20,077       95.6
 
-For the Sydney example, you’ll get the results for 30 December 2020 and
-the following message:
+If you had manually specified the date, you’d get an additional warning:
+
+``` r
+packageRank(packages = "ergm", date = "2021-01-01")
+```
 
     >         date packages downloads          rank percentile
     > 1 2020-12-30     ergm       292 873 of 20,077       95.6
@@ -585,10 +705,10 @@ the following message:
     Warning message:
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
-Second, to help you remember when logs are posted in your locale,
-there’s `logPostInfo()`. At the time it’s run, it gives you the date of
-the latest available log along with the local and UTC time when that log
-should b posted to RStudio’s server.
+Second, to help you check/remember when logs are posted in your
+location, there’s `logPostInfo()`. At the time it’s run, it gives you
+the date of the latest available log along with the local and UTC time
+when that log should be posted to RStudio’s server.
 
 Here’s what you’d see in Honoloulu:
 
@@ -606,8 +726,8 @@ logPostInfo()
     > [1] "2021-02-02 07:00:00 HST"
 
 The default is to use your local time zone, via Sys.timezone(). To use a
-specific time zone, pass the desired zone name from the list in
-OlsonNames() to the `tz` argument:
+specific time zone, pass the desired zone name from OlsonNames() to the
+`tz` argument:
 
 ``` r
 logPostInfo(tz = "Australia/Sydney")
@@ -624,7 +744,8 @@ logPostInfo(tz = "Australia/Sydney")
 
 This functionality depends on R’s ability to to compute your clock time
 and time zone (e.g., Sys.time()). My understanding is that there may be
-operating system or platform related issues that could affect this.
+operating system or platform specific issues that could affect this
+functionality.
 
 #### timeout
 
