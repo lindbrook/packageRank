@@ -95,27 +95,3 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
 
   out
 }
-
-#' Get Package Download Logs.
-#'
-#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param packages Character. Vector of package name(s).
-#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
-#' @param check.package Logical. Validate and "spell check" package.
-#' @param memoization Logical. Use memoization when downloading logs.
-
-#' @param clean.output Logical. NULL row names.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @return An R data frame.
-#' @export
-
-packageLog0 <- function(packages = "cholera", date = NULL,
-  check.package = TRUE, memoization = TRUE, clean.output = FALSE,
-  multi.core = TRUE) {
-
-  packageLog(packages = packages, date = date,
-    triplet.filter = FALSE, ip.filter = FALSE, small.filter = FALSE,
-    sequence.filter = FALSE, size.filter = FALSE, memoization = memoization,
-    check.package = check.package, clean.output = clean.output,
-    multi.core = multi.core)
-}

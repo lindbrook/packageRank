@@ -20,7 +20,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   if (check.package) packages <- checkPackage(packages)
 
   ymd <- logDate(date)
-  cran_log <- packageLog0(packages = packages, date = ymd,
+  cran_log <- packageLog(packages = packages, date = ymd,
     memoization = memoization)
 
   if (is.data.frame(cran_log)) {
