@@ -2,20 +2,29 @@
 % Please edit documentation in R/packageRank.R
 \name{packageRank}
 \alias{packageRank}
-\title{Package download counts and rank percentiles.}
+\title{Package download counts and rank percentiles (prototype).}
 \usage{
-packageRank(packages = "HistData", date = NULL, ip.filter = TRUE,
-  small.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  multi.core = TRUE)
+packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
+  check.package = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
+\item{all.filters}{Logical. Master switch for filters.}
+
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
+\item{triplet.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
+
+\item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
