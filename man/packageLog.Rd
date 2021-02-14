@@ -4,21 +4,23 @@
 \alias{packageLog}
 \title{Get Package Download Logs.}
 \usage{
-packageLog(packages = "cholera", date = NULL, ip.filter = TRUE,
-  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  clean.output = FALSE, multi.core = TRUE)
+packageLog(packages = "cholera", date = NULL, all.filters = FALSE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
+  check.package = TRUE, clean.output = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
+\item{all.filters}{Logical. Master switch for filters.}
+
 \item{ip.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
 
-\item{small.filter}{Logical.}
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
 \item{sequence.filter}{Logical.}
 

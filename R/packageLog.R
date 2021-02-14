@@ -3,9 +3,10 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
+#' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
 #' @param triplet.filter Logical.
-#' @param small.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
@@ -15,12 +16,10 @@
 #' @return An R data frame.
 #' @export
 
-packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
-  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  size.filter = TRUE, memoization = TRUE, check.package = TRUE,
-  clean.output = FALSE, multi.core = TRUE) {
-
-  cores <- multiCore(multi.core)
+packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
+  check.package = TRUE, clean.output = FALSE, multi.core = TRUE) {
 
   if (check.package) packages <- checkPackage(packages)
   pkg.order <- packages
@@ -28,6 +27,8 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
+
+  cores <- multiCore(multi.core)
 
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
   zero.downloads <- vapply(out, nrow, integer(1L))
@@ -40,18 +41,21 @@ packageLog <- function(packages = "cholera", date = NULL, ip.filter = TRUE,
     out <- out[!zero.sel]
   }
 
+  if (all.filters) {
+    ip.filter <- TRUE
+    triplet.filter <- TRUE
+    small.filter <- TRUE
+    sequence.filter <- TRUE
+    size.filter <- TRUE
+  }
+
   if (ip.filter) {
     row.delete <- ipFilter(cran_log, multi.core = cores)
     out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
   }
 
-  if (triplet.filter) {
-    if (length(packages) == 1) {
-      out <- lapply(out, tripletFilter)
-    } else if (length(packages) > 1) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
-    }
-  }
+  if (triplet.filter) out <- parallel::mclapply(out, tripletFilter,
+    mc.cores = cores)
 
   if (small.filter) lapply(out, smallFilter)
 
