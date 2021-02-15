@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9128-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9129-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -607,6 +607,28 @@ order. The second works at the level of individual packages. Since some
 campaigns may be associated with less “greedy” IP addresses, I also
 filter out sequences of past versions downloaded in some narrowly
 defined time window.
+
+#### limitations
+
+There are two sets of filters. The first includes CRAN specific filters:
+`ipFilter()` and `smallFilter()`. They work independent of packages, at
+the log or “population” level. The second includes package specific
+filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They
+rely on package specific information, like the size of source or binary
+files.
+
+Ideally, we’d like to use both sets when trying to estimate package
+downloads. However, when making relative comparisons of package
+downloads like with rank percentiles, using package specific filters
+means iterating over tens of thousands of packages. While feasible, this
+is currently very computationally expensive. However, these filters are
+available for offline, batch analysis.
+
+Functions that can use both CRAN and package specific functions:
+`packageLog()`, `packageCountry()`, and `filteredDownloads()`. Functions
+that default only to CRAN specific functions: `packageRank()`,
+`ipPackage()`, `countryPackage()`, `countryDistribution()` and
+`packageDistribution()`.
 
 ### IV - notes and miscellanea
 

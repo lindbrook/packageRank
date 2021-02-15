@@ -555,6 +555,14 @@ While there are legitimate reasons for downloading prior versions (e.g., researc
 
 I try to filter these out these efforts in two ways. The first works at the level of the log session. Using a k-means classifier, I identify IP addresses that download "too many" packages. Then, to preserve entries from "legitimate" users at the same IP address, I filter out _campaigns_, blocs of package downloads done in (nearly) alphabetical order. The second works at the level of individual packages. Since some campaigns may be associated with less "greedy" IP addresses, I also filter out sequences of past versions downloaded in some narrowly defined time window.
 
+#### limitations
+
+There are two sets of filters. The first includes CRAN specific filters: `ipFilter()` and `smallFilter()`. They work independent of packages, at the log or "population" level. The second includes package specific filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They rely on package specific information, like the size of source or binary files. 
+
+Ideally, we'd like to use both sets when trying to estimate package downloads. However, when making relative comparisons of package downloads like with rank percentiles, using package specific filters means iterating over tens of thousands of packages. While feasible, this is currently very computationally expensive. However, these filters are available for offline, batch analysis.
+
+Functions that can use both CRAN and package specific functions: `packageLog()`, `packageCountry()`, and `filteredDownloads()`. Functions that default only to CRAN specific functions: `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()`.
+
 ### IV - notes and miscellanea
 
 #### country codes (top level domains)
