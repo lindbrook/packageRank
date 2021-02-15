@@ -51,17 +51,19 @@ packageRank <- function(packages = "HistData", date = NULL,
   }
 
   if (any(pkg_specific_filters)) {
-    pkgs <- unique(cran_log$package)[1:10]
+    pkgs <- unique(cran_log$package)
 
     out <- parallel::mclapply(pkgs, function(p) {
       cran_log[cran_log$package == p, ]
     }, mc.cores = cores)
 
-    if (triplet.filter) out <- parallel::mclapply(out, tripletFilter,
-      mc.cores = cores)
+    if (triplet.filter) {
+      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
+    }
 
-    if (small.filter) out <- parallel::mclapply(out, smallFilter,
-      mc.cores = cores)
+    if (small.filter) {
+      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+    }
 
     if (sequence.filter) {
       arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
@@ -74,14 +76,10 @@ packageRank <- function(packages = "HistData", date = NULL,
       }, mc.cores = cores)
     }
 
-    # N.B. 10 packages!
-    #   user  system elapsed
-    # 13.490   7.629 151.852
     if (size.filter) out <- sizeFilter(out, pkgs, cores)
-
     cran_log <- do.call(rbind, out)
 
-    } else {
+  } else {
     if (small.filter) cran_log <- smallFilter(cran_log)
   }
 
