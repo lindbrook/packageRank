@@ -85,5 +85,9 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     tmp
   }, mc.cores = cores)
 
-  out[pkg.order]
+  if (length(packages) == 1) {
+    out[[1]]
+  } else {
+    out[pkg.order]  
+  }
 }
