@@ -772,7 +772,7 @@ functionality.
 #### timeout
 
 With R 4.0.3, the timeout value for internet connections became more
-explicit. Here’s the relevant details from this release’s [“New
+explicit. Here are the relevant details from this release’s [“New
 features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 
     The default value for options("timeout") can be set from environment variable
