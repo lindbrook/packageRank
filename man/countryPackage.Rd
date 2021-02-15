@@ -4,15 +4,17 @@
 \alias{countryPackage}
 \title{Tabulate a country's package downloads.}
 \usage{
-countryPackage(country = "HK", date = NULL, ip.filter = TRUE,
-  triplet.filter = TRUE, small.filter = TRUE, sequence.filter = FALSE,
-  size.filter = FALSE, sort = TRUE, memoization = TRUE,
-  multi.core = TRUE)
+countryPackage(country = "HK", date = NULL, all.filters = FALSE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
+  memoization = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
+
+\item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
 

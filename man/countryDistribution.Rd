@@ -4,15 +4,24 @@
 \alias{countryDistribution}
 \title{Tabulate package downloads by country.}
 \usage{
-countryDistribution(date = NULL, ip.filter = TRUE, small.filter = TRUE,
-  memoization = TRUE, multi.core = TRUE)
+countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
+  triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
+  size.filter = FALSE, memoization = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
+\item{all.filters}{Logical. Master switch for filters.}
+
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical TRUE filters out downloads less than 1000 bytes.}
+\item{triplet.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
+
+\item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 

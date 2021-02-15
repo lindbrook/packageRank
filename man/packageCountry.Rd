@@ -4,21 +4,17 @@
 \alias{packageCountry}
 \title{Package download counts by country.}
 \usage{
-packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
-  sort = TRUE, na.rm = FALSE, ip.filter = TRUE, triplet.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
-  check.package = TRUE)
+packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
+  na.rm = FALSE, memoization = TRUE, check.package = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
-\item{memoization}{Logical. Use memoization when downloading logs.}
-
-\item{sort}{Logical. Sort by download count.}
-
-\item{na.rm}{Logical. Remove NAs.}
+\item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
 
@@ -29,6 +25,12 @@ packageCountry(packages = "cholera", date = NULL, memoization = TRUE,
 \item{sequence.filter}{Logical.}
 
 \item{size.filter}{Logical.}
+
+\item{sort}{Logical. Sort by download count.}
+
+\item{na.rm}{Logical. Remove NAs.}
+
+\item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 }
