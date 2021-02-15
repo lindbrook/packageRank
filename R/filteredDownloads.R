@@ -1,26 +1,27 @@
 #' Filtered package downloads from the RStudio CRAN mirror (protoype).
 #'
-#' triplet, ip and small filters.
+#' ip, triplet, small, sequence and size filters.
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
-#' @param check.package Logical. Validate and "spell check" package.
+#' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
 #' @param triplet.filter Logical.
-#' @param small.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @export
 
 filteredDownloads <- function(packages = "HistData", date = NULL,
-  check.package = TRUE, ip.filter = TRUE, triplet.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
-  memoization = TRUE) {
+  all.filters = TRUE, ip.filter = FALSE, triplet.filter = FALSE,
+  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
+  check.package = TRUE, memoization = TRUE) {
 
   if (check.package) packages <- checkPackage(packages)
 
   ymd <- logDate(date)
-  cran_log <- packageLog0(packages = packages, date = ymd,
+  cran_log <- packageLog(packages = packages, date = ymd,
     memoization = memoization)
 
   if (is.data.frame(cran_log)) {
@@ -30,9 +31,10 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   }
 
   f.cran_log <- packageLog(packages = packages, date = ymd,
-    ip.filter = ip.filter, triplet.filter = triplet.filter,
-    small.filter = small.filter, sequence.filter = sequence.filter,
-    size.filter = size.filter, memoization = memoization)
+    all.filters = all.filters, ip.filter = ip.filter,
+    triplet.filter = triplet.filter, small.filter = small.filter,
+    sequence.filter = sequence.filter, size.filter = size.filter,
+    memoization = memoization)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)

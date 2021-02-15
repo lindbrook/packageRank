@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9128-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.5.9129-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -608,6 +608,28 @@ campaigns may be associated with less “greedy” IP addresses, I also
 filter out sequences of past versions downloaded in some narrowly
 defined time window.
 
+#### limitations
+
+There are two sets of filters. The first includes CRAN specific filters:
+`ipFilter()` and `smallFilter()`. They work independent of packages, at
+the log or “population” level. The second includes package specific
+filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They
+rely on package specific information, like the size of source or binary
+files.
+
+Ideally, we’d like to use both sets when trying to estimate package
+downloads. However, when making relative comparisons of package
+downloads like with rank percentiles, using package specific filters
+means iterating over tens of thousands of packages. While feasible, this
+is currently very computationally expensive. However, these filters are
+available for offline, batch analysis.
+
+Functions that can use both CRAN and package specific functions:
+`packageLog()`, `packageCountry()`, and `filteredDownloads()`. Functions
+that default only to CRAN specific functions: `packageRank()`,
+`ipPackage()`, `countryPackage()`, `countryDistribution()` and
+`packageDistribution()`.
+
 ### IV - notes and miscellanea
 
 #### country codes (top level domains)
@@ -687,7 +709,7 @@ Using the Sydney example, if you’d used the expression above, you’d get
 the results for 30 December 2020:
 
 ``` r
-packageRank0(packages = "ergm")
+packageRank(packages = "ergm")
 ```
 
     >         date packages downloads          rank percentile
@@ -710,7 +732,7 @@ location, there’s `logPostInfo()`. At the time it’s run, it gives you
 the date of the latest available log along with the local and UTC time
 when that log should be posted to RStudio’s server.
 
-Here’s what you’d see in Honoloulu:
+Here’s what you’d see in Honolulu:
 
 ``` r
 logPostInfo()
@@ -750,10 +772,10 @@ functionality.
 #### timeout
 
 With R 4.0.3, the timeout value for internet connections became more
-explicit. Here’s the revelant details from this release’s [“New
+explicit. Here are the relevant details from this release’s [“New
 features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 
-    The default value for options("timeout") can be set from enviromnent variable
+    The default value for options("timeout") can be set from environment variable
     R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
     or invalid.
 

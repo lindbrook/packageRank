@@ -4,21 +4,31 @@
 \alias{ipPackage}
 \title{Tabulate an IP's package downloads.}
 \usage{
-ipPackage(ip = 10, date = NULL, memoization = TRUE, sort = TRUE,
-  small.filter = FALSE, triplet.filter = FALSE, multi.core = TRUE)
+ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
+  triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
+  size.filter = FALSE, sort = TRUE, memoization = TRUE,
+  multi.core = TRUE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id.}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
-\item{memoization}{Logical. Use memoization when downloading logs.}
+\item{all.filters}{Logical. Master switch for filters.}
+
+\item{ip.filter}{Logical.}
+
+\item{triplet.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
+
+\item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
 
 \item{sort}{Logical. Sort by download count.}
 
-\item{small.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
+\item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }

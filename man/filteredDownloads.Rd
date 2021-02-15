@@ -4,9 +4,9 @@
 \alias{filteredDownloads}
 \title{Filtered package downloads from the RStudio CRAN mirror (protoype).}
 \usage{
-filteredDownloads(packages = "HistData", date = NULL,
-  check.package = TRUE, ip.filter = TRUE, triplet.filter = TRUE,
-  small.filter = TRUE, sequence.filter = TRUE, size.filter = TRUE,
+filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
+  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
+  sequence.filter = FALSE, size.filter = FALSE, check.package = TRUE,
   memoization = TRUE)
 }
 \arguments{
@@ -14,20 +14,22 @@ filteredDownloads(packages = "HistData", date = NULL,
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
-\item{check.package}{Logical. Validate and "spell check" package.}
+\item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
 
 \item{triplet.filter}{Logical.}
 
-\item{small.filter}{Logical.}
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
 \item{sequence.filter}{Logical.}
 
 \item{size.filter}{Logical.}
 
+\item{check.package}{Logical. Validate and "spell check" package.}
+
 \item{memoization}{Logical. Use memoization when downloading logs.}
 }
 \description{
-triplet, ip and small filters.
+ip, triplet, small, sequence and size filters.
 }
