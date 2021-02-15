@@ -30,17 +30,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 
   cores <- multiCore(multi.core)
 
-  out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
-  zero.downloads <- vapply(out, nrow, integer(1L))
-
-  if (any(zero.downloads == 0)) {
-    zero.sel <- zero.downloads == 0
-    zero.packages <- packages[zero.sel]
-    zero.out <- out[zero.sel]
-    packages <- packages[!zero.sel]
-    out <- out[!zero.sel]
-  }
-
   if (all.filters) {
     ip.filter <- TRUE
     triplet.filter <- TRUE
@@ -49,54 +38,52 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     size.filter <- TRUE
   }
 
+  pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
+
   if (ip.filter) {
     row.delete <- ipFilter(cran_log, multi.core = cores)
-    out <- lapply(out, function(x) x[!row.names(x) %in% row.delete, ])
+    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
-  if (triplet.filter) out <- parallel::mclapply(out, tripletFilter,
-    mc.cores = cores)
-
-  if (small.filter) out <- parallel::mclapply(out, smallFilter,
-    mc.cores = cores)
-
-  if (sequence.filter) {
-    arch.pkg.history <- parallel::mclapply(packages, function(x) {
-      tmp <- packageHistory(x)
-      tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
+  if (any(pkg_specific_filters)) {
+    out <- parallel::mclapply(packages, function(p) {
+      cran_log[cran_log$package == p, ]
     }, mc.cores = cores)
 
-    out <- parallel::mclapply(seq_along(out), function(i) {
-      sequenceFilter(out[[i]], arch.pkg.history[[i]])
-    }, mc.cores = cores)
-  }
-
-  if (size.filter) out <- sizeFilter(out, packages)
-
-  if (any(zero.downloads == 0)) {
-    packages <- c(packages, zero.packages)
-    out <- c(out, zero.out)
-  }
-
-  if (length(packages) == 1) {
-    out <- out[[1]]
-    if (nrow(out) != 0) {
-      if (!"t2" %in% names(out)) out$t2 <- dateTime(out$date, out$time)
-      out <- out[order(out$t2), ]
-      out$t2 <- NULL
-      if (clean.output) rownames(out) <- NULL
+    if (triplet.filter) {
+      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
     }
-  } else if (length(packages) > 1) {
-    names(out) <- packages
-    out <- parallel::mclapply(out, function(x) {
-      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
-      tmp <- x[order(x$date.time), ]
-      tmp$date.time <- NULL
-      tmp
-    }, mc.cores = cores)
 
-    out <- out[pkg.order]
+    if (small.filter) {
+      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+    }
+
+    if (sequence.filter) {
+      arch.pkg.history <- parallel::mclapply(packages, function(x) {
+        tmp <- packageHistory(x)
+        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
+      }, mc.cores = cores)
+
+      out <- parallel::mclapply(seq_along(out), function(i) {
+        sequenceFilter(out[[i]], arch.pkg.history[[i]])
+      }, mc.cores = cores)
+    }
+
+    if (size.filter) out <- sizeFilter(out, packages, cores)
+    names(out) <- packages
+
+  } else {
+    if (small.filter) cran_log <- smallFilter(cran_log)
+     out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+     names(out) <- packages
   }
 
-  out
+  out <- parallel::mclapply(out, function(x) {
+    if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
+    tmp <- x[order(x$date.time), ]
+    tmp$date.time <- NULL
+    tmp
+  }, mc.cores = cores)
+
+  out[pkg.order]
 }
