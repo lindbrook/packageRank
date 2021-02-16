@@ -95,7 +95,7 @@ plot.packageVersionPercent <- function(x, ...) {
 
   titleA <- "Percent of Versions Downloaded:"
   titleB <- 'CRAN (1-100) & Archive (101-200)'
-  titleC <- paste0(':', month(pkg.data[1, "date"]), year(pkg.data[1, "date"]))
+  # titleC <- paste0(':', month(pkg.data[1, "date"]), year(pkg.data[1, "date"]))
 
   ggplot(data = pkg.data, aes_string(x = "id", y = "pct.of.versions")) +
     geom_point(color = "gray") +
@@ -115,5 +115,6 @@ plot.packageVersionPercent <- function(x, ...) {
           plot.title = element_text(hjust = 0.5)) +
     scale_y_continuous(breaks = c(0, 50, 100), limits = c(-10, 110)) +
     scale_x_continuous(breaks = 100) +
-    ggtitle(paste(titleA, titleB, titleC))
+    # ggtitle(paste(titleA, titleB, titleC))
+    ggtitle(paste(titleB))
 }
