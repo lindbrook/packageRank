@@ -5,7 +5,7 @@
 #' @param date Character. NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @note Depending on when syncrhonization occurred, you may need to add 3 or 4 days to CRAN publication date, see packageHistory(), to find the package or version you're looking for.
+#' @note Depending on when synchronization occurred, you may need to add 3 or 4 days to CRAN publication date, see packageHistory(), to find the package or version you're looking for.
 #' @export
 
 packageMRAN <- function(package = "cholera", date = NULL, check.package = TRUE,

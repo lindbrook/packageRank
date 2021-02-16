@@ -5,7 +5,7 @@
 #' @param repository Character. "cran" or "archive".
 #' @param strata.samples Numeric. Number of samples from each stratum.
 #' @param package.samples Numeric. Number of packages to sample from across strata for use in versionPlot().
-#' @param use.seed Logical. Use todays's date as seed.
+#' @param use.seed Logical. Use today's date as seed.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @note July benchmarks: cran = 61.684; archive = 35.597.
 #' @export
@@ -71,7 +71,7 @@ packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
   })
 
   names(sample.id) <- paste(round(breaks[-1], 2))
-  
+
   sel <- vapply(sample.id, function(x) all(!is.na(x)), logical(1L))
   sample.id <- sample.id[sel]
 

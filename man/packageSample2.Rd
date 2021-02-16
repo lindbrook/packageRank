@@ -16,7 +16,7 @@ packageSample2(lst, repository = "cran", strata.samples = 20,
 
 \item{package.samples}{Numeric. Number of packages to sample from across strata for use in versionPlot().}
 
-\item{use.seed}{Logical. Use todays's date as seed.}
+\item{use.seed}{Logical. Use today's date as seed.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
