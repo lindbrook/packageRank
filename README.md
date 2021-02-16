@@ -392,7 +392,7 @@ For example, we can compare Wednesday (“2020-03-04”) to Saturday
 (“2020-03-07”):
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-04", ip.filter = FALSE, small.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-04")
 >         date packages downloads            rank percentile
 > 1 2020-03-04  cholera        38 5,556 of 18,038       67.9
 ```
@@ -403,7 +403,7 @@ downloads, came in 5,556th place out of 18,038 unique packages
 downloaded, and earned a spot in the 68th percentile.
 
 ``` r
-packageRank(package = "cholera", date = "2020-03-07", ip.filter = FALSE, small.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-07")
 >         date packages downloads            rank percentile
 > 1 2020-03-07  cholera        29 3,061 of 15,950         80
 ```
@@ -426,8 +426,7 @@ packages with fewer downloads. Here are the details using
 as an example:
 
 ``` r
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = FALSE, small.filter = FALSE)
+pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 
 downloads <- pkg.rank$freqtab
 
@@ -459,8 +458,7 @@ sorted in alphabetical order. Thus, ‘cholera’ benefits from the fact
 that it is 31st in the list of 263 packages with 38 downloads:
 
 ``` r
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = FALSE, small.filter = FALSE)
+pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
@@ -532,10 +530,13 @@ as part of the aforementioned triplet.
 Below is an excerpt from an abridged download log that illustrates a
 triplet:
 
-                  date     time    size package version country ip_id
-    3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
-    3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
-    3999178 2020-07-01 07:56:15     536 cholera   0.7.0      US  4760
+``` r
+packageLog(date = "2020-07-01")[4:6, -(4:6)]
+>               date     time    size package version country ip_id
+> 3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
+> 3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
+> 3999178 2020-07-01 07:56:15     536 cholera   0.7.0      US  4760
+```
 
 The observed full download, the second entry, is 4,161,948 bytes in size
 (the actual binary and source files of ‘cholera’ version 0.7.0 are 4.0
@@ -565,14 +566,17 @@ really reflect an interest in your package.
 Consider the example below. It lists a bloc of downloads, in sequential
 time order, of the ‘cholera’ package:
 
-    >              date     time    size package version country ip_id
-    > 132509 2020-07-31 21:03:06 3797776 cholera   0.2.1      US    14
-    > 132106 2020-07-31 21:03:07 4285678 cholera   0.4.0      US    14
-    > 132347 2020-07-31 21:03:07 4109051 cholera   0.3.0      US    14
-    > 133198 2020-07-31 21:03:08 3766514 cholera   0.5.0      US    14
-    > 132630 2020-07-31 21:03:09 3764848 cholera   0.5.1      US    14
-    > 133078 2020-07-31 21:03:11 4275831 cholera   0.6.0      US    14
-    > 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
+``` r
+packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
+>              date     time    size package version country ip_id
+> 132509 2020-07-31 21:03:06 3797776 cholera   0.2.1      US    14
+> 132106 2020-07-31 21:03:07 4285678 cholera   0.4.0      US    14
+> 132347 2020-07-31 21:03:07 4109051 cholera   0.3.0      US    14
+> 133198 2020-07-31 21:03:08 3766514 cholera   0.5.0      US    14
+> 132630 2020-07-31 21:03:09 3764848 cholera   0.5.1      US    14
+> 133078 2020-07-31 21:03:11 4275831 cholera   0.6.0      US    14
+> 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
+```
 
 Size-wise, there isn’t a problem. But the fact that seven different
 versions were downloaded, in order, should attract our attention. This
@@ -648,7 +652,9 @@ using MaxMind’s free database, which no longer seems to be available.
 To avoid the bottleneck of downloading multiple log files,
 `packageRank()` is currently limited to individual calendar dates. To
 reduce the bottleneck of re-downloading logs, which can be upwards of 50
-MB, ‘packageRank’ makes use of memoization via the ‘memoise’ package.
+MB, [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+makes use of memoization via the
+[‘memoise’](https://CRAN.R-project.org/package=memoise) package.
 
 Here’s relevant code:
 
@@ -747,9 +753,9 @@ logPostInfo()
     > $local
     > [1] "2021-02-02 07:00:00 HST"
 
-The default is to use your local time zone, via Sys.timezone(). To use a
-specific time zone, pass the desired zone name from OlsonNames() to the
-`tz` argument:
+The default is to use your local time zone, via `Sys.timezone()`. To use
+a specific time zone, pass the desired zone name from `OlsonNames()` to
+the `tz` argument:
 
 ``` r
 logPostInfo(tz = "Australia/Sydney")
@@ -765,8 +771,8 @@ logPostInfo(tz = "Australia/Sydney")
     > [1] "2021-02-03 04:00:00 AEDT"
 
 This functionality depends on R’s ability to to compute your clock time
-and time zone (e.g., Sys.time()). My understanding is that there may be
-operating system or platform specific issues that could affect this
+and time zone (e.g., `Sys.time()`). My understanding is that there may
+be operating system or platform specific issues that could affect this
 functionality.
 
 #### timeout

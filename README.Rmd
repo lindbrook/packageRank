@@ -350,13 +350,13 @@ To facilitate interpretation and comparison, I use the _rank percentile_ of a do
 For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 
 ```{r packageRank1}
-packageRank(package = "cholera", date = "2020-03-04", ip.filter = FALSE, small.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-04")
 ```
 
 On Wednesday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 38 downloads, came in 5,556th place out of 18,038 unique packages downloaded, and earned a spot in the 68th percentile.
 
 ```{r packageRank2}
-packageRank(package = "cholera", date = "2020-03-07", ip.filter = FALSE, small.filter = FALSE)
+packageRank(package = "cholera", date = "2020-03-07")
 ```
 
 On Saturday, we can see that ['cholera'](https://CRAN.R-project.org/package=cholera) had 29 downloads, came in 3,061st place out of 15,950 unique packages downloaded, earned a spot in the 80th percentile.
@@ -368,8 +368,7 @@ So contrary to what the nominal counts tell us, one could say that the interest 
 To compute rank percentiles, I do the following. For each package, I tabulate the number of downloads and then compute the percentage of packages with fewer downloads. Here are the details using ['cholera'](https://CRAN.R-project.org/package=cholera) from Wednesday as an example:
 
 ```{r percentile}
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = FALSE, small.filter = FALSE)
+pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 
 downloads <- pkg.rank$freqtab
 
@@ -391,8 +390,7 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 In the example above, 38 downloads puts 'cholera' in 5,556th place among the 18,038 packages downloaded. This rank is "nominal" because it's possible that multiple packages can have the same number of downloads. As a result, a package's nominal rank (but not its rank percentile) can be affected by its name: packages with the same number of downloads are sorted in alphabetical order. Thus, 'cholera' benefits from the fact that it is 31st in the list of 263 packages with 38 downloads:
 
 ```{r nominal}
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04",
-  ip.filter = FALSE, small.filter = FALSE)
+pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
@@ -409,7 +407,7 @@ plot(packageRank(packages = "cholera", date = "2020-03-04"))
 
 ```{r packageRank_data, echo = FALSE}
 dat <- lapply(c("2020-03-04", "2020-03-07"), function(x) {
-  packageRank("cholera", date = x, ip.filter = FALSE, small.filter = FALSE)
+  packageRank("cholera", date = x)
 })
 
 freqtab1 <- dat[[1]]$freqtab
@@ -467,7 +465,6 @@ plot(packageRank(packages = "cholera", date = "2020-03-07"))
 ```
 
 ```{r packageRank_plot_code_sat, echo = FALSE, fig.align = "center"}
-
 freqtab <- dat[[2]]$freqtab
 package.data <- dat[[2]]$package.data
 pkg <- dat[[2]]$packages
@@ -524,11 +521,8 @@ Beyond missing observations (e.g., NAs for package names or package sizes; packa
 
 Below is an excerpt from an abridged download log that illustrates a triplet:
 
-```
-              date     time    size package version country ip_id
-3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
-3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
-3999178 2020-07-01 07:56:15     536 cholera   0.7.0      US  4760
+```{r triplet}
+packageLog(date = "2020-07-01")[4:6, -(4:6)]
 ```
 
 The observed full download, the second entry, is 4,161,948 bytes in size (the actual binary and source files of 'cholera' version 0.7.0 are 4.0 and 4.1 MB). The "small" entry is the last observation, 536 bytes. The "medium" entry is the first observation, 99,622 bytes. Incidentally, what makes a triplet a triplet (or a pair a pair) is that all member entries have identical or adjacent timestamps. actually, information about IP address, platform, R version, etc. are also used).
@@ -541,7 +535,7 @@ Wrongly sized entries are fairly visible. Less obvious are "errors" that otherwi
 
 Consider the example below. It lists a bloc of downloads, in sequential time order, of the 'cholera' package:
 
-```{r, sequence_ex, echo = FALSE}
+```{r, sequence_ex}
 packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 ```
 
@@ -557,7 +551,7 @@ I try to filter these out these efforts in two ways. The first works at the leve
 
 #### limitations
 
-There are two sets of filters. The first includes CRAN specific filters: `ipFilter()` and `smallFilter()`. They work independent of packages, at the log or "population" level. The second includes package specific filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They rely on package specific information, like the size of source or binary files. 
+There are two sets of filters. The first includes CRAN specific filters: `ipFilter()` and `smallFilter()`. They work independent of packages, at the log or "population" level. The second includes package specific filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They rely on package specific information, like the size of source or binary files.
 
 Ideally, we'd like to use both sets when trying to estimate package downloads. However, when making relative comparisons of package downloads like with rank percentiles, using package specific filters means iterating over tens of thousands of packages. While feasible, this is currently very computationally expensive. However, these filters are available for offline, batch analysis.
 
@@ -571,7 +565,7 @@ While IP addresses are anonymized, the logs do attempt to provide the correspond
 
 #### memoization
 
-To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual calendar dates. To reduce the bottleneck of re-downloading logs, which can be upwards of 50 MB, 'packageRank' makes use of memoization via the 'memoise' package.
+To avoid the bottleneck of downloading multiple log files, `packageRank()` is currently limited to individual calendar dates. To reduce the bottleneck of re-downloading logs, which can be upwards of 50 MB, ['packageRank'](https://CRAN.R-project.org/package=packageRank) makes use of memoization via the ['memoise'](https://CRAN.R-project.org/package=memoise) package.
 
 Here's relevant code:
 
@@ -650,7 +644,7 @@ logPostInfo(tz = "Pacific/Honolulu")
 > [1] "2021-02-02 07:00:00 HST"
 ```
 
-The default is to use your local time zone, via Sys.timezone(). To use a specific time zone, pass the desired zone name from OlsonNames() to the `tz` argument:
+The default is to use your local time zone, via `Sys.timezone()`. To use a specific time zone, pass the desired zone name from `OlsonNames()` to the `tz` argument:
 
 ```{r logPostInfo2, eval = FALSE}
 logPostInfo(tz = "Australia/Sydney")
@@ -667,7 +661,7 @@ logPostInfo(tz = "Australia/Sydney")
 > [1] "2021-02-03 04:00:00 AEDT"
 ```
 
-This functionality depends on R's ability to to compute your clock time and time zone (e.g., Sys.time()). My understanding is that there may be operating system or platform specific issues that could affect this functionality.
+This functionality depends on R's ability to to compute your clock time and time zone (e.g., `Sys.time()`). My understanding is that there may be operating system or platform specific issues that could affect this functionality.
 
 #### timeout
 
