@@ -11,7 +11,7 @@ It does so via two functions, `cranDownloads()` and `packageRank()`, and
 a set of filters that remove “invalid” entries from the download logs.
 
 `cranDownloads()` extends the functionality of
-[`cranlogs::cran_downloads()`](http://r-hub.github.io/cranlogs/) by
+[`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
 adding a more user-friendly interface and providing a generic R `plot()`
 method to makes visualization easy.
 
@@ -29,13 +29,13 @@ Note that
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
 an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
-[RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
+[RStudio’s download logs](https://cran-logs.rstudio.com/). The latter
 record traffic to the [“0-Cloud” mirror “sponsored by
-RStudio”](http://cloud.r-project.org). This mirror was previously called
-RStudio’s [CRAN mirror](http://cran.rstudio.com). Logs for the previous
-day are generally posted by 17:00 UTC. Updated results for functions
-that rely on the ‘cranlogs’ package are generally available soon
-thereafter.
+RStudio”](https://cloud.r-project.org). This mirror was previously
+called RStudio’s [CRAN mirror](https://cran.rstudio.com). Logs for the
+previous day are generally posted by 17:00 UTC. Updated results for
+functions that rely on the ‘cranlogs’ package are generally available
+soon thereafter.
 
 ### getting started
 
@@ -644,7 +644,7 @@ This covers about 85% of observations (i.e., approximately 15% country
 codes are NA). Also, for what it’s worth, there seems to be a a couple
 of typos for country codes: “A1” (A + number one) and “A2” (A + number
 2). According to [RStudio’s
-documentation](http://cran-logs.rstudio.com/), this coding was done
+documentation](https://cran-logs.rstudio.com/), this coding was done
 using MaxMind’s free database, which no longer seems to be available.
 
 #### memoization
