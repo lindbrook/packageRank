@@ -777,9 +777,9 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
              facet_wrap(~ date, nrow = 2)
 
         if (statistic == "count") {
-          p <- p + geom_point(aes_string("count", "package"))
+          p <- p + geom_point(aes_string("count", "package"), size = 1.5)
         } else if (statistic == "cumulative") {
-          p <- p + geom_point(aes_string("cumulative", "package"))
+          p <- p + geom_point(aes_string("cumulative", "package"), size = 1.5)
         }
 
         if (log.count) p <- p + scale_x_log10() + xlab("log10(count)")
