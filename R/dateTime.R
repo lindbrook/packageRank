@@ -2,7 +2,7 @@
 #'
 #' Time via POSIXlt date.
 #' @param date Character. "yyyy-mm-dd".
-#' @param time Character. "hh:mmm" or "hh:mmm:ss".
+#' @param time Character. "hh:mm" or "hh:mm:ss".
 #' @param tz Character. Time zone.
 #' @export
 

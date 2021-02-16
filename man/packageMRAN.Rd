@@ -2,7 +2,7 @@
 % Please edit documentation in R/packageMRAN.R
 \name{packageMRAN}
 \alias{packageMRAN}
-\title{Extract package data from MRAN (protoype).}
+\title{Extract package data from MRAN (prototype).}
 \usage{
 packageMRAN(package = "cholera", date = NULL, check.package = TRUE,
   multi.core = TRUE)

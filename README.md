@@ -231,7 +231,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-If you want do the above on spearate independent scales, set
+If you want do the above on separate independent scales, set
 `same.xy = FALSE`:
 
 ``` r

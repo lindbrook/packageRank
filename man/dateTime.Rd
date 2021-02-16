@@ -9,7 +9,7 @@ dateTime(date = "2021-01-01", time = "09:00", tz = "GMT")
 \arguments{
 \item{date}{Character. "yyyy-mm-dd".}
 
-\item{time}{Character. "hh:mmm" or "hh:mmm:ss".}
+\item{time}{Character. "hh:mm" or "hh:mm:ss".}
 
 \item{tz}{Character. Time zone.}
 }

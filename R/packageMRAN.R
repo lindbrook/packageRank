@@ -1,4 +1,4 @@
-#' Extract package data from MRAN (protoype).
+#' Extract package data from MRAN (prototype).
 #'
 #' Binary or source size.
 #' @param package Character. Package name.

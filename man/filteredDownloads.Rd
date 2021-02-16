@@ -2,7 +2,7 @@
 % Please edit documentation in R/filteredDownloads.R
 \name{filteredDownloads}
 \alias{filteredDownloads}
-\title{Filtered package downloads from the RStudio CRAN mirror (protoype).}
+\title{Filtered package downloads from the RStudio CRAN mirror (prototype).}
 \usage{
 filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
