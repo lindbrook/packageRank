@@ -34,6 +34,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
 package_distribution <- function(package, ymd, all.filters, ip.filter,
   triplet.filter, small.filter, sequence.filter, size.filter, cran_log, cores) {
 
+  # N.B. using pkg_specific_filters not recommended!
   if (all.filters) {
     ip.filter <- TRUE
     # triplet.filter <- TRUE
