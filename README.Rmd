@@ -77,7 +77,7 @@ cranDownloads(packages = "ggplot2", from = "2020-05-01", to = "2020-05-01")
 ```
 
 <br/>
-This also works for inactive or "retired" packages in the [Archive](https://CRAN.R-project.org/src/contrib/Archive):
+This also works for inactive or "retired" packages in the [Archive](https://CRAN.R-project.org/src/contrib/Archive/):
 
 ```{r check_archive_fail, eval = FALSE}
 cranDownloads(packages = "vr")
@@ -561,7 +561,7 @@ Functions that can use both CRAN and package specific functions: `packageLog()`,
 
 #### country codes (top level domains)
 
-While IP addresses are anonymized, the logs do attempt to provide the corresponding ISO country codes or top level domains (e.g., AT, JP, US). This covers about 85% of observations (i.e., approximately 15% country codes are NA). Also, for what it's worth, there seems to be a a couple of typos for country codes: "A1" (A + number one) and "A2" (A + number 2). According to [RStudio's documentation](https://cran-logs.rstudio.com/), this coding was done using MaxMind's free database, which no longer seems to be available.
+While IP addresses are anonymized, the logs do attempt to provide the corresponding ISO country codes or top level domains (e.g., AT, JP, US). This covers about 85% of observations (i.e., approximately 15% country codes are NA). Also, for what it's worth, there seems to be a a couple of typos for country codes: "A1" (A + number one) and "A2" (A + number 2). According to [RStudio's documentation](http://cran-logs.rstudio.com/), this coding was done using MaxMind's free database, which no longer seems to be available.
 
 #### memoization
 
@@ -673,3 +673,4 @@ R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
 or invalid.
 ```
 
+This change occasionally affected functions that download logs. This was especially true over slower internet connections and with larger log files. To fix this, functions that use `fetchCranLog()` will, if needed, temporarily set the timeout to 300 seconds.

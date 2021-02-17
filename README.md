@@ -85,7 +85,7 @@ cranDownloads(packages = "ggplot2")
     > 1 2020-05-01 56357      56357 ggplot2
 
 <br/> This also works for inactive or “retired” packages in the
-[Archive](https://CRAN.R-project.org/src/contrib/Archive):
+[Archive](https://CRAN.R-project.org/src/contrib/Archive/):
 
 ``` r
 cranDownloads(packages = "vr")
@@ -644,7 +644,7 @@ This covers about 85% of observations (i.e., approximately 15% country
 codes are NA). Also, for what it’s worth, there seems to be a a couple
 of typos for country codes: “A1” (A + number one) and “A2” (A + number
 2). According to [RStudio’s
-documentation](https://cran-logs.rstudio.com/), this coding was done
+documentation](http://cran-logs.rstudio.com/), this coding was done
 using MaxMind’s free database, which no longer seems to be available.
 
 #### memoization
@@ -788,3 +788,4 @@ features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 This change occasionally affected functions that download logs. This was
 especially true over slower internet connections and with larger log
 files. To fix this, functions that use `fetchCranLog()` will, if needed,
+temporarily set the timeout to 300 seconds.
