@@ -673,4 +673,3 @@ R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
 or invalid.
 ```
 
-This change occasionally affected functions that download logs. This was especially true over slower internet connections and with larger log files. To fix this, relevant functions, which make use `fetchCranLog()`, will now temporarily change the timeout to 300 seconds and then reset the value back to your configuration's original setting.

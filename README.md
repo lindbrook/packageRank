@@ -787,6 +787,4 @@ features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 
 This change occasionally affected functions that download logs. This was
 especially true over slower internet connections and with larger log
-files. To fix this, relevant functions, which make use `fetchCranLog()`,
-will now temporarily change the timeout to 300 seconds and then reset
-the value back to your configuration’s original setting.
+files. To fix this, functions that use `fetchCranLog()` will, if needed,
