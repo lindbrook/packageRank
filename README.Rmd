@@ -20,7 +20,7 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`, and one set of filters that remove "invalid" entries from the download logs.
 
-In [Part I Package Download Counts](#i---computing-package-download-counts), I discuss how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and providing a generic R `plot()` method to makes visualization easy. 
+In [Part I Package Download Counts](#i---computing-package-download-counts), I discuss how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and providing a generic R `plot()` method to makes visualization easy.
 
 In [Part II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles), I discuss how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer counts (i.e., downloads), helps you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
 
@@ -30,7 +30,7 @@ In [Part IV Notes and Miscellanea](#iv---notes-and-miscellanea), I discuss some 
 
 [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) package and [RStudio's download logs](http://cran-logs.rstudio.com/). The latter record traffic to the [“0-Cloud” mirror](https://cloud.r-project.org), which is “currently sponsored by RStudio” and was previously RStudio's CRAN mirror.
 
-Note that logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on the ‘cranlogs' package are typically available soon thereafter.
+Note that logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are typically available soon thereafter.
 
 ### getting started
 

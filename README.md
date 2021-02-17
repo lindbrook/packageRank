@@ -46,8 +46,9 @@ which is “currently sponsored by RStudio” and was previously RStudio’s
 CRAN mirror.
 
 Note that logs for the previous day are generally posted by 17:00 UTC.
-Updated results for functions that rely on the ‘cranlogs’ package are
-typically available soon thereafter.
+Updated results for functions that rely on
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are typically
+available soon thereafter.
 
 ### getting started
 
