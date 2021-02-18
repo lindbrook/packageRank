@@ -2,7 +2,7 @@
 % Please edit documentation in R/utc.R
 \name{logPostInfo}
 \alias{logPostInfo}
-\title{Compute Date of Log, GMT and Local Posting Time.}
+\title{Compute Date and Time of Latest Available Log.}
 \usage{
 logPostInfo(tz = Sys.timezone())
 }
@@ -10,5 +10,5 @@ logPostInfo(tz = Sys.timezone())
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 }
 \description{
-Compute Date of Log, GMT and Local Posting Time.
+GMT and Local Posting Times.
 }

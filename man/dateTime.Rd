@@ -2,7 +2,7 @@
 % Please edit documentation in R/dateTime.R
 \name{dateTime}
 \alias{dateTime}
-\title{Nominal time to clock time}
+\title{Convert Nominal Date and Time to Date-Time Object.}
 \usage{
 dateTime(date = "2021-01-01", time = "09:00", tz = "GMT")
 }
@@ -14,5 +14,5 @@ dateTime(date = "2021-01-01", time = "09:00", tz = "GMT")
 \item{tz}{Character. Time zone.}
 }
 \description{
-Time via POSIXlt date.
+Character(s) to POSIXlt date.
 }

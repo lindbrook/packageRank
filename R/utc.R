@@ -18,7 +18,7 @@ utc0 <- function(date = "2020-01-01", time = "12:00:00", tz = "Europe/Vienna") {
   as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = "GMT")
 }
 
-#' Compute Current Local Time in Selected Time Zone.
+#' Compute Current Time in Selected Time Zone.
 #'
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @export
@@ -27,8 +27,9 @@ currentTime <- function(tz = "Australia/Sydney") {
   as.POSIXct(as.numeric(Sys.time()), origin = "1970-01-01", tz = tz)
 }
 
-#' Compute Date of Log, GMT and Local Posting Time.
+#' Compute Date and Time of Latest Available Log.
 #'
+#' GMT and Local Posting Times.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @export
 

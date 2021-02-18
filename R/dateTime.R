@@ -1,6 +1,6 @@
-#' Nominal time to clock time
+#' Convert Nominal Date and Time to Date-Time Object.
 #'
-#' Time via POSIXlt date.
+#' Character(s) to POSIXlt date.
 #' @param date Character. "yyyy-mm-dd".
 #' @param time Character. "hh:mm" or "hh:mm:ss".
 #' @param tz Character. Time zone.

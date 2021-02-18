@@ -2,7 +2,7 @@
 % Please edit documentation in R/utc.R
 \name{currentTime}
 \alias{currentTime}
-\title{Compute Current Local Time in Selected Time Zone.}
+\title{Compute Current Time in Selected Time Zone.}
 \usage{
 currentTime(tz = "Australia/Sydney")
 }
@@ -10,5 +10,5 @@ currentTime(tz = "Australia/Sydney")
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 }
 \description{
-Compute Current Local Time in Selected Time Zone.
+Compute Current Time in Selected Time Zone.
 }
