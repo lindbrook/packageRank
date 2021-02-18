@@ -41,7 +41,7 @@ with R 4.0.3.
 an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
 [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
-record traffic to the [“0-Cloud” mirror](https://cloud.r-project.org),
+record traffic to the [“0-Cloud” mirror](https://cloud.R-project.org),
 which is “currently sponsored by RStudio” and was previously RStudio’s
 CRAN mirror.
 
@@ -512,7 +512,7 @@ right (in blue).
 
 To compute a package’s downloads, we simply count the number of log
 entries for that package. While straightforward, this metric will
-eventually run into problems because not all log entries are created
+eventually runs into problems because not all log entries are created
 equal. Some entries are, I would argue, self-evidently “invalid”; others
 are or debatably so. As a result, nominal package download counts are
 inflated, they suffer from a strictly positive, upwards bias.
@@ -523,6 +523,11 @@ create log entries that are smaller, often by orders of magnitude, than
 a package’s actual binary or source file size. The behavioral artifacts
 are the result of efforts to essentially download all of the packages on
 [CRAN](https://cran.r-project.org/).
+
+For those interested, a prior but more detailed analysis of the
+inflation problem is available as part of this
+[post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
+on the R-hub blog. An updated treatment is forthcoming.
 
 #### software artifacts
 
@@ -625,25 +630,44 @@ campaigns may be associated with less “greedy” IP addresses, I also
 filter out sequences of past versions downloaded in some narrowly
 defined time window.
 
+#### an example
+
+To get an idea of how inflated your package’s download count may be, use
+`filteredDownloads()`. Below are the results for ‘cholera’ for 31 July
+2020.
+
+``` r
+filteredDownloads(package = "cholera", date = "2020-07-31")
+>         date package downloads filtered.downloads inflation
+> 1 2020-07-31 cholera        14                  5       180
+```
+
+While there were 14 nominal downloads, applying all filters reduced the
+number of downloads to 5, an inflation of 180%.
+
+Note that the filters are computationally demanding. Excluding the time
+it takes to download the log file, applying all the filters in the above
+example takes approximate 75 seconds using parallelized code (currently
+only macOS and Unix) on a 3.1 GHz Dual-Core Intel Core i5 processor.
+
 #### limitations
 
-There are two sets of filters. The first includes CRAN specific filters:
-`ipFilter()` and `smallFilter()`. They work independent of packages, at
-the log or “population” level. The second includes package specific
-filters: `tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`. They
-rely on package specific information, like the size of source or binary
-files.
+There are two sets of filters. The first are CRAN specific: `ipFilter()`
+and `smallFilter()`. They work independently of packages, at the log or
+“population” level. The second are package specific: `tripletFilter()`,
+`sequenceFilter()`, and `sizeFilter()`. They rely on information about
+packages, like the size of its source or binary file.
 
-Ideally, we’d like to use both sets when trying to estimate package
-downloads. However, when making relative comparisons of package
-downloads like with rank percentiles, using package specific filters
-means iterating over tens of thousands of packages. While feasible, this
-is currently very computationally expensive. However, these filters are
-available for offline, batch analysis.
+Ideally, we’d like to use both sets of filters. However, to make valid
+relative comparisons (e.g., rank percentiles) we’d have to apply package
+specific filters for each of the tens of thousands of packages in a
+given log file. While feasible, this is currently very computationally
+expensive. For that reason, certain functions default to only use CRAN
+specific filters.
 
-Functions that can use both CRAN and package specific functions:
-`packageLog()`, `packageCountry()`, and `filteredDownloads()`. Functions
-that default only to CRAN specific functions: `packageRank()`,
+The functions that default to both CRAN and package specific functions
+are `packageLog()`, `packageCountry()`, and `filteredDownloads()`. The
+functions that default only to CRAN specific functions: `packageRank()`,
 `ipPackage()`, `countryPackage()`, `countryDistribution()` and
 `packageDistribution()`.
 
@@ -691,14 +715,13 @@ again.
 
 The calendar date (e.g. “2021-01-01”) is the natural unit of observation
 for [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions. However, because the typical use case involves getting the
-most recent data (i.e., the *latest* log), time zone differences can
-come into play.
+functions. However, because the typical use case involves the *latest*
+log file, time zone differences can come into play.
 
 Let’s say that it’s 09:01 on 01 January 2021 and you want to compute the
-rank percentile for the
-[‘ergm’](https://CRAN.R-project.org/package=ergm) package for the last
-day of 2020. You might be tempted to enter the following expression:
+rank percentile for [‘ergm’](https://CRAN.R-project.org/package=ergm)
+for the last day of 2020. You might be tempted to enter the following
+expression:
 
 ``` r
 packageRank(packages = "ergm")
@@ -708,21 +731,21 @@ However, depending on *where* you make this request, you may not get the
 data you expect. If you’re in Honolulu, USA, you will. If you’re in
 Sydney, Australia, you won’t. The reason is that you’ve somehow
 forgotten a key piece of trivia: RStudio typically posts yesterday’s log
-by 17:00 UTC the following day.
+around 17:00 UTC the following day.
 
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is
-19:01 UTC 01 January 2021: the log you want has been available for 2
+19:01 UTC 01 January 2021, so the log you want has been available for 2
 hours. The expression fails in Sydney because 09:01 AEDT on 01 January
-2021 is 31 December 2020 22:00 UTC and the log you want won’t actually
-be posted for another 19 hours.
+2021 is 31 December 2020 22:00 UTC. The log you want won’t actually be
+available for another 19 hours.
 
 To make life a little easier,
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) does two
 things. First, when the date of the log you want is not available (due
 to time zone rather than server issues), you’ll just get the last
-available log as a substitute. If you specified a date in the future,
-you’ll either get an error message or a warning that provides an
-estimate of when the log should be available.
+available log. If you specified a date in the future, you’ll either get
+an error message or a warning that provides an estimate of when the log
+should be available.
 
 Using the Sydney example, if you’d used the expression above, you’d get
 the results for 30 December 2020:
@@ -734,7 +757,7 @@ packageRank(packages = "ergm")
     >         date packages downloads          rank percentile
     > 1 2020-12-30     ergm       292 873 of 20,077       95.6
 
-If you had manually specified the date, you’d get an additional warning:
+If you had specified the date, you’d get an additional warning:
 
 ``` r
 packageRank(packages = "ergm", date = "2021-01-01")
@@ -747,9 +770,9 @@ packageRank(packages = "ergm", date = "2021-01-01")
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you check/remember when logs are posted in your
-location, there’s `logPostInfo()`. At the time it’s run, it gives you
-the date of the latest available log along with the local and UTC time
-when that log should be posted to RStudio’s server.
+location, there’s `logPostInfo()`. For the time it’s run, you’ll get the
+date of the latest available log along with the expected local and UTC
+times when the log should be posted to RStudio’s server.
 
 Here’s what you’d see in Honolulu:
 
@@ -766,8 +789,8 @@ logPostInfo()
     > $local
     > [1] "2021-02-02 07:00:00 HST"
 
-The default is to use your local time zone, via `Sys.timezone()`. To use
-a specific time zone, pass the desired zone name from `OlsonNames()` to
+The default uses your local time zone, via `Sys.timezone()`. To use a
+specific time zone, pass the desired zone name from `OlsonNames()` to
 the `tz` argument:
 
 ``` r
@@ -783,7 +806,7 @@ logPostInfo(tz = "Australia/Sydney")
     > $local
     > [1] "2021-02-03 04:00:00 AEDT"
 
-This functionality depends on R’s ability to to compute your clock time
+This functionality depends on R’s ability to to compute your local time
 and time zone (e.g., `Sys.time()`). My understanding is that there may
 be operating system or platform specific issues that could affect this
 functionality.
@@ -791,7 +814,7 @@ functionality.
 #### timeout
 
 With R 4.0.3, the timeout value for internet connections became more
-explicit. Here are the relevant details from this release’s [“New
+explicit. Here are the relevant details from that release’s [“New
 features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 
     The default value for options("timeout") can be set from environment variable
