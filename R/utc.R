@@ -14,7 +14,11 @@ utc <- function() {
 #' @export
 
 utc0 <- function(date = "2020-01-01", time = "12:00:00", tz = "Europe/Vienna") {
-  x <- dateTime(date = date, time = time, tz = tz)
+  local.date <- as.Date(date, optional = TRUE)
+  if (is.na(local.date)) {
+    stop('Invalid date or format "yyyy-mm-dd".', call. = FALSE)
+  }
+  x <- dateTime(date = local.date, time = time, tz = tz)
   as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = "GMT")
 }
 
