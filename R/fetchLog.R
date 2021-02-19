@@ -63,3 +63,9 @@ fetchLog2 <- function(x, memoization = FALSE) {
   close(raw)
   dat
 }
+
+#' Memoized readLines().
+#'
+#' @noRd
+
+mreadLines <- memoise::memoise(readLines)
