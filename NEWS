@@ -3,6 +3,8 @@ packageRank 0.3.5.9130
 
 - set geom_point(size = 1.5) for single day, multiple package plot.
 - add localTime().
+- archive available_log0() and identifySequences0().
+- remove helper functions from NAMESPACE.
 
 
 packageRank 0.3.5.9129

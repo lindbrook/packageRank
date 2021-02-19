@@ -1,7 +1,7 @@
 #' Check for valid package names.
 #'
 #' @param packages Character. Vector of package name(s).
-#' @export
+#' @noRd
 
 validatePackage <- function(packages) {
   check <- vapply(packages, function(x) {
@@ -18,7 +18,7 @@ validatePackage <- function(packages) {
 #'
 #' @param packages Character. Vector of package name(s).
 #' @param check.archive Logical. Include archive when validating package. This is computationally expensive because it scrapes https://cran.r-project.org/src/contrib/Archive/.
-#' @export
+#' @noRd
 
 validatePackage0 <- function(packages, check.archive = TRUE) {
   url <- "https://cloud.r-project.org/"

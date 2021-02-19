@@ -44,7 +44,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
 #' History of version, date and size (source file).
 #' @param package Character. Package name.
 #' @param size Logical. Include size of source file.
-#' @export
+#' @noRd
 
 packageHistory0 <- function(package = "cholera", size = FALSE) {
   # set check.package = FALSE to pass "latest" packages.

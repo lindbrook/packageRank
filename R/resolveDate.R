@@ -3,7 +3,7 @@
 #' Check date format and validate date.
 #' @param date Character. \code{"yyyy-mm-dd"}, \code{"yyyy-mm"}, \code{"yyyy"} or \code{yyyy} (numeric).
 #' @param type Character. Type of date "to" or "from".
-#' @export
+#' @noRd
 
 resolveDate <- function(date, type = "from") {
   if (!type %in% c("to", "from")) {

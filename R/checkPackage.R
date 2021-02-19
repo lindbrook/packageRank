@@ -3,7 +3,7 @@
 #' "spell check" package names.
 #' @param packages Character. Vector of package name(s).
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
-#' @export
+#' @noRd
 
 checkPackage <- function(packages, dev.mode = FALSE) {
   if (dev.mode) {
