@@ -4,7 +4,7 @@
 #' @param cran_log Object. CRAN log.
 #' @param sample.pct Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @export
+#' @noRd
 
 packageSample <- function(cran_log, sample.pct = 1, multi.core = TRUE) {
   init.pkgs <- unique(cran_log$package) # remove duplicated pkgs (diff versions)

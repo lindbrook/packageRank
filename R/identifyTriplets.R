@@ -6,7 +6,7 @@
 #' @param time.window Numeric. Seconds.
 #' @param time.sort Logical. Sort output by time.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @export
+#' @noRd
 
 identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
   time.sort = TRUE, multi.core = TRUE) {

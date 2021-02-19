@@ -38,8 +38,8 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 #' @param x Character. URL.
 #' @import data.table memoise
 #' @importFrom R.utils decompressFile
-#' @export
 #' @note mfetchLog() is memoized version.
+#' @noRd
 
 fetchLog <- function(x) data.table::fread(x, data.table = FALSE)
 mfetchLog <- memoise::memoise(fetchLog)
@@ -49,7 +49,7 @@ mfetchLog <- memoise::memoise(fetchLog)
 #' Base R version.
 #' @param x Character. URL.
 #' @param memoization Logical. Use memoization
-#' @export
+#' @noRd
 
 fetchLog2 <- function(x, memoization = FALSE) {
   con <- gzcon(url(x))

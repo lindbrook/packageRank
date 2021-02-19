@@ -4,7 +4,7 @@
 #' @param i Numeric. Day/ID.
 #' @param pkg Character.
 #' @param clean.output Logical.
-#' @export
+#' @noRd
 
 pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
   cran_log <- cleanLog(lst[[i]])
@@ -27,7 +27,7 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @param pkg Character.
 #' @param multi.core Logical or Numeric.
 #' @param clean.output Logical.
-#' @export
+#' @noRd
 
 pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
@@ -70,7 +70,7 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #' @param pkg Character.
 #' @param ip.campaigns Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @export
+#' @noRd
 
 packageFilterCounts <- function(lst, pkg = "cholera", ip.campaigns = TRUE,
   multi.core = TRUE) {
@@ -153,7 +153,7 @@ filter_counts <- function(dat, pkg = "cholera", date, ip.campaigns) {
 #' @param median Logical.
 #' @param legend.loc Character. Location of legend.
 #' @param ... Additional plotting parameters.
-#' @export
+#' @noRd
 
 plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
   median = FALSE, legend.loc = "topleft", ...) {
@@ -210,7 +210,7 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
 #' @param lst Object. cran_log list of data frames.
 #' @param ip.campaigns Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @export
+#' @noRd
 
 cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -248,7 +248,7 @@ cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = TRUE) {
 #' @param legend.loc Character. Location of legend.
 #' @param add.legend Logical.
 #' @param ... Additional plotting parameters.
-#' @export
+#' @noRd
 
 plot.cranFilterCounts <- function(x, filter = "all", smooth = FALSE,
   median = FALSE, legend.loc = "topleft", add.legend = TRUE, ...) {

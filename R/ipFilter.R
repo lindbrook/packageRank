@@ -73,7 +73,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
 #' @param cran_log Object. cran log.
 #' @param centers Numeric. Number of k's for k-means clustering.
 #' @param nstart Numeric. Number of random sets.
-#' @export
+#' @noRd
 
 ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   pkgs <- tapply(cran_log$package, cran_log$ip_id, function(x) {
@@ -166,7 +166,7 @@ kmeanClassifier <- function(var = "packages", idp, centers = centers,
 #' @param cran_log Object. Package log entries.
 #' @param case.sensitive Logical.
 #' @param concatenate Logical.
-#' @export
+#' @noRd
 #' @examples
 #' \dontrun{
 #' campaignRLE(ip = 24851, cran_log = july01)

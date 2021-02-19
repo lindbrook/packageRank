@@ -5,7 +5,7 @@
 #' @param pkg.data Object.
 #' @param arch.pkg.history Object.
 #' @param download.time Numeric. Package download time allowance (seconds).
-#' @export
+#' @noRd
 
 identifySequences <- function(pkg.data, arch.pkg.history, download.time = 30) {
   pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",

@@ -4,6 +4,7 @@
 #' @param date Character. Date. "yyyy-mm-dd".
 #' @note This date problem does not affect \code{cranDownlaods()}.
 #' @return A one unit R date or character vector.
+#' @noRd
 
 fixDate_2012 <- function(date = "2012-12-31") {
   if (class(date) != "Date") ymd <- as.Date(date)
