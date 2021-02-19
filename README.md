@@ -770,9 +770,9 @@ packageRank(packages = "ergm", date = "2021-01-01")
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you check/remember when logs are posted in your
-location, there’s `logPostInfo()`. For the time it’s run, you’ll get the
-date of the latest available log along with the expected local and UTC
-times when the log should be posted to RStudio’s server.
+location, there’s `logPostInfo()`. When you run that function, you’ll
+get the date for the latest available log along with the expected local
+and UTC times when that log should be posted to RStudio’s server.
 
 Here’s what you’d see in Honolulu:
 
