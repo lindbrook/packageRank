@@ -7,43 +7,37 @@
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
 via two functions, `cranDownloads()` and `packageRank()`, and one set of
-filters that remove “invalid” entries from the download logs.
+filters that remove “invalid” entries from the download logs. I cover
+these topics in four parts.
 
 In [Part I Package Download
 Counts](#i---computing-package-download-counts), I discuss how
 `cranDownloads()` extends the functionality of
 [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
-adding a more user-friendly interface and providing a generic R `plot()`
-method to makes visualization easy.
-
-In [Part II Package Download Rank
+adding a more user-friendly interface and by providing generic R
+`plot()` methods to makes visualization easy. In [Part II Package
+Download Rank
 Percentiles](#ii---computing-package-download-rank-percentiles), I
 discuss how `packageRank()` uses rank percentiles, a nonparametric
 statistic that tells you the percentage of observations (i.e., packages)
-with fewer counts (i.e., downloads), helps you see how your package is
+with fewer counts (i.e., downloads), to help you see how your package is
 doing relative to *all* other [CRAN](https://CRAN.R-project.org/)
-packages.
-
-In [Part III Package Download
+packages. In [Part III Package Download
 Filters](#iii---filtering-package-download-counts), I discuss how I use
-various filters to reduce software and behavioral artifacts (e.g.,
-downloads that are too “small” and efforts to download all of
-[CRAN](https://CRAN.R-project.org/)) that inflate the package download
-count.
-
-In [Part IV Notes and Miscellanea](#iv---notes-and-miscellanea), I
-discuss some technical issues that may be of interest to users. This
-includes the use of memoization, time zone issues when downloading the
-latest log files, and internet connection time out problems that emerged
-with R 4.0.3.
+filters to reduce the presence of software and behavioral artifacts that
+would otherwise inflate package download counts. In [Part IV Notes and
+Miscellanea](#iv---notes-and-miscellanea), I discuss some technical
+issues that may be of interest to users. This includes the use of
+memoization, time zone issues, and internet connection time out
+problems.
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
 an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
 [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
 record traffic to the [“0-Cloud” mirror](https://cloud.R-project.org),
-which is “currently sponsored by RStudio” and was previously RStudio’s
-CRAN mirror.
+which is “currently sponsored by RStudio” and was previously nominally
+RStudio’s CRAN mirror.
 
 Note that logs for the previous day are generally posted by 17:00 UTC.
 Updated results for functions that rely on
@@ -510,43 +504,39 @@ right (in blue).
 
 ### III - filtering package download counts
 
-To compute a package’s downloads, we simply count the number of log
-entries for that package. While straightforward, this metric will
-eventually runs into problems because not all log entries are created
-equal. Some entries are, I would argue, self-evidently “invalid”; others
-are or debatably so. As a result, nominal package download counts are
-inflated, they suffer from a strictly positive, upwards bias.
+Package downloads are computed by counting the number of log entries for
+each package. While intuitive and straightforward, this approach runs
+into problems because not all log entries are created equal. Putting
+aside whether package dependency downloads, I’d argue that some entries
+are obviously “invalid” while others are less obviously but still
+reasonably viewed as such. As a result, nominal package download counts
+are inflated; they suffer from a strictly positive, upward bias.
 
-This inflation is a product of software and behavioral artifacts. The
-software artifacts are the result of client/user side software that
-create log entries that are smaller, often by orders of magnitude, than
-a package’s actual binary or source file size. The behavioral artifacts
-are the result of efforts to essentially download all of the packages on
-[CRAN](https://cran.r-project.org/).
-
-For those interested, a prior but more detailed analysis of the
-inflation problem is available as part of this
-[post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
-on the R-hub blog. An updated treatment is forthcoming.
+The inflation I’m considering is a product of software and behavioral
+artifacts. The software artifacts result from client/user side software
+that create log entries that are smaller, often orders of magnitude
+smaller, than a package’s actual binary or source file size. The
+behavioral artifacts result from efforts to download all of the packages
+on [CRAN](https://cran.r-project.org/). For those interested, a early
+but more detailed analysis of both inflations is available as part of
+this [R-hub blog
+post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts).
 
 #### software artifacts
 
-Beyond missing observations (e.g., NAs for package names or package
-sizes; package sizes of zero bytes), the most noticeable problem when
-looking at download logs are wrongly sized log entries. These come in
-two sizes: “small” and “medium”. The “small” entries are the most
-noticeable: they are in the neighborhood of 500 bytes. The “medium”
-entries are a newer phenomenon. They are variable in size, falling
-anywhere between a “small” and a complete download (“small” &lt;=
-“medium” &lt;= full download).
+When looking at download logs, the most noticeable problem are wrongly
+sized log entries. These come in two sizes: “small” and “medium”. The
+“small” entries are in the neighborhood of 500 bytes. The “medium”
+entries, a newer phenomenon, are variable in size. They fall anywhere
+between a “small” and a full download (i.e., “small” &lt;= “medium”
+&lt;= full download). “Small” entries manifest themselves as standalone
+entries, as part of pair with a full download, or as part of a triplet
+with a “medium” and a full download. “Medium” entries manifest
+themselves as standalone entries, or as part of the aforementioned
+triplet.
 
-“Small” entries manifest themselves as standalone entries, paired with a
-full download, or as part of a triplet with a “medium” and full
-download. “Medium” entries manifest themselves as standalone entries, or
-as part of the aforementioned triplet.
-
-Below is an excerpt from an abridged download log that illustrates a
-triplet:
+Below is an excerpt from an abridged download log that illustrates these
+artifacts with a triplet:
 
 ``` r
 packageLog(date = "2020-07-01")[4:6, -(4:6)]
@@ -560,29 +550,26 @@ The observed full download, the second entry, is 4,161,948 bytes in size
 (the actual binary and source files of ‘cholera’ version 0.7.0 are 4.0
 and 4.1 MB). The “small” entry is the last observation, 536 bytes. The
 “medium” entry is the first observation, 99,622 bytes. Incidentally,
-what makes a triplet a triplet (or a pair a pair) is that all member
-entries have identical or adjacent timestamps. actually, information
-about IP address, platform, R version, etc. are also used).
+what makes a triplet a triplet (or a pair a pair) is that all members
+have, at least, identical or adjacent timestamps.
 
-“Small” entries can be easily dealt with by filtering out entries below
-1000 bytes (the smallest package appears to be
+To deal with “small” entries, I essentially filter out entries smaller
+than 1000 bytes (the smallest package appears to be
 [‘source.gist’](https://cran.r-project.org/package=source.gist) at 1200
-bytes). “Medium” entries are harder to deal with. I use either a
-triplet-specific filter or a filter that looks up a package’s real size.
+bytes). “Medium” entries are harder to handle. I remove them by either
+using a triplet-specific filter or a filter that looks up a package’s
+actual size.
 
 #### behavioral artifacts
 
-Wrongly sized entries are fairly visible. Less obvious are “errors” that
-otherwise look “right”. The issue, simply put, is that package downloads
-don’t simply reflect an interest in your package *per se*, they can also
-reflect an interest in [CRAN](https://cran.r-project.org/) itself: when
-someone downloads all the packages on
-[CRAN](https://cran.r-project.org/), the fact that your package got
-downloaded along with all the other packages shouldn’t or maybe doesn’t
-really reflect an interest in your package.
+Wrongly sized entries are fairly easy to spot. Less obvious are
+“invalid” entries that otherwise look right. Here, what I have in mind
+is that, putting aside official mirroring activity, there seems to be a
+lot of effort given toward downloading *all* the packages on
+[CRAN](https://cran.r-project.org/) including *all* the past versions of
+packages.
 
-Consider the example below. It lists a bloc of downloads, in sequential
-time order, of the ‘cholera’ package:
+Consider the example below:
 
 ``` r
 packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
@@ -596,10 +583,9 @@ packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 > 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
 ```
 
-Size-wise, there isn’t a problem. But the fact that seven different
-versions were downloaded, in order, should attract our attention. This
-is especially true given that the bloc above represents *all* the prior
-versions of ‘cholera’:
+Here, we see that seven different versions of the package were
+downloaded sequentially in a bloc. A little digging show that these
+seven versions represent *all* prior versions of ‘cholera’:
 
 ``` r
 packageHistory(package = "cholera")
@@ -614,27 +600,26 @@ packageHistory(package = "cholera")
 > 8 cholera   0.7.0 2019-08-28       CRAN
 ```
 
-While there are legitimate reasons for downloading prior versions (e.g.,
-research, container-based software distribution, etc.), examples like
-the above probably happen more often than one would expect. The reason
-why is that people are literally downloading all packages from
-[CRAN](https://cran.r-project.org/).
+While there are legitimate reasons for downloading past versions (e.g.,
+research, container-based software distribution, etc.), I’d argue that
+examples like the above tell us that some downloads do not reflect an
+interest in those packages *per se*. Instead, they reflect an interest
+in [CRAN](https://cran.r-project.org/) itself, as collection of
+packages.
 
-I try to filter these out these efforts in two ways. The first works at
-the level of the log session. Using a k-means classifier, I identify IP
-addresses that download “too many” packages. Then, to preserve entries
-from “legitimate” users at the same IP address, I filter out
-*campaigns*, blocs of package downloads done in (nearly) alphabetical
-order. The second works at the level of individual packages. Since some
-campaigns may be associated with less “greedy” IP addresses, I also
-filter out sequences of past versions downloaded in some narrowly
-defined time window.
+I try to filter these out these entries in two ways. The first works at
+the level of a given log session: I identify IP addresses that download
+“too many” packages and then filter out “campaigns”, large blocs of
+downloads that occur in (nearly) alphabetical order. The second works at
+the level of individual packages. Since some campaigns may not be
+associated with “greedy” IP addresses, I also filter out sequences of
+past versions downloaded that occur in a narrowly defined time window.
 
 #### an example
 
-To get an idea of how inflated your package’s download count may be, use
-`filteredDownloads()`. Below are the results for ‘cholera’ for 31 July
-2020.
+To get an idea of how inflated your package’s download count may be, you
+can use `filteredDownloads()`. Below are the results for ‘cholera’ for
+31 July 2020.
 
 ``` r
 filteredDownloads(package = "cholera", date = "2020-07-31")
@@ -642,13 +627,14 @@ filteredDownloads(package = "cholera", date = "2020-07-31")
 > 1 2020-07-31 cholera        14                  5       180
 ```
 
-While there were 14 nominal downloads, applying all filters reduced the
-number of downloads to 5, an inflation of 180%.
+While there were 14 nominal downloads, applying all the filters reduced
+the number of downloads to 5, an inflation of 180%.
 
-Note that the filters are computationally demanding. Excluding the time
-it takes to download the log file, applying all the filters in the above
-example takes approximate 75 seconds using parallelized code (currently
-only macOS and Unix) on a 3.1 GHz Dual-Core Intel Core i5 processor.
+Note that these filters are computationally demanding. Excluding the
+time it takes to download the log file, the filters in the above example
+take approximate 75 seconds to run using parallelized code, which is
+currently only available on macOS and Unix, on a 3.1 GHz Dual-Core Intel
+Core i5 processor.
 
 #### limitations
 
