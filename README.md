@@ -551,23 +551,23 @@ the first observation (99,622 bytes). Incidentally, what makes a triplet
 a triplet (or a pair a pair) is that all members have, at a minimum,
 identical or adjacent time stamps.
 
-To deal with “small” entries, I filter out entries smaller than 1,000
-bytes (the smallest package appears to be
-[‘source.gist’](https://cran.r-project.org/package=source.gist), which
-weighs in at 1,200 bytes). “Medium” entries are harder to handle. I
-remove them by either using a triplet-specific filter or a filter that
+To deal with the inflationary effect of “small” entries, I filter out
+observations smaller than 1,000 bytes (the smallest package appears to
+be [‘source.gist’](https://cran.r-project.org/package=source.gist),
+which weighs in at 1,200 bytes). “Medium” entries are harder to handle.
+I remove them using either a triplet-specific filter or a filter that
 looks up a package’s actual size.
 
 #### behavioral artifacts
 
-While wrongly sized entries are fairly easy to see, seeing other
-“invalid” entries can sometimes require a change of perspective. What I
-have in mind here are downloads that are a consequence of efforts to
-download *all* the packages, including *all* past version, from
-[CRAN](https://cran.r-project.org/) (I think this activity excludes
-mirroring activity via `rsync`). Again, see this [R-hub blog
+While wrongly sized entries are fairly easy to spot, seeing some types
+of “invalid” entries can require a change of perspective. What I have in
+mind here are downloads that are a consequence of efforts to download
+all of [CRAN](https://cran.r-project.org/): *all* packages including
+*all* past versions. For details and evidence see the [R-hub blog
 post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
-for details.
+mentioned above (I believe this activity excludes mirroring activity via
+`rsync`).
 
 Consider the example below:
 
@@ -585,7 +585,7 @@ packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 
 Here, we see that seven different versions of the package were
 downloaded in a sequential bloc. A little digging show that these seven
-versions actually represent *all* prior versions of ‘cholera’:
+versions represent *all* prior versions of ‘cholera’:
 
 ``` r
 packageHistory(package = "cholera")
@@ -602,20 +602,19 @@ packageHistory(package = "cholera")
 
 While there are legitimate reasons for downloading past versions (e.g.,
 research, container-based software distribution, etc.), examples like
-the above are a signature of efforts to download
-[CRAN](https://cran.r-project.org/). As such, when your package is
-downloaded as part of such efforts, they reflect more an interest in
-[CRAN](https://cran.r-project.org/) as collection of packages than an
-interest in your package *per se*. Since one of the uses of counting
-package downloads is to estimate interest in your packages, it may be
-useful to exclude these entries.
+the above are “fingerprints” of efforts to download
+[CRAN](https://cran.r-project.org/). The upshot here is that when your
+package is downloaded as part of such efforts, that download is more a
+reflection of an interest in [CRAN](https://cran.r-project.org/) as
+collection of packages than an interest in your package *per se*. And
+since one of the uses of counting package downloads is to estimate
+interest in your package, it may be useful to exclude such log entries.
 
-I try to filter these out these entries in two ways. The first works at
-the level of the log itself: I identify IP addresses that download “too
-many” packages and then filter out “campaigns”, large blocs of downloads
-that occur in (nearly) alphabetical order. The second works at the level
-of individual packages. Since some campaigns may not be associated with
-“greedy” IP addresses, I also filter out sequences of past versions
+To do so, I try to filter out these entries in two ways. The first
+identifies IP addresses that download “too many” packages and then
+filter out “campaigns”, large blocs of downloads that occur in (nearly)
+alphabetical order. The second looks for campaigns not associated with
+“greedy” IP addresses and filters out sequences of past versions
 downloaded in a narrowly defined time window.
 
 #### an example
@@ -633,28 +632,41 @@ filteredDownloads(package = "cholera", date = "2020-07-31")
 While there were 14 nominal downloads, applying all the filters reduced
 the number of downloads to 5, an inflation of 180%.
 
-Note that these filters are computationally demanding. Excluding the
-time it takes to download the log file, the filters in the above example
-take approximate 75 seconds to run using parallelized code (currently
-only available on macOS and Unix) on a 3.1 GHz Dual-Core Intel Core i5
+Note that the filters are computationally demanding. Excluding the time
+it takes to download the log file, the filters in the above example take
+approximate 75 seconds to run using parallelized code (currently only
+available on macOS and Unix) on a 3.1 GHz Dual-Core Intel Core i5
 processor.
 
-#### limitations
+#### usage
 
-There are two sets of filters in
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank): the
-CRAN specific, which work independently of packages, at the level of the
-entire log (i.e., `ipFilter()` and `smallFilter()`) and the package
-specific, rely on information about packages like the size of its source
-or binary file (i.e., `tripletFilter()`, `sequenceFilter()`, and
-`sizeFilter()`)
+To apply these filters in other
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+functions, you either set the argument for the filter you want to TRUE:
 
-Ideally, we’d like to use both sets of filters. However, to make useful
-relative comparisons (e.g., rank percentiles) we’d have to apply package
-specific filters for each of the tens of thousands of packages typically
-found in a log file. While feasible, this is currently very
-computationally expensive. For that reason, when using and setting the
-`all.filters = TRUE`, certain functions will default to only use CRAN
+``` r
+packageRank(package = "cholera", small.filter = TRUE)
+```
+
+or simply set `all.filters = TRUE`.
+
+``` r
+packageRank(package = "cholera", all.filters = TRUE)
+```
+
+Note that `all.filters = TRUE` is contextual. This is because there are
+two sets of filters. The first is CRAN specific. They work independently
+of packages, at the level of the entire log: `ipFilter()` and
+`smallFilter()`. The second is package specific. They rely on
+information about packages like the size of its source or binary file:
+`tripletFilter()`, `sequenceFilter()`, and `sizeFilter()`.
+
+Ideally, we’d like to use both sets of filters. However, the second set
+can be computationally expensive. When making relative comparisons, like
+when computing rank percentiles, we need to apply the package specific
+filters to tens of thousands of packages. While not unfeasible,
+currently this will take a long time. For this reason, when setting
+`all.filters = TRUE`, certain functions default to use only CRAN
 specific filters.
 
 The functions that default to both CRAN and package specific functions
@@ -662,11 +674,6 @@ are `packageLog()`, `packageCountry()`, and `filteredDownloads()`. The
 functions that default only to CRAN specific functions: `packageRank()`,
 `ipPackage()`, `countryPackage()`, `countryDistribution()` and
 `packageDistribution()`.
-
-``` r
-packageLog(package = "cholera", all.filters = TRUE)
-packageRank(package = "cholera", all.filters = TRUE)
-```
 
 ### IV - notes
 
