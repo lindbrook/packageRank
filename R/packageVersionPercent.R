@@ -47,7 +47,6 @@ packageVersionPercent <- function(lst, yr.mo = "2020-07", multi.core = TRUE) {
 #' @export
 
 monthlyLog <- function(yr.mo = "2020-07") {
-  cal.date <- Sys.Date() - 1
   start.date <- resolveDate(yr.mo)
   end.date <- resolveDate(yr.mo, "to")
   start.date <- fixDate_2012(start.date)
