@@ -654,7 +654,7 @@ These filters are off by default (e.g., ip.filter = FALSE). To apply
 them, set the argument for the filter you want to TRUE:
 
 ``` r
-packageRank(package = "cholera", size.filter = TRUE)
+packageRank(package = "cholera", small.filter = TRUE)
 ```
 
 Alternatively, you can simply set `all.filters = TRUE`.

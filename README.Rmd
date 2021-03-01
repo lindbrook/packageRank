@@ -569,7 +569,7 @@ Currently, there are 5 different functions. They are controlled by the following
 These filters are off by default (e.g., ip.filter = FALSE). To apply them, set the argument for the filter you want to TRUE:
 
 ```{r,  small_filter, eval = FALSE}
-packageRank(package = "cholera", size.filter = TRUE)
+packageRank(package = "cholera", small.filter = TRUE)
 ```
 
 Alternatively, you can simply set `all.filters = TRUE`.
