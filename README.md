@@ -664,11 +664,12 @@ packageRank(package = "cholera", all.filters = TRUE)
 ```
 
 Note that the `all.filters` argument is contextual. This is because
-there are two sets of filters: CRAN specific functions (`ip.filter` and
-`size.filter`) work independently of packages, at the level of the
-entire log; package specific functions (`triplet.filter`,
-`sequence.filter`, and `size.filter`) rely on specific information about
-packages (e.g., size of source or binary file).
+there are two sets of filters: CRAN specific functions, accessible via
+the `ip.filter` and `size.filter` arguments, work independently of
+packages, at the level of the entire log; package specific functions,
+accessible via the `triplet.filter`, `sequence.filter`, and
+`size.filter` arguments, rely on specific information about packages
+(e.g., size of source or binary file).
 
 Ideally, we’d like to use both sets. However, the package specific set
 can be computationally expensive, especially when making relative
@@ -678,8 +679,11 @@ log, which can involve tens of thousands of packages. While not
 unfeasible, this will currently take a long time.
 
 For this reason, when setting `all.filters = TRUE`, certain functions
-default to use only CRAN specific filters:
-packageRank()`,`ipPackage()`,`countryPackage()`,`countryDistribution()`and`packageDistribution()`. Other functions default to using both CRAN and package specific functions:`packageLog()`,`packageCountry()`, and`filteredDownloads()\`.
+default to use only CRAN specific filters: `packageRank()`,
+`ipPackage()`, `countryPackage()`, `countryDistribution()` and
+`packageDistribution()`. Other functions default to using both CRAN and
+package specific functions: `packageLog()`, `packageCountry()`, and
+`filteredDownloads()`.
 
 ### IV - notes
 
