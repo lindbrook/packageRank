@@ -4,7 +4,7 @@ packageRank 0.4.0
 # New Features and Functionality #
 
 - filters shortcut via all.filters = TRUE argument.
-- temporarily set options(timeout = 300L) for fetchCranLog() with R v4.0.3.
+- temporarily set options(timeout = 300L) for fetchCranLog() for R 4.0.3.
 - time zone support via logDate().
 
 # Data Changes #
@@ -22,8 +22,8 @@ packageRank 0.4.0
  - fix Mac directory changes in packageMRAN().
  - fix typo in plot.countryDistribution().
  - fix resolveDate() by first as.character() all dates.
- - fix packageInfio() using strsplit(fixed = TRUE).
- - pass f argument, lowess() smoother span value, to rPlot().
+ - fix scrapeData() using strsplit(fixed = TRUE).
+ - pass 'f' argument, lowess() smoother span value, to rPlot().
 
 # Function Changes #
 
@@ -44,31 +44,35 @@ packageRank 0.4.0
 - use sugrrants::facet_calendar() with packageVersionPercent(),
   plotTopCountryCodes(), and plotDownloadsCountry
 
-
 # New Functions #
 
 - countryDistribution()
-- cranPackageSize()
 - cranMirrors()
+- cranPackages()
+- cranPackageSize()
+- downloadsCountry()
 - filteredDownloads()
 - ipCount()
+- ipDownloads()
 - ipPackage()
 - packageMRAN()
-- topCountry()
+- topCountryCodes()
+
+# New Filter Functions #
+
+- ipFilter()
+- sequenceFilter()
+- sizeFilter()
+- smallFilter()
+- tripletFilter()
 
 # New Helper Functions #
 
 - checkPackage()
 - cleanLog()
+- dateTime()
 - packageSample()
-
-# New Filter Functions #
-
-- tripletFilter()
-- smallFilter()
-- ipFilter()
-- sequenceFilter()
-- sizeFilter()
+- validatePackage()
 
 # New Time/Time Zone Functions #
 
@@ -80,10 +84,12 @@ packageRank 0.4.0
 - logPostInfo()
 
 # New/Amended Blog specific Functions
+- countsRanks()
 - cranPlot()
 - inflationPlot2()
+- monthlyLog()
+- packageVersionPercent()
 - versionsPlot()
-
 
 packageRank 0.3.5
 ==================
