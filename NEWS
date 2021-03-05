@@ -1,3 +1,10 @@
+packageRank 0.4.0.9000
+==================
+
+- sizeFilter() and cranPackageSize(): fix multiple versions with package
+  updates.
+
+
 packageRank 0.4.0
 ==================
 

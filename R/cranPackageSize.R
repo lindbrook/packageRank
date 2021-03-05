@@ -40,7 +40,13 @@ cranPackageSize <- function(package = "cholera", check.package = TRUE,
           unlist(strsplit(x[1], "_"))[1]
         }, character(1L)))
         if (package %in% multiple.matches) {
-          pkg.data <- pkg.data[multiple.matches %in% package]
+          sel <- multiple.matches %in% package
+          # package update transition (multiple versions)
+          if (length(unique(multiple.matches)) == 1) {
+            pkg.data <- pkg.data[sel][length(pkg.data)]
+          } else {
+            pkg.data <- pkg.data[sel]
+          }
           out <- cran_package_info(pkg.data, x$ext)
           } else out <- NULL
       } else if (length(pkg.data) == 1) {
