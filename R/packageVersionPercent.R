@@ -52,9 +52,7 @@ monthlyLog <- function(yr.mo = "2020-07") {
   start.date <- fixDate_2012(start.date)
   end.date <- fixDate_2012(end.date)
   days <- seq(start.date, end.date, by = "day")
-  lapply(days, function(d) {
-    packageLog(packages = NULL, date = d, memoization = FALSE)
-  })
+  lapply(days, fetchCranLog)
 }
 
 computeVersionPercents <- function(lst, pkgs, cores) {
