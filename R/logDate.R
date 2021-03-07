@@ -14,7 +14,7 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
   tz = Sys.timezone(), upload.time = "17:00", warning.msg = TRUE) {
 
   if (is.null(date)) {
-    local.time <- Sys.time()
+    local.time <- utc()
     local.date <- as.Date(format(local.time, "%Y-%m-%d"))
     warning.msg <- FALSE
 
@@ -43,11 +43,16 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
   }
 
   if (repository == "CRAN") {
+    if (is.null(date)) local.date <- local.date - 1
     year <- as.POSIXlt(local.date)$year + 1900
     rstudio.url <- "http://cran-logs.rstudio.com/"
     log.url <- paste0(rstudio.url, year, '/', local.date, ".csv.gz")
-    if (RCurl::url.exists(log.url)) log.date <- local.date
-    else log.date <- available_log(local.date, tz, upload.time, warning.msg)
+    if (RCurl::url.exists(log.url)) {
+      log.date <- local.date
+    } else {
+      if (is.null(date)) local.date <- local.date + 1
+      log.date <- available_log(local.date, tz, upload.time, warning.msg)
+    }
   } else if (repository == "MRAN") {
     # MRAN fixed snapshot time?
     if (local.date <= Sys.Date()) log.date <- local.date
