@@ -1,7 +1,8 @@
 packageRank 0.4.0.9001
 ==================
 
-- amend monthlyLog()'s packageLog() syntax.
+- amend monthlyLog() with fetchCranLog().
+- amend logDate() URL for date = NULL.
 
 
 packageRank 0.4.0.9000
