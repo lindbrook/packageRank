@@ -692,7 +692,7 @@ package specific functions: `packageLog()`, `packageCountry()`, and
 While IP addresses are anonymized, `packageCountry()` and
 `countryPackage()` make use of the fact that the logs attempt to provide
 corresponding ISO country codes or top level domains (e.g., AT, JP, US).
-Note however, that his covers about 85% of observations (i.e.,
+Note however, that this covers about 85% of observations (i.e.,
 approximately 15% country codes are NA). Also, for what it’s worth,
 there seems to be a a couple of typos for country codes: “A1” (A +
 number one) and “A2” (A + number 2). According to [RStudio’s
