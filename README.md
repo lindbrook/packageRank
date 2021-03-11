@@ -784,45 +784,64 @@ packageRank(packages = "ergm", date = "2021-01-01")
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you check/remember when logs are posted in your
-location, there’s `logPostInfo()`. When you run that function, you’ll
-get the date for the latest available log along with the expected local
-and UTC times when that log should be posted to RStudio’s server.
+location, there’s `logDate()` and `logPostInfo()`. The former silently
+returns the date of the current available log. The latter adds the
+approximate local and UTC times when logs of the desired date are posted
+to RStudio’s server.
 
-Here’s what you’d see if you’re in Honolulu:
+Here’s what you’d see using the Honolulu example:
+
+``` r
+logDate()
+```
+
+    > [1] "2021-01-01
+
+and
 
 ``` r
 logPostInfo()
 ```
 
     > $log.date
-    > [1] "2021-02-01"
+    > [1] "2021-01-01"
     >
     > $GMT
-    > [1] "2021-02-02 17:00:00 GMT"
+    > [1] "2021-01-01 17:00:00 GMT"
     >
     > $local
-    > [1] "2021-02-02 07:00:00 HST"
+    > [1] "2021-01-01 07:00:00 HST"
 
-The default uses your local time zone, via `Sys.timezone()`. To use a
-specific time zone, pass the desired zone name from `OlsonNames()` to
-the `tz` argument:
+For both functions, the default is to use your time zone. To see the
+results in a different time zone, pass the desired zone name from
+`OlsonNames()` to the `tz` argument. Here are the results for Sydney
+when the functions are called from Honolulu (19:01 UTC):
+
+``` r
+logDate(tz = "Australia/Sydney")
+```
+
+    > [1] "2021-01-01"
+
+and
 
 ``` r
 logPostInfo(tz = "Australia/Sydney")
 ```
 
     > $log.date
-    > [1] "2021-02-01"
+    > [1] "2021-01-01"
     >
     > $GMT
-    > [1] "2021-02-02 17:00:00 GMT"
+    > [1] "2021-01-01 17:00:00 GMT"
     >
     > $local
-    > [1] "2021-02-03 04:00:00 AEDT"
+    > [1] "2021-01-01 04:00:00 AEDT"
 
 This functionality depends on R’s ability to to compute your local time
 and time zone (e.g., `Sys.time()`). My understanding is that there may
-be operating system or platform specific issues that could affect this.
+be operating system or platform specific issues that could undermine
+this.
 
 #### timeout
 
