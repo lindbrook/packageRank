@@ -326,7 +326,7 @@ ggPlot <- function(x, log_count, freqtab, iqr, package.data, y.max, date) {
                   label = xlabel, nudge_y = ylabel.nudge) +
        xlab("Rank") +
        ylab("Count") +
-       facet_wrap(~ id, ncol = 2) +
+       facet_wrap(~ id, nrow = 2) +
        theme_bw() +
        theme(panel.grid.major = element_blank(),
              panel.grid.minor = element_blank())

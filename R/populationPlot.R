@@ -113,7 +113,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
            theme_bw() +
            theme(panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank()) +
-           facet_wrap(~ package, ncol = 2)
+           facet_wrap(~ package, nrow = 2)
 
     cran.smpl.lst <- rep(list(cran.smpl), length(packages))
 

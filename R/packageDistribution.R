@@ -126,7 +126,7 @@ plot.packageDistribution <- function(x, ...) {
                  fill = grDevices::adjustcolor("red", alpha.f = 2/3),
                  colour = "white", size = 2.75, label = pkg.ct$count) +
       scale_x_log10() +
-      facet_wrap(~ package, ncol = 2) +
+      facet_wrap(~ package, nrow = 2) +
       xlab("Downloads") +
       ylab("Frequency") +
       theme_bw() +
