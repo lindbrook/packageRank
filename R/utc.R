@@ -56,5 +56,5 @@ localTime <- function(date = "2021-1-1", time = "12:00", tz = Sys.timezone()) {
 logPostInfo <- function(tz = Sys.timezone()) {
   x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
   local <- as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
-  list(log.date = as.Date(format(x, "%Y-%m-%d")) - 1, GMT = x, local = local)
+  list(log.date = logDate(tz = tz), GMT = x, local = local)
 }
