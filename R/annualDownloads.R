@@ -31,14 +31,15 @@ annualDownloads <- function(start.yr = 2015, end.yr = 2020, multi.core = TRUE) {
 #' Plot method for annualDownloads().
 #'
 #' @param x object.
+#' @param nrow Numeric. Number of rows for ggplot2 facets.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.annualDownloads <- function(x, ...) {
+plot.annualDownloads <- function(x, nrow = 2, ...) {
   day.month <- dayMonth()
   p <- ggplot(data = x, aes_string(x = "date.id", y = "count")) +
   geom_line(colour = "gray") +
-  facet_wrap(~ year, nrow = 2, scales = "free_y") +
+  facet_wrap(~ year, nrow = nrow, scales = "free_y") +
   scale_y_continuous(trans = "log10") +
   geom_smooth(method = "loess", formula = "y ~ x", se = FALSE) +
   theme_bw() +

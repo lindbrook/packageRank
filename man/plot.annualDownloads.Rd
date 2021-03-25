@@ -4,10 +4,12 @@
 \alias{plot.annualDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{annualDownloads}(x, ...)
+\method{plot}{annualDownloads}(x, nrow = 2, ...)
 }
 \arguments{
 \item{x}{object.}
+
+\item{nrow}{Numeric. Number of rows for ggplot2 facets.}
 
 \item{...}{Additional plotting parameters.}
 }
