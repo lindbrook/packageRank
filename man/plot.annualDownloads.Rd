@@ -4,12 +4,14 @@
 \alias{plot.annualDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{annualDownloads}(x, nrow = 2, ...)
+\method{plot}{annualDownloads}(x, nrow = 2, span = 2/3, ...)
 }
 \arguments{
 \item{x}{object.}
 
 \item{nrow}{Numeric. Number of rows for ggplot2 facets.}
+
+\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(f).}
 
 \item{...}{Additional plotting parameters.}
 }

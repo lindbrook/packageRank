@@ -32,16 +32,17 @@ annualDownloads <- function(start.yr = 2015, end.yr = 2020, multi.core = TRUE) {
 #'
 #' @param x object.
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
+#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(f).
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.annualDownloads <- function(x, nrow = 2, ...) {
+plot.annualDownloads <- function(x, nrow = 2, span = 2/3, ...) {
   day.month <- dayMonth()
   p <- ggplot(data = x, aes_string(x = "date.id", y = "count")) +
   geom_line(colour = "gray") +
   facet_wrap(~ year, nrow = nrow, scales = "free_y") +
   scale_y_continuous(trans = "log10") +
-  geom_smooth(method = "loess", formula = "y ~ x", se = FALSE) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = FALSE, span = span) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
