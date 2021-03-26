@@ -4,7 +4,7 @@
 \alias{annualDownloads}
 \title{Count Total CRAN Download.}
 \usage{
-annualDownloads(start.yr = 2015, end.yr = 2020, multi.core = TRUE)
+annualDownloads(start.yr = 2013, end.yr = 2020, multi.core = TRUE)
 }
 \arguments{
 \item{start.yr}{Numeric or Integer.}

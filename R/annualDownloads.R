@@ -6,7 +6,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-annualDownloads <- function(start.yr = 2015, end.yr = 2020, multi.core = TRUE) {
+annualDownloads <- function(start.yr = 2013, end.yr = 2020, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
   dwnlds <- parallel::mclapply(start.yr:end.yr, function(x) {
