@@ -4,7 +4,7 @@
 \alias{plot.annualDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{annualDownloads}(x, nrow = 2, span = 2/3, ...)
+\method{plot}{annualDownloads}(x, nrow = 3, span = 2/3, ...)
 }
 \arguments{
 \item{x}{object.}

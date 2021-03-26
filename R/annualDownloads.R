@@ -36,7 +36,7 @@ annualDownloads <- function(start.yr = 2015, end.yr = 2020, multi.core = TRUE) {
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.annualDownloads <- function(x, nrow = 2, span = 2/3, ...) {
+plot.annualDownloads <- function(x, nrow = 3, span = 2/3, ...) {
   day.month <- dayMonth()
   p <- ggplot(data = x, aes_string(x = "date.id", y = "count")) +
   geom_line(colour = "gray") +
