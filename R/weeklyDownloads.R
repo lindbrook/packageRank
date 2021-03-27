@@ -33,19 +33,59 @@ weeklyDownloads <- function(start.yr = 2013, n = 9) {
 #' Plot method for annualDownloads().
 #'
 #' @param x object.
+#' @param statistic Character. "count" or "percent".
+#' @param aggregate Logical.
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.weeklyDownloads <- function(x, nrow = 3L, ...) {
-  ggplot(data = x, aes_string(x = "day.id", y = "count")) +
-  geom_line() +
-  geom_point() +
-  facet_wrap(~ week.id, nrow = nrow, scales = "free_y") +
-  xlab("Day") +
-  theme_bw() +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
-  scale_x_continuous(breaks = seq(2, 6, 2),
-                     labels = c("Tue", "Thu", "Sat"))
+plot.weeklyDownloads <- function(x, statistic = "percent", aggregate = TRUE,
+  nrow = 3L, ...) {
+
+  if (aggregate) {
+    if (statistic == "count") {
+      agg.data <- data.frame(day = unique(x$day), day.id = 1:7,
+        percent = tapply(x$count, x$day.id, mean))
+      plot(agg.data$day.id, agg.data$percent, type = "o", xaxt = "n",
+        xlab = "Day", ylab = "Count",
+        main = "Mean Daily Count of Weekly CRAN Downloads",
+        sub = paste("n =", length(unique(x$week.id)), "weeks"))
+      axis(1, at = 1:7, labels = agg.data$day)
+
+    } else if (statistic == "percent") {
+      agg.data <- data.frame(day = unique(x$day), day.id = 1:7,
+        percent = tapply(x$percent, x$day.id, mean))
+      plot(agg.data$day.id, agg.data$percent, type = "o", xaxt = "n",
+        xlab = "Day", ylab = "Percent",
+        main = "Mean Daily Percent of Weekly CRAN Downloads",
+        sub = paste("n =", length(unique(x$week.id)), "weeks"))
+      axis(1, at = 1:7, labels = agg.data$day)
+
+    } else stop('statistic must be "count" or "percent".')
+
+  } else {
+    if (statistic == "count") {
+      p <- ggplot(data = x, aes_string(x = "day.id", y = "count")) +
+        ylab("Count") +
+        facet_wrap(~ week.id, nrow = nrow, scales = "free_y") +
+        ggtitle("Daily Count of Weekly CRAN Downloads")
+
+    } else if (statistic == "percent") {
+      p <- ggplot(data = x, aes_string(x = "day.id", y = "percent")) +
+        ylab("Percent") +
+        facet_wrap(~ week.id, nrow = nrow) +
+        ggtitle("Percent of Weekly CRAN Downloads")
+
+    } else stop('statistic must be "count" or "percent".')
+
+    p + geom_line() +
+      geom_point() +
+      scale_x_continuous(breaks = seq(2, 6, 2),
+                         labels = c("Tue", "Thu", "Sat")) +
+      xlab("Day") +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+  }
 }

@@ -4,10 +4,14 @@
 \alias{plot.weeklyDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{weeklyDownloads}(x, nrow = 3L, ...)
+\method{plot}{weeklyDownloads}(x, statistic = "percent", aggregate = TRUE, nrow = 3L, ...)
 }
 \arguments{
 \item{x}{object.}
+
+\item{statistic}{Character. "count" or "percent".}
+
+\item{aggregate}{Logical.}
 
 \item{nrow}{Numeric. Number of rows for ggplot2 facets.}
 
