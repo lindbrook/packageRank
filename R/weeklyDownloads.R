@@ -6,21 +6,22 @@
 #' @export
 
 weeklyDownloads <- function(start.yr = 2013, n = 9) {
-  first <- as.Date(paste0(start.yr, "-01-01"))
+  first.day <- as.Date(paste0(start.yr, "-01-01"))
   last.wk <- seq.Date(logDate() - 7, logDate(), by = "days")
   last.wk.day <- weekdays(last.wk)
-  last <- last.wk[last.wk.day == "Sunday"] - 6
+  last.day <- last.wk[last.wk.day == "Sunday"] - 6
 
-  tmp <- seq.Date(first, last, by = "days")
-  mon <- tmp[weekdays(tmp) == "Monday"]
+  log.dates <- seq.Date(first.day, last.day, by = "days")
+  mon <- log.dates[weekdays(log.dates) == "Monday"]
   mon.smpl <- sort(sample(mon, n))
 
   dwnlds <- lapply(mon.smpl, function(x) {
     x <- cranDownloads(from = x, to = x + 6)[["cranlogs.data"]]
-    x$day <- weekdays(x$date)
+    x$day <- weekdays(x$date, abbreviate = TRUE)
     x$year <- as.numeric(format(x$date, "%Y"))
     x$day.id <- 1:7
     x$week.id <- x$date[1]
+    x$percent <- 100 * x$count / sum(x$count)
     x
   })
 
