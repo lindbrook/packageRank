@@ -5,7 +5,7 @@
 #' @param n Numeric or Integer. Number of weeks (samples).
 #' @export
 
-weeklyDownloads <- function(start.yr = 2013, n = 9) {
+weeklyDownloads <- function(start.yr = 2013, n = 50) {
   first.day <- as.Date(paste0(start.yr, "-01-01"))
   last.wk <- seq.Date(logDate() - 7, logDate(), by = "days")
   last.wk.day <- weekdays(last.wk)
