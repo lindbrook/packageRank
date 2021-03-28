@@ -4,14 +4,17 @@
 \alias{plot.weeklyDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{weeklyDownloads}(x, statistic = "percent", aggregate = TRUE, nrow = 3L, ...)
+\method{plot}{weeklyDownloads}(x, statistic = "percent",
+  aggregation = "day", typical.value = "mean", nrow = 3L, ...)
 }
 \arguments{
 \item{x}{object.}
 
 \item{statistic}{Character. "count" or "percent".}
 
-\item{aggregate}{Logical.}
+\item{aggregation}{Chearacter. "week" or "day"}
+
+\item{typical.value}{Character. "mean" or "median".}
 
 \item{nrow}{Numeric. Number of rows for ggplot2 facets.}
 
@@ -19,4 +22,10 @@
 }
 \description{
 Plot method for annualDownloads().
+}
+\examples{
+\dontrun{
+plot(weeklyDownloads())
+plot(weeklyDownloads(n = 9), aggregation = "week")
+}
 }

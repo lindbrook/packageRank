@@ -34,36 +34,48 @@ weeklyDownloads <- function(start.yr = 2013, n = 50) {
 #'
 #' @param x object.
 #' @param statistic Character. "count" or "percent".
-#' @param aggregate Logical.
+#' @param typical.value Character. "mean" or "median".
+#' @param aggregation Chearacter. "week" or "day"
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
 #' @param ... Additional plotting parameters.
 #' @export
+#' @examples
+#' \dontrun{
+#' plot(weeklyDownloads())
+#' plot(weeklyDownloads(n = 9), aggregation = "week")
+#' }
 
-plot.weeklyDownloads <- function(x, statistic = "percent", aggregate = TRUE,
-  nrow = 3L, ...) {
+plot.weeklyDownloads <- function(x, statistic = "percent", aggregation = "day",
+  typical.value = "mean", nrow = 3L, ...) {
 
-  if (aggregate) {
+  if (aggregation == "day") {
+    days <- unique(x$day)
+    day.id <- unique(x$day.id)
     if (statistic == "count") {
-      agg.data <- data.frame(day = unique(x$day), day.id = 1:7,
-        percent = tapply(x$count, x$day.id, mean))
-      plot(agg.data$day.id, agg.data$percent, type = "o", xaxt = "n",
-        xlab = "Day", ylab = "Count",
-        main = "Mean Daily Count of Weekly CRAN Downloads",
-        sub = paste("n =", length(unique(x$week.id)), "weeks"))
-      axis(1, at = 1:7, labels = agg.data$day)
-
+      plot(x$day.id, x$count, xaxt = "n", xlab = "Day", ylab = "Count")
+      if (typical.value == "mean") {
+       typ.val <- tapply(x$count, x$day.id, mean)
+      } else if (typical.value == "median") {
+       typ.val <- tapply(x$count, x$day.id, stats::median)
+      }
+      lines(day.id, typ.val, col = "red")
+      axis(1, at = seq_along(days), labels = days)
+      title(main = "Daily Count of CRAN Downloads",
+            sub = paste(length(unique(x$week.id)), "Randomly Sampled Weeks"))
     } else if (statistic == "percent") {
-      agg.data <- data.frame(day = unique(x$day), day.id = 1:7,
-        percent = tapply(x$percent, x$day.id, mean))
-      plot(agg.data$day.id, agg.data$percent, type = "o", xaxt = "n",
-        xlab = "Day", ylab = "Percent",
-        main = "Mean Daily Percent of Weekly CRAN Downloads",
-        sub = paste("n =", length(unique(x$week.id)), "weeks"))
-      axis(1, at = 1:7, labels = agg.data$day)
-
+      plot(x$day.id, x$percent, xaxt = "n", xlab = "Day", ylab = "Percent")
+      if (typical.value == "mean") {
+       typ.val <- tapply(x$percent, x$day.id, mean)
+      } else if (typical.value == "median") {
+       typ.val <- tapply(x$percent, x$day.id, stats::median)
+      }
+      lines(day.id, typ.val, col = "red")
+      axis(1, at = seq_along(days), labels = days)
+      title(main = "Percent of Weekly CRAN Downloads by Day",
+            sub = paste(length(unique(x$week.id)), "Randomly Sampled Weeks"))
     } else stop('statistic must be "count" or "percent".')
 
-  } else {
+  } else if (aggregation == "week") {
     if (statistic == "count") {
       p <- ggplot(data = x, aes_string(x = "day.id", y = "count")) +
         ylab("Count") +
@@ -87,5 +99,5 @@ plot.weeklyDownloads <- function(x, statistic = "percent", aggregate = TRUE,
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
-  }
+  } else stop('aggregation must be "day" or "week".')
 }
