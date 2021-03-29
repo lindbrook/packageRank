@@ -1,3 +1,9 @@
+packageRank 0.4.0.9007
+==================
+
+- add/set annualDownloads(multi.core = TRUE).
+
+
 packageRank 0.4.0.9006
 ==================
 

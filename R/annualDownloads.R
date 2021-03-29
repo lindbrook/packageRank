@@ -10,16 +10,13 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2020, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
   dwnlds <- parallel::mclapply(start.yr:end.yr, function(x) {
-    cranDownloads(from = x, to = x)$cranlogs.data
-  }, mc.cores = cores)
-
-  annual.data <- lapply(dwnlds, function(x) {
+    x <- cranDownloads(from = x, to = x)$cranlogs.data
     x$year <- as.numeric(format(x$date, "%Y"))
     x$day.mo <- format(x$date, "%d %b")
     x
-  })
+  }, mc.cores = cores)
 
-  out <- do.call(rbind, annual.data)
+  out <- do.call(rbind, dwnlds)
   day.month <- dayMonth()
   out <- merge(out, day.month, by.x = "day.mo", by.y = "date.nm")
   out <- out[order(out$year, out$date.id), ]
