@@ -35,7 +35,7 @@ weeklyDownloads <- function(start.yr = 2013, n = 50) {
 #' @param x object.
 #' @param statistic Character. "count" or "percent".
 #' @param typical.value Character. "mean" or "median".
-#' @param aggregation Chearacter. "week" or "day"
+#' @param aggregation Character. "week" or "day".
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
 #' @param ... Additional plotting parameters.
 #' @export

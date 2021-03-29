@@ -12,7 +12,7 @@
 
 \item{statistic}{Character. "count" or "percent".}
 
-\item{aggregation}{Chearacter. "week" or "day"}
+\item{aggregation}{Character. "week" or "day".}
 
 \item{typical.value}{Character. "mean" or "median".}
 
