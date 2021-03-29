@@ -50,56 +50,49 @@ weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = TRUE) {
 plot.weeklyDownloads <- function(x, statistic = "percent", aggregation = "day",
   typical.value = "mean", nrow = 3L, ...) {
 
+  days <- unique(x$day)
+  day.id <- unique(x$day.id)
+  smpl.size <- length(unique(x$week.id))
+
   if (aggregation == "day") {
-    days <- unique(x$day)
-    day.id <- unique(x$day.id)
+    if (typical.value == "mean") {
+      typ.val <- tapply(x[, statistic], x$day.id, mean)
+    } else if (typical.value == "median") {
+      typ.val <- tapply(x[, statistic], x$day.id, stats::median)
+    } else stop('typical.value must be "mean" or "median".')
+
     if (statistic == "count") {
-      plot(x$day.id, x$count, xaxt = "n", xlab = "Day", ylab = "Count")
-      if (typical.value == "mean") {
-       typ.val <- tapply(x$count, x$day.id, mean)
-      } else if (typical.value == "median") {
-       typ.val <- tapply(x$count, x$day.id, stats::median)
-      }
-      lines(day.id, typ.val, col = "red")
-      axis(1, at = seq_along(days), labels = days)
-      title(main = "Daily Count of CRAN Downloads",
-            sub = paste(length(unique(x$week.id)), "Randomly Sampled Weeks"))
+      title.main <- "Daily Count of CRAN Downloads"
     } else if (statistic == "percent") {
-      plot(x$day.id, x$percent, xaxt = "n", xlab = "Day", ylab = "Percent")
-      if (typical.value == "mean") {
-       typ.val <- tapply(x$percent, x$day.id, mean)
-      } else if (typical.value == "median") {
-       typ.val <- tapply(x$percent, x$day.id, stats::median)
-      }
-      lines(day.id, typ.val, col = "red")
-      axis(1, at = seq_along(days), labels = days)
-      title(main = "Percent of Weekly CRAN Downloads by Day",
-            sub = paste(length(unique(x$week.id)), "Randomly Sampled Weeks"))
+      title.main <- "Percent of Weekly CRAN Downloads by Day"
     } else stop('statistic must be "count" or "percent".')
+
+    plot(x$day.id, x[, statistic], xaxt = "n", xlab = "Day",
+      ylab = tools::toTitleCase(statistic))
+    lines(day.id, typ.val, col = "red", lwd = 1.5)
+    axis(1, at = seq_along(days), labels = days)
+    title(main = title.main, sub = paste(smpl.size, "Randomly Sampled Weeks"))
 
   } else if (aggregation == "week") {
     if (statistic == "count") {
       p <- ggplot(data = x, aes_string(x = "day.id", y = "count")) +
-        ylab("Count") +
         facet_wrap(~ week.id, nrow = nrow, scales = "free_y") +
         ggtitle("Daily Count of Weekly CRAN Downloads")
-
     } else if (statistic == "percent") {
       p <- ggplot(data = x, aes_string(x = "day.id", y = "percent")) +
-        ylab("Percent") +
         facet_wrap(~ week.id, nrow = nrow) +
         ggtitle("Percent of Weekly CRAN Downloads")
-
     } else stop('statistic must be "count" or "percent".')
 
     p + geom_line() +
       geom_point() +
-      scale_x_continuous(breaks = seq(2, 6, 2),
-                         labels = c("Tue", "Thu", "Sat")) +
+      scale_x_continuous(breaks = c(2, 4, 6), labels = days[c(2, 4, 6)]) +
       xlab("Day") +
+      ylab(tools::toTitleCase(statistic)) +
       theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
+
   } else stop('aggregation must be "day" or "week".')
 }
