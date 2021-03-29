@@ -3,9 +3,11 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param start.yr Numeric or Integer.
 #' @param n Numeric or Integer. Number of weeks (samples).
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-weeklyDownloads <- function(start.yr = 2013, n = 50) {
+weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = TRUE) {
+  cores <- multiCore(multi.core)
   first.day <- as.Date(paste0(start.yr, "-01-01"))
   last.wk <- seq.Date(logDate() - 7, logDate(), by = "days")
   last.wk.day <- weekdays(last.wk)
@@ -15,7 +17,7 @@ weeklyDownloads <- function(start.yr = 2013, n = 50) {
   mon <- log.dates[weekdays(log.dates) == "Monday"]
   mon.smpl <- sort(sample(mon, n))
 
-  dwnlds <- lapply(mon.smpl, function(x) {
+  dwnlds <- parallel::mclapply(mon.smpl, function(x) {
     x <- cranDownloads(from = x, to = x + 6)[["cranlogs.data"]]
     x$day <- weekdays(x$date, abbreviate = TRUE)
     x$year <- as.numeric(format(x$date, "%Y"))
@@ -23,7 +25,7 @@ weeklyDownloads <- function(start.yr = 2013, n = 50) {
     x$week.id <- x$date[1]
     x$percent <- 100 * x$count / sum(x$count)
     x
-  })
+  }, mc.cores = cores)
 
   out <- do.call(rbind, dwnlds)
   class(out) <- c("weeklyDownloads", class(out))

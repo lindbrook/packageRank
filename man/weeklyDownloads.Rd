@@ -4,12 +4,14 @@
 \alias{weeklyDownloads}
 \title{Sample Weekly CRAN Downloads Data.}
 \usage{
-weeklyDownloads(start.yr = 2013, n = 50)
+weeklyDownloads(start.yr = 2013, n = 50, multi.core = TRUE)
 }
 \arguments{
 \item{start.yr}{Numeric or Integer.}
 
 \item{n}{Numeric or Integer. Number of weeks (samples).}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
