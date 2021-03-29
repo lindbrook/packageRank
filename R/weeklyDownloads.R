@@ -11,7 +11,7 @@ weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = TRUE) {
   first.day <- as.Date(paste0(start.yr, "-01-01"))
   last.wk <- seq.Date(logDate() - 7, logDate(), by = "days")
   last.wk.day <- weekdays(last.wk)
-  last.day <- last.wk[last.wk.day == "Sunday"] - 6
+  last.day <- max(last.wk[last.wk.day == "Sunday"] - 6)
 
   log.dates <- seq.Date(first.day, last.day, by = "days")
   mon <- log.dates[weekdays(log.dates) == "Monday"]
