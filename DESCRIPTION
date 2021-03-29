@@ -29,6 +29,7 @@ Imports:
     rversions,
     stats,
     sugrrants,
+    tools,
     utils
 Suggests: knitr,
           rmarkdown
