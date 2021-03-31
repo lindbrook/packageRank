@@ -200,11 +200,11 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     if (r.total) {
-      rTotPlot(x, statistic, graphics, legend.loc, points, smooth, se,
-        r.version, f)
+      rTotPlot(x, statistic, graphics, legend.loc, points, log.count, smooth,
+        se, r.version, f)
     } else {
-      rPlot(x, statistic, graphics, legend.loc, points, smooth, se, r.version,
-        f)
+      rPlot(x, statistic, graphics, legend.loc, points, log.count, smooth, se,
+        r.version, f, multi.plot)
     }
   } else {
     if (multi.plot) {
@@ -236,8 +236,8 @@ summary.cranDownloads <- function(object, ...) {
   object$cranlogs.data
 }
 
-rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
-  r.version, f) {
+rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
+  smooth, se, r.version, f, multi.plot) {
 
   dat <- x$cranlogs.data
 
@@ -249,10 +249,17 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
 
   if (graphics == "base") {
     if (points) {
-      plot(dat[dat$platform == "win", "date"],
-           dat[dat$platform == "win", statistic],
-           type = "o", ylim = range(dat[, statistic]),
-           xlab = "Date", ylab = ylab)
+      if (log.count) {
+        plot(dat[dat$platform == "win", "date"],
+             dat[dat$platform == "win", statistic],
+             type = "o", ylim = range(dat[, statistic]),
+             xlab = "Date", ylab = paste("log10", ylab), log = "y")
+      } else {
+        plot(dat[dat$platform == "win", "date"],
+             dat[dat$platform == "win", statistic],
+             type = "o", ylim = range(dat[, statistic]),
+             xlab = "Date", ylab = ylab)
+      }
       lines(dat[dat$platform == "osx", "date"],
             dat[dat$platform == "osx", statistic],
             type = "o", pch = 0, col = "red")
@@ -260,10 +267,17 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
             dat[dat$platform == "src", statistic],
             type = "o", pch = 2, col = "blue")
     } else {
-      plot(dat[dat$platform == "win", "date"],
-           dat[dat$platform == "win", statistic],
-           type = "l", ylim = range(dat[, statistic]),
-           xlab = "Date", ylab = ylab)
+      if (log.count) {
+        plot(dat[dat$platform == "win", "date"],
+             dat[dat$platform == "win", statistic],
+             type = "l", ylim = range(dat[, statistic]),
+             xlab = "Date", ylab = paste("log10", ylab), log = "y")
+      } else {
+        plot(dat[dat$platform == "win", "date"],
+             dat[dat$platform == "win", statistic],
+             type = "l", ylim = range(dat[, statistic]),
+             xlab = "Date", ylab = ylab)
+      }
       lines(dat[dat$platform == "osx", "date"],
             dat[dat$platform == "osx", statistic],
             col = "red")
@@ -305,32 +319,47 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
       dat2 <- dat[, c("date", "count", "platform")]
-      p <- ggplot(data = dat2, aes_string("date", "count"))
+      if (multi.plot) {
+        p <- ggplot(data = dat2, aes_string("date", "count",
+          colour = "platform"))
+      } else {
+        p <- ggplot(data = dat2, aes_string("date", "count")) +
+          facet_wrap(~ platform, nrow = 2)
+      }
     } else {
       dat2 <- dat[, c("date", "cumulative", "platform")]
-      p <- ggplot(data = dat2, aes_string("date", "cumulative"))
+      if (multi.plot) {
+        p <- ggplot(data = dat2, aes_string("date", "cumulative",
+          colour = "platform"))
+      } else {
+        p <- ggplot(data = dat2, aes_string("date", "cumulative")) +
+          facet_wrap(~ platform, nrow = 2)
+      }
     }
 
     p <- p + geom_line(size = 0.5) +
-      facet_wrap(~ platform, nrow = 2) +
       theme_bw() +
       theme(panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
       ggtitle("R Downloads")
 
     if (points & smooth) {
-      p + geom_point() +
+      p <- p + geom_point() +
         geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & !smooth) {
-      p + geom_point()
+      p <- p + geom_point()
     } else if (!points & smooth) {
-      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
-    } else p
+      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
+    }
+
+    if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+    if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
+    p
   } else stop('graphics must be "base" or "ggplot2"', call. = FALSE)
 }
 
-rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
-  r.version, f) {
+rTotPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
+  smooth, se, r.version, f) {
 
   dat <- x$cranlogs.data
   if (statistic == "count") ylab <- "Count"
@@ -342,9 +371,21 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
 
   if (graphics == "base") {
     if (points) {
-      plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date", ylab = ylab)
+      if (log.count) {
+        plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date",
+          ylab = ylab, log = "y")
+      } else {
+        plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date",
+          ylab = ylab)
+      }
     } else {
-      plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date", ylab = ylab)
+      if (log.count) {
+        plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date",
+          ylab = ylab, log = "y")
+      } else {
+        plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date",
+          ylab = ylab)
+      }
     }
 
     if (smooth) {
@@ -375,13 +416,17 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, smooth, se,
       ggtitle("Total R Downloads")
 
     if (points & smooth) {
-      p + geom_point() +
+      p <- p + geom_point() +
         geom_smooth(method = "loess", formula = "y ~ x", se = se)
     } else if (points & !smooth) {
-      p + geom_point()
+      p <- p + geom_point()
     } else if (!points & smooth) {
-      p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
-    } else p
+      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
+    }
+
+    if (log.count) p <- p + scale_y_log10() + ylab("log10(count)")
+    p
+
   } else stop('graphics must be "base" or "ggplot2"', call. = FALSE)
 }
 
