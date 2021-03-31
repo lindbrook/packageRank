@@ -253,7 +253,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
         plot(dat[dat$platform == "win", "date"],
              dat[dat$platform == "win", statistic],
              type = "o", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = ylab, log = "y")
+             xlab = "Date", ylab = paste("log10", ylab), log = "y")
       } else {
         plot(dat[dat$platform == "win", "date"],
              dat[dat$platform == "win", statistic],
@@ -271,7 +271,7 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
         plot(dat[dat$platform == "win", "date"],
              dat[dat$platform == "win", statistic],
              type = "l", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = ylab, log = "y")
+             xlab = "Date", ylab = paste("log10", ylab), log = "y")
       } else {
         plot(dat[dat$platform == "win", "date"],
              dat[dat$platform == "win", statistic],
