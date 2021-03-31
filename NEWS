@@ -1,7 +1,8 @@
 packageRank 0.4.0.9008
 ==================
 
-- enable log.count = TRUE for plot.cranDownloads(r.total = TRUE and FALSE).
+- enable log.count argument for plot.cranDownloads(r.total = TRUE and FALSE).
+- enable multi.plot argument for rPlot(graphics = "ggplot2").
 
 
 packageRank 0.4.0.9007
@@ -19,7 +20,7 @@ packageRank 0.4.0.9006
 packageRank 0.4.0.9005
 ==================
 
-- add/set plot.annualDownload(span = 2/3). 
+- add/set plot.annualDownload(span = 2/3).
 
 
 packageRank 0.4.0.9004

@@ -204,7 +204,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         se, r.version, f)
     } else {
       rPlot(x, statistic, graphics, legend.loc, points, log.count, smooth, se,
-        r.version, f)
+        r.version, f, multi.plot)
     }
   } else {
     if (multi.plot) {
@@ -237,7 +237,7 @@ summary.cranDownloads <- function(object, ...) {
 }
 
 rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
-  smooth, se, r.version, f) {
+  smooth, se, r.version, f, multi.plot) {
 
   dat <- x$cranlogs.data
 
@@ -319,14 +319,25 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
       dat2 <- dat[, c("date", "count", "platform")]
-      p <- ggplot(data = dat2, aes_string("date", "count"))
+      if (multi.plot) {
+        p <- ggplot(data = dat2, aes_string("date", "count",
+          colour = "platform"))
+      } else {
+        p <- ggplot(data = dat2, aes_string("date", "count")) +
+          facet_wrap(~ platform, nrow = 2)
+      }
     } else {
       dat2 <- dat[, c("date", "cumulative", "platform")]
-      p <- ggplot(data = dat2, aes_string("date", "cumulative"))
+      if (multi.plot) {
+        p <- ggplot(data = dat2, aes_string("date", "cumulative",
+          colour = "platform"))
+      } else {
+        p <- ggplot(data = dat2, aes_string("date", "cumulative")) +
+          facet_wrap(~ platform, nrow = 2)
+      }
     }
 
     p <- p + geom_line(size = 0.5) +
-      facet_wrap(~ platform, nrow = 2) +
       theme_bw() +
       theme(panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
@@ -341,7 +352,8 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
       p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
     }
 
-    if (log.count) p <- p + scale_y_log10() + ylab("log10(count)")
+    if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+    if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
     p
   } else stop('graphics must be "base" or "ggplot2"', call. = FALSE)
 }
