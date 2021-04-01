@@ -13,6 +13,7 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2020, multi.core = TRUE) {
     x <- cranDownloads(from = x, to = x)$cranlogs.data
     x$year <- as.numeric(format(x$date, "%Y"))
     x$day.mo <- format(x$date, "%d %b")
+    x$percent <- 100 * x$count / sum(x$count)
     x
   }, mc.cores = cores)
 
