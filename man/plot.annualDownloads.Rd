@@ -4,14 +4,23 @@
 \alias{plot.annualDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{annualDownloads}(x, nrow = 3, span = 2/3, ...)
+\method{plot}{annualDownloads}(x, statistic = "count", pool.obs = FALSE,
+  log.y = TRUE, nrow = 3, smooth = TRUE, span = 3/4, ...)
 }
 \arguments{
 \item{x}{object.}
 
+\item{statistic}{Character. "count" or "percent".}
+
+\item{pool.obs}{Logical.}
+
+\item{log.y}{Logical. Base 10 logarithm of y-axis.}
+
 \item{nrow}{Numeric. Number of rows for ggplot2 facets.}
 
-\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(f).}
+\item{smooth}{Logical. Add smoother. 2/3 is built-in default.}
+
+\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).}
 
 \item{...}{Additional plotting parameters.}
 }
