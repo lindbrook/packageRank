@@ -78,9 +78,11 @@ plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
   p <- p + geom_line(colour = "gray") +
     theme_bw() +
     theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()) +
+          panel.grid.minor = element_blank(),
+          plot.title = element_text(hjust = 0.5)) +
     xlab("Date") +
-    geom_point(data = outliers, shape = 15, colour = "red")
+    geom_point(data = outliers, shape = 15, colour = "red") +
+    ggtitle("Total CRAN Package Downloads")
 
   if (log.y) {
     p <- p + scale_y_continuous(trans = "log10") + ylab(paste("Log", y.var))
