@@ -42,11 +42,7 @@ plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
   log.y = TRUE, nrow = 3, smooth = TRUE, span = 3/4, ...) {
 
   day.month <- dayMonth()
-
-  outlier.days <- as.Date(c("2014-11-17", "2018-10-21", "2020-02-29"))
-  outlier.vars <- c("date", "date.id", "count", "percent")
-  outliers <- x[x$date %in% outlier.days, outlier.vars]
-  outliers$year <- as.numeric(format(outliers$date, "%Y"))
+  outliers <- outlierDays(x, c("2014-11-17", "2018-10-21", "2020-02-29"))
 
   if (pool.obs) {
     if (statistic == "count") {
@@ -96,11 +92,18 @@ plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
   }
 
   p
-
 }
 
 dayMonth <- function() {
   tmp <- seq.Date(as.Date("2016-1-1"), as.Date("2016-12-31"), by = "days")
   date.nm <- format(tmp, "%d %b")
   data.frame(date.id = seq_along(date.nm), date.nm = date.nm)
+}
+
+outlierDays <- function(x, dates) {
+  dts <- as.Date(dates)
+  vars <- c("date", "date.id", "count", "percent")
+  out <- x[x$date %in% dts, vars]
+  out$year <- as.numeric(format(out$date, "%Y"))
+  out
 }
