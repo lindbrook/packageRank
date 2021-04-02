@@ -1,66 +1,23 @@
-packageRank 0.4.0.9009
+packageRank 0.4.1
 ==================
 
-- add/set plot.annualDownloads(statistic = "count", pool.obs = FALSE,
-  log.y = TRUE, smooth = TRUE, span = 3/4).
-  
+# Function Changes #
 
-packageRank 0.4.0.9008
-==================
-
+- logDate(): check download log URL before computing available_log() for
+  logs available before 17:00 UTC.
+- change facet_wrap(~ package, ncol = 2) to facet_wrap(~ package, nrow = 2).
+- use logDate() in logPostInfo().
 - enable log.count argument for plot.cranDownloads(r.total = TRUE and FALSE).
 - enable multi.plot argument for rPlot(graphics = "ggplot2").
 
-
-packageRank 0.4.0.9007
-==================
-
-- add/set annualDownloads(multi.core = TRUE).
-
-
-packageRank 0.4.0.9006
-==================
-
-- add weeklyDownloads().
-
-
-packageRank 0.4.0.9005
-==================
-
-- add/set plot.annualDownload(span = 2/3).
-
-
-packageRank 0.4.0.9004
-==================
-
-- add annualDownloads().
-
-
-packageRank 0.4.0.9003
-==================
-
-- use logDate() in logPostInfo().
-
-
-packageRank 0.4.0.9002
-==================
-
-- plot.packageDistribution(), plot.packageRank(), populationPlot():
-  facet_wrap(~ package, ncol = 2) to facet_wrap(~ package, nrow = 2).
-
-
-packageRank 0.4.0.9001
-==================
-
-- amend monthlyLog() with fetchCranLog().
-- amend logDate() URL for date = NULL.
-
-
-packageRank 0.4.0.9000
-==================
+# Fixes #
 
 - sizeFilter() and cranPackageSize(): fix multiple versions with package
   updates.
+
+# New Research Functions #
+
+- annualDownloads() and weeklyDownloads().
 
 
 packageRank 0.4.0

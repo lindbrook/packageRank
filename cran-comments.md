@@ -1,19 +1,19 @@
 ### Test environments
 
-* local: macOS 11.2.1; R 4.0.4 (2021-02-15)
+* local: macOS 11.2.3; R 4.0.5 (2021-03-31)
 * win-builder: devel, oldrelease and release
 * R-hub: Fedora Linux, Ubuntu Linux 16.04 LTS, Debian Linux
 
 
 ### R CMD check results
 
-4.0.4 (2021-02-15)), x86_64-apple-darwin17.0 (64-bit):
+4.0.5 (2021-03-31), x86_64-apple-darwin17.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2021-02-20 r80030):
+R-devel: R Under development (unstable) (2021-03-29 r80130):
 * 0 errors | 0 warnings | 1 note
 - non-canonical URL: https://cloud.R-project.org
 
