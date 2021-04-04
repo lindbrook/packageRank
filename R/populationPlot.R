@@ -6,14 +6,15 @@
 #' @param log.count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param sample.smooth Logical. Add smoother.
-#' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
+#' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
+#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param sample.pct Numeric. Percent of packages to sample.
 #' @param population.seed Numeric. Seed for sample.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @noRd
 
 populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
-  sample.smooth = TRUE, f = 1/3, sample.pct = 2.5,
+  sample.smooth = TRUE, f = 1/3, span = 3/4, sample.pct = 2.5,
   population.seed = as.numeric(Sys.Date()), multi.core = TRUE) {
 
   pkg.data <- x$cranlogs.data
@@ -126,6 +127,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
                                method = "loess",
                                formula = "y ~ x",
                                se = FALSE,
+                               span = span,
                                size = 0.25,
                                colour = "lightgray")
         } else {

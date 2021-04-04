@@ -5,8 +5,8 @@
 \title{Plot method for bioconductorDownloads().}
 \usage{
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
-  count = "download", points = "auto", smooth = FALSE, smooth.f = 2/3,
-  se = FALSE, log_count = FALSE, ...)
+  count = "download", points = "auto", smooth = FALSE, f = 2/3,
+  span = 3/4, se = FALSE, log_count = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -19,7 +19,9 @@
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
-\item{smooth.f}{Numeric. smoother span.}
+\item{f}{Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)}
+
+\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).}
 
 \item{se}{Logical. Works only with graphics = "ggplot2".}
 

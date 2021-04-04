@@ -79,7 +79,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param count Character. "download" or "ip".
 #' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.
 #' @param smooth Logical. Add stats::lowess smoother.
-#' @param smooth.f Numeric. smoother span.
+#' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
+#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param log_count Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
@@ -94,7 +95,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' }
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
-  points = "auto", smooth = FALSE, smooth.f = 2/3, se = FALSE,
+  points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
   log_count = FALSE, ...) {
 
   if( x$observation == "month") {
@@ -131,16 +132,16 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
 
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
-      bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
+      bioc_plot(x, graphics, count, points, smooth, f, log_count,
         obs.in.progress)
     } else if (length(x$packages) > 1) {
       grDevices::devAskNewPage(ask = TRUE)
-      bioc_plot(x, graphics, count, points, smooth, smooth.f, log_count,
+      bioc_plot(x, graphics, count, points, smooth, f, log_count,
         obs.in.progress)
       grDevices::devAskNewPage(ask = FALSE)
     }
   } else if (graphics == "ggplot2") {
-    gg_bioc_plot(x, graphics, count, points, smooth, smooth.f, se,
+    gg_bioc_plot(x, graphics, count, points, smooth, span, se,
       log_count, obs.in.progress)
   }
 }
@@ -299,8 +300,8 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   dat[dat$date <= current.date, ]
 }
 
-bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
-  log_count, obs.in.progress) {
+bioc_plot <- function(x, graphics, count, points, smooth, f, log_count,
+  obs.in.progress) {
 
   obs <- x$observation
 
@@ -341,7 +342,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$date, dat[, y.var], f = smooth.f), col = "blue")
+        lines(stats::lowess(dat$date, dat[, y.var], f = f), col = "blue")
       }
 
      } else if (obs == "year") {
@@ -373,7 +374,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, smooth.f,
   }))
 }
 
-gg_bioc_plot <- function(x, graphics, count, points, smooth, smooth.f, se,
+gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
   log_count, obs.in.progress) {
 
   obs <- x$observation
