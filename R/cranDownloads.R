@@ -487,6 +487,14 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
             type = "o", col = cbPalette[i], pch = token[i])
         }))
 
+        if (smooth) {
+          invisible(lapply(seq_along(x$packages), function(i) {
+            vars <- c("date", statistic)
+            lines(stats::lowess(dat[dat$package == x$packages[i], vars], f = f),
+              col = cbPalette[i])
+          }))  
+        }
+
         id <- seq_along(x$packages)
         legend(x = legend.loc,
                legend = x$packages,
