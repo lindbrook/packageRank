@@ -133,7 +133,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param log.count Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. Works only with graphics = "ggplot2".
-#' @param f Numeric. stats::lowess() smoother window. For use with graphics = "base" only.
+#' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
+#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param package.version Logical. Add latest package release dates.
 #' @param r.version Logical. Add R release dates.
 #' @param population.plot Logical. Plot population plot.
@@ -156,9 +157,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
 plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  package.version = FALSE, r.version = FALSE, population.plot = FALSE,
-  population.seed = as.numeric(Sys.Date()), multi.plot = FALSE, same.xy = TRUE,
-  legend.loc = "topleft", r.total = FALSE, dev.mode = FALSE, ...) {
+  span = 3/4, package.version = FALSE, r.version = FALSE,
+  population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
+  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft", r.total = FALSE,
+  dev.mode = FALSE, ...) {
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
@@ -196,23 +198,23 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   }
 
   if (population.plot) {
-     populationPlot(x, graphics = graphics, f = f,
+     populationPlot(x, graphics = graphics, f = f, span = span,
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     if (r.total) {
       rTotPlot(x, statistic, graphics, legend.loc, points, log.count, smooth,
-        se, r.version, f)
+        se, r.version, f, span)
     } else {
       rPlot(x, statistic, graphics, legend.loc, points, log.count, smooth, se,
-        r.version, f, multi.plot)
+        r.version, f, span, multi.plot)
     }
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, days.observed, log.count, legend.loc,
-        points, smooth, se)
+        points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, days.observed, points, smooth, se, f,
-        log.count, package.version, dev.mode, r.version, same.xy)
+        span, log.count, package.version, dev.mode, r.version, same.xy)
     }
   }
 }
@@ -237,7 +239,7 @@ summary.cranDownloads <- function(object, ...) {
 }
 
 rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
-  smooth, se, r.version, f, multi.plot) {
+  smooth, se, r.version, f, span, multi.plot) {
 
   dat <- x$cranlogs.data
 
