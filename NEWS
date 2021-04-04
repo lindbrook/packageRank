@@ -9,6 +9,7 @@ packageRank 0.4.1
 - use logDate() in logPostInfo().
 - enable log.count argument for plot.cranDownloads(r.total = TRUE and FALSE).
 - enable multi.plot argument for rPlot(graphics = "ggplot2").
+- add geom_smooth(span = 3/4).
 
 # Fixes #
 
