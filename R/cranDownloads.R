@@ -300,13 +300,13 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
     if (smooth) {
       lines(stats::lowess(dat[dat$platform == "win", "date"],
                           dat[dat$platform == "win", statistic], f = f),
-                          lty = "dotted")
+                          lty = "dashed")
       lines(stats::lowess(dat[dat$platform == "osx", "date"],
                           dat[dat$platform == "osx", statistic], f = f),
-                          lty = "dotted", col = "red")
+                          lty = "dashed", col = "red")
       lines(stats::lowess(dat[dat$platform == "src", "date"],
                           dat[dat$platform == "src", statistic], f = f),
-                          lty = "dotted", col = "blue")
+                          lty = "dashed", col = "blue")
     }
 
     if (r.version) {
