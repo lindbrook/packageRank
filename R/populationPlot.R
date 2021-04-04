@@ -140,13 +140,12 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
     p <- p + geom_line(colour = "red", size = 0.75) +
              geom_point(shape = 1, colour = "red", size = 2)
 
-    if (smooth) p <- p + geom_smooth(colour = "blue",
-                                     method = "loess",
-                                     formula = "y ~ x",
-                                     se = FALSE)
+    if (smooth) p <- p + geom_smooth(colour = "blue",method = "loess",
+                                     formula = "y ~ x", se = FALSE, span = span)
 
-    if (log.count) p + scale_y_log10() else p
+    if (log.count) p <- p + scale_y_log10()
 
+    p
   } else stop('graphics must be "base" or "ggplot2"')
 }
 

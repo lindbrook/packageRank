@@ -393,26 +393,16 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
          ylab("Unique IP Addresses")
   }
 
-  p <- p + geom_line(size = 0.5) + facet_wrap(~ packages, ncol = 2) +
-    xlab("Date") + theme_bw() + theme(panel.grid.minor = element_blank())
+  p <- p + geom_line(size = 0.5) +
+    facet_wrap(~ packages, ncol = 2) +
+    xlab("Date") +
+    theme_bw() +
+    theme(panel.grid.minor = element_blank())
 
-  if (points & log_count & smooth) {
-    p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10() +
-      geom_smooth(method = "loess", formula = "y ~ x", se = se)
-  } else if (points & log_count & !smooth) {
-    p <- p + geom_point(data = dat[!dat$date %in% oip, ]) + scale_y_log10()
-  } else if (points & !log_count & smooth) {
-    p <- p +  geom_point(data = dat[!dat$date %in% oip, ]) +
-      geom_smooth(method = "loess", formula = "y ~ x", se = se)
-  } else if (!points & log_count & smooth) {
-    p <- p + scale_y_log10() + geom_smooth(method = "loess", formula = "y ~ x",
-      se = se)
-  } else if (!points & !log_count & smooth) {
-    p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se)
-  } else if (points & !log_count & !smooth) {
-    p <- p + geom_point(data = dat[!dat$date %in% oip, ])
-  } else if (!points & log_count & !smooth) {
-    p + scale_y_log10()
+  if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
+  if (log_count) p <- p +  scale_y_log10()
+  if (smooth) {
+    p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se, span = span)
   }
 
   if (obs.in.progress) {
