@@ -13,11 +13,11 @@
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2021-03-29 r80130):
+R-devel: R Under development (unstable) (2021-04-02 r80141):
 * 0 errors | 0 warnings | 1 note
 - non-canonical URL: https://cloud.R-project.org
 
-R-release: 4.0.4 (2021-02-15):
+R-release: 4.0.5 (2021-03-31):
 * 0 errors | 0 warnings | 1 note
 - non-canonical URL: https://cloud.R-project.org
 
