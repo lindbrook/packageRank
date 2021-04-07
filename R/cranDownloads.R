@@ -489,7 +489,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
             vars <- c("date", statistic)
             lines(stats::lowess(dat[dat$package == x$packages[i], vars], f = f),
               col = cbPalette[i])
-          }))  
+          }))
         }
 
         id <- seq_along(x$packages)
@@ -671,14 +671,11 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
             }
 
             if (package.version) {
-              if (dev.mode) p_v <- lapply(x$packages, packageHistory0)
-              else p_v <- lapply(x$packages, packageHistory)
-
-              invisible(lapply(p_v, function(dat) {
-                axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
-                  padj = 0.9, col.axis = "red", col.ticks = "red")
-                abline(v = dat$Date, lty = "dotted", col = "red")
-              }))
+              if (dev.mode) p_v <- packageHistory0(pkg)
+              else p_v <- packageHistory(pkg)
+              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                padj = 0.9, col.axis = "red", col.ticks = "red")
+              abline(v = p_v$Date, lty = "dotted", col = "red")
             }
 
             if (r.version) {
@@ -719,14 +716,11 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
             }
 
             if (package.version) {
-              if (dev.mode) p_v <- lapply(x$packages, packageHistory0)
-              else p_v <- lapply(x$packages, packageHistory)
-
-              invisible(lapply(p_v, function(dat) {
-                axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
-                  padj = 0.9, col.axis = "red", col.ticks = "red")
-                abline(v = dat$Date, lty = "dotted", col = "red")
-              }))
+              if (dev.mode) p_v <- packageHistory0(pkg)
+              else p_v <- packageHistory(pkg)
+              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                padj = 0.9, col.axis = "red", col.ticks = "red")
+              abline(v = p_v$Date, lty = "dotted", col = "red")
             }
 
             if (r.version) {
@@ -766,14 +760,11 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
       }
 
       if (package.version) {
-        if (dev.mode) p_v <- lapply(x$packages, packageHistory0)
-        else p_v <- lapply(x$packages, packageHistory)
-
-        invisible(lapply(p_v, function(dat) {
-          axis(3, at = dat$Date, labels = dat$Version, cex.axis = 2/3,
-            padj = 0.9, col.axis = "red", col.ticks = "red")
-          abline(v = dat$Date, lty = "dotted", col = "red")
-        }))
+        if (dev.mode) p_v <- packageHistory0(x$packages)
+        else p_v <- packageHistory(x$packages)
+        axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+          padj = 0.9, col.axis = "red", col.ticks = "red")
+        abline(v = p_v$Date, lty = "dotted", col = "red")
       }
 
       if (r.version) {
