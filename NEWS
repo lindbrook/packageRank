@@ -1,3 +1,9 @@
+packageRank 0.4.1.9000
+==================
+
+- fix plot.cranDownloads(package.version = TRUE) for multiple packages.
+
+
 packageRank 0.4.1
 ==================
 
