@@ -8,22 +8,16 @@
 
 sizeFilter <- function(dat, packages, cores) {
   size.data <- lapply(packages, cranPackageSize)
+  version.data <- lapply(packages, packageHistory)
   cores <- ifelse(length(packages) > 4, cores, 1L)
   parallel::mclapply(seq_along(dat), function(i) {
     sz <- size.data[[i]]
+    ver <- version.data[[i]]
     tmp <- dat[[i]]
-    if (length(unique(sz$version)) != 1) {
-      sz2 <- sz[sz$date == max(sz$date), ]
-      latest.ver <- unique(sz2$version)
-      leftover <- tmp[tmp$version != latest.ver, ]
-      tmp <- tmp[tmp$version == latest.ver, ]
-      latest.sz <- min(sz2$bytes)
-      tmp <- tmp[tmp$size >= latest.sz, ]
-    } else {
-      leftover <- tmp[tmp$version != unique(sz$version), ]
-      tmp <- tmp[tmp$version == unique(sz$version), ]
-      tmp <- tmp[tmp$size >= min(sz$bytes), ]
-    }
+    latest.ver <- ver[nrow(ver), "Version"]
+    latest.size <- sz[sz$version %in% latest.ver, ]
+    leftover <- tmp[tmp$version != latest.ver, ]
+    tmp <- tmp[tmp$version == latest.ver, ]
     rbind(tmp, leftover)
   }, mc.cores = cores)
 }

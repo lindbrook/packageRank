@@ -1,3 +1,9 @@
+packageRank 0.4.1.9001
+==================
+
+- fix multiple version in sizeFilter() with packageHistory().
+
+
 packageRank 0.4.1.9000
 ==================
 
