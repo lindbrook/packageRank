@@ -11,14 +11,16 @@
 #' @param size.filter Logical.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
 filteredDownloads <- function(packages = "HistData", date = NULL,
   all.filters = TRUE, ip.filter = FALSE, triplet.filter = FALSE,
   small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  check.package = TRUE, memoization = TRUE) {
+  check.package = TRUE, memoization = TRUE, multi.core = TRUE) {
 
   if (check.package) packages <- checkPackage(packages)
+  cores <- multiCore(multi.core)
 
   ymd <- logDate(date)
   cran_log <- packageLog(packages = packages, date = ymd,
@@ -34,7 +36,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
     all.filters = all.filters, ip.filter = ip.filter,
     triplet.filter = triplet.filter, small.filter = small.filter,
     sequence.filter = sequence.filter, size.filter = size.filter,
-    memoization = memoization)
+    memoization = memoization, multi.core = multi.core)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)
