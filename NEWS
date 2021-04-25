@@ -1,3 +1,9 @@
+packageRank 0.4.1.9004
+==================
+
+- amend warning message with timeMsg() in logDate().
+
+
 packageRank 0.4.1.9003
 ==================
 

@@ -97,10 +97,7 @@ available_log <- function(local.date, tz, upload.time, warning.msg) {
        next.upload <- as.POSIXlt(effective.utc, tz = tz)
        next.upload <- format(next.upload, "%d %b %H:%M %Z")
        if (warning.msg) {
-         msg <- paste0(nominal.date, " log arrives in appox. ",
-           paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
-           ". Using last available!")
-         warning(msg, call. = FALSE)
+        warning(timeMsg(nominal.date, t.minus, next.upload), call. = FALSE)
        }
        log.date <- effective.date - 1
      }
@@ -120,10 +117,7 @@ available_log <- function(local.date, tz, upload.time, warning.msg) {
         next.upload <- as.POSIXlt(next.utc, tz = tz)
         next.upload <- format(next.upload, "%d %b %H:%M %Z")
         if (warning.msg) {
-          msg <- paste0(nominal.date, " log arrives in appox. ",
-            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
-            ". Using last available!")
-          warning(msg, call. = FALSE)
+          warning(timeMsg(nominal.date, t.minus, next.upload), call. = FALSE)
         }
         log.date <- effective.date - 1
       }
@@ -135,10 +129,7 @@ available_log <- function(local.date, tz, upload.time, warning.msg) {
         next.upload <- as.POSIXlt(effective.utc, tz = tz)
         next.upload <- format(next.upload, "%d %b %H:%M %Z")
         if (warning.msg) {
-          msg <- paste0(nominal.date, " log arrives in appox. ",
-            paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
-            ". Using last available!")
-          warning(msg, call. = FALSE)
+          warning(timeMsg(nominal.date, t.minus, next.upload), call. = FALSE)
         }
       }
       log.date <- effective.date - 2
@@ -157,4 +148,10 @@ timeUnit <- function(x) {
   } else stop("Error!")
   Unit <- ifelse(Time == 1, substr(Unit, 1, nchar(Unit) - 1), Unit)
   data.frame(Time = Time, Unit = Unit)
+}
+
+timeMsg <- function(nominal.date, t.minus, next.upload) {
+  paste0(nominal.date, " log arrives in ~",
+    paste(t.minus$Time, t.minus$Unit), " at ", next.upload,
+    ". Using previous!")
 }
