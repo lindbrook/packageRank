@@ -36,7 +36,7 @@ checkPackage <- function(packages, dev.mode = FALSE) {
 
   if ("pkg.err" %in% ls()) {
     pkg.err.msg <- paste(pkg.err, collapse = ", ")
-    msg <- ": misspelled or not on CRAN/Archive."
+    msg <- ": misspelled or not on CRAN/Archive. Check internet connection."
     err.test <- length(setdiff(packages, pkg.err)) == 0
 
     if (err.test) {
