@@ -627,7 +627,7 @@ To get an idea of how inflated your package’s download count may be, use
 ``` r
 filteredDownloads(package = "cholera", date = "2020-07-31")
 >         date package downloads filtered.downloads inflation
-> 1 2020-07-31 cholera        14                  5       180
+> 1 2020-07-31 cholera        14                 12     16.67
 ```
 
 While there were 14 nominal downloads, applying all the filters reduced
