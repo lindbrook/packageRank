@@ -1,31 +1,16 @@
-packageRank 0.4.1.9004
+packageRank 0.4.2
 ==================
 
-- amend warning message with timeMsg() in logDate().
-
-
-packageRank 0.4.1.9003
-==================
-
-- add/set filteredDownloads(multi.core = TRUE).
-
-
-packageRank 0.4.1.9002
-==================
-
-- fix sizeFilter().
-
-
-packageRank 0.4.1.9001
-==================
-
-- fix multiple version in sizeFilter() with packageHistory().
-
-
-packageRank 0.4.1.9000
-==================
+# Fixes #
 
 - fix plot.cranDownloads(package.version = TRUE) for multiple packages.
+- fix multiple version in sizeFilter() with packageHistory().
+- fix and enable sizeFilter().
+
+# Function Changes #
+
+- add/set filteredDownloads(multi.core = TRUE).
+- amend warning message with timeMsg() in logDate().
 
 
 packageRank 0.4.1

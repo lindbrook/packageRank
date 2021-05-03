@@ -1,6 +1,6 @@
 ### Test environments
 
-* local: macOS 11.2.3; R 4.0.5 (2021-03-31)
+* local: macOS 11.3; R 4.0.5 (2021-03-31)
 * win-builder: devel, oldrelease and release
 * R-hub: Fedora Linux, Ubuntu Linux 16.04 LTS, Debian Linux
 
@@ -13,7 +13,7 @@
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2021-04-02 r80141):
+R-devel: 4.1.0 alpha (2021-04-28 r80240):
 * 0 errors | 0 warnings | 1 note
 - non-canonical URL: https://cloud.R-project.org
 
@@ -22,7 +22,7 @@ R-release: 4.0.5 (2021-03-31):
 - non-canonical URL: https://cloud.R-project.org
 
 R-oldrelease: R version 3.6.3 (2020-02-29):
-* 0 errors | 0 warnings | 0 note
+* 0 errors | 0 warnings | 0 notes
 
 
 ### R-hub builder check results
@@ -40,7 +40,7 @@ Fedora Linux, R-devel, clang, gfortran
 - non-canonical URL https://cloud.R-project.org
 
 Debian Linux, R-release, GCC
-* 0 errors | 0 warnings | 0 note
+* 0 errors | 0 warnings | 0 notes
 
 
 ### Reverse dependencies
