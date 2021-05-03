@@ -36,9 +36,8 @@ issues.
 an active internet connection, and relies on the
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
 [RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
-record traffic to the [“0-Cloud” mirror](https://cloud.R-project.org),
-which is “currently sponsored by RStudio” and was previously RStudio’s
-CRAN mirror.
+records traffic to the “0-Cloud” mirror at cloud.R-project.org, which is
+“currently sponsored by RStudio” and was formerly RStudio’s CRAN mirror.
 
 Note that logs for the previous day are generally posted by 17:00 UTC.
 Updated results for functions that rely on
