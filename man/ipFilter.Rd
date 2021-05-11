@@ -12,7 +12,7 @@ ipFilter(cran_log, campaigns = TRUE, rle.depth = 100,
 
 \item{campaigns}{Logical. Filter A-Z campaigns when checking IPs with high unique package download counts.}
 
-\item{rle.depth}{s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs}
+\item{rle.depth}{s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs.}
 
 \item{case.sensitive}{Logical.}
 

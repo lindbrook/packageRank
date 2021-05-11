@@ -3,7 +3,7 @@
 #' Uses run length encoding, rle(), and k-means clustering, stats::kmeans().
 #' @param cran_log Object. Package log entries.
 #' @param campaigns Logical. Filter A-Z campaigns when checking IPs with high unique package download counts.
-#' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs
+#' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs.
 #' @param case.sensitive Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
