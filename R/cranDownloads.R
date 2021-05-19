@@ -199,55 +199,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   }
 
   if (unit.observation != "day") {
-    pkg <- unique(dat$package)
-    if (unit.observation == "year") {
-      if (length(pkg) == 1) {
-        unit <- as.numeric(format(dat$date, "%Y"))
-        unit.ct <- tapply(dat$count, unit, sum)
-        max.obs <- max(dat$date)
-        max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
-        if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
-        else ip <- rep(FALSE, length(unit.ct))
-        x$cranlogs.data <- data.frame(unit.obs = as.numeric(names(unit.ct)),
-          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-          date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
-          package = pkg)
-      } else {
-        pkg.data <- lapply(pkg, function(p) {
-          tmp <- dat[dat$package == p, ]
-          unit <- as.numeric(format(tmp$date, "%Y"))
-          unit.ct <- tapply(tmp$count, unit, sum)
-          max.obs <- max(tmp$date)
-          max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
-          if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
-          else ip <- rep(FALSE, length(unit.ct))
-          data.frame(unit.obs = as.numeric(names(unit.ct)),
-            count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-            date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
-            package = p)
-          })
-        x$cranlogs.data <- do.call(rbind, pkg.data)
-      }
-
-    } else if (unit.observation == "month") {
-      if (length(pkg) == 1) {
-        unit <- format(dat$date, "%Y-%m")
-        unit.ct <- tapply(dat$count, unit, sum)
-        x$cranlogs.data <- data.frame(unit.obs = names(unit.ct),
-          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-          lastDayMonth(dat$date), package = pkg)
-      } else {
-        pkg.data <- lapply(pkg, function(p) {
-          tmp <- dat[dat$package == p, ]
-          unit <- format(tmp$date, "%Y-%m")
-          unit.ct <- tapply(tmp$count, unit, sum)
-          out <- data.frame(unit.obs = names(unit.ct),
-            count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-            lastDayMonth(tmp$date), package = p)
-        })
-        x$cranlogs.data <- do.call(rbind, pkg.data)
-      }
-    }
+    x$cranlogs.data <- aggregateData(unit.observation, dat)
   }
 
   if (population.plot) {
@@ -904,4 +856,33 @@ lastDayMonth <- function(dates) {
           ifelse(max.obs.date != max.date, TRUE, FALSE))
 
   data.frame(date = c(ldm, max.date), in.progress = ip)
+}
+
+aggregateData <- function(unit.observation, dat) {
+  pkg <- unique(dat$package)
+  if (unit.observation == "year") {
+    pkg.data <- lapply(pkg, function(p) {
+      tmp <- dat[dat$package == p, ]
+      unit <- as.numeric(format(tmp$date, "%Y"))
+      unit.ct <- tapply(tmp$count, unit, sum)
+      max.obs <- max(tmp$date)
+      max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
+      if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
+      else ip <- rep(FALSE, length(unit.ct))
+      data.frame(unit.obs = as.numeric(names(unit.ct)),
+        count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+        date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
+        package = p)
+      })
+  } else if (unit.observation == "month") {
+    pkg.data <- lapply(pkg, function(p) {
+      tmp <- dat[dat$package == p, ]
+      unit <- format(tmp$date, "%Y-%m")
+      unit.ct <- tapply(tmp$count, unit, sum)
+      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+        cumulative = cumsum(unname(unit.ct)), lastDayMonth(tmp$date),
+        package = p)
+    })
+  }
+  do.call(rbind, pkg.data)
 }
