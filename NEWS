@@ -1,3 +1,9 @@
+packageRank 0.4.2.9000
+==================
+
+- add/set plot.cranDownloads(unit.observation = "day").
+
+
 packageRank 0.4.2
 ==================
 
