@@ -836,10 +836,8 @@ lastDayMonth <- function(dates) {
   max.yr <- as.numeric(format(max.obs.date, "%Y"))
   max.yr.mo <- format(max.obs.date, "%Y-%m")
   max.date <- as.Date(paste0(max.yr, "-", max.mo + 1, "-", 1)) - 1
-
   obs.yr.mo <- unique(format(dates, "%Y-%m"))
   obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
-
   ldm <- lapply(obs.yr.mo, function(dt) {
     parts <- as.numeric(unlist(strsplit(dt, "-")))
     if (parts[2] < 12) {
@@ -849,12 +847,9 @@ lastDayMonth <- function(dates) {
       as.Date(paste0(parts[1] + 1, "-", "01-01")) - 1
     }
   })
-
   ldm <- do.call(c, ldm)
-
   ip <- c(rep(FALSE, length(ldm)),
           ifelse(max.obs.date != max.date, TRUE, FALSE))
-
   data.frame(date = c(ldm, max.date), in.progress = ip)
 }
 
