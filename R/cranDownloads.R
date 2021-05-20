@@ -73,7 +73,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
-    
+
     to.data <- lapply(seq_along(packages), function(i) {
       cranlogs::cran_downloads(packages[i], from = first.published[i],
         to = end.date)
@@ -122,15 +122,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   }
 
   if (!is.null(packages)) {
-    dat <- out$cranlogs.data
-    birth.data <- lapply(seq_along(packages), function(i) {
-      tmp <- dat[dat$package == packages[i], ]
-      if (any(tmp$date < first.published[i])) {
-        tmp <- tmp[tmp$date >= first.published[i], ]
-      }
-      tmp
-    })
-    out$cranlogs.data <- do.call(rbind, birth.data)
+    out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
   }
 
   class(out) <- "cranDownloads"
@@ -836,4 +828,16 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
       p
     }
   }
+}
+
+packageLifeFilter <- function(out, packages, first.published) {
+  dat <- out$cranlogs.data
+  birth.data <- lapply(seq_along(packages), function(i) {
+    tmp <- dat[dat$package == packages[i], ]
+    if (any(tmp$date < first.published[i])) {
+      tmp <- tmp[tmp$date >= first.published[i], ]
+    }
+    tmp
+  })
+  do.call(rbind, birth.data)
 }
