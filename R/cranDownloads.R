@@ -42,6 +42,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (check.package) {
         packages <- checkPackage(packages, dev.mode)
       }
+      first.published <- do.call(c, lapply(packages, function(pkg) {
+        packageHistory(pkg)[1, "Date"]
+      }))
     }
   }
 
@@ -53,28 +56,26 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
       args <- list(packages = packages, when = when)
-    } else stop('"when" must be "last-day", "last-week" or "last-month".',
-      call. = FALSE)
+    } else {
+      stop('"when" must be "last-day", "last-week" or "last-month".',
+        call. = FALSE)
+      }
 
   } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
 
-    if (!is.null(to)) {
-      end.date <- resolveDate(to, type = "to")
-    } else end.date <- cal.date
+    if (!is.null(to)) end.date <- resolveDate(to, type = "to")
+    else end.date <- cal.date
 
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
+
     args <- list(packages = packages, from = start.date, to = end.date)
 
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
 
-    first.published <- lapply(packages, function(pkg) {
-      packageHistory(pkg)[1, "Date"]
-    })
-
     to.data <- lapply(seq_along(packages), function(i) {
-      cranlogs::cran_downloads(packages[i], from = first.published[[i]],
+      cranlogs::cran_downloads(packages[i], from = first.published[i],
         to = end.date)
     })
   }
@@ -115,9 +116,13 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       cranlogs.data$package)
     names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
 
-    id <- which.min(unlist(first.published))
+    id <- which.min(first.published)
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
-      when = NULL, from = first.published[[id]], to = end.date)
+      when = NULL, from = first.published[id], to = end.date)
+  }
+
+  if (!is.null(packages)) {
+    out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
   }
 
   class(out) <- "cranDownloads"
@@ -880,4 +885,16 @@ aggregateData <- function(unit.observation, dat) {
     })
   }
   do.call(rbind, pkg.data)
+}
+
+packageLifeFilter <- function(out, packages, first.published) {
+  dat <- out$cranlogs.data
+  birth.data <- lapply(seq_along(packages), function(i) {
+    tmp <- dat[dat$package == packages[i], ]
+    if (any(tmp$date < first.published[i])) {
+      tmp <- tmp[tmp$date >= first.published[i], ]
+    }
+    tmp
+  })
+  do.call(rbind, birth.data)
 }
