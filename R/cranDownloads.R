@@ -840,7 +840,11 @@ lastDayMonth <- function(dates) {
   max.mo <- as.numeric(format(max.obs.date, "%m"))
   max.yr <- as.numeric(format(max.obs.date, "%Y"))
   max.yr.mo <- format(max.obs.date, "%Y-%m")
-  max.date <- as.Date(paste0(max.yr, "-", max.mo + 1, "-", 1)) - 1
+  if (max.mo < 12) {
+    max.date <- as.Date(paste0(max.yr, "-", max.mo + 1, "-", 1)) - 1
+  } else {
+    max.date <- as.Date(paste0(max.yr + 1, "-01-01")) - 1
+  }
   obs.yr.mo <- unique(format(dates, "%Y-%m"))
   obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
   ldm <- lapply(obs.yr.mo, function(dt) {
