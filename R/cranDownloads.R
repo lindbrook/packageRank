@@ -863,32 +863,51 @@ lastDayMonth <- function(dates) {
 }
 
 aggregateData <- function(unit.observation, dat) {
-  pkg <- unique(dat$package)
-  if (unit.observation == "year") {
-    pkg.data <- lapply(pkg, function(p) {
-      tmp <- dat[dat$package == p, ]
-      unit <- as.numeric(format(tmp$date, "%Y"))
-      unit.ct <- tapply(tmp$count, unit, sum)
-      max.obs <- max(tmp$date)
+  if ("package" %in% names(dat)) {
+    pkg <- unique(dat$package)
+    if (unit.observation == "year") {
+      out <- lapply(pkg, function(p) {
+        tmp <- dat[dat$package == p, ]
+        unit <- as.numeric(format(tmp$date, "%Y"))
+        unit.ct <- tapply(tmp$count, unit, sum)
+        max.obs <- max(tmp$date)
+        max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
+        if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
+        else ip <- rep(FALSE, length(unit.ct))
+        data.frame(unit.obs = as.numeric(names(unit.ct)),
+          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+          date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
+          package = p)
+        })
+    } else if (unit.observation == "month") {
+      out <- lapply(pkg, function(p) {
+        tmp <- dat[dat$package == p, ]
+        unit <- format(tmp$date, "%Y-%m")
+        unit.ct <- tapply(tmp$count, unit, sum)
+        data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+          cumulative = cumsum(unname(unit.ct)), lastDayMonth(tmp$date),
+          package = p)
+      })
+    }
+    do.call(rbind, out)
+  } else {
+    if (unit.observation == "year") {
+      unit <- format(dat$date, "%Y")
+      unit.ct <- tapply(dat$count, unit, sum)
+      max.obs <- max(dat$date)
       max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
       if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
       else ip <- rep(FALSE, length(unit.ct))
-      data.frame(unit.obs = as.numeric(names(unit.ct)),
-        count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-        date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
-        package = p)
-      })
-  } else if (unit.observation == "month") {
-    pkg.data <- lapply(pkg, function(p) {
-      tmp <- dat[dat$package == p, ]
-      unit <- format(tmp$date, "%Y-%m")
-      unit.ct <- tapply(tmp$count, unit, sum)
       data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
-        cumulative = cumsum(unname(unit.ct)), lastDayMonth(tmp$date),
-        package = p)
-    })
+        cumulative = cumsum(unname(unit.ct)),
+        date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip)
+    } else if (unit.observation == "month") {
+      unit <- format(dat$date, "%Y-%m")
+      unit.ct <- tapply(dat$count, unit, sum)
+      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+        cumulative = cumsum(unname(unit.ct)), lastDayMonth(dat$date))
+    }
   }
-  do.call(rbind, pkg.data)
 }
 
 packageLifeFilter <- function(out, packages, first.published) {
