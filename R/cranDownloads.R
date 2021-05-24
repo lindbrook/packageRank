@@ -865,30 +865,55 @@ lastDayMonth <- function(dates) {
 }
 
 aggregateData <- function(unit.observation, dat) {
-  if ("package" %in% names(dat)) {
-    pkg <- unique(dat$package)
+  if ("package" %in% names(dat) | "platform" %in% names(dat)) {
+    if ("package" %in% names(dat)) {
+      grp <- unique(dat$package)
+    } else if ("platform" %in% names(dat)) {
+      grp <- unique(dat$platform)
+    }
     if (unit.observation == "year") {
-      out <- lapply(pkg, function(p) {
-        tmp <- dat[dat$package == p, ]
+      out <- lapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
         unit <- as.numeric(format(tmp$date, "%Y"))
         unit.ct <- tapply(tmp$count, unit, sum)
         max.obs <- max(tmp$date)
         max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
         if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
         else ip <- rep(FALSE, length(unit.ct))
-        data.frame(unit.obs = as.numeric(names(unit.ct)),
+        grp.data <- data.frame(unit.obs = as.numeric(names(unit.ct)),
           count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
           date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
-          package = p)
-        })
+          group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
+      })
+      do.call(rbind, out)
     } else if (unit.observation == "month") {
-      out <- lapply(pkg, function(p) {
-        tmp <- dat[dat$package == p, ]
+      out <- lapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
         unit <- format(tmp$date, "%Y-%m")
         unit.ct <- tapply(tmp$count, unit, sum)
-        data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
-          cumulative = cumsum(unname(unit.ct)), lastDayMonth(tmp$date),
-          package = p)
+        grp.data <- data.frame(unit.obs = names(unit.ct),
+          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+          lastDayMonth(tmp$date), group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
       })
     }
     do.call(rbind, out)
