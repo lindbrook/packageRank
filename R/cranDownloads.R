@@ -122,7 +122,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   }
 
   if (!is.null(packages)) {
-    out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
+    if (all(packages != "R")) {
+      out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
+    }
   }
 
   class(out) <- "cranDownloads"
