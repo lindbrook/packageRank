@@ -9,7 +9,8 @@
   f = 1/3, span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
-  r.total = FALSE, dev.mode = FALSE, unit.observation = "day", ...)
+  r.total = FALSE, dev.mode = FALSE, unit.observation = "day",
+  multi.core = TRUE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -49,6 +50,8 @@
 \item{dev.mode}{Logical. Use packageHistory0() to scrape CRAN.}
 
 \item{unit.observation}{Character. "year", "month", or "day".}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 
 \item{...}{Additional plotting parameters.}
 }

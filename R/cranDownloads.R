@@ -152,6 +152,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param unit.observation Character. "year", "month", or "day".
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -168,7 +169,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft", r.total = FALSE,
-  dev.mode = FALSE, unit.observation = "day", ...) {
+  dev.mode = FALSE, unit.observation = "day", multi.core = TRUE, ...) {
+
+  cores <- multiCore(multi.core)
 
   if (graphics == "auto") {
     if (is.null(x$packages)) {
@@ -863,7 +866,7 @@ lastDayMonth <- function(dates) {
   data.frame(date = c(ldm, max.date), in.progress = ip)
 }
 
-aggregateData <- function(unit.observation, dat) {
+aggregateData <- function(unit.observation, dat, cores) {
   if ("package" %in% names(dat) | "platform" %in% names(dat)) {
     if ("package" %in% names(dat)) {
       grp <- unique(dat$package)
@@ -871,7 +874,7 @@ aggregateData <- function(unit.observation, dat) {
       grp <- unique(dat$platform)
     }
     if (unit.observation == "year") {
-      out <- lapply(grp, function(g) {
+      out <- parallel::mclapply(grp, function(g) {
         if ("package" %in% names(dat)) {
           tmp <- dat[dat$package == g, ]
         } else if ("platform" %in% names(dat)) {
@@ -893,10 +896,10 @@ aggregateData <- function(unit.observation, dat) {
           names(grp.data)[names(grp.data) == "group"] <- "platform"
         }
         grp.data
-      })
+      }, mc.cores = cores)
       do.call(rbind, out)
     } else if (unit.observation == "month") {
-      out <- lapply(grp, function(g) {
+      out <- parallel::mclapply(grp, function(g) {
         if ("package" %in% names(dat)) {
           tmp <- dat[dat$package == g, ]
         } else if ("platform" %in% names(dat)) {
@@ -913,7 +916,7 @@ aggregateData <- function(unit.observation, dat) {
           names(grp.data)[names(grp.data) == "group"] <- "platform"
         }
         grp.data
-      })
+      }, mc.cores = cores)
     }
     do.call(rbind, out)
   } else {

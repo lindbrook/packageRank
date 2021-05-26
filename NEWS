@@ -2,6 +2,7 @@ packageRank 0.4.2.9002
 ==================
 
 - amend aggregateData() for cranDownloads(packages = "R").
+- parallelize aggregateData().
 
 
 packageRank 0.4.2.9001
