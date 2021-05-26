@@ -122,7 +122,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   }
 
   if (!is.null(packages)) {
-    out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
+    if (all(packages != "R")) {
+      out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
+    }
   }
 
   class(out) <- "cranDownloads"
@@ -194,17 +196,16 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('"statistic" must be "count" or "cumulative".', call. = FALSE)
   }
 
-  dat <- x$cranlogs.data
-  days.observed <- unique(dat$date)
-
-  if (points == "auto") {
-    if (length(days.observed) <= 45) points <- TRUE else points <- FALSE
-  } else if (is.logical(points) == FALSE) {
-    stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
+  if (unit.observation != "day") {
+    x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
   }
 
-  if (unit.observation != "day") {
-    x$cranlogs.data <- aggregateData(unit.observation, dat)
+  obs.ct <- length(unique(x$cranlogs.data$date))
+
+  if (points == "auto") {
+    if (obs.ct <= 45) points <- TRUE else points <- FALSE
+  } else if (is.logical(points) == FALSE) {
+    stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
   }
 
   if (population.plot) {
@@ -220,10 +221,10 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   } else {
     if (multi.plot) {
-      multiPlot(x, statistic, graphics, days.observed, log.count, legend.loc,
+      multiPlot(x, statistic, graphics, obs.ct, log.count, legend.loc,
         points, smooth, se, f, span)
     } else {
-      singlePlot(x, statistic, graphics, days.observed, points, smooth, se, f,
+      singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
         span, log.count, package.version, dev.mode, r.version, same.xy)
     }
   }
@@ -439,7 +440,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, days.observed, log.count,
+multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   legend.loc, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
@@ -451,15 +452,15 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
   }
 
   if (graphics == "base") {
-    if (length(days.observed) == 1) {
+    if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = days.observed)
+          xlab = "log10 Count", main = obs.ct)
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
-          main = days.observed)
+          main = obs.ct)
       }
-    } else if (length(days.observed) > 1) {
+    } else if (obs.ct > 1) {
       if (length(x$packages) > 8) {
         stop('Use <= 8 packages when graphics = "base".', call. = FALSE)
       } else {
@@ -515,7 +516,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
     }
 
   } else if (graphics == "ggplot2") {
-    if (length(days.observed) == 1) {
+    if (obs.ct == 1) {
       p <- ggplot(data = dat, aes_string("count", y = "package",
                   colour = "package"))
       if (log.count) {
@@ -530,7 +531,7 @@ multiPlot <- function(x, statistic, graphics, days.observed, log.count,
       p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
         theme(panel.grid.minor = element_blank())
 
-    } else if (length(days.observed) > 1) {
+    } else if (obs.ct > 1) {
       if (statistic == "count") {
         p <- ggplot(data = dat, aes_string("date", "count",
           colour = "package")) + ggtitle("Package Download Counts")
@@ -622,7 +623,7 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
   } else stop('graphics must be "base" or "ggplot2".', call. = FALSE)
 }
 
-singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
+singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
 
   dat <- x$cranlogs.data
@@ -643,15 +644,15 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
         f, span, r.version)
 
     } else if (length(x$packages) > 1) {
-      if (length(days.observed) == 1) {
+      if (obs.ct == 1) {
         if (log.count) {
           dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10 Count", main = days.observed)
+            xlab = "log10 Count", main = obs.ct)
         } else {
           dotchart(dat$count, labels = dat$package, xlab = "Count",
-            main = days.observed)
+            main = obs.ct)
         }
-      } else if (length(days.observed) > 1) {
+      } else if (obs.ct > 1) {
 
         if (same.xy) {
           xlim <- range(dat$date)
@@ -796,7 +797,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
       p <- cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth,
         se, f)
     } else {
-      if (length(days.observed) == 1) {
+      if (obs.ct == 1) {
         p <- ggplot(data = dat) +
              theme_bw() +
              theme(panel.grid.major.x = element_blank(),
@@ -811,7 +812,7 @@ singlePlot <- function(x, statistic, graphics, days.observed, points, smooth,
 
         if (log.count) p <- p + scale_x_log10() + xlab("log10 Count")
 
-      } else if (length(days.observed) > 1) {
+      } else if (obs.ct > 1) {
         if (statistic == "count") {
           p <- ggplot(data = dat, aes_string("date", "count"))
         } else if (statistic == "cumulative") {
@@ -863,30 +864,55 @@ lastDayMonth <- function(dates) {
 }
 
 aggregateData <- function(unit.observation, dat) {
-  if ("package" %in% names(dat)) {
-    pkg <- unique(dat$package)
+  if ("package" %in% names(dat) | "platform" %in% names(dat)) {
+    if ("package" %in% names(dat)) {
+      grp <- unique(dat$package)
+    } else if ("platform" %in% names(dat)) {
+      grp <- unique(dat$platform)
+    }
     if (unit.observation == "year") {
-      out <- lapply(pkg, function(p) {
-        tmp <- dat[dat$package == p, ]
+      out <- lapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
         unit <- as.numeric(format(tmp$date, "%Y"))
         unit.ct <- tapply(tmp$count, unit, sum)
         max.obs <- max(tmp$date)
         max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
         if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
         else ip <- rep(FALSE, length(unit.ct))
-        data.frame(unit.obs = as.numeric(names(unit.ct)),
+        grp.data <- data.frame(unit.obs = as.numeric(names(unit.ct)),
           count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
           date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip,
-          package = p)
-        })
+          group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
+      })
+      do.call(rbind, out)
     } else if (unit.observation == "month") {
-      out <- lapply(pkg, function(p) {
-        tmp <- dat[dat$package == p, ]
+      out <- lapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
         unit <- format(tmp$date, "%Y-%m")
         unit.ct <- tapply(tmp$count, unit, sum)
-        data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
-          cumulative = cumsum(unname(unit.ct)), lastDayMonth(tmp$date),
-          package = p)
+        grp.data <- data.frame(unit.obs = names(unit.ct),
+          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+          lastDayMonth(tmp$date), group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
       })
     }
     do.call(rbind, out)
