@@ -198,7 +198,10 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (statistic %in% c("count", "cumulative") == FALSE) {
     stop('"statistic" must be "count" or "cumulative".', call. = FALSE)
   }
-
+  if (!graphics %in% c("base", "ggplot2")) {
+    stop('graphics must be "base" or "ggplot2"', call. = FALSE)
+  }
+  
   if (unit.observation != "day") {
     x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
   }
