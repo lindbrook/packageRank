@@ -479,10 +479,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
     if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = obs.ct)
+          xlab = "log10 Count", main = ttl)
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
-          main = obs.ct)
+          main = ttl)
       }
     } else if (obs.ct > 1) {
       if (length(x$packages) > 8) {
