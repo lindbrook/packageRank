@@ -853,20 +853,26 @@ lastDayMonth <- function(dates) {
     max.date <- as.Date(paste0(max.yr + 1, "-01-01")) - 1
   }
   obs.yr.mo <- unique(format(dates, "%Y-%m"))
-  obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
-  ldm <- lapply(obs.yr.mo, function(dt) {
-    parts <- as.numeric(unlist(strsplit(dt, "-")))
-    if (parts[2] < 12) {
-      next.mo <- parts[2] + 1
-      as.Date(paste0(parts[1], "-", next.mo, "-01")) - 1
-    } else {
-      as.Date(paste0(parts[1] + 1, "-", "01-01")) - 1
-    }
-  })
-  ldm <- do.call(c, ldm)
-  ip <- c(rep(FALSE, length(ldm)),
-          ifelse(max.obs.date != max.date, TRUE, FALSE))
-  data.frame(date = c(ldm, max.date), in.progress = ip)
+
+  if (length(obs.yr.mo) == 1) {
+    data.frame(date = max.date, in.progress = TRUE)
+  } else {
+    obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
+    ldm <- lapply(obs.yr.mo, function(dt) {
+      parts <- as.numeric(unlist(strsplit(dt, "-")))
+      if (parts[2] < 12) {
+        next.mo <- parts[2] + 1
+        as.Date(paste0(parts[1], "-", next.mo, "-01")) - 1
+      } else {
+        as.Date(paste0(parts[1] + 1, "-", "01-01")) - 1
+      }
+    })
+    ldm <- do.call(c, ldm)
+    ip <- c(rep(FALSE, length(ldm)),
+            ifelse(max.obs.date != max.date, TRUE, FALSE))
+    data.frame(date = c(ldm, max.date), in.progress = ip)
+  }
+
 }
 
 aggregateData <- function(unit.observation, dat, cores) {
