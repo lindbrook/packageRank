@@ -656,10 +656,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     y.var <- dat$count
     y.nm.case <- "Count"
     y.nm <- tolower(y.nm.case)
+    ttl <- "Package Download Counts"
   } else if (statistic == "cumulative") {
     y.var <- dat$cumulative
     y.nm.case <- "Cumulative"
     y.nm <- tolower(y.nm.case)
+    ttl <- "Cumulative Package Downloads"
   }
 
   if (graphics == "base") {
@@ -671,10 +673,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (obs.ct == 1) {
         if (log.count) {
           dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10 Count", main = obs.ct)
+            xlab = "log10 Count", main = ttl)
         } else {
-          dotchart(dat$count, labels = dat$package, xlab = "Count",
-            main = obs.ct)
+          dotchart(dat$count, labels = dat$package, xlab = "Count", main = ttl)
         }
       } else if (obs.ct > 1) {
 
