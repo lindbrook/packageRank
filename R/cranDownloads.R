@@ -201,7 +201,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (!graphics %in% c("base", "ggplot2")) {
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
-  
+
   if (unit.observation != "day") {
     x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
   }
@@ -222,8 +222,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       rTotPlot(x, statistic, graphics, legend.loc, points, log.count, smooth,
         se, r.version, f, span)
     } else {
-      rPlot(x, statistic, graphics, legend.loc, points, log.count, smooth, se,
-        r.version, f, span, multi.plot)
+      rPlot(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
+        smooth, se, r.version, f, span, multi.plot)
     }
   } else {
     if (multi.plot) {
