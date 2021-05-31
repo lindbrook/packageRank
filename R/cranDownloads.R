@@ -198,6 +198,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (statistic %in% c("count", "cumulative") == FALSE) {
     stop('"statistic" must be "count" or "cumulative".', call. = FALSE)
   }
+  if (!graphics %in% c("base", "ggplot2")) {
+    stop('graphics must be "base" or "ggplot2"', call. = FALSE)
+  }
 
   if (unit.observation != "day") {
     x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
@@ -219,8 +222,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       rTotPlot(x, statistic, graphics, legend.loc, points, log.count, smooth,
         se, r.version, f, span)
     } else {
-      rPlot(x, statistic, graphics, legend.loc, points, log.count, smooth, se,
-        r.version, f, span, multi.plot)
+      rPlot(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
+        smooth, se, r.version, f, span, multi.plot)
     }
   } else {
     if (multi.plot) {
@@ -252,7 +255,7 @@ summary.cranDownloads <- function(object, ...) {
   object$cranlogs.data
 }
 
-rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
+rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
   smooth, se, r.version, f, span, multi.plot) {
 
   dat <- x$cranlogs.data
@@ -263,148 +266,168 @@ rPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
     ylab <- "Cumulative"
   }
 
-  if (graphics == "base") {
-    if (points) {
+  if (obs.ct == 1) {
+    if (graphics == "base") {
       if (log.count) {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             type = "o", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = paste("log10", ylab), log = "y")
+        dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
+          main = paste("R Downloads:", unique(dat$date)))
       } else {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             type = "o", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = ylab)
+        dotchart(dat$count, labels = dat$platform, xlab = "Count",
+          main = paste("R Downloads:", unique(dat$date)))
       }
-      lines(dat[dat$platform == "osx", "date"],
-            dat[dat$platform == "osx", statistic],
-            type = "o", pch = 0, col = "red")
-      lines(dat[dat$platform == "src", "date"],
-            dat[dat$platform == "src", statistic],
-            type = "o", pch = 2, col = "blue")
-    } else {
+    } else if (graphics == "ggplot2") {
       if (log.count) {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             type = "l", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = paste("log10", ylab), log = "y")
+        dat2 <- dat
+        dat2$count <- log10(dat2$count)
+        p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
+          geom_point(size = 2) +
+          xlab("log10 Count")
       } else {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             type = "l", ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = ylab)
+        p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
+          geom_point(size = 2)
       }
-      lines(dat[dat$platform == "osx", "date"],
-            dat[dat$platform == "osx", statistic],
-            col = "red")
-      lines(dat[dat$platform == "src", "date"],
-            dat[dat$platform == "src", statistic],
-            col = "blue")
+
+      p + theme_bw() +
+        ggtitle(paste("R Downloads:", unique(dat$date))) +
+        theme(panel.grid.major.x = element_blank(),
+              panel.grid.minor = element_blank(),
+              plot.title = element_text(hjust = 0.5))
     }
 
-    legend(x = legend.loc,
-           legend = c("win", "mac", "src"),
-           col = c("black", "red", "blue"),
-           pch = c(1, 0, 2),
-           bg = "white",
-           cex = 2/3,
-           title = "Platform",
-           lwd = 1)
-
-    if (smooth) {
-      lines(stats::lowess(dat[dat$platform == "win", "date"],
-                          dat[dat$platform == "win", statistic], f = f),
-                          lty = "dashed")
-      lines(stats::lowess(dat[dat$platform == "osx", "date"],
-                          dat[dat$platform == "osx", statistic], f = f),
-                          lty = "dashed", col = "red")
-      lines(stats::lowess(dat[dat$platform == "src", "date"],
-                          dat[dat$platform == "src", statistic], f = f),
-                          lty = "dashed", col = "blue")
-    }
-
-    if (r.version) {
-      r_v <- rversions::r_versions()
-      axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-        cex.axis = 2/3, padj = 0.9)
-      abline(v = as.Date(r_v$date), lty = "dotted")
-    }
-
-    title(main = "R Downloads")
-
-  } else if (graphics == "ggplot2") {
-    if (statistic == "count") {
-      dat2 <- dat[, c("date", "count", "platform")]
-      if (multi.plot) {
-        p <- ggplot(data = dat2, aes_string("date", "count",
-          colour = "platform"))
+  } else if (obs.ct > 1) {
+    if (graphics == "base") {
+      if (points) {
+        if (log.count) {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               type = "o", ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = paste("log10", ylab), log = "y")
+        } else {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               type = "o", ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = ylab)
+        }
+        lines(dat[dat$platform == "osx", "date"],
+              dat[dat$platform == "osx", statistic],
+              type = "o", pch = 0, col = "red")
+        lines(dat[dat$platform == "src", "date"],
+              dat[dat$platform == "src", statistic],
+              type = "o", pch = 2, col = "blue")
       } else {
-        p <- ggplot(data = dat2, aes_string("date", "count")) +
-          facet_wrap(~ platform, nrow = 2)
+        if (log.count) {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               type = "l", ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = paste("log10", ylab), log = "y")
+        } else {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               type = "l", ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = ylab)
+        }
+        lines(dat[dat$platform == "osx", "date"],
+              dat[dat$platform == "osx", statistic],
+              col = "red")
+        lines(dat[dat$platform == "src", "date"],
+              dat[dat$platform == "src", statistic],
+              col = "blue")
       }
-    } else {
-      dat2 <- dat[, c("date", "cumulative", "platform")]
-      if (multi.plot) {
-        p <- ggplot(data = dat2, aes_string("date", "cumulative",
-          colour = "platform"))
+
+      legend(x = legend.loc,
+             legend = c("win", "mac", "src"),
+             col = c("black", "red", "blue"),
+             pch = c(1, 0, 2),
+             bg = "white",
+             cex = 2/3,
+             title = "Platform",
+             lwd = 1)
+
+      if (smooth) {
+        lines(stats::lowess(dat[dat$platform == "win", "date"],
+                            dat[dat$platform == "win", statistic], f = f),
+                            lty = "dashed")
+        lines(stats::lowess(dat[dat$platform == "osx", "date"],
+                            dat[dat$platform == "osx", statistic], f = f),
+                            lty = "dashed", col = "red")
+        lines(stats::lowess(dat[dat$platform == "src", "date"],
+                            dat[dat$platform == "src", statistic], f = f),
+                            lty = "dashed", col = "blue")
+      }
+
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
+        abline(v = as.Date(r_v$date), lty = "dotted")
+      }
+      title(main = "R Downloads")
+
+    } else if (graphics == "ggplot2") {
+      if (statistic == "count") {
+        dat2 <- dat[, c("date", "count", "platform")]
+        if (multi.plot) {
+          p <- ggplot(data = dat2, aes_string("date", "count",
+            colour = "platform"))
+        } else {
+          p <- ggplot(data = dat2, aes_string("date", "count")) +
+            facet_wrap(~ platform, nrow = 2)
+        }
       } else {
-        p <- ggplot(data = dat2, aes_string("date", "cumulative")) +
-          facet_wrap(~ platform, nrow = 2)
+        dat2 <- dat[, c("date", "cumulative", "platform")]
+        if (multi.plot) {
+          p <- ggplot(data = dat2, aes_string("date", "cumulative",
+            colour = "platform"))
+        } else {
+          p <- ggplot(data = dat2, aes_string("date", "cumulative")) +
+            facet_wrap(~ platform, nrow = 2)
+        }
       }
+      p <- p + geom_line(size = 0.5) +
+        theme_bw() +
+        theme(panel.grid.minor = element_blank(),
+              plot.title = element_text(hjust = 0.5)) +
+        ggtitle("R Downloads")
+
+      if (points) p <- p + geom_point()
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
+      if (smooth) {
+        p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+          span = span)
+      }
+      p
     }
-
-    p <- p + geom_line(size = 0.5) +
-      theme_bw() +
-      theme(panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5)) +
-      ggtitle("R Downloads")
-
-    if (points) p <- p + geom_point()
-    if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
-    if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
-    if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
-    }
-
-    p
-  } else {
-    stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
 }
 
-rTotPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
-  smooth, se, r.version, f, span) {
+rTotPlot <- function(x, statistic, graphics, legend.loc, points,
+  log.count, smooth, se, r.version, f, span) {
 
   dat <- x$cranlogs.data
-  if (statistic == "count") ylab <- "Count"
-  if (statistic == "cumulative") ylab <- "Cumulative"
-  ct <- tapply(dat$count, dat$date, sum)
-  cs <- cumsum(ct)
-  dat2 <- data.frame(date = as.Date(names(ct)), count = ct, cumulative = cs,
-    row.names = NULL)
+  ylab <- tools::toTitleCase(statistic)
 
   if (graphics == "base") {
     if (points) {
       if (log.count) {
-        plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date",
+        plot(dat$date, dat[, statistic], type = "o", xlab = "Date",
           ylab = ylab, log = "y")
       } else {
-        plot(dat2$date, dat2[, statistic], type = "o", xlab = "Date",
+        plot(dat$date, dat[, statistic], type = "o", xlab = "Date",
           ylab = ylab)
       }
     } else {
       if (log.count) {
-        plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date",
+        plot(dat$date, dat[, statistic], type = "l", xlab = "Date",
           ylab = ylab, log = "y")
       } else {
-        plot(dat2$date, dat2[, statistic], type = "l", xlab = "Date",
+        plot(dat$date, dat[, statistic], type = "l", xlab = "Date",
           ylab = ylab)
       }
     }
 
     if (smooth) {
-      lines(stats::lowess(dat2$date, dat2[, statistic], f), col = "blue",
+      lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
         lwd = 1.25)
     }
 
@@ -419,9 +442,9 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
 
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
-      p <- ggplot(data = dat2, aes_string("date", "count"))
+      p <- ggplot(data = dat, aes_string("date", "count"))
     } else if (statistic == "cumulative") {
-      p <- ggplot(data = dat2, aes_string("date", "cumulative"))
+      p <- ggplot(data = dat, aes_string("date", "cumulative"))
     }
 
     p <- p + geom_line(size = 0.5) +
@@ -438,8 +461,6 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points, log.count,
     }
 
     p
-  } else {
-    stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
 }
 
@@ -458,10 +479,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
     if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = obs.ct)
+          xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
-          main = obs.ct)
+           main = paste(ttl, unique(dat$date)))
       }
     } else if (obs.ct > 1) {
       if (length(x$packages) > 8) {
@@ -520,14 +541,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
-      p <- ggplot(data = dat, aes_string("count", y = "package",
-                  colour = "package"))
+      p <- ggplot(data = dat, aes_string("count", y = "package"))
       if (log.count) {
         # p + scale_x_log10() + xlab("log10(count)") doesn't work!
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string("count", "package",
-                    colour = "package")) +
+        p <- ggplot(data = dat2, aes_string(x = "count", y = "package")) +
              xlab("log10 Count")
       }
 
@@ -536,10 +555,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
     } else if (obs.ct > 1) {
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string("date", "count",
+        p <- ggplot(data = dat, aes_string(x = "date", y = "count",
           colour = "package")) + ggtitle("Package Download Counts")
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string("date", "cumulative",
+        p <- ggplot(data = dat, aes_string(x = "date", y = "cumulative",
           colour = "package")) + ggtitle("Cumulative Package Downloads")
       }
 
@@ -635,10 +654,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     y.var <- dat$count
     y.nm.case <- "Count"
     y.nm <- tolower(y.nm.case)
+    ttl <- "Package Download Counts"
   } else if (statistic == "cumulative") {
     y.var <- dat$cumulative
     y.nm.case <- "Cumulative"
     y.nm <- tolower(y.nm.case)
+    ttl <- "Cumulative Package Downloads"
   }
 
   if (graphics == "base") {
@@ -650,10 +671,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (obs.ct == 1) {
         if (log.count) {
           dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10 Count", main = obs.ct)
+            xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
         } else {
           dotchart(dat$count, labels = dat$package, xlab = "Count",
-            main = obs.ct)
+            main = paste(ttl, unique(dat$date)))
         }
       } else if (obs.ct > 1) {
 
@@ -850,20 +871,26 @@ lastDayMonth <- function(dates) {
     max.date <- as.Date(paste0(max.yr + 1, "-01-01")) - 1
   }
   obs.yr.mo <- unique(format(dates, "%Y-%m"))
-  obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
-  ldm <- lapply(obs.yr.mo, function(dt) {
-    parts <- as.numeric(unlist(strsplit(dt, "-")))
-    if (parts[2] < 12) {
-      next.mo <- parts[2] + 1
-      as.Date(paste0(parts[1], "-", next.mo, "-01")) - 1
-    } else {
-      as.Date(paste0(parts[1] + 1, "-", "01-01")) - 1
-    }
-  })
-  ldm <- do.call(c, ldm)
-  ip <- c(rep(FALSE, length(ldm)),
-          ifelse(max.obs.date != max.date, TRUE, FALSE))
-  data.frame(date = c(ldm, max.date), in.progress = ip)
+
+  if (length(obs.yr.mo) == 1) {
+    data.frame(date = max.date, in.progress = TRUE)
+  } else {
+    obs.yr.mo <- obs.yr.mo[obs.yr.mo != max.yr.mo]
+    ldm <- lapply(obs.yr.mo, function(dt) {
+      parts <- as.numeric(unlist(strsplit(dt, "-")))
+      if (parts[2] < 12) {
+        next.mo <- parts[2] + 1
+        as.Date(paste0(parts[1], "-", next.mo, "-01")) - 1
+      } else {
+        as.Date(paste0(parts[1] + 1, "-", "01-01")) - 1
+      }
+    })
+    ldm <- do.call(c, ldm)
+    ip <- c(rep(FALSE, length(ldm)),
+            ifelse(max.obs.date != max.date, TRUE, FALSE))
+    data.frame(date = c(ldm, max.date), in.progress = ip)
+  }
+
 }
 
 aggregateData <- function(unit.observation, dat, cores) {
