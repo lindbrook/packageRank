@@ -270,25 +270,25 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
     if (graphics == "base") {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
-          main = paste("R Downloads @", unique(dat$date)))
+          main = paste("R Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
-          main = paste("R Downloads", unique(dat$date)))
+          main = paste("R Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
       if (log.count) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string("count", "platform",
-                    colour = "platform")) +  geom_point(size = 2) +
-             xlab("log10 Count")
+        p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
+          geom_point(size = 2) +
+          xlab("log10 Count")
       } else {
-        p <- ggplot(data = dat, aes_string(x = "count", y = "platform",
-          colour = "platform")) + geom_point(size = 2)
+        p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
+          geom_point(size = 2)
       }
 
       p + theme_bw() +
-        ggtitle(paste("R Downloads @", unique(dat$date))) +
+        ggtitle(paste("R Downloads:", unique(dat$date))) +
         theme(panel.grid.major.x = element_blank(),
               panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5))
@@ -479,10 +479,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
     if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = ttl)
+          xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
-          main = ttl)
+           main = paste(ttl, unique(dat$date)))
       }
     } else if (obs.ct > 1) {
       if (length(x$packages) > 8) {
@@ -541,14 +541,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
-      p <- ggplot(data = dat, aes_string("count", y = "package",
-                  colour = "package"))
+      p <- ggplot(data = dat, aes_string("count", y = "package"))
       if (log.count) {
         # p + scale_x_log10() + xlab("log10(count)") doesn't work!
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string("count", "package",
-                    colour = "package")) +
+        p <- ggplot(data = dat2, aes_string(x = "count", y = "package")) +
              xlab("log10 Count")
       }
 
@@ -557,10 +555,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
     } else if (obs.ct > 1) {
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string("date", "count",
+        p <- ggplot(data = dat, aes_string(x = "date", y = "count",
           colour = "package")) + ggtitle("Package Download Counts")
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string("date", "cumulative",
+        p <- ggplot(data = dat, aes_string(x = "date", y = "cumulative",
           colour = "package")) + ggtitle("Cumulative Package Downloads")
       }
 
@@ -673,9 +671,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (obs.ct == 1) {
         if (log.count) {
           dotchart(log10(dat$count), labels = dat$package,
-            xlab = "log10 Count", main = ttl)
+            xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
         } else {
-          dotchart(dat$count, labels = dat$package, xlab = "Count", main = ttl)
+          dotchart(dat$count, labels = dat$package, xlab = "Count",
+            main = paste(ttl, unique(dat$date)))
         }
       } else if (obs.ct > 1) {
 
