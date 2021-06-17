@@ -478,8 +478,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   if (graphics == "base") {
     if (obs.ct == 1) {
       if (log.count) {
-        dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
+        dotchart(log10(dat$count), labels = dat$package, xlab = "log10 Count",
+          main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
            main = paste(ttl, unique(dat$date)))
@@ -890,7 +890,6 @@ lastDayMonth <- function(dates) {
             ifelse(max.obs.date != max.date, TRUE, FALSE))
     data.frame(date = c(ldm, max.date), in.progress = ip)
   }
-
 }
 
 aggregateData <- function(unit.observation, dat, cores) {
