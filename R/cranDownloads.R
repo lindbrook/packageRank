@@ -994,6 +994,16 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               xlab = "Date", ylab = y.nm.case, xlim = range(dat$date),
               ylim = range(dat[, y.nm]))
           }
+
+          segments(complete.data[last.obs, "date"],
+            complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
+            lty = "dotted")
+          segments(complete.data[last.obs, "date"],
+            complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
+            col = "red")
+          axis(4, at = ip.data[, y.nm], labels = "obs")
+          axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
+            col.ticks = "red")
         }
 
       } else if (unit.observation == "day") {
@@ -1015,16 +1025,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
         }
       }
-
-      segments(complete.data[last.obs, "date"],
-        complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
-        lty = "dotted")
-      segments(complete.data[last.obs, "date"],
-        complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
-        col = "red")
-      axis(4, at = ip.data[, y.nm], labels = "obs")
-      axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
-        col.ticks = "red")
 
       if (package.version) {
         if (dev.mode) p_v <- packageHistory0(x$packages)
