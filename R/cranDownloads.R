@@ -1081,7 +1081,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- ggplot(data = dat, aes_string("date", "cumulative"))
         }
 
-        p <- p + geom_line(size = 0.5) +
+        p <- p + geom_line(size = 1/3) +
           facet_wrap(~ package, nrow = 2) +
           theme_bw() +
           theme(panel.grid.minor = element_blank())
