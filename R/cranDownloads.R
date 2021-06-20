@@ -202,7 +202,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
 
-  if (unit.observation != "day") {
+  if (unit.observation %in% c("month", "year")) {
+    x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
     x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
   }
 
@@ -231,7 +232,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.count, package.version, dev.mode, r.version, same.xy)
+        span, log.count, package.version, dev.mode, r.version, same.xy,
+        unit.observation)
     }
   }
 }
@@ -646,9 +648,11 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
+  se, f, span, log.count, package.version, dev.mode, r.version, same.xy,
+  unit.observation) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
 
   if (statistic == "count") {
     y.var <- dat$count
@@ -666,7 +670,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     if (is.null(x$packages)) {
       cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth, se,
         f, span, r.version)
-
     } else if (length(x$packages) > 1) {
       if (obs.ct == 1) {
         if (log.count) {
@@ -677,120 +680,390 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             main = paste(ttl, unique(dat$date)))
         }
       } else if (obs.ct > 1) {
-
         if (same.xy) {
           xlim <- range(dat$date)
           ylim <- range(y.var)
           grDevices::devAskNewPage(ask = TRUE)
 
-          invisible(lapply(x$package, function(pkg) {
-            pkg.dat <- dat[dat$package == pkg, ]
-            if (log.count) {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y",
-                  xlim = xlim, ylim = ylim)
+          if (unit.observation %in% c("month", "year")) {
+            invisible(lapply(x$package, function(pkg) {
+              pkg.dat <- dat[dat$package == pkg, ]
+
+              ip.sel <- pkg.dat$in.progress == TRUE
+              ip.data <- pkg.dat[ip.sel, ]
+              complete.data <- pkg.dat[!ip.sel, ]
+              last.obs <- nrow(complete.data)
+
+              obs.days <- as.numeric(format(last.obs.date , "%d"))
+              exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+              est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+              est.data <- ip.data
+              est.data$count <- est.ct
+              last.cumulative <- complete.data[nrow(complete.data),
+                "cumulative"]
+              est.data$cumulative <- last.cumulative + est.ct
+
+              if (log.count) {
+                if (points) {
+                  plot(complete.data$date, complete.data[, y.nm], type = "o",
+                    xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                    xlim = xlim, ylim = ylim, log = "y")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                  points(est.data[, "date"], est.data[, y.nm], col = "red")
+                } else {
+                  plot(complete.data$date, complete.data[, y.nm], type = "l",
+                    xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                    xlim = xlim, ylim = ylim, log = "y")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                }
               } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y",
-                  xlim = xlim, ylim = ylim)
+                if (points) {
+                  plot(complete.data$date, complete.data[, y.nm], type = "o",
+                    xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                  points(est.data[, "date"], est.data[, y.nm], col = "red")
+                } else {
+                  plot(complete.data$date, complete.data[, y.nm], type = "l",
+                    xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                }
               }
-            } else {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
+
+              if (package.version) {
+                if (dev.mode) p_v <- packageHistory0(pkg)
+                else p_v <- packageHistory(pkg)
+                axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = p_v$Date, lty = "dotted", col = "red")
+              }
+
+              if (r.version) {
+                r_v <- rversions::r_versions()
+                axis(3, at = as.Date(r_v$date),
+                  labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+                abline(v = as.Date(r_v$date), lty = "dotted")
+              }
+
+              if (smooth) {
+                if (unit.observation %in% c("month", "year")) {
+                  smooth.data <- rbind(complete.data, est.data)
+                  lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
+                    f = f), col = "blue")
+                } else if (unit.observation == "day") {
+                  lines(stats::lowess(dat$date, dat[, y.nm], f = f),
+                    col = "blue")
+                }
+              }
+              title(main = pkg)
+            }))
+            grDevices::devAskNewPage(ask = FALSE)
+
+          } else if (unit.observation == "day") {
+            invisible(lapply(x$package, function(pkg) {
+              pkg.dat <- dat[dat$package == pkg, ]
+              if (log.count) {
+                if (points) {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                    ylab = paste0("log10 ", y.nm.case), log = "y",
+                    xlim = xlim, ylim = ylim)
+                } else {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                    ylab = paste0("log10 ", y.nm.case), log = "y",
+                    xlim = xlim, ylim = ylim)
+                }
               } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                if (points) {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                    ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                } else {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                    ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                }
               }
-            }
 
-            if (package.version) {
-              if (dev.mode) p_v <- packageHistory0(pkg)
-              else p_v <- packageHistory(pkg)
-              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-                padj = 0.9, col.axis = "red", col.ticks = "red")
-              abline(v = p_v$Date, lty = "dotted", col = "red")
-            }
+              if (package.version) {
+                if (dev.mode) p_v <- packageHistory0(pkg)
+                else p_v <- packageHistory(pkg)
+                axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = p_v$Date, lty = "dotted", col = "red")
+              }
 
-            if (r.version) {
-              r_v <- rversions::r_versions()
-              axis(3, at = as.Date(r_v$date),
-                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
-              abline(v = as.Date(r_v$date), lty = "dotted")
-            }
+              if (r.version) {
+                r_v <- rversions::r_versions()
+                axis(3, at = as.Date(r_v$date),
+                  labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+                abline(v = as.Date(r_v$date), lty = "dotted")
+              }
 
-            if (smooth) {
-              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
-                col = "blue")
-            }
-            title(main = pkg)
-          }))
-          grDevices::devAskNewPage(ask = FALSE)
+              if (smooth) {
+                lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
+                  col = "blue")
+              }
+              title(main = pkg)
+            }))
+            grDevices::devAskNewPage(ask = FALSE)
+          }
 
-        } else {
+        } else { # same.xy
           grDevices::devAskNewPage(ask = TRUE)
-          invisible(lapply(x$package, function(pkg) {
-            pkg.dat <- dat[dat$package == pkg, ]
-            if (log.count) {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y")
+          if (unit.observation %in% c("month", "year")) {
+            invisible(lapply(x$package, function(pkg) {
+              pkg.dat <- dat[dat$package == pkg, ]
+
+              ip.sel <- pkg.dat$in.progress == TRUE
+              ip.data <- pkg.dat[ip.sel, ]
+              complete.data <- pkg.dat[!ip.sel, ]
+              last.obs <- nrow(complete.data)
+
+              obs.days <- as.numeric(format(last.obs.date , "%d"))
+              exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+              est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+              est.data <- ip.data
+              est.data$count <- est.ct
+              last.cumulative <- complete.data[nrow(complete.data),
+                "cumulative"]
+              est.data$cumulative <- last.cumulative + est.ct
+
+              if (log.count) {
+                if (points) {
+                  plot(complete.data$date, complete.data[, y.nm], type = "o",
+                    xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                    xlim = range(pkg.dat$date), ylim = range(pkg.dat[, y.nm]),
+                    log = "y")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                  points(est.data[, "date"], est.data[, y.nm], col = "red")
+                } else {
+                  plot(complete.data$date, complete.data[, y.nm], type = "l",
+                    xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                    xlim = range(pkg.dat$date), ylim = range(pkg.dat[, y.nm]),
+                    log = "y")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                }
               } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y")
+                if (points) {
+                  plot(complete.data$date, complete.data[, y.nm], type = "o",
+                    xlab = "Date", ylab = y.nm.case, xlim = range(pkg.dat$date),
+                    ylim = range(pkg.dat[, y.nm]))
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                  points(est.data[, "date"], est.data[, y.nm], col = "red")
+                } else {
+                  plot(complete.data$date, complete.data[, y.nm], type = "l",
+                    xlab = "Date", ylab = y.nm.case, xlim = range(pkg.dat$date),
+                    ylim = range(pkg.dat[, y.nm]))
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], ip.data$date,
+                    ip.data[, y.nm], lty = "dotted")
+                  segments(complete.data[last.obs, "date"],
+                    complete.data[last.obs, y.nm], est.data$date,
+                    est.data[, y.nm], col = "red")
+                }
               }
-            } else {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = y.nm.case)
+
+              if (package.version) {
+                if (dev.mode) p_v <- packageHistory0(pkg)
+                else p_v <- packageHistory(pkg)
+                axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = p_v$Date, lty = "dotted", col = "red")
+              }
+
+              if (r.version) {
+                r_v <- rversions::r_versions()
+                axis(3, at = as.Date(r_v$date),
+                  labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+                abline(v = as.Date(r_v$date), lty = "dotted")
+              }
+
+              if (smooth) {
+                if (unit.observation %in% c("month", "year")) {
+                  smooth.data <- rbind(complete.data, est.data)
+                  lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
+                    f = f), col = "blue")
+                } else if (unit.observation == "day") {
+                  lines(stats::lowess(dat$date, dat[, y.nm], f = f),
+                    col = "blue")
+                }
+              }
+              title(main = pkg)
+            }))
+            grDevices::devAskNewPage(ask = FALSE)
+          } else if (unit.observation == "day") {
+            grDevices::devAskNewPage(ask = TRUE)
+            invisible(lapply(x$package, function(pkg) {
+              pkg.dat <- dat[dat$package == pkg, ]
+              if (log.count) {
+                if (points) {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                    ylab = paste0("log10 ", y.nm.case), log = "y",
+                    xlim = range(pkg.dat$date), ylim = range(pkg.dat[, y.nm]))
+                } else {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                    ylab = paste0("log10 ", y.nm.case), log = "y",
+                    xlim = range(pkg.dat$date), ylim = range(pkg.dat[, y.nm]))
+                }
               } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = y.nm.case)
+                if (points) {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
+                    ylab = y.nm.case, xlim = range(pkg.dat$date),
+                    ylim = range(pkg.dat[, y.nm]))
+                } else {
+                  plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
+                    ylab = y.nm.case, xlim = range(pkg.dat$date),
+                    ylim = range(pkg.dat[, y.nm]))
+                }
               }
-            }
 
-            if (package.version) {
-              if (dev.mode) p_v <- packageHistory0(pkg)
-              else p_v <- packageHistory(pkg)
-              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-                padj = 0.9, col.axis = "red", col.ticks = "red")
-              abline(v = p_v$Date, lty = "dotted", col = "red")
-            }
+              if (package.version) {
+                if (dev.mode) p_v <- packageHistory0(pkg)
+                else p_v <- packageHistory(pkg)
+                axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                  padj = 0.9, col.axis = "red", col.ticks = "red")
+                abline(v = p_v$Date, lty = "dotted", col = "red")
+              }
 
-            if (r.version) {
-              r_v <- rversions::r_versions()
-              axis(3, at = as.Date(r_v$date),
-                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
-              abline(v = as.Date(r_v$date), lty = "dotted")
-            }
+              if (r.version) {
+                r_v <- rversions::r_versions()
+                axis(3, at = as.Date(r_v$date),
+                  labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+                abline(v = as.Date(r_v$date), lty = "dotted")
+              }
 
-            if (smooth) {
-              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
-                col = "blue")
-            }
-            title(main = pkg)
-          }))
-          grDevices::devAskNewPage(ask = FALSE)
+              if (smooth) {
+                lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
+                  col = "blue")
+              }
+              title(main = pkg)
+            }))
+            grDevices::devAskNewPage(ask = FALSE)
+          }
         }
       }
 
     } else if (length(x$packages) == 1) {
-      if (log.count) {
-        if (points) {
-          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), log = "y")
+      if (unit.observation %in% c("month", "year")) {
+        ip.sel <- dat$in.progress == TRUE
+        ip.data <- dat[ip.sel, ]
+        complete.data <- dat[!ip.sel, ]
+        last.obs <- nrow(complete.data)
+
+        obs.days <- as.numeric(format(last.obs.date , "%d"))
+        exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+        est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+        est.data <- ip.data
+        est.data$count <- est.ct
+        last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+        est.data$cumulative <- last.cumulative + est.ct
+
+        if (log.count) {
+          if (points) {
+            plot(complete.data$date, complete.data[, y.nm], type = "o",
+              xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+              xlim = range(dat$date), ylim = range(dat[, y.nm]), log = "y")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
+              lty = "dotted")
+            points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
+              col = "red")
+            points(est.data[, "date"], est.data[, y.nm], col = "red")
+          } else {
+            plot(complete.data$date, complete.data[, y.nm], type = "l",
+              xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+              xlim = range(dat$date), ylim = range(dat[, y.nm]), log = "y")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
+              lty = "dotted")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
+              col = "red")
+          }
         } else {
-          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), log = "y")
+          if (points) {
+            plot(complete.data$date, complete.data[, y.nm], type = "o",
+              xlab = "Date", ylab = y.nm.case, xlim = range(dat$date),
+              ylim = range(dat[, y.nm]))
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
+              lty = "dotted")
+            points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
+              col = "red")
+            points(est.data[, "date"], est.data[, y.nm], col = "red")
+          } else {
+            plot(complete.data$date, complete.data[, y.nm], type = "l",
+              xlab = "Date", ylab = y.nm.case, xlim = range(dat$date),
+              ylim = range(dat[, y.nm]))
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], ip.data$date, ip.data[, y.nm],
+              lty = "dotted")
+            segments(complete.data[last.obs, "date"],
+              complete.data[last.obs, y.nm], est.data$date, est.data[, y.nm],
+              col = "red")
+          }
         }
-      } else {
-        if (points) {
-          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-            ylab = y.nm.case)
+
+      } else if (unit.observation == "day") {
+        if (log.count) {
+          if (points) {
+            plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
+              ylab = paste0("log10 ", y.nm.case), log = "y")
+          } else {
+            plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
+              ylab = paste0("log10 ", y.nm.case), log = "y")
+          }
         } else {
-          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-            ylab = y.nm.case)
+          if (points) {
+            plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
+              ylab = y.nm.case)
+          } else {
+            plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
+              ylab = y.nm.case)
+          }
         }
       }
 
@@ -810,7 +1083,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       }
 
       if (smooth) {
-        lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
+        if (unit.observation %in% c("month", "year")) {
+          smooth.data <- rbind(complete.data, est.data)
+          lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+            col = "blue")
+        } else if (unit.observation == "day") {
+          lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
+        }
       }
 
       title(main = x$packages)
