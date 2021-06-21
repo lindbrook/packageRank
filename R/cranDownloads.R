@@ -1081,20 +1081,80 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- ggplot(data = dat, aes_string("date", "cumulative"))
         }
 
-        p <- p + geom_line(size = 1/3) +
-          facet_wrap(~ package, nrow = 2) +
-          theme_bw() +
-          theme(panel.grid.minor = element_blank())
+        if (unit.observation == "day") {
+          p <- p + geom_line(size = 1/3)
+          if (points) p <- p + geom_point()
 
-        if (points) p <- p + geom_point()
+        } else if (unit.observation %in% c("month", "year")) {
+
+          g <- lapply(x$packages, function(pkg) {
+            pkg.data <- dat[dat$package == pkg, ]
+            ip.sel <- pkg.data$in.progress == TRUE
+            ip.data <- pkg.data[ip.sel, ]
+            complete.data <- pkg.data[!ip.sel, ]
+            last.obs <- nrow(complete.data)
+
+            obs.days <- as.numeric(format(last.obs.date , "%d"))
+            exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+            est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+            est.data <- ip.data
+            est.data$count <- est.ct
+            last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+            est.data$cumulative <- last.cumulative + est.ct
+
+            list(ip.data = ip.data,
+                 complete.data = complete.data,
+                 est.data = est.data,
+                 est.seg = rbind(complete.data[last.obs, ], est.data),
+                 obs.seg = rbind(complete.data[last.obs, ], ip.data))
+          })
+
+          ip.data <- do.call(rbind, lapply(g, function(x) x$ip.data))
+          complete.data <- do.call(rbind, lapply(g, function(x) {
+            x$complete.data
+          }))
+          est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
+          est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
+          obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
+
+          if (statistic == "count") {
+            p <- ggplot(data = dat, aes_string("date", "count"))
+          } else if (statistic == "cumulative") {
+            p <- ggplot(data = dat, aes_string("date", "cumulative"))
+          }
+
+          p <- p + geom_line(data = complete.data, size = 1/3) +
+            geom_line(data = est.seg, size = 1/3, col = "red") +
+            geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+            geom_point(data = est.data, col = "red") +
+            geom_point(data = ip.data, shape = 1) # +
+            # geom_text(data = est.data, col = "red", label = "est") +
+            # geom_text(data = ip.data, label = "obs")
+
+          if (points) p <- p + geom_point(data = complete.data)
+        }
+
         if (log.count) p <- p + scale_y_log10()
+
         if (smooth) {
+          if (unit.observation %in% c("month", "year")) {
+            smooth.data <- rbind(complete.data, est.data)
+            p <- p + geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x", se = se, span = span)
+          } else if (unit.observation == "day") {
             p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
               span = span)
+          }
         }
+
+        p <- p + facet_wrap(~ package, nrow = 2) +
+             theme_bw() +
+             theme(panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank())
       }
-      p
     }
+    p
   }
 }
 
