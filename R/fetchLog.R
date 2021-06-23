@@ -12,7 +12,7 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 
   # R default is 60
   orig.timeout <- getOption("timeout")
-  if (orig.timeout < 300L) options(timeout = 600L)
+  if (orig.timeout < 600L) options(timeout = 600L)
 
   if (RCurl::url.exists(log.url)) {
     if (dev.mode) {
