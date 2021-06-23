@@ -202,7 +202,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
 
-  if (unit.observation != "day") {
+  if (unit.observation %in% c("month", "year")) {
+    x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
     x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
   }
 
@@ -231,7 +232,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.count, package.version, dev.mode, r.version, same.xy)
+        span, log.count, package.version, dev.mode, r.version, same.xy,
+        unit.observation)
     }
   }
 }
@@ -478,8 +480,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   if (graphics == "base") {
     if (obs.ct == 1) {
       if (log.count) {
-        dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
+        dotchart(log10(dat$count), labels = dat$package, xlab = "log10 Count",
+          main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
            main = paste(ttl, unique(dat$date)))
@@ -646,9 +648,11 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
+  se, f, span, log.count, package.version, dev.mode, r.version, same.xy,
+  unit.observation) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
 
   if (statistic == "count") {
     y.var <- dat$count
@@ -666,8 +670,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     if (is.null(x$packages)) {
       cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth, se,
         f, span, r.version)
-
-    } else if (length(x$packages) > 1) {
+    } else {
       if (obs.ct == 1) {
         if (log.count) {
           dotchart(log10(dat$count), labels = dat$package,
@@ -677,23 +680,112 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             main = paste(ttl, unique(dat$date)))
         }
       } else if (obs.ct > 1) {
-
         if (same.xy) {
           xlim <- range(dat$date)
           ylim <- range(y.var)
-          grDevices::devAskNewPage(ask = TRUE)
+        } else {
+          xlim <- NULL
+          ylim <- NULL
+        }
 
+        if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
+
+        if (any(dat$in.progress)) {
+          invisible(lapply(x$package, function(pkg) {
+            pkg.dat <- dat[dat$package == pkg, ]
+
+            ip.sel <- pkg.dat$in.progress == TRUE
+            ip.data <- pkg.dat[ip.sel, ]
+            complete.data <- pkg.dat[!ip.sel, ]
+            last.obs <- nrow(complete.data)
+
+            obs.days <- as.numeric(format(last.obs.date , "%d"))
+            exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+            est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+            est.data <- ip.data
+            est.data$count <- est.ct
+            last.cumulative <- complete.data[nrow(complete.data),
+              "cumulative"]
+            est.data$cumulative <- last.cumulative + est.ct
+
+            if (log.count) {
+              if (points) {
+                plot(complete.data$date, complete.data[, y.nm], type = "o",
+                  xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                  xlim = xlim, ylim = ylim, log = "y")
+                points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                points(est.data[, "date"], est.data[, y.nm], col = "red")
+              } else {
+                plot(complete.data$date, complete.data[, y.nm], type = "l",
+                  xlab = "Date", ylab = paste0("log10 ", y.nm.case),
+                  xlim = xlim, ylim = ylim, log = "y")
+              }
+
+            } else {
+              if (points) {
+                plot(complete.data$date, complete.data[, y.nm], type = "o",
+                  xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+                points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+                points(est.data[, "date"], est.data[, y.nm], col = "red")
+              } else {
+                plot(complete.data$date, complete.data[, y.nm], type = "l",
+                  xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+              }
+            }
+
+            segments(complete.data[last.obs, "date"],
+                     complete.data[last.obs, y.nm],
+                     ip.data$date, ip.data[, y.nm],
+                     lty = "dotted")
+            segments(complete.data[last.obs, "date"],
+                     complete.data[last.obs, y.nm],
+                     est.data$date,
+                     est.data[, y.nm],
+                     col = "red")
+            axis(4, at = ip.data[, y.nm], labels = "obs")
+            axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
+              col.ticks = "red")
+
+            if (package.version) {
+              if (dev.mode) p_v <- packageHistory0(pkg)
+              else p_v <- packageHistory(pkg)
+              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+                padj = 0.9, col.axis = "red", col.ticks = "red")
+              abline(v = p_v$Date, lty = "dotted", col = "red")
+            }
+
+            if (r.version) {
+              r_v <- rversions::r_versions()
+              axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+                cex.axis = 2/3, padj = 0.9)
+              abline(v = as.Date(r_v$date), lty = "dotted")
+            }
+
+            if (smooth) {
+              if (unit.observation %in% c("month", "year")) {
+                smooth.data <- rbind(complete.data, est.data)
+                lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
+                  f = f), col = "blue")
+              } else if (unit.observation == "day") {
+                lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
+              }
+            }
+            title(main = pkg)
+          }))
+
+        } else {
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
             if (log.count) {
               if (points) {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y",
-                  xlim = xlim, ylim = ylim)
+                  ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
+                  ylim = ylim)
               } else {
                 plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y",
-                  xlim = xlim, ylim = ylim)
+                  ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
+                  ylim = ylim)
               }
             } else {
               if (points) {
@@ -715,8 +807,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
             if (r.version) {
               r_v <- rversions::r_versions()
-              axis(3, at = as.Date(r_v$date),
-                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
+              axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+                cex.axis = 2/3, padj = 0.9)
               abline(v = as.Date(r_v$date), lty = "dotted")
             }
 
@@ -726,94 +818,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             }
             title(main = pkg)
           }))
-          grDevices::devAskNewPage(ask = FALSE)
-
-        } else {
-          grDevices::devAskNewPage(ask = TRUE)
-          invisible(lapply(x$package, function(pkg) {
-            pkg.dat <- dat[dat$package == pkg, ]
-            if (log.count) {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y")
-              } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y")
-              }
-            } else {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = y.nm.case)
-              } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = y.nm.case)
-              }
-            }
-
-            if (package.version) {
-              if (dev.mode) p_v <- packageHistory0(pkg)
-              else p_v <- packageHistory(pkg)
-              axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-                padj = 0.9, col.axis = "red", col.ticks = "red")
-              abline(v = p_v$Date, lty = "dotted", col = "red")
-            }
-
-            if (r.version) {
-              r_v <- rversions::r_versions()
-              axis(3, at = as.Date(r_v$date),
-                labels = paste("R", r_v$version), cex.axis = 2/3, padj = 0.9)
-              abline(v = as.Date(r_v$date), lty = "dotted")
-            }
-
-            if (smooth) {
-              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
-                col = "blue")
-            }
-            title(main = pkg)
-          }))
-          grDevices::devAskNewPage(ask = FALSE)
         }
+        if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
       }
-
-    } else if (length(x$packages) == 1) {
-      if (log.count) {
-        if (points) {
-          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), log = "y")
-        } else {
-          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), log = "y")
-        }
-      } else {
-        if (points) {
-          plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-            ylab = y.nm.case)
-        } else {
-          plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-            ylab = y.nm.case)
-        }
-      }
-
-      if (package.version) {
-        if (dev.mode) p_v <- packageHistory0(x$packages)
-        else p_v <- packageHistory(x$packages)
-        axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-          padj = 0.9, col.axis = "red", col.ticks = "red")
-        abline(v = p_v$Date, lty = "dotted", col = "red")
-      }
-
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
-        abline(v = as.Date(r_v$date), lty = "dotted")
-      }
-
-      if (smooth) {
-        lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
-      }
-
-      title(main = x$packages)
     }
 
   } else if (graphics == "ggplot2") {
@@ -843,20 +850,79 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- ggplot(data = dat, aes_string("date", "cumulative"))
         }
 
-        p <- p + geom_line(size = 0.5) +
-          facet_wrap(~ package, nrow = 2) +
-          theme_bw() +
-          theme(panel.grid.minor = element_blank())
+        if (any(dat$in.progress)) {
+          g <- lapply(x$packages, function(pkg) {
+            pkg.data <- dat[dat$package == pkg, ]
+            ip.sel <- pkg.data$in.progress == TRUE
+            ip.data <- pkg.data[ip.sel, ]
+            complete.data <- pkg.data[!ip.sel, ]
+            last.obs <- nrow(complete.data)
 
-        if (points) p <- p + geom_point()
+            obs.days <- as.numeric(format(last.obs.date , "%d"))
+            exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+            est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+
+            est.data <- ip.data
+            est.data$count <- est.ct
+            last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+            est.data$cumulative <- last.cumulative + est.ct
+
+            list(ip.data = ip.data,
+                 complete.data = complete.data,
+                 est.data = est.data,
+                 est.seg = rbind(complete.data[last.obs, ], est.data),
+                 obs.seg = rbind(complete.data[last.obs, ], ip.data))
+          })
+
+          ip.data <- do.call(rbind, lapply(g, function(x) x$ip.data))
+          complete.data <- do.call(rbind, lapply(g, function(x) {
+            x$complete.data
+          }))
+          est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
+          est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
+          obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
+
+          if (statistic == "count") {
+            p <- ggplot(data = dat, aes_string("date", "count"))
+          } else if (statistic == "cumulative") {
+            p <- ggplot(data = dat, aes_string("date", "cumulative"))
+          }
+
+          p <- p + geom_line(data = complete.data, size = 1/3) +
+            geom_line(data = est.seg, size = 1/3, col = "red") +
+            geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+            geom_point(data = est.data, col = "red") +
+            geom_point(data = ip.data, shape = 1) # +
+            # geom_text(data = est.data, col = "red", label = "est") +
+            # geom_text(data = ip.data, label = "obs")
+
+          if (points) p <- p + geom_point(data = complete.data)
+
+        } else {
+          p <- p + geom_line(size = 1/3)
+          if (points) p <- p + geom_point()
+        }
+
         if (log.count) p <- p + scale_y_log10()
+
         if (smooth) {
+          if (any(dat$in.progress)) {
+            smooth.data <- rbind(complete.data, est.data)
+            p <- p + geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x", se = se, span = span)
+          } else {
             p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
               span = span)
+          }
         }
+
+        p <- p + facet_wrap(~ package, nrow = 2) +
+             theme_bw() +
+             theme(panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank())
       }
-      p
     }
+    p
   }
 }
 
@@ -890,7 +956,6 @@ lastDayMonth <- function(dates) {
             ifelse(max.obs.date != max.date, TRUE, FALSE))
     data.frame(date = c(ldm, max.date), in.progress = ip)
   }
-
 }
 
 aggregateData <- function(unit.observation, dat, cores) {
