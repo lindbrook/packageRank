@@ -690,7 +690,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
 
-        if (unit.observation %in% c("month", "year")) {
+        if (any(dat$in.progress)) {
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
 
@@ -774,9 +774,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             title(main = pkg)
           }))
 
-          # if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
-
-        } else if (unit.observation == "day") {
+        } else {
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
             if (log.count) {
@@ -852,11 +850,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- ggplot(data = dat, aes_string("date", "cumulative"))
         }
 
-        if (unit.observation == "day") {
-          p <- p + geom_line(size = 1/3)
-          if (points) p <- p + geom_point()
-
-        } else if (unit.observation %in% c("month", "year")) {
+        if (any(dat$in.progress)) {
           g <- lapply(x$packages, function(pkg) {
             pkg.data <- dat[dat$package == pkg, ]
             ip.sel <- pkg.data$in.progress == TRUE
@@ -903,16 +897,20 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             # geom_text(data = ip.data, label = "obs")
 
           if (points) p <- p + geom_point(data = complete.data)
+
+        } else {
+          p <- p + geom_line(size = 1/3)
+          if (points) p <- p + geom_point()
         }
 
         if (log.count) p <- p + scale_y_log10()
 
         if (smooth) {
-          if (unit.observation %in% c("month", "year")) {
+          if (any(dat$in.progress)) {
             smooth.data <- rbind(complete.data, est.data)
             p <- p + geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
-          } else if (unit.observation == "day") {
+          } else {
             p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
               span = span)
           }
