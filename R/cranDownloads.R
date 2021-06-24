@@ -232,8 +232,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.count, package.version, dev.mode, r.version, same.xy,
-        unit.observation)
+        span, log.count, package.version, dev.mode, r.version, same.xy)
     }
   }
 }
@@ -648,8 +647,7 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.count, package.version, dev.mode, r.version, same.xy,
-  unit.observation) {
+  se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -763,11 +761,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             }
 
             if (smooth) {
-              if (unit.observation %in% c("month", "year")) {
+              if (any(dat$in.progress)) {
                 smooth.data <- rbind(complete.data, est.data)
                 lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
                   f = f), col = "blue")
-              } else if (unit.observation == "day") {
+              } else {
                 lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
               }
             }
