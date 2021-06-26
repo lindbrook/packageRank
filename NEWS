@@ -1,7 +1,7 @@
 packageRank 0.4.2.9004
 ==================
 
-- add singlePlot() in progress graphs.
+- add singlePlot() in-progress graphs.
 - set fetchCranLog() timeout to 600.
 
 
