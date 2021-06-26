@@ -920,7 +920,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                    panel.grid.minor = element_blank())
       }
     }
-    p
+    suppressWarnings(print(p))
   }
 }
 
