@@ -699,7 +699,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
             obs.days <- as.numeric(format(last.obs.date , "%d"))
             exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
-            est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+            est.ct <- round(ip.data$count * exp.days / obs.days)
 
             est.data <- ip.data
             est.data$count <- est.ct
@@ -858,7 +858,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
             obs.days <- as.numeric(format(last.obs.date , "%d"))
             exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
-            est.ct <- round(ip.data[, y.nm] * exp.days / obs.days)
+            est.ct <- round(ip.data$count * exp.days / obs.days)
 
             est.data <- ip.data
             est.data$count <- est.ct
