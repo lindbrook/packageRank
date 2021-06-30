@@ -469,6 +469,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   legend.loc, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
 
   if (statistic == "count") {
     ttl <- "Package Download Counts"
@@ -555,6 +556,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         theme(panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
+
       if (statistic == "count") {
         p <- ggplot(data = dat, aes_string(x = "date", y = "count",
           colour = "package")) + ggtitle("Package Download Counts")
@@ -563,18 +565,69 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           colour = "package")) + ggtitle("Cumulative Package Downloads")
       }
 
-      p <- p + geom_line() +
-        theme(panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
-    }
+      if (any(dat$in.progress)) {
+        g <- lapply(x$packages, function(pkg) {
+          pkg.data <- dat[dat$package == pkg, ]
+          ip.sel <- pkg.data$in.progress == TRUE
+          ip.data <- pkg.data[ip.sel, ]
+          complete.data <- pkg.data[!ip.sel, ]
+          last.obs <- nrow(complete.data)
 
-    if (points) p <- p + geom_point()
-    if (log.count) p <- p + scale_y_log10()
-    if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
-    }
+          obs.days <- as.numeric(format(last.obs.date , "%d"))
+          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          est.ct <- round(ip.data$count * exp.days / obs.days)
 
+          est.data <- ip.data
+          est.data$count <- est.ct
+          last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct
+
+          list(ip.data = ip.data,
+               complete.data = complete.data,
+               est.data = est.data,
+               est.seg = rbind(complete.data[last.obs, ], est.data),
+               obs.seg = rbind(complete.data[last.obs, ], ip.data))
+        })
+
+        ip.data <- do.call(rbind, lapply(g, function(x) x$ip.data))
+        complete.data <- do.call(rbind, lapply(g, function(x) {
+          x$complete.data
+        }))
+
+        est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
+        est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
+        obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
+
+        p <- p + geom_line(data = complete.data, size = 1/3) +
+          geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
+          geom_line(data = obs.seg,  size = 1/3, linetype = "dotted")
+
+        if (points) {
+          p <- p + geom_point(data = est.data) +
+                   geom_point(data = ip.data, shape = 1)
+        }
+
+      } else {
+        p <- p + geom_line(size = 1/3) +
+          theme(panel.grid.minor = element_blank(),
+          plot.title = element_text(hjust = 0.5))
+
+        if (points) p <- p + geom_point()
+      }
+
+      if (log.count) p <- p + scale_y_log10()
+
+      if (smooth) {
+        if (any(dat$in.progress)) {
+          smooth.data <- rbind(complete.data, est.data)
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else {
+          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+            span = span)
+        }
+      }
+    }
     p
   }
 }
@@ -879,7 +932,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
           est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
           obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
-          
+
           p <- p + geom_line(data = complete.data, size = 1/3) +
             geom_line(data = est.seg, size = 1/3, col = "red") +
             geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
