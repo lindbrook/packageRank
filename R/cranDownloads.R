@@ -879,13 +879,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
           est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
           obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
-
-          if (statistic == "count") {
-            p <- ggplot(data = dat, aes_string("date", "count"))
-          } else if (statistic == "cumulative") {
-            p <- ggplot(data = dat, aes_string("date", "cumulative"))
-          }
-
+          
           p <- p + geom_line(data = complete.data, size = 1/3) +
             geom_line(data = est.seg, size = 1/3, col = "red") +
             geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
