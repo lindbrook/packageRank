@@ -610,7 +610,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
       } else {
         p <- p + geom_line(size = 1/3) +
           theme(panel.grid.minor = element_blank(),
-          plot.title = element_text(hjust = 0.5))
+                plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
       }
