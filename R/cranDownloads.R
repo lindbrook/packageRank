@@ -628,7 +628,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         }
       }
     }
-    p
+    suppressWarnings(print(p))
   }
 }
 
