@@ -465,8 +465,8 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
-  legend.loc, points, smooth, se, f, span) {
+multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
+  points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -547,7 +547,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                      ip.data$date,
                      ip.data[, statistic],
                      lty = "dotted")
-
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      est.data$date,
@@ -627,7 +626,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         theme(panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
-
       if (statistic == "count") {
         p <- ggplot(data = dat, aes_string(x = "date", y = "count",
           colour = "package")) + ggtitle("Package Download Counts")
@@ -671,7 +669,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
-          geom_line(data = obs.seg,  size = 1/3, linetype = "dotted")
+          geom_line(data = obs.seg, size = 1/3, linetype = "dotted")
 
         if (points) {
           p <- p + geom_point(data = est.data) +
