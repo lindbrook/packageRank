@@ -465,10 +465,11 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
-  legend.loc, points, smooth, se, f, span) {
+multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
+  points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
 
   if (statistic == "count") {
     ttl <- "Package Download Counts"
@@ -489,57 +490,127 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
       if (length(x$packages) > 8) {
         stop('Use <= 8 packages when graphics = "base".', call. = FALSE)
       } else {
-        if (log.count) {
-          if (points) {
-            plot(dat[dat$package == x$packages[1], c("date", statistic)],
-              ylim = range(dat[, statistic]), type = "o", log = "y", main = ttl)
-          } else {
-            plot(dat[dat$package == x$packages[1], c("date", statistic)],
-              ylim = range(dat[, statistic]), type = "l", log = "y", main = ttl)
-          }
-        } else {
-          if (points) {
-            plot(dat[dat$package == x$packages[1], c("date", statistic)],
-              ylim = range(dat[, statistic]), type = "o", main = ttl)
-          } else {
-            plot(dat[dat$package == x$packages[1], c("date", statistic)],
-              ylim = range(dat[, statistic]), type = "l", main = ttl)
-          }
-        }
-
         # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
         # http://jfly.iam.u-tokyo.ac.jp/color/
         # The palette with grey:
         # cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
         #   "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-        cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-        token <- c(0, 2:7)
-        invisible(lapply(seq_along(x$packages)[-1], function(i) {
-          lines(dat[dat$package == x$packages[i], c("date", statistic)],
-            type = "o", col = cbPalette[i], pch = token[i])
-        }))
+        cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+          "#0072B2", "#D55E00", "#CC79A7")
 
-        if (smooth) {
-          invisible(lapply(seq_along(x$packages), function(i) {
-            vars <- c("date", statistic)
-            lines(stats::lowess(dat[dat$package == x$packages[i], vars], f = f),
+        token <- c(1, 0,  2:7)
+        vars <- c("date", statistic)
+        type <- ifelse(points, "o", "l")
+        xlim <- range(dat$date)
+        ylim <- range(dat[, statistic])
+
+        if (any(dat$in.progress)) {
+          pkg.data <- lapply(x$package, function(pkg) {
+            tmp <- dat[dat$package == pkg, ]
+            ip.data <- tmp[tmp$in.progress == TRUE, ]
+            complete.data <- tmp[tmp$in.progress == FALSE, ]
+            last.obs <- nrow(complete.data)
+
+            obs.days <- as.numeric(format(last.obs.date , "%d"))
+            exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+            est.ct <- round(ip.data$count * exp.days / obs.days)
+
+            est.data <- ip.data
+            est.data$count <- est.ct
+            last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+            est.data$cumulative <- last.cumulative + est.ct
+
+            list(complete.data = complete.data, est.data = est.data,
+              ip.data = ip.data)
+          })
+
+          pkg1 <- complete.data[complete.data$package == x$packages[1], ]
+
+          if (log.count) {
+            plot(pkg1[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
+              main = ttl)
+          } else {
+            plot(pkg1[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+          }
+
+          invisible(lapply(seq_along(pkg.data), function(i) {
+            complete.data <- pkg.data[[i]]$complete.data
+            est.data <- pkg.data[[i]]$est.data
+            ip.data <- pkg.data[[i]]$ip.data
+            last.obs <- nrow(complete.data)
+
+            lines(complete.data$date, complete.data[, statistic],
               col = cbPalette[i])
-          }))
-        }
 
-        id <- seq_along(x$packages)
-        legend(x = legend.loc,
-               legend = x$packages,
-               col = cbPalette[id],
-               pch = c(1, token[id]),
-               bg = "white",
-               cex = 2/3,
-               title = NULL,
-               lwd = 1)
+            segments(complete.data[last.obs, "date"],
+                     complete.data[last.obs, statistic],
+                     ip.data$date,
+                     ip.data[, statistic],
+                     lty = "dotted")
+            segments(complete.data[last.obs, "date"],
+                     complete.data[last.obs, statistic],
+                     est.data$date,
+                     est.data[, statistic],
+                     col = "red")
+
+            if (points) {
+              points(complete.data[, "date"], complete.data[, statistic],
+                col = cbPalette[i], pch = token[i])
+              points(est.data[, "date"], est.data[, statistic],
+                col = cbPalette[i], pch = token[i])
+              points(ip.data[, "date"], ip.data[, statistic],
+                col = cbPalette[i], pch = token[i])
+            }
+
+            if (smooth) {
+              smooth.data <- rbind(complete.data, est.data)
+              lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
+                f = f), col = "blue")
+            }
+
+            if (i == 1) {
+              axis(4, at = ip.data[, statistic], labels = "obs")
+              axis(4, at = est.data[, statistic], labels = "est",
+                col.axis = "red", col.ticks = "red")
+            }
+          }))
+        } else {
+          pkg1 <- dat[dat$package == x$packages[1], ]
+
+          if (log.count) {
+            plot(pkg1[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
+              main = ttl)
+          } else {
+            plot(pkg1[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+          }
+
+          invisible(lapply(seq_along(x$packages), function(i) {
+            tmp <- dat[dat$package == x$packages[i], ]
+            lines(tmp$date, tmp[, statistic], col = cbPalette[i])
+
+            if (points) {
+              points(tmp[, "date"], tmp[, statistic], col = cbPalette[i],
+                pch = token[i])
+            }
+
+            if (smooth) {
+              lines(stats::lowess(dat[dat$package == x$packages[i], vars],
+                f = f), col = cbPalette[i])
+            }
+          }))
+
+          id <- seq_along(x$packages)
+          legend(x = legend.loc,
+                 legend = x$packages,
+                 col = cbPalette[id],
+                 pch = c(1, token[id]),
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1)
+        }
       }
     }
-
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
       p <- ggplot(data = dat, aes_string("count", y = "package"))
@@ -563,19 +634,70 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           colour = "package")) + ggtitle("Cumulative Package Downloads")
       }
 
-      p <- p + geom_line() +
-        theme(panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
-    }
+      if (any(dat$in.progress)) {
+        g <- lapply(x$packages, function(pkg) {
+          pkg.data <- dat[dat$package == pkg, ]
+          ip.sel <- pkg.data$in.progress == TRUE
+          ip.data <- pkg.data[ip.sel, ]
+          complete.data <- pkg.data[!ip.sel, ]
+          last.obs <- nrow(complete.data)
 
-    if (points) p <- p + geom_point()
-    if (log.count) p <- p + scale_y_log10()
-    if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
-    }
+          obs.days <- as.numeric(format(last.obs.date , "%d"))
+          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          est.ct <- round(ip.data$count * exp.days / obs.days)
 
-    p
+          est.data <- ip.data
+          est.data$count <- est.ct
+          last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct
+
+          list(ip.data = ip.data,
+               complete.data = complete.data,
+               est.data = est.data,
+               est.seg = rbind(complete.data[last.obs, ], est.data),
+               obs.seg = rbind(complete.data[last.obs, ], ip.data))
+        })
+
+        ip.data <- do.call(rbind, lapply(g, function(x) x$ip.data))
+        complete.data <- do.call(rbind, lapply(g, function(x) {
+          x$complete.data
+        }))
+
+        est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
+        est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
+        obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
+
+        p <- p + geom_line(data = complete.data, size = 1/3) +
+          geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
+          geom_line(data = obs.seg, size = 1/3, linetype = "dotted")
+
+        if (points) {
+          p <- p + geom_point(data = est.data) +
+                   geom_point(data = ip.data, shape = 1)
+        }
+
+      } else {
+        p <- p + geom_line(size = 1/3) +
+          theme(panel.grid.minor = element_blank(),
+                plot.title = element_text(hjust = 0.5))
+
+        if (points) p <- p + geom_point()
+      }
+
+      if (log.count) p <- p + scale_y_log10()
+
+      if (smooth) {
+        if (any(dat$in.progress)) {
+          smooth.data <- rbind(complete.data, est.data)
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else {
+          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+            span = span)
+        }
+      }
+    }
+    suppressWarnings(print(p))
   }
 }
 
@@ -879,12 +1001,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
           est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
           obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
-
-          if (statistic == "count") {
-            p <- ggplot(data = dat, aes_string("date", "count"))
-          } else if (statistic == "cumulative") {
-            p <- ggplot(data = dat, aes_string("date", "cumulative"))
-          }
 
           p <- p + geom_line(data = complete.data, size = 1/3) +
             geom_line(data = est.seg, size = 1/3, col = "red") +
