@@ -669,7 +669,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
-          geom_line(data = obs.seg, size = 1/3, linetype = "dotted")
+          geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
+          theme(panel.grid.minor = element_blank(),
+                plot.title = element_text(hjust = 0.5))
 
         if (points) {
           p <- p + geom_point(data = est.data) +
