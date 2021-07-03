@@ -815,6 +815,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         if (any(dat$in.progress)) {
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
+            type <- ifelse(points, "o", "l")
 
             ip.sel <- pkg.dat$in.progress == TRUE
             ip.data <- pkg.dat[ip.sel, ]
@@ -827,44 +828,34 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
             est.data <- ip.data
             est.data$count <- est.ct
-            last.cumulative <- complete.data[nrow(complete.data),
-              "cumulative"]
+            last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
             est.data$cumulative <- last.cumulative + est.ct
 
             if (log.count) {
-              if (points) {
-                plot(complete.data$date, complete.data[, y.nm], type = "o",
-                  xlab = "Date", ylab = paste0("log10 ", y.nm.case),
-                  xlim = xlim, ylim = ylim, log = "y")
-                points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
-                points(est.data[, "date"], est.data[, y.nm], col = "red")
-              } else {
-                plot(complete.data$date, complete.data[, y.nm], type = "l",
-                  xlab = "Date", ylab = paste0("log10 ", y.nm.case),
-                  xlim = xlim, ylim = ylim, log = "y")
-              }
-
+              plot(complete.data$date, complete.data[, y.nm], type = type,
+                xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim, log = "y")
             } else {
-              if (points) {
-                plot(complete.data$date, complete.data[, y.nm], type = "o",
-                  xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
-                points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
-                points(est.data[, "date"], est.data[, y.nm], col = "red")
-              } else {
-                plot(complete.data$date, complete.data[, y.nm], type = "l",
-                  xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
-              }
+              plot(complete.data$date, complete.data[, y.nm], type = type,
+                xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+            }
+
+            if (points) {
+              points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+              points(est.data[, "date"], est.data[, y.nm], col = "red")
             }
 
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, y.nm],
-                     ip.data$date, ip.data[, y.nm],
+                     ip.data$date,
+                     ip.data[, y.nm],
                      lty = "dotted")
+
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, y.nm],
                      est.data$date,
                      est.data[, y.nm],
                      col = "red")
+
             axis(4, at = ip.data[, y.nm], labels = "obs")
             axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
               col.ticks = "red")
@@ -899,24 +890,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         } else {
           invisible(lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
+            type <- ifelse(points, "o", "l")
+
             if (log.count) {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
-                  ylim = ylim)
-              } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
-                  ylim = ylim)
-              }
+              plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
+                ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
+                ylim = ylim)
             } else {
-              if (points) {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "o", xlab = "Date",
-                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
-              } else {
-                plot(pkg.dat$date, pkg.dat[, y.nm], type = "l", xlab = "Date",
-                  ylab = y.nm.case, xlim = xlim, ylim = ylim)
-              }
+              plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
+                ylab = y.nm.case, xlim = xlim, ylim = ylim)
             }
 
             if (package.version) {
@@ -941,6 +923,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             title(main = pkg)
           }))
         }
+
         if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
       }
     }
