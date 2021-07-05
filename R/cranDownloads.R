@@ -707,6 +707,7 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
   smooth, se, f, span, r.version) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
 
   if (statistic == "count") {
     y.nm.case <- "Count"
@@ -716,20 +717,64 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
     y.nm <- tolower(y.nm.case)
   }
 
+  type <- ifelse(points, "o", "l")
+
   if (graphics == "base") {
-    if (log.count) {
-      if (points) {
-        plot(dat$date, dat[, y.nm], type = "o", xlab = "Date",
-          ylab = paste0("log10 ", y.nm.case), log = "y")
+    if (any(dat$in.progress)) {
+      ip.sel <- dat$in.progress == TRUE
+      ip.data <- dat[ip.sel, ]
+      complete.data <- dat[!ip.sel, ]
+      last.obs <- nrow(complete.data)
+
+      obs.days <- as.numeric(format(last.obs.date , "%d"))
+      exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+      est.ct <- round(ip.data$count * exp.days / obs.days)
+
+      est.data <- ip.data
+      est.data$count <- est.ct
+      last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+      est.data$cumulative <- last.cumulative + est.ct
+
+      xlim <- range(dat$date)
+      ylim <- range(dat[, y.nm])
+
+      if (log.count) {
+        plot(complete.data$date, complete.data[, y.nm], type = type,
+          xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
+          ylim = ylim, log = "y")
       } else {
-        plot(dat$date, dat[, y.nm], type = "l", xlab = "Date",
-          ylab = paste0("log10 ", y.nm.case), log = "y")
+        plot(complete.data$date, complete.data[, y.nm], type = type,
+          xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
       }
-    } else {
+
       if (points) {
-        plot(dat$date, dat[, y.nm], type = "o", xlab = "Date", ylab = y.nm.case)
+        points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
+        points(est.data[, "date"], est.data[, y.nm], col = "red")
+      }
+
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, y.nm],
+               ip.data$date,
+               ip.data[, y.nm],
+               lty = "dotted")
+
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, y.nm],
+               est.data$date,
+               est.data[, y.nm],
+               col = "red")
+
+      axis(4, at = ip.data[, y.nm], labels = "obs")
+      axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
+        col.ticks = "red")
+
+    } else {
+      if (log.count) {
+        plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
+          ylab = paste0("log10 ", y.nm.case), log = "y")
       } else {
-        plot(dat$date, dat[, y.nm], type = "l", xlab = "Date", ylab = y.nm.case)
+        plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
+          ylab = paste0("log10 ", y.nm.case))
       }
     }
 
@@ -737,12 +782,17 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
       r_v <- rversions::r_versions()
       axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
         cex.axis = 2/3, padj = 0.9)
-      abline(v = as.Date(r_v$date), lty = "dotted")
+      # abline(v = as.Date(r_v$date), lty = "dotted")
     }
 
     if (smooth) {
-      lines(stats::lowess(dat$date, dat[, y.nm], f = f),
-        col = "blue")
+      if (any(dat$in.progress)) {
+        smooth.data <- rbind(complete.data, est.data)
+        lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
+          f = f), col = "blue")
+      } else {
+        lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
+      }
     }
 
     title(main = "Total Package Downloads")
@@ -754,20 +804,60 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
       p <- ggplot(data = dat, aes_string("date", "cumulative"))
     }
 
-    p <- p + geom_line(size = 0.5) +
-      theme_bw() +
-      ggtitle("Total Package Downloads") +
-      theme(plot.title = element_text(hjust = 0.5))
+    if (any(dat$in.progress)) {
+      ip.sel <- dat$in.progress == TRUE
+      ip.data <- dat[ip.sel, ]
+      complete.data <- dat[!ip.sel, ]
+      last.obs <- nrow(complete.data)
 
-    if (points) p <- p + geom_point()
-    if (log.count) p <- p + scale_y_log10()
-    if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
+      obs.days <- as.numeric(format(last.obs.date , "%d"))
+      exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+      est.ct <- round(ip.data$count * exp.days / obs.days)
+
+      est.data <- ip.data
+      est.data$count <- est.ct
+      last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+      est.data$cumulative <- last.cumulative + est.ct
+
+      est.seg <- rbind(complete.data[last.obs, ], est.data)
+      obs.seg <- rbind(complete.data[last.obs, ], ip.data)
+
+      p <- p + geom_line(data = complete.data, size = 1/3) +
+        geom_line(data = est.seg, size = 1/3, col = "red") +
+        geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+        geom_point(data = est.data, col = "red", shape = 1) +
+        geom_point(data = ip.data, col = "gray", shape = 1)
+
+      if (points) p <- p + geom_point(data = complete.data)
+      if (log.count) p <- p + scale_y_log10()
+      if (smooth) {
+        if (any(dat$in.progress)) {
+          smooth.data <- rbind(complete.data, est.data)
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else {
+          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+            span = span)
+        }
+      }
+    } else {
+      p <- p + geom_line(size = 1/3)
+      if (points) p <- p + geom_point()
+      if (log.count) p <- p + scale_y_log10()
+      if (smooth) {
+        p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+          span = span)
+      }
     }
 
-    p
-  } else stop('graphics must be "base" or "ggplot2".', call. = FALSE)
+    p <- p + theme_bw() +
+      ggtitle("Total Package Downloads") +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+
+    suppressWarnings(print(p))
+  }
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
@@ -833,7 +923,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
             if (log.count) {
               plot(complete.data$date, complete.data[, y.nm], type = type,
-                xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim, log = "y")
+                xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
+                ylim = ylim, log = "y")
             } else {
               plot(complete.data$date, complete.data[, y.nm], type = type,
                 xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
@@ -931,7 +1022,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   } else if (graphics == "ggplot2") {
     if (is.null(x$packages)) {
       p <- cranDownloadsPlot(x, statistic, graphics, points, log.count, smooth,
-        se, f)
+        se, f, span, r.version)
     } else {
       if (obs.ct == 1) {
         p <- ggplot(data = dat) +
