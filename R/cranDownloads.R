@@ -524,6 +524,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
               ip.data = ip.data)
           })
 
+          if (statistic == "count") {
+            ylim <- range(c(ylim, est.data$count))
+          } else if (statistic == "cumulative") {
+            ylim <- range(c(ylim, est.data$cumulative))
+          }
+
           pkg1 <- complete.data[complete.data$package == x$packages[1], ]
 
           if (log.count) {
@@ -736,7 +742,12 @@ cranDownloadsPlot <- function(x, statistic, graphics, points, log.count,
       est.data$cumulative <- last.cumulative + est.ct
 
       xlim <- range(dat$date)
-      ylim <- range(dat[, y.nm])
+
+      if (statistic == "count") {
+        ylim <- range(c(dat[, y.nm], est.data$count))
+      } else if (statistic == "cumulative") {
+        ylim <- range(c(dat[, y.nm], est.data$cumulative))
+      }
 
       if (log.count) {
         plot(complete.data$date, complete.data[, y.nm], type = type,
@@ -921,6 +932,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
             est.data$cumulative <- last.cumulative + est.ct
 
+            if (statistic == "count") {
+              ylim <- range(c(ylim, est.data$count))
+            } else if (statistic == "cumulative") {
+              ylim <- range(c(ylim, est.data$cumulative))
+            }
+            
             if (log.count) {
               plot(complete.data$date, complete.data[, y.nm], type = type,
                 xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
