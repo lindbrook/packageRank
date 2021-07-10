@@ -261,6 +261,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
   dat <- x$cranlogs.data
   ylab <- tools::toTitleCase(statistic)
+  last.obs.date <- x$last.obs.date
+  type <- ifelse(points, "o", "l")
 
   if (obs.ct == 1) {
     if (graphics == "base") {
@@ -291,54 +293,158 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
     }
 
   } else if (obs.ct > 1) {
-    type <- ifelse(points, "o", "l")
-
     if (graphics == "base") {
-      if (log.count) {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             pch = NA, ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = paste("log10", ylab), log = "y")
-      } else {
-        plot(dat[dat$platform == "win", "date"],
-             dat[dat$platform == "win", statistic],
-             pch = NA, ylim = range(dat[, statistic]),
-             xlab = "Date", ylab = ylab)
-      }
+      if (any(dat$in.progress)) {
+        pltfrm <- unique(dat$platform)
+        pltfrm.col <- c("red", "blue", "black")
 
-      pform <- unique(dat$platform)
-      pform.col <- c("red", "blue", "black")
+        p.data <- lapply(seq_along(pltfrm), function(i) {
+          pkg.dat <- dat[dat$platform == pltfrm[i], ]
+          ip.sel <- pkg.dat$in.progress == TRUE
+          ip.data <- pkg.dat[ip.sel, ]
+          complete.data <- pkg.dat[!ip.sel, ]
+          obs.days <- as.numeric(format(last.obs.date , "%d"))
+          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          est.ct <- round(ip.data$count * exp.days / obs.days)
+          est.data <- ip.data
+          est.data$count <- est.ct
+          last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct
+          list(ip.data = ip.data, complete.data = complete.data,
+            est.data = est.data)
+        })
 
-      invisible(lapply(seq_along(pform), function(i) {
-        lines(dat[dat$platform == pform[i], "date"],
-              dat[dat$platform == pform[i], statistic],
-              type = type, pch = 0, col = pform.col[i])
-      }))
+        est.stat <- vapply(p.data, function(x) {
+          x$est.data[, statistic]
+        }, numeric(1L))
 
-      legend(x = legend.loc,
-             legend = c("win", "mac", "src"),
-             col = c("black", "red", "blue"),
-             pch = c(1, 0, 2),
-             bg = "white",
-             cex = 2/3,
-             title = "Platform",
-             lwd = 1)
+        complete.data <- lapply(p.data, function(x) x$complete.data)
+        est.data <- lapply(p.data, function(x) x$est.data)
+        ip.data <- lapply(p.data, function(x) x$ip.data)
 
-      if (smooth) {
-        invisible(lapply(seq_along(pform), function(i) {
-          sm.data <- stats::lowess(dat[dat$platform == pform[i], "date"],
-            dat[dat$platform == pform[i], statistic], f = f)
-          lines(sm.data, lty = "dashed", col = pform.col[i])
+        last.obs <- unique(vapply(complete.data, nrow, integer(1L)))
+        ylim <- range(c(dat[, statistic], est.stat))
+
+        if (log.count) {
+          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
+            ylab = paste("log10", ylab), ylim = ylim, log = "y")
+        } else {
+          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", ylab = ylab,
+            ylim = ylim)
+        }
+
+        if (points) {
+          invisible(lapply(seq_along(complete.data), function(i) {
+            tmp <- complete.data[[i]]
+            points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i],
+              pch = 1)
+          }))
+        }
+
+        invisible(lapply(seq_along(complete.data), function(i) {
+          tmp <- complete.data[[i]]
+          lines(tmp$date, tmp[, statistic], type = type, col = pltfrm.col[i])
         }))
-      }
 
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
-        # abline(v = as.Date(r_v$date), lty = "dotted")
+        invisible(lapply(seq_along(est.data), function(i) {
+          tmp <- est.data[[i]]
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 16)
+        }))
+
+        invisible(lapply(seq_along(ip.data), function(i) {
+          tmp <- ip.data[[i]]
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 0)
+        }))
+
+        invisible(lapply(seq_along(complete.data), function(i) {
+          tmpA <- complete.data[[i]]
+          tmpB <- ip.data[[i]]
+          segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic],
+            tmpB$date, tmpB[, statistic], lty = "dotted")
+        }))
+
+        invisible(lapply(seq_along(complete.data), function(i) {
+          tmpA <- complete.data[[i]]
+          tmpB <- est.data[[i]]
+          arrows(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
+            tmpB[, statistic], length = 1/8, col = pltfrm.col[i])
+        }))
+
+        if (smooth) {
+          invisible(lapply(seq_along(complete.data), function(i) {
+            tmpA <- complete.data[[i]]
+            tmpB <- est.data[[i]]
+            smooth.data <- rbind(tmpA, tmpB)
+            lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
+              f = f), col = pltfrm.col[i])
+          }))
+        }
+
+        legend(x = legend.loc,
+               legend = c("win", "mac", "src"),
+               col = c("black", "red", "blue"),
+               pch = c(1, 0, 2),
+               bg = "white",
+               cex = 2/3,
+               title = "Platform",
+               lwd = 1)
+
+        if (r.version) {
+          r_v <- rversions::r_versions()
+          axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+            cex.axis = 2/3, padj = 0.9)
+          # abline(v = as.Date(r_v$date), lty = "dotted")
+        }
+
+        title(main = "R Downloads")
+
+      } else {
+        if (log.count) {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               pch = NA, ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = paste("log10", ylab), log = "y")
+        } else {
+          plot(dat[dat$platform == "win", "date"],
+               dat[dat$platform == "win", statistic],
+               pch = NA, ylim = range(dat[, statistic]),
+               xlab = "Date", ylab = ylab)
+        }
+
+        pltfrm <- unique(dat$platform)
+        pltfrm.col <- c("red", "blue", "black")
+
+        invisible(lapply(seq_along(pltfrm), function(i) {
+          lines(dat[dat$platform == pltfrm[i], "date"],
+                dat[dat$platform == pltfrm[i], statistic],
+                type = type, pch = 0, col = pltfrm.col[i])
+        }))
+
+        legend(x = legend.loc,
+               legend = c("win", "mac", "src"),
+               col = c("black", "red", "blue"),
+               pch = c(1, 0, 2),
+               bg = "white",
+               cex = 2/3,
+               title = "Platform",
+               lwd = 1)
+
+        if (smooth) {
+          invisible(lapply(seq_along(pltfrm), function(i) {
+            sm.data <- stats::lowess(dat[dat$platform == pltfrm[i], "date"],
+              dat[dat$platform == pltfrm[i], statistic], f = f)
+            lines(sm.data, lty = "dashed", col = pltfrm.col[i])
+          }))
+        }
+
+        if (r.version) {
+          r_v <- rversions::r_versions()
+          axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+            cex.axis = 2/3, padj = 0.9)
+          # abline(v = as.Date(r_v$date), lty = "dotted")
+        }
+        title(main = "R Downloads")
       }
-      title(main = "R Downloads")
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
