@@ -448,37 +448,125 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
-        dat2 <- dat[, c("date", "count", "platform")]
         if (multi.plot) {
-          p <- ggplot(data = dat2, aes_string("date", "count",
+          p <- ggplot(data = dat, aes_string("date", "count",
             colour = "platform"))
         } else {
-          p <- ggplot(data = dat2, aes_string("date", "count")) +
+          p <- ggplot(data = dat, aes_string("date", "count")) +
             facet_wrap(~ platform, nrow = 2)
         }
       } else {
-        dat2 <- dat[, c("date", "cumulative", "platform")]
         if (multi.plot) {
-          p <- ggplot(data = dat2, aes_string("date", "cumulative",
+          p <- ggplot(data = dat, aes_string("date", "cumulative",
             colour = "platform"))
         } else {
-          p <- ggplot(data = dat2, aes_string("date", "cumulative")) +
+          p <- ggplot(data = dat, aes_string("date", "cumulative")) +
             facet_wrap(~ platform, nrow = 2)
         }
       }
-      p <- p + geom_line(size = 0.5) +
-        theme_bw() +
-        theme(panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5)) +
-        ggtitle("R Downloads")
 
-      if (points) p <- p + geom_point()
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
-      if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
-      if (smooth) {
-        p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-          span = span)
+      if (any(dat$in.progress)) {
+        pltfrm <- unique(dat$platform)
+        pltfrm.col <- c("red", "blue", "black")
+
+        p.data <- lapply(seq_along(pltfrm), function(i) {
+          pkg.dat <- dat[dat$platform == pltfrm[i], ]
+          ip.sel <- pkg.dat$in.progress == TRUE
+          ip.data <- pkg.dat[ip.sel, ]
+          complete.data <- pkg.dat[!ip.sel, ]
+          last.obs <- nrow(complete.data)
+          obs.days <- as.numeric(format(last.obs.date , "%d"))
+          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          est.ct <- round(ip.data$count * exp.days / obs.days)
+          est.data <- ip.data
+          est.data$count <- est.ct
+          last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct
+
+          list(ip.data = ip.data,
+               complete.data = complete.data,
+               est.data = est.data,
+               est.seg = rbind(complete.data[last.obs, ], est.data),
+               obs.seg = rbind(complete.data[last.obs, ], ip.data))
+        })
+
+        est.stat <- vapply(p.data, function(x) {
+          x$est.data[, statistic]
+        }, numeric(1L))
+
+        ylim <- range(c(dat[, statistic], est.stat))
+
+        complete.data <- lapply(p.data, function(x) x$complete.data)
+        est.data <- lapply(p.data, function(x) x$est.data)
+        ip.data <- lapply(p.data, function(x) x$ip.data)
+
+        # last.obs <- unique(vapply(complete.data, nrow, integer(1L)))
+
+        complete.data <- do.call(rbind, complete.data)
+        est.data <- do.call(rbind, est.data)
+        ip.data <- do.call(rbind, ip.data)
+
+        p <- p + geom_line(data = complete.data, size = 1/3)
+
+        est.seg <- lapply(p.data, function(x) x$est.seg)
+        obs.seg <- lapply(p.data, function(x) x$obs.seg)
+
+        for (i in seq_along(est.seg)) {
+          tmp <- est.seg[[i]]
+          p <- p + geom_segment(data = tmp,
+                                xend = tmp[tmp$in.progress == TRUE, "date"],
+                                yend = tmp[tmp$in.progress == TRUE, statistic],
+                                linetype = "dashed")
+        }
+
+        for (i in seq_along(obs.seg)) {
+          tmp <- obs.seg[[i]]
+          p <- p + geom_segment(data = tmp,
+                                xend = tmp[tmp$in.progress == TRUE, "date"],
+                                yend = tmp[tmp$in.progress == TRUE, statistic],
+                                linetype = "dotted")
+        }
+
+        if (points) {
+          p <- p + geom_point(data = est.data) +
+                   geom_point(data = ip.data, shape = 1)
+        }
+
+        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+
+        if (smooth) {
+          if (any(dat$in.progress)) {
+            smooth.data <- rbind(complete.data, est.data)
+            p <- p + geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x", se = se, span = span)
+          } else {
+            p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+              span = span)
+          }
+        }
+
+        p <- p + theme_bw() +
+          ggtitle("R Downloads") +
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
+                plot.title = element_text(hjust = 0.5))
+
+      } else {
+        p <- p + geom_line(size = 0.5) +
+          ggtitle("R Downloads") +
+          theme_bw() +
+          theme(panel.grid.minor = element_blank(),
+                plot.title = element_text(hjust = 0.5))
+
+        if (points) p <- p + geom_point()
+        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+        if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
+        if (smooth) {
+          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+            span = span)
+        }
       }
+
       suppressWarnings(print(p))
     }
   }
