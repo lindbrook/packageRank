@@ -820,38 +820,116 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
   log.count, smooth, se, r.version, f, span) {
 
   dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
   ct <-  tapply(dat$count, dat$date, sum)
 
-  dat <- data.frame(date = unique(dat$date),
-                    count = ct,
-                    cumulative = cumsum(ct),
-                    row.names = NULL)
+  if (any(dat$in.progress)) {
+    dat <- data.frame(date = unique(dat$date),
+                      count = ct,
+                      cumulative = cumsum(ct),
+                      in.progress = dat[dat$platform == "win", "in.progress"],
+                      row.names = NULL)
+  } else {
+    dat <- data.frame(date = unique(dat$date),
+                      count = ct,
+                      cumulative = cumsum(ct),
+                      row.names = NULL)
+  }
 
   ylab <- tools::toTitleCase(statistic)
 
   if (graphics == "base") {
     type <- ifelse(points, "o", "l")
-    
-    if (log.count) {
-      plot(dat$date, dat[, statistic], type = type, xlab = "Date", ylab = ylab,
-        log = "y")
+
+    if (any(dat$in.progress)) {
+      ip.sel <- dat$in.progress == TRUE
+      ip.data <- dat[ip.sel, ]
+      complete.data <- dat[!ip.sel, ]
+      last.obs <- nrow(complete.data)
+
+      obs.days <- as.numeric(format(last.obs.date , "%d"))
+      exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+      est.ct <- round(ip.data$count * exp.days / obs.days)
+
+      est.data <- ip.data
+      est.data$count <- est.ct
+      last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+      est.data$cumulative <- last.cumulative + est.ct
+
+      if (statistic == "count") {
+        ylim <- range(c(dat[, statistic], est.data$count))
+      } else if (statistic == "cumulative") {
+        ylim <- range(c(dat[, statistic], est.data$cumulative))
+      }
+
+      xlim <- range(dat$date)
+
+      if (log.count) {
+        plot(complete.data$date, complete.data[, statistic], type = type,
+          xlab = "Date", ylab = paste0("log10 ", ylab), xlim = xlim,
+          ylim = ylim, log = "y")
+      } else {
+        plot(complete.data$date, complete.data[, statistic], type = type,
+          xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
+      }
+
+      if (points) {
+        points(ip.data[, "date"], ip.data[, statistic], col = "gray")
+        points(est.data[, "date"], est.data[, statistic], col = "red")
+      }
+
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, statistic],
+               ip.data$date,
+               ip.data[, statistic],
+               lty = "dotted")
+
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, statistic],
+               est.data$date,
+               est.data[, statistic],
+               col = "red")
+
+      axis(4, at = ip.data[, statistic], labels = "obs")
+      axis(4, at = est.data[, statistic], labels = "est", col.axis = "red",
+        col.ticks = "red")
+
+      if (smooth) {
+        smooth.data <- rbind(complete.data, est.data)
+        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
+          col = "blue")
+      }
+
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
+      }
+
+      title(main = "Total R Downloads")
+
     } else {
-      plot(dat$date, dat[, statistic], type = type, xlab = "Date", ylab = ylab)
-    }
+      if (log.count) {
+        plot(dat$date, dat[, statistic], type = type, xlab = "Date",
+          ylab = ylab, log = "y")
+      } else {
+        plot(dat$date, dat[, statistic], type = type, xlab = "Date",
+          ylab = ylab)
+      }
 
-    if (smooth) {
-      lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
-        lwd = 1.25)
-    }
+      if (smooth) {
+        lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
+          lwd = 1.25)
+      }
 
-    if (r.version) {
-      r_v <- rversions::r_versions()
-      axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-        cex.axis = 2/3, padj = 0.9)
-      # abline(v = as.Date(r_v$date), lty = "dotted")
-    }
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
+      }
 
-    title(main = "Total R Downloads")
+      title(main = "Total R Downloads")
+    }
 
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
@@ -860,18 +938,60 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       p <- ggplot(data = dat, aes_string("date", "cumulative"))
     }
 
-    p <- p + geom_line(size = 0.5) +
-      theme_bw() +
-      theme(panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5)) +
-      ggtitle("Total R Downloads")
+    if (any(dat$in.progress)) {
+      ip.sel <- dat$in.progress == TRUE
+      ip.data <- dat[ip.sel, ]
+      complete.data <- dat[!ip.sel, ]
+      last.obs <- nrow(complete.data)
 
-    if (points) p <- p + geom_point()
+      obs.days <- as.numeric(format(last.obs.date , "%d"))
+      exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+      est.ct <- round(ip.data$count * exp.days / obs.days)
+
+      est.data <- ip.data
+      est.data$count <- est.ct
+      last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+      est.data$cumulative <- last.cumulative + est.ct
+
+      est.seg <- rbind(complete.data[last.obs, ], est.data)
+      obs.seg <- rbind(complete.data[last.obs, ], ip.data)
+
+      p <- p + geom_line(data = complete.data, size = 1/3) +
+        geom_line(data = est.seg, size = 1/3, col = "red") +
+        geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+        geom_point(data = est.data, col = "red") +
+        geom_point(data = ip.data, shape = 1)
+
+      if (points) p <- p + geom_point(data = complete.data)
+
+    } else {
+      p <- p + geom_line(size = 0.5) +
+        theme_bw() +
+        theme(panel.grid.minor = element_blank(),
+              plot.title = element_text(hjust = 0.5)) +
+        ggtitle("Total R Downloads")
+
+      if (points) p <- p + geom_point()
+    }
+
     if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
     if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
+      if (any(dat$in.progress)) {
+        smooth.data <- rbind(complete.data, est.data)
+        p <- p + geom_smooth(data = smooth.data, method = "loess",
+          formula = "y ~ x", se = se, span = span)
+      } else {
+        p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+          span = span)
+      }
     }
+
+    p <- p + theme_bw() +
+      ggtitle("Total R Downloads") +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+
     suppressWarnings(print(p))
   }
 }
