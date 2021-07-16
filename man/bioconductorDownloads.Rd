@@ -40,7 +40,8 @@ bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
 bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 
 # 2010 through 2015 (yearly)
-bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, unit.observation = "year")
+bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015,
+  unit.observation = "year")
 
 # selected year (yearly)
 bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
