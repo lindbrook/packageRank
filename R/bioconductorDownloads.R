@@ -302,17 +302,18 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   dat[dat$date <= current.date, ]
 }
 
-bioc_plot <- function(x, graphics, count, points, smooth, f, log_count,
-  obs.in.progress) {
+bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
+  obs.in.progress, r.version) {
 
   obs <- x$unit.observation
+  type <- ifelse(points, "o", "l")
 
   if (count == "download") {
     y.var <- "Nb_of_downloads"
-    y.lab <- "Downloads"
+    ylab <- "Downloads"
   } else if (count == "ip") {
     y.var <- "Nb_of_distinct_IPs"
-    y.lab <- "Unique IP Addresses"
+    ylab <- "Unique IP Addresses"
   }
 
   if (obs == "month") {
@@ -322,51 +323,84 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log_count,
   }
 
   invisible(lapply(x$data, function(dat) {
-    if (obs == "month") {
-      if (log_count) {
-        plot(dat[, x.var], dat[, y.var], type = "l", xlab = "Year",
-          ylab = paste0("log10(", y.lab, ")"), log = "y")
+    if (obs.in.progress) {
+      ip.data <- dat[nrow(dat), ]
+      complete.data <- dat[1:(nrow(dat) - 1), ]
+      last.obs <- nrow(complete.data)
+
+      today <- Sys.Date()
+      end.of.month <- lastDayMonth(today)$date
+      obs.days <- as.numeric(format(today, "%d"))
+      exp.days <- as.numeric(format(end.of.month, "%d"))
+      est.ct <- round(ip.data[, y.var] * exp.days / obs.days)
+      est.data <- ip.data
+      est.data[, y.var] <- est.ct
+
+      ylim <- range(c(dat[, y.var], est.data[, y.var]))
+      xlim <- range(dat$date)
+
+      if (log.count) {
+        plot(complete.data$date, complete.data[, y.var], type = type,
+          xlab = "Date", ylab = paste0("log10 ", ylab), xlim = xlim,
+          ylim = ylim, log = "y")
       } else {
-        plot(dat[, x.var], dat[, y.var], type = "l", xlab = "Year",
-          ylab = y.lab)
+        plot(complete.data$date, complete.data[, y.var], type = type,
+          xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
       }
 
       if (points) {
-        if (obs.in.progress) {
-          points(dat[1:(nrow(dat) - 1), "date"], dat[1:(nrow(dat) - 1), y.var],
-            pch = 1)
-        } else points(dat$date, dat[, y.var])
+        points(ip.data[, "date"], ip.data[, y.var], col = "gray")
+        points(est.data[, "date"], est.data[, y.var], col = "red")
       }
 
-      if (obs.in.progress) {
-        points(dat[nrow(dat), "date"], dat[nrow(dat), y.var], pch = 15,
-          col = "red")
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, y.var],
+               ip.data$date,
+               ip.data[, y.var],
+               lty = "dotted")
+
+      segments(complete.data[last.obs, "date"],
+               complete.data[last.obs, y.var],
+               est.data$date,
+               est.data[, y.var],
+               col = "red")
+
+      axis(4, at = ip.data[, y.var], labels = "obs")
+      axis(4, at = est.data[, y.var], labels = "est", col.axis = "red",
+        col.ticks = "red")
+
+      if (smooth) {
+        smooth.data <- rbind(complete.data, est.data)
+        lines(stats::lowess(smooth.data$date, smooth.data[, y.var], f = f),
+          col = "blue")
       }
+
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
+      }
+
+    } else {
+      if (log.count) {
+        plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
+          ylab = paste0("log10(", ylab, ")"), log = "y")
+      } else {
+        plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
+          ylab = ylab)
+      }
+
+      if (points) points(dat$date, dat[, y.var])
 
       if (smooth) {
         lines(stats::lowess(dat$date, dat[, y.var], f = f), col = "blue")
       }
-
-     } else if (obs == "year") {
-       if (log_count) {
-         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year",
-           ylab = paste0("log10(", y.lab, ")"), log = "y")
-       } else {
-         plot(dat$Year, dat[, y.var], type = "l", xlab = "Year", ylab = y.lab)
-       }
-
-       if (points) {
-         if (obs.in.progress) {
-           points(dat[1:(nrow(dat) - 1), "Year"], dat[1:(nrow(dat) - 1), y.var],
-             pch = 1)
-         } else points(dat$Year, dat[, y.var])
-       }
-
-       if (obs.in.progress) {
-         points(dat[nrow(dat), "Year"], dat[nrow(dat), y.var], pch = 15,
-           col = "red")
-       }
-     }
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
+      }
+    }
 
     if (is.null(dat$packages)) {
        title(main = "All Packages")
