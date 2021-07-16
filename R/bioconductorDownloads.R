@@ -83,7 +83,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param se Logical. Works only with graphics = "ggplot2".
-#' @param log_count Logical. Logarithm of package downloads.
+#' @param log.count Logical. Logarithm of package downloads.
+#' @param r.version Logical. Add R release dates.
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
@@ -97,7 +98,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
-  log_count = FALSE, ...) {
+  log.count = FALSE, r.version = FALSE, ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
@@ -133,17 +134,17 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
 
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
-      bioc_plot(x, graphics, count, points, smooth, f, log_count,
-        obs.in.progress)
+      bioc_plot(x, graphics, count, points, smooth, f, log.count,
+        obs.in.progress, r.version)
     } else if (length(x$packages) > 1) {
       grDevices::devAskNewPage(ask = TRUE)
-      bioc_plot(x, graphics, count, points, smooth, f, log_count,
-        obs.in.progress)
+      bioc_plot(x, graphics, count, points, smooth, f, log.count,
+        obs.in.progress, r.version)
       grDevices::devAskNewPage(ask = FALSE)
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
-      log_count, obs.in.progress)
+      log.count, obs.in.progress)
   }
 }
 
