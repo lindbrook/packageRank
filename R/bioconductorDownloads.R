@@ -46,8 +46,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   }
 
   current.date <- Sys.Date()
-  current.yr <- data.table::year(current.date)
-  current.mo <- data.table::month(current.date)
+  current.yr <- as.numeric(format(current.date , "%Y"))
+  current.mo <- as.numeric(format(current.date , "%m"))
 
   if (is.null(packages)) {
     dat <- list(bioc_download(packages, from, to, when, current.date,
@@ -115,8 +115,8 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   } else if (x$observation == "month") {
     start.obs <- x$data[[1]]$date[1]
     stop.obs <- rev(x$data[[1]]$date)[1]
-    obs.in.progress <- x$current.yr == data.table::year(stop.obs) &
-                       x$current.mo == data.table::month(stop.obs)
+    obs.in.progress <- x$current.yr == as.numeric(format(stop.obs, "%Y")) &
+                       x$current.mo == as.numeric(format(stop.obs, "%m"))
   }
 
   if (is.null(graphics)) {
