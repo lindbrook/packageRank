@@ -4,7 +4,7 @@
 #' @param when \code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.
 #' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm} or \code{yyyy}.
-#' @param observation "year" or "month".
+#' @param unit.observation "year" or "month".
 #' @export
 #' @examples
 #' \dontrun{
@@ -25,7 +25,7 @@
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 #'
 #' # 2010 through 2015 (yearly)
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, observation = "year")
+#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, unit.observation = "year")
 #'
 #' # selected year (yearly)
 #' bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
@@ -38,11 +38,11 @@
 #' }
 
 bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
-  when = NULL, observation = "month") {
+  when = NULL, unit.observation = "month") {
 
   # January 2009
-  if (observation %in% c("month", "year") == FALSE) {
-    stop('observation must be "month" or "year".', call. = FALSE)
+  if (unit.observation %in% c("month", "year") == FALSE) {
+    stop('unit.observation must be "month" or "year".', call. = FALSE)
   }
 
   current.date <- Sys.Date()
@@ -51,23 +51,23 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
   if (is.null(packages)) {
     dat <- list(bioc_download(packages, from, to, when, current.date,
-      current.yr, current.mo, observation))
+      current.yr, current.mo, unit.observation))
   } else {
     if (length(packages) > 1) {
       dat <- lapply(packages, function(p) {
         bioc_download(p, from, to, when, current.date, current.yr, current.mo,
-          observation)
+          unit.observation)
       })
       names(dat) <- packages
 
     } else if (length(packages) == 1) {
       dat <- list(bioc_download(packages, from, to, when, current.date,
-        current.yr, current.mo, observation))
+        current.yr, current.mo, unit.observation))
     }
   }
 
   out <- list(data = dat, packages = packages, current.date = current.date,
-    current.yr = current.yr, current.mo = current.mo, observation = observation)
+    current.yr = current.yr, current.mo = current.mo, unit.observation = unit.observation)
   class(out) <- "bioconductorDownloads"
   out
 }
@@ -77,7 +77,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
-#' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.
+#' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(unit.observation = "month") with 24 or fewer months, points are plotted.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
@@ -98,7 +98,7 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
   log_count = FALSE, ...) {
 
-  if( x$observation == "month") {
+  if(x$unit.observation == "month") {
     if (points == "auto") {
       if (length(unique(do.call(rbind, x$data)$date)) <= 24) {
         points <- TRUE
@@ -108,11 +108,11 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
     } else if (is.logical(points) == FALSE) {
       stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
     }
-  } else if (x$observation == "year") points <- TRUE
+  } else if (x$unit.observation == "year") points <- TRUE
 
-  if (x$observation == "year") {
+  if (x$unit.observation == "year") {
     obs.in.progress <- x$current.yr == max(x$data[[1]]$Year)
-  } else if (x$observation == "month") {
+  } else if (x$unit.observation == "month") {
     start.obs <- x$data[[1]]$date[1]
     stop.obs <- rev(x$data[[1]]$date)[1]
     obs.in.progress <- x$current.yr == as.numeric(format(stop.obs, "%Y")) &
@@ -176,7 +176,7 @@ summary.bioconductorDownloads <- function(object, ...) {
 }
 
 bioc_download <- function(packages, from, to, when, current.date, current.yr,
-  current.mo, observation) {
+  current.mo, unit.observation) {
 
   if (is.null(packages)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
@@ -189,7 +189,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
 
   if (!is.null(when)) {
     if (when == "last-year") {
-      if (observation == "month") {
+      if (unit.observation == "month") {
         log.data <- bioc.data[bioc.data$Month != "all", ]
         month.num <- vapply(log.data$Month, function(x) {
           which(x == month.abb)
@@ -199,14 +199,14 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
         then <- as.Date(paste0(current.yr - 1, "-", mo, "-01"))
         dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
-      } else if (observation == "year") {
+      } else if (unit.observation == "year") {
         log.data <- bioc.data[bioc.data$Month == "all", ]
         dat <- log.data[log.data$Year %in% c(current.yr, current.yr - 1), ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year".', call. = FALSE)
+      } else stop('"unit.observation must be "month" or "year".', call. = FALSE)
 
     } else if (when == "year-to-date" | when == "ytd") {
-      if (observation == "month") {
+      if (unit.observation == "month") {
         log.data <- bioc.data[bioc.data$Month != "all", ]
         month.num <- vapply(log.data$Month, function(x) {
           which(x == month.abb)
@@ -216,18 +216,18 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         mo <- ifelse(nchar(current.mo) == 1, paste0(0, current.mo), current.mo)
         then <- as.Date(paste0(current.yr, "-01-01"))
         dat <- log.data[log.data$date >= then & log.data$date <= current.date, ]
-      } else if (observation == "year") {
+      } else if (unit.observation == "year") {
         log.data <- bioc.data[bioc.data$Month == "all", ]
         dat <- log.data[log.data$Year == current.yr, ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year".', call. = FALSE)
+      } else stop('"unit.observation must be "month" or "year".', call. = FALSE)
     } else {
       stop('when must be "last-year", "year-to-date" or "ytd".', call. = FALSE)
     }
 
   } else {
     if (is.null(from) & is.null(to)) {
-      if (observation == "month") {
+      if (unit.observation == "month") {
         log.data <- bioc.data[bioc.data$Month != "all", ]
         month.num <- vapply(log.data$Month, function(x) {
           which(x == month.abb)
@@ -235,13 +235,13 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         month <- ifelse(nchar(month.num) == 1, paste0(0, month.num), month.num)
         log.data$date <- as.Date(paste0(log.data$Year, "-", month, "-01"))
         dat <- log.data
-      } else if (observation == "year") {
+      } else if (unit.observation == "year") {
         dat <- bioc.data[bioc.data$Month == "all", ]
         dat$date <- as.Date(paste0(dat$Year, "-01-01"))
-      } else stop('"observation must be "month" or "year".', call. = FALSE)
+      } else stop('"unit.observation must be "month" or "year".', call. = FALSE)
 
     } else if (all(c(from, to) %in% 2009:current.yr)) {
-      if (observation == "month") {
+      if (unit.observation == "month") {
         log.data <- bioc.data[bioc.data$Month != "all", ]
         month.num <- vapply(log.data$Month, function(x) {
           which(x == month.abb)
@@ -256,7 +256,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
         } else if (!is.null(from) & !is.null(to)) {
           dat <- log.data[log.data$Year >= from & log.data$Year <= to, ]
         } else dat <- log.data
-      } else if (observation == "year") {
+      } else if (unit.observation == "year") {
         log.data <- bioc.data[bioc.data$Month == "all", ]
         if (!is.null(from) & is.null(to)) {
           dat <- log.data[log.data$Year >= from, ]
@@ -303,7 +303,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
 bioc_plot <- function(x, graphics, count, points, smooth, f, log_count,
   obs.in.progress) {
 
-  obs <- x$observation
+  obs <- x$unit.observation
 
   if (count == "download") {
     y.var <- "Nb_of_downloads"
@@ -377,7 +377,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log_count,
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
   log_count, obs.in.progress) {
 
-  obs <- x$observation
+  obs <- x$unit.observation
   date <- x$date
   dat <- summary(x)
   oip <- rev(unique(dat$date))[1]

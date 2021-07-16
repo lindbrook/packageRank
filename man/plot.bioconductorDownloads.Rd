@@ -15,7 +15,7 @@
 
 \item{count}{Character. "download" or "ip".}
 
-\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.}
+\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(unit.observation = "month") with 24 or fewer months, points are plotted.}
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
