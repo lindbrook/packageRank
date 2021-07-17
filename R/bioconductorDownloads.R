@@ -411,39 +411,90 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
-  log_count, obs.in.progress) {
+  log.count, obs.in.progress) {
 
   obs <- x$unit.observation
-  date <- x$date
+  type <- ifelse(points, "o", "l")
+  date <- x$current.date
   dat <- summary(x)
   oip <- rev(unique(dat$date))[1]
-
   mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
   dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
 
   if (count == "download") {
-    p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-         ylab("Downloads")
+    y.var <- "Nb_of_downloads"
+    ylab <- "Downloads"
   } else if (count == "ip") {
-    p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-         ylab("Unique IP Addresses")
-  }
-
-  p <- p + geom_line(size = 0.5) +
-    facet_wrap(~ packages, ncol = 2) +
-    xlab("Date") +
-    theme_bw() +
-    theme(panel.grid.minor = element_blank())
-
-  if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
-  if (log_count) p <- p +  scale_y_log10()
-  if (smooth) {
-    p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se, span = span)
+    y.var <- "Nb_of_distinct_IPs"
+    ylab <- "Unique IP Addresses"
   }
 
   if (obs.in.progress) {
-    p + geom_point(data = dat[dat$date %in% oip, ], color = "red", shape = 15)
-  } else p
+    ip.sel <- dat$date == oip
+    ip.data <- dat[ip.sel, ]
+    complete.data <- dat[!ip.sel, ]
+    last.obs <- vapply(x$packages, function(p) {
+      nrow(complete.data[complete.data$packages == p, ])
+    }, integer(1L))
+
+    obs.days <- as.numeric(format(Sys.Date(), "%d"))
+    exp.days <- as.numeric(format(lastDayMonth(date)$date, "%d"))
+    est.ct <- round(ip.data[, y.var] * exp.days / obs.days)
+    est.data <- ip.data
+    est.data[, y.var] <- est.ct
+    est.seg <- rbind(complete.data[cumsum(last.obs), ], est.data)
+    obs.seg <- rbind(complete.data[cumsum(last.obs), ], ip.data)
+
+    if (count == "download") {
+      p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+           ylab("Downloads")
+    } else if (count == "ip") {
+      p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+           ylab("Unique IP Addresses")
+    }
+
+    p <- p + geom_line(data = complete.data, size = 1/3) +
+             geom_line(data = est.seg, size = 1/3, col = "red") +
+             geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+             geom_point(data = est.data, col = "red") +
+             geom_point(data = ip.data, shape = 1) +
+             facet_wrap(~ packages, ncol = 2) +
+             xlab("Date") +
+             theme_bw() +
+             theme(panel.grid.minor = element_blank())
+
+    if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
+    if (log.count) p <- p + scale_y_log10()
+    if (smooth) {
+      smooth.data <- rbind(complete.data, est.data)
+      p <- p + geom_smooth(data = smooth.data, method = "loess",
+        formula = "y ~ x", se = se, span = span)
+    }
+
+  } else {
+    if (count == "download") {
+      p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+           ylab("Downloads")
+    } else if (count == "ip") {
+      p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+           ylab("Unique IP Addresses")
+    }
+
+    p <- p + geom_line(size = 0.5) +
+      facet_wrap(~ packages, ncol = 2) +
+      xlab("Date") +
+      theme_bw() +
+      theme(panel.grid.minor = element_blank())
+
+    if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
+    if (log.count) p <- p + scale_y_log10()
+    if (smooth) {
+      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+        span = span)
+    }
+  }
+
+  suppressWarnings(print(p))
 }
 
 checkDate <- function(string, end.date = FALSE) {
