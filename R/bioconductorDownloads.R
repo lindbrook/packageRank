@@ -328,7 +328,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
       complete.data <- dat[1:(nrow(dat) - 1), ]
       last.obs <- nrow(complete.data)
 
-      today <- Sys.Date()
+      today <- x$current.date
       end.of.month <- lastDayMonth(today)$date
       obs.days <- as.numeric(format(today, "%d"))
       exp.days <- as.numeric(format(end.of.month, "%d"))
