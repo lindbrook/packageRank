@@ -348,10 +348,8 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
           xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
       }
 
-      if (points) {
-        points(ip.data[, "date"], ip.data[, y.var], col = "gray")
-        points(est.data[, "date"], est.data[, y.var], col = "red")
-      }
+      points(ip.data[, "date"], ip.data[, y.var], col = "gray")
+      points(est.data[, "date"], est.data[, y.var], col = "red")
 
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, y.var],
@@ -414,7 +412,6 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
   log.count, obs.in.progress) {
 
   obs <- x$unit.observation
-  type <- ifelse(points, "o", "l")
   date <- x$current.date
   dat <- summary(x)
   oip <- rev(unique(dat$date))[1]
@@ -463,7 +460,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
              theme_bw() +
              theme(panel.grid.minor = element_blank())
 
-    if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
+    if (points) p <- p + geom_point(data = complete.data)
     if (log.count) p <- p + scale_y_log10()
     if (smooth) {
       smooth.data <- rbind(complete.data, est.data)
@@ -486,7 +483,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
       theme_bw() +
       theme(panel.grid.minor = element_blank())
 
-    if (points) p <- p + geom_point(data = dat[!dat$date %in% oip, ])
+    if (points) p <- p + geom_point()
     if (log.count) p <- p + scale_y_log10()
     if (smooth) {
       p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
