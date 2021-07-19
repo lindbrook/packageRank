@@ -85,6 +85,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param log.count Logical. Logarithm of package downloads.
 #' @param r.version Logical. Add R release dates.
+#' @param same.xy Logical.  Use same scale for multiple packages when graphics = "base".
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
@@ -98,7 +99,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
-  log.count = FALSE, r.version = FALSE, ...) {
+  log.count = FALSE, r.version = FALSE, same.xy = TRUE, ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
@@ -135,11 +136,11 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
       bioc_plot(x, graphics, count, points, smooth, f, log.count,
-        obs.in.progress, r.version)
+        obs.in.progress, r.version, same.xy)
     } else if (length(x$packages) > 1) {
       grDevices::devAskNewPage(ask = TRUE)
       bioc_plot(x, graphics, count, points, smooth, f, log.count,
-        obs.in.progress, r.version)
+        obs.in.progress, r.version, same.xy)
       grDevices::devAskNewPage(ask = FALSE)
     }
   } else if (graphics == "ggplot2") {
@@ -303,7 +304,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
 }
 
 bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
-  obs.in.progress, r.version) {
+  obs.in.progress, r.version, same.xy) {
 
   obs <- x$unit.observation
   type <- ifelse(points, "o", "l")
@@ -322,22 +323,32 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
     x.var <- "Year"
   }
 
-  invisible(lapply(x$data, function(dat) {
-    if (obs.in.progress) {
+  if (obs.in.progress) {
+    today <- x$current.date
+    end.of.month <- lastDayMonth(today)$date
+
+    est.ct <- vapply(x$data, function(dat) {
+      ip.data <- dat[nrow(dat), ]
+      obs.days <- as.numeric(format(today, "%d"))
+      exp.days <- as.numeric(format(end.of.month, "%d"))
+      round(ip.data[, y.var] * exp.days / obs.days)
+    }, numeric(1L))
+
+    if (same.xy) {
+      xlim <- range(do.call(rbind, x$data)$date)
+      ylim <- range(c(do.call(rbind, x$data)[, y.var], est.ct))
+    } else {
+      xlim <- NULL
+      ylim <- NULL
+    }
+
+    invisible(lapply(seq_along(x$data), function(i) {
+      dat <- x$data[[i]]
       ip.data <- dat[nrow(dat), ]
       complete.data <- dat[1:(nrow(dat) - 1), ]
       last.obs <- nrow(complete.data)
-
-      today <- x$current.date
-      end.of.month <- lastDayMonth(today)$date
-      obs.days <- as.numeric(format(today, "%d"))
-      exp.days <- as.numeric(format(end.of.month, "%d"))
-      est.ct <- round(ip.data[, y.var] * exp.days / obs.days)
       est.data <- ip.data
-      est.data[, y.var] <- est.ct
-
-      ylim <- range(c(dat[, y.var], est.data[, y.var]))
-      xlim <- range(dat$date)
+      est.data[, y.var] <- est.ct[i]
 
       if (log.count) {
         plot(complete.data$date, complete.data[, y.var], type = type,
@@ -356,7 +367,6 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
                ip.data$date,
                ip.data[, y.var],
                lty = "dotted")
-
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, y.var],
                est.data$date,
@@ -366,6 +376,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
       axis(4, at = ip.data[, y.var], labels = "obs")
       axis(4, at = est.data[, y.var], labels = "est", col.axis = "red",
         col.ticks = "red")
+      title(main = x$packages[i])
 
       if (smooth) {
         smooth.data <- rbind(complete.data, est.data)
@@ -378,8 +389,20 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
         axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
           cex.axis = 2/3, padj = 0.9)
       }
+    }))
 
+  } else {
+    if (same.xy) {
+      xlim <- range(do.call(rbind, x$data)$date)
+      ylim <- range(do.call(rbind, x$data)[, y.var])
     } else {
+      xlim <- NULL
+      ylim <- NULL
+    }
+
+    invisible(lapply(seq_along(x$data), function(i) {
+      dat <- x$data[[i]]
+      
       if (log.count) {
         plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
           ylab = paste0("log10(", ylab, ")"), log = "y")
@@ -398,14 +421,12 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
         axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
           cex.axis = 2/3, padj = 0.9)
       }
-    }
 
-    if (is.null(dat$packages)) {
-       title(main = "All Packages")
-     } else {
-       title(main = unique(dat$packages))
-     }
-  }))
+      title(main = x$packages[i])
+    }))
+  }
+
+  if (is.null(x$packages)) title(main = "All Packages")
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,

@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
   count = "download", points = "auto", smooth = FALSE, f = 2/3,
-  span = 3/4, se = FALSE, log.count = FALSE, r.version = FALSE, ...)
+  span = 3/4, se = FALSE, log.count = FALSE, r.version = FALSE,
+  same.xy = TRUE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -28,6 +29,8 @@
 \item{log.count}{Logical. Logarithm of package downloads.}
 
 \item{r.version}{Logical. Add R release dates.}
+
+\item{same.xy}{Logical.  Use same scale for multiple packages when graphics = "base".}
 
 \item{...}{Additional plotting parameters.}
 }
