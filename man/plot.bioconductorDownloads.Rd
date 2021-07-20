@@ -7,7 +7,7 @@
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
   count = "download", points = "auto", smooth = FALSE, f = 2/3,
   span = 3/4, se = FALSE, log.count = FALSE, r.version = FALSE,
-  same.xy = TRUE, ...)
+  same.xy = TRUE, multi.plot = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -31,6 +31,8 @@
 \item{r.version}{Logical. Add R release dates.}
 
 \item{same.xy}{Logical.  Use same scale for multiple packages when graphics = "base".}
+
+\item{multi.plot}{Logical. Plot all data in a single window frame.}
 
 \item{...}{Additional plotting parameters.}
 }

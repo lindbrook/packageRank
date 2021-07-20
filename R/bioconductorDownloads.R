@@ -86,6 +86,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param log.count Logical. Logarithm of package downloads.
 #' @param r.version Logical. Add R release dates.
 #' @param same.xy Logical.  Use same scale for multiple packages when graphics = "base".
+#' @param multi.plot Logical. Plot all data in a single window frame.
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
@@ -99,7 +100,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
-  log.count = FALSE, r.version = FALSE, same.xy = TRUE, ...) {
+  log.count = FALSE, r.version = FALSE, same.xy = TRUE, multi.plot = FALSE,
+  ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
@@ -145,7 +147,7 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
-      log.count, obs.in.progress)
+      log.count, obs.in.progress, multi.plot)
   }
 }
 
@@ -402,7 +404,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 
     invisible(lapply(seq_along(x$data), function(i) {
       dat <- x$data[[i]]
-      
+
       if (log.count) {
         plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
           ylab = paste0("log10(", ylab, ")"), log = "y")
@@ -430,7 +432,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
-  log.count, obs.in.progress) {
+  log.count, obs.in.progress, multi.plot) {
 
   obs <- x$unit.observation
   date <- x$current.date
@@ -463,23 +465,42 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     est.seg <- rbind(complete.data[cumsum(last.obs), ], est.data)
     obs.seg <- rbind(complete.data[cumsum(last.obs), ], ip.data)
 
-    if (count == "download") {
-      p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-           ylab("Downloads")
-    } else if (count == "ip") {
-      p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-           ylab("Unique IP Addresses")
-    }
+    if (multi.plot) {
+      if (count == "download") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads",
+          colour = "packages")) + ylab("Downloads")
+      } else if (count == "ip") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs",
+          colour = "packages")) + ylab("Unique IP Addresses")
+      }
 
-    p <- p + geom_line(data = complete.data, size = 1/3) +
-             geom_line(data = est.seg, size = 1/3, col = "red") +
-             geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-             geom_point(data = est.data, col = "red") +
-             geom_point(data = ip.data, shape = 1) +
-             facet_wrap(~ packages, ncol = 2) +
-             xlab("Date") +
-             theme_bw() +
-             theme(panel.grid.minor = element_blank())
+      p <- p + geom_line(data = complete.data, size = 1/3) +
+               geom_line(data = est.seg, size = 1/3) +
+               geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
+               geom_point(data = est.data, shape = 1) +
+               geom_point(data = ip.data, shape = 0) +
+               xlab("Date") +
+               theme(panel.grid.minor = element_blank())
+
+    } else {
+      if (count == "download") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+             ylab("Downloads")
+      } else if (count == "ip") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+             ylab("Unique IP Addresses")
+      }
+
+      p <- p + geom_line(data = complete.data, size = 1/3) +
+               geom_line(data = est.seg, size = 1/3, col = "red") +
+               geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
+               geom_point(data = est.data, col = "red") +
+               geom_point(data = ip.data, shape = 0) +
+               facet_wrap(~ packages, ncol = 2) +
+               xlab("Date") +
+               theme_bw() +
+               theme(panel.grid.minor = element_blank())
+    }
 
     if (points) p <- p + geom_point(data = complete.data)
     if (log.count) p <- p + scale_y_log10()
@@ -492,17 +513,24 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
   } else {
     if (count == "download") {
       p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-           ylab("Downloads")
+        ylab("Downloads")
     } else if (count == "ip") {
       p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-           ylab("Unique IP Addresses")
+        ylab("Unique IP Addresses")
     }
 
-    p <- p + geom_line(size = 0.5) +
-      facet_wrap(~ packages, ncol = 2) +
-      xlab("Date") +
-      theme_bw() +
-      theme(panel.grid.minor = element_blank())
+    if (multi.plot) {
+      p <- p + geom_line(size = 0.5) +
+        xlab("Date") +
+        theme(panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
+    } else {
+      p <- p + geom_line(size = 0.5) +
+        facet_wrap(~ packages, ncol = 2) +
+        xlab("Date") +
+        theme_bw() +
+        theme(panel.grid.minor = element_blank())
+    }
 
     if (points) p <- p + geom_point()
     if (log.count) p <- p + scale_y_log10()
