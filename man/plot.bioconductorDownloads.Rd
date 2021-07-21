@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
   count = "download", points = "auto", smooth = FALSE, f = 2/3,
-  span = 3/4, se = FALSE, log_count = FALSE, ...)
+  span = 3/4, se = FALSE, log.count = FALSE, r.version = FALSE,
+  same.xy = TRUE, multi.plot = FALSE, legend.loc = "topleft", ...)
 }
 \arguments{
 \item{x}{object.}
@@ -15,7 +16,7 @@
 
 \item{count}{Character. "download" or "ip".}
 
-\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(observation = "month") with 24 or fewer months, points are plotted.}
+\item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(unit.observation = "month") with 24 or fewer months, points are plotted.}
 
 \item{smooth}{Logical. Add stats::lowess smoother.}
 
@@ -25,7 +26,15 @@
 
 \item{se}{Logical. Works only with graphics = "ggplot2".}
 
-\item{log_count}{Logical. Logarithm of package downloads.}
+\item{log.count}{Logical. Logarithm of package downloads.}
+
+\item{r.version}{Logical. Add R release dates.}
+
+\item{same.xy}{Logical.  Use same scale for multiple packages when graphics = "base".}
+
+\item{multi.plot}{Logical. Plot all data in a single window frame.}
+
+\item{legend.loc}{Character.}
 
 \item{...}{Additional plotting parameters.}
 }

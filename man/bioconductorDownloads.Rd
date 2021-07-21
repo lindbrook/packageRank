@@ -5,7 +5,7 @@
 \title{Annual/monthly package downloads from Bioconductor.}
 \usage{
 bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
-  when = NULL, observation = "month")
+  when = NULL, unit.observation = "month")
 }
 \arguments{
 \item{packages}{Character. Vector of package names.}
@@ -16,7 +16,7 @@ bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
 
 \item{when}{\code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.}
 
-\item{observation}{"year" or "month".}
+\item{unit.observation}{"year" or "month".}
 }
 \description{
 Annual/monthly package downloads from Bioconductor.
@@ -40,7 +40,8 @@ bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
 bioconductorDownloads(packages = "clusterProfiler", from = 2015)
 
 # 2010 through 2015 (yearly)
-bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015, observation = "year")
+bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015,
+  unit.observation = "year")
 
 # selected year (yearly)
 bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
