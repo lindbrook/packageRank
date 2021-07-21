@@ -7,7 +7,7 @@
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
   count = "download", points = "auto", smooth = FALSE, f = 2/3,
   span = 3/4, se = FALSE, log.count = FALSE, r.version = FALSE,
-  same.xy = TRUE, multi.plot = FALSE, ...)
+  same.xy = TRUE, multi.plot = FALSE, legend.loc = "topleft", ...)
 }
 \arguments{
 \item{x}{object.}
@@ -33,6 +33,8 @@
 \item{same.xy}{Logical.  Use same scale for multiple packages when graphics = "base".}
 
 \item{multi.plot}{Logical. Plot all data in a single window frame.}
+
+\item{legend.loc}{Character.}
 
 \item{...}{Additional plotting parameters.}
 }

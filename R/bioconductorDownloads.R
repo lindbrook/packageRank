@@ -87,6 +87,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param r.version Logical. Add R release dates.
 #' @param same.xy Logical.  Use same scale for multiple packages when graphics = "base".
 #' @param multi.plot Logical. Plot all data in a single window frame.
+#' @param legend.loc Character.
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
@@ -101,7 +102,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
   log.count = FALSE, r.version = FALSE, same.xy = TRUE, multi.plot = FALSE,
-  ...) {
+  legend.loc = "topleft", ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
@@ -140,10 +141,16 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
       bioc_plot(x, graphics, count, points, smooth, f, log.count,
         obs.in.progress, r.version, same.xy)
     } else if (length(x$packages) > 1) {
-      grDevices::devAskNewPage(ask = TRUE)
-      bioc_plot(x, graphics, count, points, smooth, f, log.count,
-        obs.in.progress, r.version, same.xy)
-      grDevices::devAskNewPage(ask = FALSE)
+      if (multi.plot) {
+        bioc_plot_multi(x, count, points, smooth, f, log.count,
+          obs.in.progress, r.version, legend.loc)
+      } else {
+        grDevices::devAskNewPage(ask = TRUE)
+        bioc_plot(x, graphics, count, points, smooth, f, log.count,
+          obs.in.progress, r.version, same.xy)
+        grDevices::devAskNewPage(ask = FALSE)
+      }
+
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
@@ -429,6 +436,119 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
   }
 
   if (is.null(x$packages)) title(main = "All Packages")
+}
+
+bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
+  obs.in.progress, r.version, legend.loc) {
+
+  obs <- x$unit.observation
+  type <- ifelse(points, "o", "l")
+
+  if (count == "download") {
+    y.var <- "Nb_of_downloads"
+    ylab <- "Downloads"
+  } else if (count == "ip") {
+    y.var <- "Nb_of_distinct_IPs"
+    ylab <- "Unique IP Addresses"
+  }
+
+  dat <- do.call(rbind, x$data)
+  vars <- c("date", y.var)
+  xlim <- range(dat$date)
+  ylim <- range(dat[, y.var])
+
+  # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+  # http://jfly.iam.u-tokyo.ac.jp/color/
+  # The palette with grey:
+  # cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+  #   "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+    "#0072B2", "#D55E00", "#CC79A7")
+  token <- c(1, 0,  2:7)
+
+  if (obs.in.progress) {
+    today <- x$current.date
+    end.of.month <- lastDayMonth(today)$date
+
+    est.ct <- vapply(x$data, function(dat) {
+      ip.data <- dat[nrow(dat), ]
+      obs.days <- as.numeric(format(today, "%d"))
+      exp.days <- as.numeric(format(end.of.month, "%d"))
+      round(ip.data[, y.var] * exp.days / obs.days)
+    }, numeric(1L))
+
+    ylim <- range(c(ylim, est.ct))
+
+    if (log.count) {
+      plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA, xlab = "Date",
+        ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim, log = "y")
+    } else {
+      plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA,
+        xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
+    }
+
+    invisible(lapply(seq_along(x$data), function(i) {
+      tmp <- x$data[[i]]
+      complete.data <- tmp[1:(nrow(tmp) - 1), ]
+      ip.data <- tmp[nrow(tmp), ]
+      lines(complete.data[, vars], col = cbPalette[i], type = type,
+        pch = token[i])
+      segments(complete.data[nrow(complete.data), "date"],
+               complete.data[nrow(complete.data), y.var],
+               ip.data$date,
+               ip.data[, y.var],
+               lty = "dotted",
+               col = "gray")
+       segments(complete.data[nrow(complete.data), "date"],
+                complete.data[nrow(complete.data), y.var],
+                ip.data$date,
+                est.ct[i],
+                col = cbPalette[i])
+      points(ip.data[, "date"], ip.data[, y.var], col = "gray", pch = token[i])
+      points(ip.data[, "date"], est.ct[i], col = "red", pch = token[i])
+      if (smooth) {
+        est.data <- ip.data
+        est.data[, y.var] <- est.ct[i]
+        smooth.data <- rbind(complete.data, est.data)
+        lines(stats::lowess(smooth.data$date, smooth.data[, y.var], f = f),
+          col = cbPalette[i], lwd = 1.5)
+      }
+    }))
+
+  } else {
+    if (log.count) {
+      plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA, xlab = "Date",
+        ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim, log = "y")
+    } else {
+      plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA, xlab = "Date",
+        ylab = ylab, xlim = xlim, ylim = ylim)
+    }
+
+    invisible(lapply(seq_along(x$packages), function(i) {
+      tmp <- dat[dat$package == x$packages[i], ]
+      lines(tmp$date, tmp[, y.var], type = type, col = cbPalette[i])
+      if (smooth) {
+        lines(stats::lowess(dat[dat$package == x$packages[i], vars],
+          f = f), col = cbPalette[i])
+      }
+    }))
+  }
+
+  if (r.version) {
+    r_v <- rversions::r_versions()
+    axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+      cex.axis = 2/3, padj = 0.9)
+  }
+
+  id <- seq_along(x$packages)
+  legend(x = legend.loc,
+         legend = x$packages,
+         col = cbPalette[id],
+         pch = c(1, token[id]),
+         bg = "white",
+         cex = 2/3,
+         title = NULL,
+         lwd = 1)
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
