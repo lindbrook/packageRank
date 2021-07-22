@@ -631,19 +631,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
               ip.data = ip.data)
           })
 
-          if (statistic == "count") {
-            ylim <- range(c(ylim, est.data$count))
-          } else if (statistic == "cumulative") {
-            ylim <- range(c(ylim, est.data$cumulative))
-          }
-
-          pkg1 <- complete.data[complete.data$package == x$packages[1], ]
+          est.stat <- lapply(pkg.data, function(x) x$est.data)
+          est.stat <- do.call(rbind, est.stat)[, statistic]
+          ylim <- range(c(ylim, est.stat))
 
           if (log.count) {
-            plot(pkg1[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
+            plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
-            plot(pkg1[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
           }
 
           invisible(lapply(seq_along(pkg.data), function(i) {
@@ -670,7 +666,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
               points(complete.data[, "date"], complete.data[, statistic],
                 col = cbPalette[i], pch = token[i])
               points(est.data[, "date"], est.data[, statistic],
-                col = cbPalette[i], pch = token[i])
+                col = "red", pch = token[i])
               points(ip.data[, "date"], ip.data[, statistic],
                 col = cbPalette[i], pch = token[i])
             }
@@ -678,7 +674,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
             if (smooth) {
               smooth.data <- rbind(complete.data, est.data)
               lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
-                f = f), col = "blue")
+                f = f), col = cbPalette[i])
             }
 
             if (i == 1) {
@@ -688,13 +684,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
             }
           }))
         } else {
-          pkg1 <- dat[dat$package == x$packages[1], ]
-
           if (log.count) {
-            plot(pkg1[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
+            plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
-            plot(pkg1[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
           }
 
           invisible(lapply(seq_along(x$packages), function(i) {
@@ -711,17 +705,17 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                 f = f), col = cbPalette[i])
             }
           }))
-
-          id <- seq_along(x$packages)
-          legend(x = legend.loc,
-                 legend = x$packages,
-                 col = cbPalette[id],
-                 pch = c(1, token[id]),
-                 bg = "white",
-                 cex = 2/3,
-                 title = NULL,
-                 lwd = 1)
         }
+
+        id <- seq_along(x$packages)
+        legend(x = legend.loc,
+               legend = x$packages,
+               col = cbPalette[id],
+               pch = c(1, token[id]),
+               bg = "white",
+               cex = 2/3,
+               title = NULL,
+               lwd = 1)
       }
     }
   } else if (graphics == "ggplot2") {
