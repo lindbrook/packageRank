@@ -111,16 +111,16 @@ inflationPlot2 <- function(dataset = "october", filter = "small", wed = FALSE,
                   "; filtered = ",
                   format(round(filtered.ct, 2), big.mark = ","))
     title(sub = paste0(ptA, "; inflation = ", paste0(inflation, "%")))
-  }  
+  }
 }
 
-#' CRAN Plot.
+#' CRAN inflation plot.
 #'
 #' Document code.
 #' @param dataset Character. "october" or "july" for October 2019 or July 2020.
 #' @export
 
-cranPlot <- function(dataset = "october") {
+cranInflationPlot <- function(dataset = "october") {
   if (dataset == "october") dat <- packageRank::blog.data$october.downloads
   else if (dataset == "july") dat <- packageRank::blog.data$july.downloads
   else stop('"dataset" must be "october" or "july".')
