@@ -177,10 +177,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   }
 
   if (graphics == "base") {
-    # if (is.null(x$packages)) {
-    #   cranPlot(x, statistic, graphics, points, log.count, smooth, se, f, span,
-    #     r.version)
-    # } else {
     if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
@@ -318,13 +314,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
     }
-    # }
 
   } else if (graphics == "ggplot2") {
-    # if (is.null(x$packages)) {
-    #   p <- cranPlot(x, statistic, graphics, points, log.count, smooth, se, f,
-    #     span, r.version)
-    # } else {
     if (obs.ct == 1) {
       p <- ggplot(data = dat) +
            theme_bw() +
@@ -408,7 +399,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
            theme(panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank())
     }
-    # }
     suppressWarnings(print(p))
   }
 }
