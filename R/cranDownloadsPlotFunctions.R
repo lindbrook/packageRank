@@ -915,6 +915,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                    geom_point(data = ip.data, shape = 1)
         }
 
+        if (points) p <- p + geom_point(data = complete.data)
         if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
 
         if (smooth) {
