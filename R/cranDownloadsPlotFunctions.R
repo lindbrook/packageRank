@@ -907,8 +907,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                                 linetype = "dotted")
         }
 
-        if (points) {
+        if (multi.plot) {
           p <- p + geom_point(data = est.data) +
+                   geom_point(data = ip.data, shape = 1)
+        } else {
+          p <- p + geom_point(data = est.data, colour = "red") +
                    geom_point(data = ip.data, shape = 1)
         }
 
