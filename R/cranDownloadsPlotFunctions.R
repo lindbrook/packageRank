@@ -888,31 +888,45 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         p <- p + geom_line(data = complete.data, size = 1/3)
 
-        est.seg <- lapply(p.data, function(x) x$est.seg)
-        obs.seg <- lapply(p.data, function(x) x$obs.seg)
+        est.seg <- lapply(p.data, function(z) {
+          tmp <- z$est.seg
+          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
+            xend = tmp$date[2], yend = tmp[, statistic][2],
+            platform = unique(tmp$platform))
+          if (statistic == "cumulative") {
+            names(out)[names(out) == "count"] <- "cumulative"
+          }
+          out
+        })
 
-        for (i in seq_along(est.seg)) {
-          tmp <- est.seg[[i]]
-          p <- p + geom_segment(data = tmp,
-                                xend = tmp[tmp$in.progress == TRUE, "date"],
-                                yend = tmp[tmp$in.progress == TRUE, statistic],
-                                linetype = "dashed")
-        }
+        obs.seg <- lapply(p.data, function(z) {
+          tmp <- z$obs.seg
+          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
+            xend = tmp$date[2], yend = tmp[, statistic][2],
+            platform = unique(tmp$platform))
+          if (statistic == "cumulative") {
+            names(out)[names(out) == "count"] <- "cumulative"
+          }
+          out
+        })
 
-        for (i in seq_along(obs.seg)) {
-          tmp <- obs.seg[[i]]
-          p <- p + geom_segment(data = tmp,
-                                xend = tmp[tmp$in.progress == TRUE, "date"],
-                                yend = tmp[tmp$in.progress == TRUE, statistic],
-                                linetype = "dotted")
-        }
+        est.seg <- do.call(rbind, est.seg)
+        obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data) +
-                   geom_point(data = ip.data, shape = 1)
+          p <- p + geom_point(data = est.data, shape = 15) +
+                   geom_point(data = ip.data, shape = 0) +
+                   geom_segment(data = est.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dashed") +
+                   geom_segment(data = obs.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dotted")
         } else {
           p <- p + geom_point(data = est.data, colour = "red") +
-                   geom_point(data = ip.data, shape = 1)
+                   geom_point(data = ip.data, shape = 1) +
+                   geom_segment(data = est.seg, aes_string(xend = "xend",
+                                yend = "yend"), colour = "red") +
+                   geom_segment(data = obs.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dotted")
         }
 
         if (points) p <- p + geom_point(data = complete.data)
