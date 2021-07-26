@@ -177,10 +177,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   }
 
   if (graphics == "base") {
-    # if (is.null(x$packages)) {
-    #   cranPlot(x, statistic, graphics, points, log.count, smooth, se, f, span,
-    #     r.version)
-    # } else {
     if (obs.ct == 1) {
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$package,
@@ -318,13 +314,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
     }
-    # }
 
   } else if (graphics == "ggplot2") {
-    # if (is.null(x$packages)) {
-    #   p <- cranPlot(x, statistic, graphics, points, log.count, smooth, se, f,
-    #     span, r.version)
-    # } else {
     if (obs.ct == 1) {
       p <- ggplot(data = dat) +
            theme_bw() +
@@ -408,7 +399,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
            theme(panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank())
     }
-    # }
     suppressWarnings(print(p))
   }
 }
@@ -760,8 +750,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         invisible(lapply(seq_along(complete.data), function(i) {
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
-          arrows(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], length = 1/8, col = pltfrm.col[i])
+          segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
+            tmpB[, statistic], lty = "dashed", col = pltfrm.col[i])
         }))
 
         if (smooth) {
@@ -898,30 +888,48 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         p <- p + geom_line(data = complete.data, size = 1/3)
 
-        est.seg <- lapply(p.data, function(x) x$est.seg)
-        obs.seg <- lapply(p.data, function(x) x$obs.seg)
+        est.seg <- lapply(p.data, function(z) {
+          tmp <- z$est.seg
+          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
+            xend = tmp$date[2], yend = tmp[, statistic][2],
+            platform = unique(tmp$platform))
+          if (statistic == "cumulative") {
+            names(out)[names(out) == "count"] <- "cumulative"
+          }
+          out
+        })
 
-        for (i in seq_along(est.seg)) {
-          tmp <- est.seg[[i]]
-          p <- p + geom_segment(data = tmp,
-                                xend = tmp[tmp$in.progress == TRUE, "date"],
-                                yend = tmp[tmp$in.progress == TRUE, statistic],
-                                linetype = "dashed")
+        obs.seg <- lapply(p.data, function(z) {
+          tmp <- z$obs.seg
+          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
+            xend = tmp$date[2], yend = tmp[, statistic][2],
+            platform = unique(tmp$platform))
+          if (statistic == "cumulative") {
+            names(out)[names(out) == "count"] <- "cumulative"
+          }
+          out
+        })
+
+        est.seg <- do.call(rbind, est.seg)
+        obs.seg <- do.call(rbind, obs.seg)
+
+        if (multi.plot) {
+          p <- p + geom_point(data = est.data, shape = 15) +
+                   geom_point(data = ip.data, shape = 0) +
+                   geom_segment(data = est.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dashed") +
+                   geom_segment(data = obs.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dotted")
+        } else {
+          p <- p + geom_point(data = est.data, colour = "red") +
+                   geom_point(data = ip.data, shape = 1) +
+                   geom_segment(data = est.seg, aes_string(xend = "xend",
+                                yend = "yend"), colour = "red") +
+                   geom_segment(data = obs.seg, aes_string(xend = "xend",
+                                yend = "yend"), linetype = "dotted")
         }
 
-        for (i in seq_along(obs.seg)) {
-          tmp <- obs.seg[[i]]
-          p <- p + geom_segment(data = tmp,
-                                xend = tmp[tmp$in.progress == TRUE, "date"],
-                                yend = tmp[tmp$in.progress == TRUE, statistic],
-                                linetype = "dotted")
-        }
-
-        if (points) {
-          p <- p + geom_point(data = est.data) +
-                   geom_point(data = ip.data, shape = 1)
-        }
-
+        if (points) p <- p + geom_point(data = complete.data)
         if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
 
         if (smooth) {
