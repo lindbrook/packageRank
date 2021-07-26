@@ -750,8 +750,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         invisible(lapply(seq_along(complete.data), function(i) {
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
-          arrows(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], length = 1/8, col = pltfrm.col[i])
+          segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
+            tmpB[, statistic], lty = "dashed", col = pltfrm.col[i])
         }))
 
         if (smooth) {
