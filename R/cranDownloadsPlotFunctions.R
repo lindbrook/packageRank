@@ -491,12 +491,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                      complete.data[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
-                     col = "red")
+                     col = cbPalette[i])
 
              points(est.data[, "date"], est.data[, statistic], col = "red",
                pch = token[i])
              points(ip.data[, "date"], ip.data[, statistic],
-               col = cbPalette[i], pch = token[i])
+               col = "gray", pch = token[i])
 
             if (points) {
               points(complete.data[, "date"], complete.data[, statistic],
@@ -507,12 +507,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
               smooth.data <- rbind(complete.data, est.data)
               lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
                 f = f), col = cbPalette[i])
-            }
-
-            if (i == 1) {
-              axis(4, at = ip.data[, statistic], labels = "obs")
-              axis(4, at = est.data[, statistic], labels = "est",
-                col.axis = "red", col.ticks = "red")
             }
           }))
         } else {
