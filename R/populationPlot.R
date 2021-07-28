@@ -137,11 +137,11 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
       }
     }
 
-    p <- p + geom_line(colour = "red", size = 0.75) +
-             geom_point(shape = 1, colour = "red", size = 2)
+    p <- p + geom_line(colour = "red", size = 1/3) +
+             geom_point(shape = 1, size = 2, colour = "red")
 
-    if (smooth) p <- p + geom_smooth(colour = "blue",method = "loess",
-                                     formula = "y ~ x", se = FALSE, span = span)
+    if (smooth) p <- p + geom_smooth(colour = "blue", method = "loess",
+      formula = "y ~ x", se = FALSE, size = 0.75, span = span)
 
     if (log.count) p <- p + scale_y_log10()
 
@@ -181,11 +181,11 @@ basePlotTime <- function(x, log.count, cran.smpl, pkg.data, smooth,
       }
     }
 
-    lines(pkg.data$date, log10(pkg.data$count), lwd = 2, col = "red",
+    lines(pkg.data$date, log10(pkg.data$count), lwd = 1, col = "red",
       type = "o")
     if (smooth) {
       lines(stats::lowess(pkg.data$date, log10(pkg.data$count), f = f),
-        col = "blue", lwd = 2)
+        col = "blue", lwd = 1.5)
     }
   } else {
     plot(cran.smpl$date, cran.smpl$count, pch = NA, ylim = c(0, max(x$y.max)),
@@ -205,8 +205,8 @@ basePlotTime <- function(x, log.count, cran.smpl, pkg.data, smooth,
       }
     }
 
-    lines(pkg.data$date, pkg.data$count, lwd = 2, col = "red")
+    lines(pkg.data$date, pkg.data$count, lwd = 1, col = "red")
     lines(stats::lowess(pkg.data$date, pkg.data$count, f = f), col = "blue",
-      lwd = 2)
+      lwd = 1.5)
   }
 }
