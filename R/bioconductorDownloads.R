@@ -66,9 +66,16 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
         current.yr, current.mo, unit.observation))
     }
   }
-
+  
+  dat <- lapply(dat, function(x) {
+    x$cumulative_Nb_of_distinct_IPs <- cumsum(x$Nb_of_distinct_IPs)
+    x$cumulative_Nb_of_downloads <- cumsum(x$Nb_of_distinct_IPs)
+    x
+  })
+  
   out <- list(data = dat, packages = packages, current.date = current.date,
-    current.yr = current.yr, current.mo = current.mo, unit.observation = unit.observation)
+    current.yr = current.yr, current.mo = current.mo,
+    unit.observation = unit.observation)
   class(out) <- "bioconductorDownloads"
   out
 }
@@ -78,6 +85,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
+#' @param cumulative Logical. Use cumulative counts.
 #' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(unit.observation = "month") with 24 or fewer months, points are plotted.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
@@ -100,9 +108,9 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' }
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
-  points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
-  log.count = FALSE, r.version = FALSE, same.xy = TRUE, multi.plot = FALSE,
-  legend.loc = "topleft", ...) {
+  cumulative = FALSE, points = "auto", smooth = FALSE, f = 2/3, span = 3/4,
+  se = FALSE, log.count = FALSE, r.version = FALSE, same.xy = TRUE,
+  multi.plot = FALSE, legend.loc = "topleft", ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
