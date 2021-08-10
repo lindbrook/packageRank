@@ -455,17 +455,25 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 }
 
 bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
-  obs.in.progress, r.version, legend.loc) {
+  obs.in.progress, r.version, legend.loc, cumulative) {
 
   obs <- x$unit.observation
   type <- ifelse(points, "o", "l")
 
   if (count == "download") {
-    y.var <- "Nb_of_downloads"
     ylab <- "Downloads"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_downloads"
+    } else {
+      y.var <- "Nb_of_downloads"
+    }
   } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
     ylab <- "Unique IP Addresses"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_distinct_IPs"
+    } else {
+      y.var <- "Nb_of_distinct_IPs"
+    }
   }
 
   dat <- do.call(rbind, x$data)
