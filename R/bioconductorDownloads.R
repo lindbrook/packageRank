@@ -47,8 +47,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   }
 
   current.date <- Sys.Date()
-  current.yr <- as.numeric(format(current.date , "%Y"))
-  current.mo <- as.numeric(format(current.date , "%m"))
+  current.yr <- as.numeric(format(current.date, "%Y"))
+  current.mo <- as.numeric(format(current.date, "%m"))
 
   if (is.null(packages)) {
     dat <- list(bioc_download(packages, from, to, when, current.date,
@@ -66,13 +66,13 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
         current.yr, current.mo, unit.observation))
     }
   }
-  
+
   dat <- lapply(dat, function(x) {
     x$cumulative_Nb_of_distinct_IPs <- cumsum(x$Nb_of_distinct_IPs)
     x$cumulative_Nb_of_downloads <- cumsum(x$Nb_of_distinct_IPs)
     x
   })
-  
+
   out <- list(data = dat, packages = packages, current.date = current.date,
     current.yr = current.yr, current.mo = current.mo,
     unit.observation = unit.observation)
@@ -147,22 +147,22 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
       bioc_plot(x, graphics, count, points, smooth, f, log.count,
-        obs.in.progress, r.version, same.xy)
+        obs.in.progress, r.version, same.xy, cumulative)
     } else if (length(x$packages) > 1) {
       if (multi.plot) {
         bioc_plot_multi(x, count, points, smooth, f, log.count,
-          obs.in.progress, r.version, legend.loc)
+          obs.in.progress, r.version, legend.loc, cumulative)
       } else {
         grDevices::devAskNewPage(ask = TRUE)
         bioc_plot(x, graphics, count, points, smooth, f, log.count,
-          obs.in.progress, r.version, same.xy)
+          obs.in.progress, r.version, same.xy, cumulative)
         grDevices::devAskNewPage(ask = FALSE)
       }
 
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
-      log.count, obs.in.progress, multi.plot)
+      log.count, obs.in.progress, multi.plot, cumulative)
   }
 }
 
