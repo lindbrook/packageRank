@@ -321,17 +321,25 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
 }
 
 bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
-  obs.in.progress, r.version, same.xy) {
+  obs.in.progress, r.version, same.xy, cumulative) {
 
   obs <- x$unit.observation
   type <- ifelse(points, "o", "l")
 
   if (count == "download") {
-    y.var <- "Nb_of_downloads"
     ylab <- "Downloads"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_downloads"
+    } else {
+      y.var <- "Nb_of_downloads"
+    }
   } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
     ylab <- "Unique IP Addresses"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_distinct_IPs"
+    } else {
+      y.var <- "Nb_of_distinct_IPs"
+    }
   }
 
   if (obs == "month") {
