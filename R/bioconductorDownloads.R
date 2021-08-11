@@ -47,8 +47,8 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   }
 
   current.date <- Sys.Date()
-  current.yr <- as.numeric(format(current.date , "%Y"))
-  current.mo <- as.numeric(format(current.date , "%m"))
+  current.yr <- as.numeric(format(current.date, "%Y"))
+  current.mo <- as.numeric(format(current.date, "%m"))
 
   if (is.null(packages)) {
     dat <- list(bioc_download(packages, from, to, when, current.date,
@@ -67,8 +67,15 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
     }
   }
 
+  dat <- lapply(dat, function(x) {
+    x$cumulative_Nb_of_distinct_IPs <- cumsum(x$Nb_of_distinct_IPs)
+    x$cumulative_Nb_of_downloads <- cumsum(x$Nb_of_distinct_IPs)
+    x
+  })
+
   out <- list(data = dat, packages = packages, current.date = current.date,
-    current.yr = current.yr, current.mo = current.mo, unit.observation = unit.observation)
+    current.yr = current.yr, current.mo = current.mo,
+    unit.observation = unit.observation)
   class(out) <- "bioconductorDownloads"
   out
 }
@@ -78,6 +85,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
 #' @param count Character. "download" or "ip".
+#' @param cumulative Logical. Use cumulative counts.
 #' @param points Character of Logical. Plot points. "auto", TRUE, FALSE. "auto" for bioconductorDownloads(unit.observation = "month") with 24 or fewer months, points are plotted.
 #' @param smooth Logical. Add stats::lowess smoother.
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
@@ -100,9 +108,9 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' }
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
-  points = "auto", smooth = FALSE, f = 2/3, span = 3/4, se = FALSE,
-  log.count = FALSE, r.version = FALSE, same.xy = TRUE, multi.plot = FALSE,
-  legend.loc = "topleft", ...) {
+  cumulative = FALSE, points = "auto", smooth = FALSE, f = 2/3, span = 3/4,
+  se = FALSE, log.count = FALSE, r.version = FALSE, same.xy = TRUE,
+  multi.plot = FALSE, legend.loc = "topleft", ...) {
 
   if(x$unit.observation == "month") {
     if (points == "auto") {
@@ -139,22 +147,21 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
       bioc_plot(x, graphics, count, points, smooth, f, log.count,
-        obs.in.progress, r.version, same.xy)
+        obs.in.progress, r.version, same.xy, cumulative)
     } else if (length(x$packages) > 1) {
       if (multi.plot) {
         bioc_plot_multi(x, count, points, smooth, f, log.count,
-          obs.in.progress, r.version, legend.loc)
+          obs.in.progress, r.version, legend.loc, cumulative)
       } else {
         grDevices::devAskNewPage(ask = TRUE)
         bioc_plot(x, graphics, count, points, smooth, f, log.count,
-          obs.in.progress, r.version, same.xy)
+          obs.in.progress, r.version, same.xy, cumulative)
         grDevices::devAskNewPage(ask = FALSE)
       }
-
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
-      log.count, obs.in.progress, multi.plot)
+      log.count, obs.in.progress, multi.plot, cumulative)
   }
 }
 
@@ -313,24 +320,28 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
 }
 
 bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
-  obs.in.progress, r.version, same.xy) {
+  obs.in.progress, r.version, same.xy, cumulative) {
 
   obs <- x$unit.observation
   type <- ifelse(points, "o", "l")
 
   if (count == "download") {
-    y.var <- "Nb_of_downloads"
     ylab <- "Downloads"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_downloads"
+    } else {
+      y.var <- "Nb_of_downloads"
+    }
   } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
     ylab <- "Unique IP Addresses"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_distinct_IPs"
+    } else {
+      y.var <- "Nb_of_distinct_IPs"
+    }
   }
 
-  if (obs == "month") {
-    x.var <- "date"
-  } else if (obs == "year") {
-    x.var <- "Year"
-  }
+  x.var <- tools::toTitleCase(obs)
 
   if (obs.in.progress) {
     today <- x$current.date
@@ -338,9 +349,19 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 
     est.ct <- vapply(x$data, function(dat) {
       ip.data <- dat[nrow(dat), ]
+      complete.data <- dat[-nrow(dat), ]
       obs.days <- as.numeric(format(today, "%d"))
       exp.days <- as.numeric(format(end.of.month, "%d"))
-      round(ip.data[, y.var] * exp.days / obs.days)
+      if (cumulative) {
+        if (count == "download") {
+          delta <- ip.data[, "Nb_of_downloads"] * exp.days / obs.days
+        } else if (count == "ip") {
+          delta <- ip.data[, "Nb_of_distinct_IPs"] * exp.days / obs.days
+        }
+        round(complete.data[nrow(complete.data), y.var] + delta)
+      } else {
+        round(ip.data[, y.var] * exp.days / obs.days)
+      }
     }, numeric(1L))
 
     if (same.xy) {
@@ -439,17 +460,25 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 }
 
 bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
-  obs.in.progress, r.version, legend.loc) {
+  obs.in.progress, r.version, legend.loc, cumulative) {
 
   obs <- x$unit.observation
   type <- ifelse(points, "o", "l")
 
   if (count == "download") {
-    y.var <- "Nb_of_downloads"
     ylab <- "Downloads"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_downloads"
+    } else {
+      y.var <- "Nb_of_downloads"
+    }
   } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
     ylab <- "Unique IP Addresses"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_distinct_IPs"
+    } else {
+      y.var <- "Nb_of_distinct_IPs"
+    }
   }
 
   dat <- do.call(rbind, x$data)
@@ -472,9 +501,19 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
 
     est.ct <- vapply(x$data, function(dat) {
       ip.data <- dat[nrow(dat), ]
+      complete.data <- dat[-nrow(dat), ]
       obs.days <- as.numeric(format(today, "%d"))
       exp.days <- as.numeric(format(end.of.month, "%d"))
-      round(ip.data[, y.var] * exp.days / obs.days)
+      if (cumulative) {
+        if (count == "download") {
+          delta <- ip.data[, "Nb_of_downloads"] * exp.days / obs.days
+        } else if (count == "ip") {
+          delta <- ip.data[, "Nb_of_distinct_IPs"] * exp.days / obs.days
+        }
+        round(complete.data[nrow(complete.data), y.var] + delta)
+      } else {
+        round(ip.data[, y.var] * exp.days / obs.days)
+      }
     }, numeric(1L))
 
     ylim <- range(c(ylim, est.ct))
@@ -552,46 +591,71 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
-  log.count, obs.in.progress, multi.plot) {
+  log.count, obs.in.progress, multi.plot, cumulative) {
 
   obs <- x$unit.observation
   date <- x$current.date
   dat <- summary(x)
-  oip <- rev(unique(dat$date))[1]
-  mo <- vapply(dat$Month, function(mo) which(mo == month.abb), numeric(1L))
-  dat$date <- as.Date(paste0(dat$Year, "-", mo, "-01"))
 
   if (count == "download") {
-    y.var <- "Nb_of_downloads"
     ylab <- "Downloads"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_downloads"
+    } else {
+      y.var <- "Nb_of_downloads"
+    }
   } else if (count == "ip") {
-    y.var <- "Nb_of_distinct_IPs"
     ylab <- "Unique IP Addresses"
+    if (cumulative) {
+      y.var <- "cumulative_Nb_of_distinct_IPs"
+    } else {
+      y.var <- "Nb_of_distinct_IPs"
+    }
   }
 
   if (obs.in.progress) {
-    ip.sel <- dat$date == oip
-    ip.data <- dat[ip.sel, ]
-    complete.data <- dat[!ip.sel, ]
-    last.obs <- vapply(x$packages, function(p) {
-      nrow(complete.data[complete.data$packages == p, ])
-    }, integer(1L))
+    today <- x$current.date
+    end.of.month <- lastDayMonth(today)$date
+    ip.data <- dat[dat$date == max(dat$date), ]
+    complete.data <- dat[dat$date != max(dat$date), ]
+    obs.days <- as.numeric(format(today, "%d"))
+    exp.days <- as.numeric(format(end.of.month, "%d"))
 
-    obs.days <- as.numeric(format(Sys.Date(), "%d"))
-    exp.days <- as.numeric(format(lastDayMonth(date)$date, "%d"))
-    est.ct <- round(ip.data[, y.var] * exp.days / obs.days)
+    if (cumulative) {
+      if (count == "download") {
+        delta <- ip.data[, "Nb_of_downloads"] * exp.days / obs.days
+      } else if (count == "ip") {
+        delta <- ip.data[, "Nb_of_distinct_IPs"] * exp.days / obs.days
+      }
+      sel <- complete.data$date == max(complete.data$date)
+      est.ct <- round(complete.data[sel, y.var] + delta)
+    } else {
+      est.ct <- round(ip.data[, y.var] * exp.days / obs.days)
+    }
+
     est.data <- ip.data
     est.data[, y.var] <- est.ct
-    est.seg <- rbind(complete.data[cumsum(last.obs), ], est.data)
-    obs.seg <- rbind(complete.data[cumsum(last.obs), ], ip.data)
+    last.obs <- complete.data$date == max(complete.data$date)
+    est.seg <- rbind(complete.data[last.obs, ], est.data)
+    obs.seg <- rbind(complete.data[last.obs, ], ip.data)
 
     if (multi.plot) {
-      if (count == "download") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads",
-          colour = "packages")) + ylab("Downloads")
-      } else if (count == "ip") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs",
-          colour = "packages")) + ylab("Unique IP Addresses")
+      if (cumulative) {
+        if (count == "download") {
+          p <- ggplot(data = dat, aes_string("date",
+            "cumulative_Nb_of_downloads", colour = "packages")) + ylab(ylab)
+        } else if (count == "ip") {
+          p <- ggplot(data = dat, aes_string("date",
+            "cumulative_Nb_of_distinct_IPs", colour = "packages")) + ylab(ylab)
+        }
+      } else {
+        if (count == "download") {
+          p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads",
+            colour = "packages")) + ylab(ylab)
+        } else if (count == "ip") {
+          p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs",
+            colour = "packages")) + ylab(ylab)
+        }
       }
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
@@ -603,12 +667,22 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
                theme(panel.grid.minor = element_blank())
 
     } else {
-      if (count == "download") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-             ylab("Downloads")
-      } else if (count == "ip") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-             ylab("Unique IP Addresses")
+      if (cumulative) {
+        if (count == "download") {
+          p <- ggplot(data = dat,
+            aes_string("date", "cumulative_Nb_of_downloads")) + ylab(ylab)
+        } else if (count == "ip") {
+          p <- ggplot(data = dat,
+            aes_string("date", "cumulative_Nb_of_distinct_IPs")) + ylab(ylab)
+        }
+      } else {
+        if (count == "download") {
+          p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+               ylab(ylab)
+        } else if (count == "ip") {
+          p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+               ylab(ylab)
+        }
       }
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
@@ -631,12 +705,22 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
   } else {
-    if (count == "download") {
-      p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-        ylab("Downloads")
-    } else if (count == "ip") {
-      p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-        ylab("Unique IP Addresses")
+    if (cumulative) {
+      if (count == "download") {
+        p <- ggplot(data = dat,
+          aes_string("date", "cumulative_Nb_of_downloads")) + ylab(ylab)
+      } else if (count == "ip") {
+        p <- ggplot(data = dat,
+          aes_string("date", "cumulative_Nb_of_distinct_IPs")) + ylab(ylab)
+      }
+    } else {
+      if (count == "download") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
+             ylab(ylab)
+      } else if (count == "ip") {
+        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
+             ylab(ylab)
+      }
     }
 
     if (multi.plot) {

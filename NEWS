@@ -1,3 +1,9 @@
+packageRank 0.4.2.9013
+==================
+
+- add plot.bioconductorDownloads(cumulative = TRUE).
+
+
 packageRank 0.4.2.9012
 ==================
 
