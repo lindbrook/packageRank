@@ -158,7 +158,6 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
           obs.in.progress, r.version, same.xy, cumulative)
         grDevices::devAskNewPage(ask = FALSE)
       }
-
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
@@ -342,11 +341,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
     }
   }
 
-  if (obs == "month") {
-    x.var <- "date"
-  } else if (obs == "year") {
-    x.var <- "Year"
-  }
+  x.var <- tools::toTitleCase(obs)
 
   if (obs.in.progress) {
     today <- x$current.date
@@ -354,9 +349,19 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
 
     est.ct <- vapply(x$data, function(dat) {
       ip.data <- dat[nrow(dat), ]
+      complete.data <- dat[-nrow(dat), ]
       obs.days <- as.numeric(format(today, "%d"))
       exp.days <- as.numeric(format(end.of.month, "%d"))
-      round(ip.data[, y.var] * exp.days / obs.days)
+      if (cumulative) {
+        if (count == "download") {
+          delta <- ip.data[, "Nb_of_downloads"] * exp.days / obs.days
+        } else if (count == "ip") {
+          delta <- ip.data[, "Nb_of_distinct_IPs"] * exp.days / obs.days
+        }
+        round(complete.data[nrow(complete.data), y.var] + delta)
+      } else {
+        round(ip.data[, y.var] * exp.days / obs.days)
+      }
     }, numeric(1L))
 
     if (same.xy) {
@@ -496,9 +501,19 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
 
     est.ct <- vapply(x$data, function(dat) {
       ip.data <- dat[nrow(dat), ]
+      complete.data <- dat[-nrow(dat), ]
       obs.days <- as.numeric(format(today, "%d"))
       exp.days <- as.numeric(format(end.of.month, "%d"))
-      round(ip.data[, y.var] * exp.days / obs.days)
+      if (cumulative) {
+        if (count == "download") {
+          delta <- ip.data[, "Nb_of_downloads"] * exp.days / obs.days
+        } else if (count == "ip") {
+          delta <- ip.data[, "Nb_of_distinct_IPs"] * exp.days / obs.days
+        }
+        round(complete.data[nrow(complete.data), y.var] + delta)
+      } else {
+        round(ip.data[, y.var] * exp.days / obs.days)
+      }
     }, numeric(1L))
 
     ylim <- range(c(ylim, est.ct))
