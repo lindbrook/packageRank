@@ -2,6 +2,7 @@ packageRank 0.4.2.9013
 ==================
 
 - add plot.bioconductorDownloads(cumulative = TRUE).
+- fix ylim in singlePlot(graphics = "base").
 
 
 packageRank 0.4.2.9012

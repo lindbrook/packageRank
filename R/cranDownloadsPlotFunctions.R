@@ -163,6 +163,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
+  type <- ifelse(points, "o", "l")
 
   if (statistic == "count") {
     y.var <- dat$count
@@ -188,23 +189,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     } else if (obs.ct > 1) {
       if (same.xy) {
         xlim <- range(dat$date)
-        ylim <- range(y.var)
       } else {
         xlim <- NULL
-        ylim <- NULL
       }
 
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
 
       if (any(dat$in.progress)) {
-        invisible(lapply(x$package, function(pkg) {
+        plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-          type <- ifelse(points, "o", "l")
-
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete.data <- pkg.dat[!ip.sel, ]
-          last.obs <- nrow(complete.data)
 
           obs.days <- as.numeric(format(last.obs.date , "%d"))
           exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
@@ -215,11 +211,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
-          if (statistic == "count") {
-            ylim <- range(c(ylim, est.data$count))
-          } else if (statistic == "cumulative") {
-            ylim <- range(c(ylim, est.data$cumulative))
-          }
+          list(complete.data = complete.data, ip.data = ip.data,
+            est.data = est.data)
+         })
+
+        tmp <- lapply(plot.data, function(x) do.call(rbind, x))
+        tmp <- do.call(rbind, tmp)
+        ylim <- range(tmp[, y.nm])
+
+        invisible(lapply(seq_along(plot.data), function(i) {
+          complete.data <- plot.data[[i]]$complete.data
+          ip.data <- plot.data[[i]]$ip.data
+          est.data <- plot.data[[i]]$est.data
 
           if (log.count) {
             plot(complete.data$date, complete.data[, y.nm], type = type,
@@ -233,6 +236,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
           points(est.data[, "date"], est.data[, y.nm], col = "red")
 
+          last.obs <- nrow(complete.data)
           segments(complete.data[last.obs, "date"],
                    complete.data[last.obs, y.nm],
                    ip.data$date,
@@ -249,8 +253,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             col.ticks = "red")
 
           if (package.version) {
-            if (dev.mode) p_v <- packageHistory0(pkg)
-            else p_v <- packageHistory(pkg)
+            if (dev.mode) p_v <- packageHistory0(est.data$package)
+            else p_v <- packageHistory(est.data$package)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
             abline(v = p_v$Date, lty = "dotted", col = "red")
@@ -272,10 +276,16 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
             }
           }
-          title(main = pkg)
+          title(main = est.data$package)
         }))
 
       } else {
+        if (statistic == "count") {
+          ylim <- range(c(ylim, est.data$count))
+        } else if (statistic == "cumulative") {
+          ylim <- range(c(ylim, est.data$cumulative))
+        }
+
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
           type <- ifelse(points, "o", "l")
