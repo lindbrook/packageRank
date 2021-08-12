@@ -664,7 +664,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
                geom_point(data = est.data, shape = 1) +
                geom_point(data = ip.data, shape = 0) +
                xlab("Date") +
-               theme(panel.grid.minor = element_blank())
+               theme(panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank())
 
     } else {
       if (cumulative) {
@@ -693,7 +694,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
                facet_wrap(~ packages, ncol = 2) +
                xlab("Date") +
                theme_bw() +
-               theme(panel.grid.minor = element_blank())
+               theme(panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank())
     }
 
     if (points) p <- p + geom_point(data = complete.data)
@@ -733,7 +735,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
         facet_wrap(~ packages, ncol = 2) +
         xlab("Date") +
         theme_bw() +
-        theme(panel.grid.minor = element_blank())
+        theme(panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
     }
 
     if (points) p <- p + geom_point()
