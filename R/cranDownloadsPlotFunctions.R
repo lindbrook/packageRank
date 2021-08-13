@@ -566,7 +566,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
       }
 
       p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-        theme(panel.grid.minor = element_blank())
+        theme(legend.position = "bottom",
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
       if (statistic == "count") {
@@ -612,7 +614,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
           geom_point(data = est.data) +
           geom_point(data = ip.data, shape = 1) +
-          theme(panel.grid.minor = element_blank(),
+          theme(legend.position = "bottom",
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
         if (points) {
@@ -621,7 +625,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
 
       } else {
         p <- p + geom_line(size = 1/3) +
-          theme(panel.grid.minor = element_blank(),
+          theme(legend.position = "bottom",
+                panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
