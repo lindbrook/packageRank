@@ -280,11 +280,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
 
       } else {
-        if (statistic == "count") {
-          ylim <- range(c(ylim, est.data$count))
-        } else if (statistic == "cumulative") {
-          ylim <- range(c(ylim, est.data$cumulative))
-        }
+        ylim <- range(dat[, y.nm])
 
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
