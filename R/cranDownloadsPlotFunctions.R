@@ -959,7 +959,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         p <- p + geom_line(size = 0.5) +
           ggtitle("R Downloads") +
           theme_bw() +
-          theme(panel.grid.minor = element_blank(),
+          theme(panel.grid.major = element_blank(),
+                panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
@@ -1124,7 +1125,8 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
     } else {
       p <- p + geom_line(size = 0.5) +
         theme_bw() +
-        theme(panel.grid.minor = element_blank(),
+        theme(panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5)) +
         ggtitle("Total R Downloads")
 
