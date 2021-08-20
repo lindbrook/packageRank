@@ -85,7 +85,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
 
     if (smooth) {
       if (any(dat$in.progress)) {
-        smooth.data <- rbind(complete.data, est.data)
+        smooth.data <- complete.data
         lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
           col = "blue")
       } else {
@@ -130,7 +130,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       if (log.count) p <- p + scale_y_log10()
       if (smooth) {
         if (any(dat$in.progress)) {
-          smooth.data <- rbind(complete.data, est.data)
+          smooth.data <- complete.data
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
@@ -233,8 +233,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
           }
 
-          points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
-          points(est.data[, "date"], est.data[, y.nm], col = "red")
+          points(ip.data[, "date"], ip.data[, y.nm], col = "gray", pch = 0)
+          points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
 
           last.obs <- nrow(complete.data)
           segments(complete.data[last.obs, "date"],
@@ -269,7 +269,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (smooth) {
             if (any(dat$in.progress)) {
-              smooth.data <- rbind(complete.data, est.data)
+              smooth.data <- complete.data
               lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
                 f = f), col = "blue")
             } else {
@@ -377,8 +377,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, col = "red") +
           geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, col = "red") +
-          geom_point(data = ip.data, shape = 1)
+          geom_point(data = est.data, col = "red", shape = 0) +
+          geom_point(data = ip.data, shape = 0)
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -391,7 +391,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (smooth) {
         if (any(dat$in.progress)) {
-          smooth.data <- rbind(complete.data, est.data)
+          smooth.data <- complete.data
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
@@ -442,7 +442,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
           "#0072B2", "#D55E00", "#CC79A7")
 
-        token <- c(1, 0,  2:7)
+        token <- c(1, 0, 2:7)
         vars <- c("date", statistic)
         type <- ifelse(points, "o", "l")
         xlim <- range(dat$date)
@@ -510,7 +510,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
             }
 
             if (smooth) {
-              smooth.data <- rbind(complete.data, est.data)
+              smooth.data <- complete.data
               lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
                 f = f), col = cbPalette[i])
             }
@@ -608,8 +608,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data) +
-          geom_point(data = ip.data, shape = 1) +
+          geom_point(data = est.data, shape = 0) +
+          geom_point(data = ip.data, shape = 0) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -633,7 +633,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
 
       if (smooth) {
         if (any(dat$in.progress)) {
-          smooth.data <- rbind(complete.data, est.data)
+          smooth.data <- complete.data
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
@@ -738,7 +738,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         invisible(lapply(seq_along(est.data), function(i) {
           tmp <- est.data[[i]]
-          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 16)
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 0)
         }))
 
         invisible(lapply(seq_along(ip.data), function(i) {
@@ -762,9 +762,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         if (smooth) {
           invisible(lapply(seq_along(complete.data), function(i) {
-            tmpA <- complete.data[[i]]
-            tmpB <- est.data[[i]]
-            smooth.data <- rbind(tmpA, tmpB)
+            smooth.data <- complete.data[[i]]
             lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
               f = f), col = pltfrm.col[i])
           }))
@@ -920,15 +918,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 15) +
+          p <- p + geom_point(data = est.data, shape = 0) +
                    geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dashed") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
-          p <- p + geom_point(data = est.data, colour = "red") +
-                   geom_point(data = ip.data, shape = 1) +
+          p <- p + geom_point(data = est.data, colour = "red", shape = 0) +
+                   geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
@@ -940,7 +938,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         if (smooth) {
           if (any(dat$in.progress)) {
-            smooth.data <- rbind(complete.data, est.data)
+            smooth.data <- complete.data
             p <- p + geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
           } else {
@@ -1034,8 +1032,8 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
           xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
       }
 
-      points(ip.data[, "date"], ip.data[, statistic], col = "gray")
-      points(est.data[, "date"], est.data[, statistic], col = "red")
+      points(ip.data[, "date"], ip.data[, statistic], col = "gray", pch = 0)
+      points(est.data[, "date"], est.data[, statistic], col = "red", pch = 0)
 
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, statistic],
@@ -1053,7 +1051,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
         col.ticks = "red")
 
       if (smooth) {
-        smooth.data <- rbind(complete.data, est.data)
+        smooth.data <- complete.data
         lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
           col = "blue")
       }
@@ -1117,7 +1115,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       p <- p + geom_line(data = complete.data, size = 1/3) +
         geom_line(data = est.seg, size = 1/3, col = "red") +
         geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-        geom_point(data = est.data, col = "red") +
+        geom_point(data = est.data, col = "red", shape = 0) +
         geom_point(data = ip.data, shape = 1)
 
       if (points) p <- p + geom_point(data = complete.data)
@@ -1136,7 +1134,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
     if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
     if (smooth) {
       if (any(dat$in.progress)) {
-        smooth.data <- rbind(complete.data, est.data)
+        smooth.data <- complete.data
         p <- p + geom_smooth(data = smooth.data, method = "loess",
           formula = "y ~ x", se = se, span = span)
       } else {
