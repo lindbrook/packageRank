@@ -257,14 +257,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             else p_v <- packageHistory(est.data$package)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
-            abline(v = p_v$Date, lty = "dotted", col = "red")
           }
 
           if (r.version) {
             r_v <- rversions::r_versions()
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, padj = 0.9)
-            abline(v = as.Date(r_v$date), lty = "dotted")
           }
 
           if (smooth) {
@@ -300,14 +298,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             else p_v <- packageHistory(pkg)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
-            abline(v = p_v$Date, lty = "dotted", col = "red")
           }
 
           if (r.version) {
             r_v <- rversions::r_versions()
             axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
               cex.axis = 2/3, padj = 0.9)
-            abline(v = as.Date(r_v$date), lty = "dotted")
           }
 
           if (smooth) {
