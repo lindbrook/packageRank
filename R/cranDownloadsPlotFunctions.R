@@ -373,8 +373,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, col = "red") +
           geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, col = "red", shape = 0) +
-          geom_point(data = ip.data, shape = 0)
+          geom_point(data = est.data, colour = "red", shape = 0) +
+          geom_point(data = ip.data, colour = "gray", shape = 0)
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -922,7 +922,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                                 yend = "yend"), linetype = "dotted")
         } else {
           p <- p + geom_point(data = est.data, colour = "red", shape = 0) +
-                   geom_point(data = ip.data, shape = 0) +
+                   geom_point(data = ip.data, colour = "gray", shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
@@ -1109,10 +1109,11 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       obs.seg <- rbind(complete.data[last.obs, ], ip.data)
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
-        geom_line(data = est.seg, size = 1/3, col = "red") +
-        geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-        geom_point(data = est.data, col = "red", shape = 0) +
-        geom_point(data = ip.data, shape = 1)
+        geom_line(data = est.seg, size = 1/3, colour = "red") +
+        geom_line(data = obs.seg,  size = 1/3, colour = "gray",
+                  linetype = "dotted") +
+        geom_point(data = est.data, colour = "red", shape = 0) +
+        geom_point(data = ip.data, colour = "gray", shape = 1)
 
       if (points) p <- p + geom_point(data = complete.data)
 
