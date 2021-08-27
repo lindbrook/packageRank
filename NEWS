@@ -2,7 +2,7 @@ packageRank 0.4.2.9015
 ==================
 
 - remove package and r version abline().
-- gray out in-progress observation in ggplot2 version. 
+- amend in-progress and observed data in of plot.cranDownloads(). 
 
 
 packageRank 0.4.2.9014
