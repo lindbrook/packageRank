@@ -603,7 +603,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
+          geom_line(data = est.seg, size = 1/3, linetype = "solid") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
           geom_point(data = est.data, shape = 0) +
           geom_point(data = ip.data, shape = 0) +
@@ -735,7 +735,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         invisible(lapply(seq_along(est.data), function(i) {
           tmp <- est.data[[i]]
-          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 0)
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 15)
         }))
 
         invisible(lapply(seq_along(ip.data), function(i) {
@@ -754,14 +754,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], lty = "dashed", col = pltfrm.col[i])
+            tmpB[, statistic], lty = "solid", col = pltfrm.col[i])
         }))
 
         if (smooth) {
           invisible(lapply(seq_along(complete.data), function(i) {
             smooth.data <- complete.data[[i]]
             lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
-              f = f), col = pltfrm.col[i])
+              f = f), col = pltfrm.col[i], lty = "solid", lwd = 1.5)
           }))
         }
 
@@ -817,7 +817,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           invisible(lapply(seq_along(pltfrm), function(i) {
             sm.data <- stats::lowess(dat[dat$platform == pltfrm[i], "date"],
               dat[dat$platform == pltfrm[i], statistic], f = f)
-            lines(sm.data, lty = "dashed", col = pltfrm.col[i])
+            lines(sm.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
           }))
         }
 
@@ -915,14 +915,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 0) +
+          p <- p + geom_point(data = est.data, shape = 15) +
                    geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "dashed") +
+                                yend = "yend"), linetype = "solid") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
-          p <- p + geom_point(data = est.data, colour = "red", shape = 0) +
+          p <- p + geom_point(data = est.data, colour = "red", shape = 15) +
                    geom_point(data = ip.data, colour = "black", shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
