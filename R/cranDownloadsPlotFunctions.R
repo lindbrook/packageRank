@@ -49,7 +49,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
           xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      points(ip.data[, "date"], ip.data[, y.nm], col = "gray", pch = 0)
+      points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
       points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
 
       segments(complete.data[last.obs, "date"],
@@ -124,7 +124,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
         geom_line(data = est.seg, size = 1/3, col = "red") +
         geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
         geom_point(data = est.data, col = "red", shape = 0) +
-        geom_point(data = ip.data, col = "gray", shape = 0)
+        geom_point(data = ip.data, col = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
       if (log.count) p <- p + scale_y_log10()
@@ -234,7 +234,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               pch = 16)
           }
 
-          points(ip.data[, "date"], ip.data[, y.nm], col = "gray", pch = 0)
+          points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
           points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
 
           last.obs <- nrow(complete.data)
@@ -375,7 +375,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           geom_line(data = est.seg, size = 1/3, col = "red") +
           geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
           geom_point(data = est.data, colour = "red", shape = 0) +
-          geom_point(data = ip.data, colour = "gray", shape = 0)
+          geom_point(data = ip.data, colour = "black", shape = 0)
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -499,7 +499,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
              points(est.data[, "date"], est.data[, statistic], col = "red",
                pch = token[i])
              points(ip.data[, "date"], ip.data[, statistic],
-               col = "gray", pch = token[i])
+               col = "black", pch = token[i])
 
             if (points) {
               points(complete.data[, "date"], complete.data[, statistic],
@@ -923,7 +923,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                                 yend = "yend"), linetype = "dotted")
         } else {
           p <- p + geom_point(data = est.data, colour = "red", shape = 0) +
-                   geom_point(data = ip.data, colour = "gray", shape = 0) +
+                   geom_point(data = ip.data, colour = "black", shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
@@ -1029,7 +1029,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
           xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      points(ip.data[, "date"], ip.data[, statistic], col = "gray", pch = 0)
+      points(ip.data[, "date"], ip.data[, statistic], col = "black", pch = 0)
       points(est.data[, "date"], est.data[, statistic], col = "red", pch = 0)
 
       segments(complete.data[last.obs, "date"],
@@ -1111,10 +1111,10 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
         geom_line(data = est.seg, size = 1/3, colour = "red") +
-        geom_line(data = obs.seg,  size = 1/3, colour = "gray",
+        geom_line(data = obs.seg,  size = 1/3, colour = "black",
                   linetype = "dotted") +
         geom_point(data = est.data, colour = "red", shape = 0) +
-        geom_point(data = ip.data, colour = "gray", shape = 0)
+        geom_point(data = ip.data, colour = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
 
