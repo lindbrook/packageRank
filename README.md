@@ -44,6 +44,37 @@ Updated results for functions that rely on
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are typically
 available soon thereafter.
 
+### new in v0.5.0: plots with different units of observation
+
+When plotting cranDownloads(), you can now select the unit of
+observation: “day” (the default), “month”, or “year”.
+
+``` r
+plot(cranDownloads(packages = "HistData", from = "2021"))
+```
+
+![](man/figures/README-day_code-1.png)<!-- -->
+
+Here are the same data aggregated by month:
+
+``` r
+plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "month")
+```
+
+![](man/figures/README-month_code-1.png)<!-- -->
+
+In plots with aggregated data, there are two things to remember. First,
+each point, with the likely exception of the latest observation (far
+right), represents the total monthly count on the last day of the month.
+For example, the point on the far left is the total count for January
+2021. Second, because it’s likely that the latest observation is still
+in-progress, two points are plotted: a “grayed-out” point for
+in-progress total and a highlighted point for the estimated total.
+Currently, the estimate is computed using based the proportion of the
+unit of observation completed. For example, in the example above there
+are 2,010 downloads from August 1 through August 15: this creates an
+estimate of 4,154 downloads for the month (41 / 15 \* 2010).
+
 ### getting started
 
 To install
@@ -855,4 +886,4 @@ features”](https://cran.r-project.org/doc/manuals/r-release/NEWS.html):
 This change occasionally affected functions that download logs. This was
 especially true over slower internet connections and with larger log
 files. To fix this, functions that use `fetchCranLog()` will, if needed,
-temporarily set the timeout to 300 seconds.
+temporarily set the timeout to 600 seconds.
