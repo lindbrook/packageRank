@@ -1,12 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.2.9015-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
-via two functions, `cranDownloads()` and `packageRank()`, and one set of
+via two functions, `cranDownloads()` and `packageRank()` (analogous but
+more limited functionality for Bioconductor packages is available via
+`bioconductorDownloads()` and `bioconductorRank()`), and one set of
 filters that remove “invalid” entries from the download logs. I cover
 these topics in three parts. A fourth part covers package related
 issues.
@@ -44,10 +46,13 @@ Updated results for functions that rely on
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are typically
 available soon thereafter.
 
-### new in v0.5.0: plots with different units of observation
+### new in v0.5.0: plotting different units of observation
 
-When plotting cranDownloads(), you can now select the unit of
-observation: “day” (the default), “month”, or “year”.
+When plotting cranDownloads(), you can now select “day” (the default),
+“month”, or “year” as the the unit of observation. Here is the plot for
+the daily downloads of
+[‘HistData’](https://CRAN.R-project.org/package=HistData) from January
+01 through August 15 2021.
 
 ``` r
 plot(cranDownloads(packages = "HistData", from = "2021"))
@@ -55,7 +60,7 @@ plot(cranDownloads(packages = "HistData", from = "2021"))
 
 ![](man/figures/README-day_code-1.png)<!-- -->
 
-Here are the same data aggregated by month:
+Here is the plot for the same data aggregated by month:
 
 ``` r
 plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "month")
@@ -63,17 +68,18 @@ plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "mo
 
 ![](man/figures/README-month_code-1.png)<!-- -->
 
-In plots with aggregated data, there are two things to remember. First,
-each point, with the likely exception of the latest observation (far
-right), represents the total monthly count on the last day of the month.
-For example, the point on the far left is the total count for January
-2021. Second, because it’s likely that the latest observation is still
-in-progress, two points are plotted: a “grayed-out” point for
-in-progress total and a highlighted point for the estimated total.
-Currently, the estimate is computed using based the proportion of the
-unit of observation completed. For example, in the example above there
-are 2,010 downloads from August 1 through August 15: this creates an
-estimate of 4,154 downloads for the month (41 / 15 \* 2010).
+In plots of aggregated data, there are two things to keep in mind.
+First, each point, with the likely exception of the latest observation
+(far right), represents the total monthly count on the last day of the
+month. For example, in the plot above, the solid point on the far left
+is the total count for January 2021. Second, because it’s likely that
+the latest observation is in-progress, two points are plotted (far
+right): a “grayed-out” point for the in-progress total and a highlighted
+point for the estimated total. Currently, I compute the estimate using
+the proportion of the unit of observation completed. For example, in the
+example above there were 2,010 downloads from August 1 through August
+15; this leads to an estimate of 4,154 downloads for the month (31 / 15
+\* 2010).
 
 ### getting started
 
@@ -617,7 +623,8 @@ packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 
 Here, we see that seven different versions of the package were
 downloaded in a sequential bloc. A little digging show that these seven
-versions represent *all* prior versions of ‘cholera’:
+versions represent *all* prior versions of ‘cholera’ available on that
+date:
 
 ``` r
 packageHistory(package = "cholera")

@@ -3,6 +3,7 @@ packageRank 0.4.2.9015
 
 - remove package and r version abline().
 - amend in-progress and observed data in plot.cranDownloads(). 
+- update README.
 
 
 packageRank 0.4.2.9014
