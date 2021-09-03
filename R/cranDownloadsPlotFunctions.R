@@ -43,14 +43,14 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       if (log.count) {
         plot(complete.data$date, complete.data[, y.nm], type = type,
           xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
-          ylim = ylim, log = "y")
+          ylim = ylim, log = "y", pch = 16)
       } else {
         plot(complete.data$date, complete.data[, y.nm], type = type,
-          xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+          xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      points(ip.data[, "date"], ip.data[, y.nm], col = "gray")
-      points(est.data[, "date"], est.data[, y.nm], col = "red")
+      points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
+      points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
 
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, y.nm],
@@ -123,8 +123,8 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       p <- p + geom_line(data = complete.data, size = 1/3) +
         geom_line(data = est.seg, size = 1/3, col = "red") +
         geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-        geom_point(data = est.data, col = "red", shape = 1) +
-        geom_point(data = ip.data, col = "gray", shape = 1)
+        geom_point(data = est.data, col = "red", shape = 0) +
+        geom_point(data = ip.data, col = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
       if (log.count) p <- p + scale_y_log10()
@@ -227,13 +227,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (log.count) {
             plot(complete.data$date, complete.data[, y.nm], type = type,
               xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
-              ylim = ylim, log = "y")
+              ylim = ylim, log = "y", pch = 16)
           } else {
             plot(complete.data$date, complete.data[, y.nm], type = type,
-              xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim)
+              xlab = "Date", ylab = y.nm.case, xlim = xlim, ylim = ylim,
+              pch = 16)
           }
 
-          points(ip.data[, "date"], ip.data[, y.nm], col = "gray", pch = 0)
+          points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
           points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
 
           last.obs <- nrow(complete.data)
@@ -374,7 +375,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           geom_line(data = est.seg, size = 1/3, col = "red") +
           geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
           geom_point(data = est.data, colour = "red", shape = 0) +
-          geom_point(data = ip.data, colour = "gray", shape = 0)
+          geom_point(data = ip.data, colour = "black", shape = 0)
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -498,7 +499,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
              points(est.data[, "date"], est.data[, statistic], col = "red",
                pch = token[i])
              points(ip.data[, "date"], ip.data[, statistic],
-               col = "gray", pch = token[i])
+               col = "black", pch = token[i])
 
             if (points) {
               points(complete.data[, "date"], complete.data[, statistic],
@@ -602,9 +603,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, linetype = "dashed") +
+          geom_line(data = est.seg, size = 1/3, linetype = "solid") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, shape = 0) +
+          geom_point(data = est.data, shape = 2) +
           geom_point(data = ip.data, shape = 0) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
@@ -682,7 +683,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
     if (graphics == "base") {
       if (any(dat$in.progress)) {
         pltfrm <- unique(dat$platform)
-        pltfrm.col <- c("red", "blue", "black")
+        pltfrm.col <- c("red", "dodgerblue", "black")
 
         p.data <- lapply(seq_along(pltfrm), function(i) {
           pkg.dat <- dat[dat$platform == pltfrm[i], ]
@@ -723,7 +724,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           invisible(lapply(seq_along(complete.data), function(i) {
             tmp <- complete.data[[i]]
             points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i],
-              pch = 1)
+              pch = 16)
           }))
         }
 
@@ -734,7 +735,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         invisible(lapply(seq_along(est.data), function(i) {
           tmp <- est.data[[i]]
-          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 0)
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 15)
         }))
 
         invisible(lapply(seq_along(ip.data), function(i) {
@@ -753,21 +754,21 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], lty = "dashed", col = pltfrm.col[i])
+            tmpB[, statistic], lty = "solid", col = pltfrm.col[i])
         }))
 
         if (smooth) {
           invisible(lapply(seq_along(complete.data), function(i) {
             smooth.data <- complete.data[[i]]
             lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
-              f = f), col = pltfrm.col[i])
+              f = f), col = pltfrm.col[i], lty = "solid", lwd = 1.5)
           }))
         }
 
         legend(x = legend.loc,
                legend = c("win", "mac", "src"),
-               col = c("black", "red", "blue"),
-               pch = c(1, 0, 2),
+               col = c("black", "red", "dodgerblue"),
+               pch = rep(16, 3),
                bg = "white",
                cex = 2/3,
                title = "Platform",
@@ -795,7 +796,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         }
 
         pltfrm <- unique(dat$platform)
-        pltfrm.col <- c("red", "blue", "black")
+        pltfrm.col <- c("red", "dodgerblue", "black")
 
         invisible(lapply(seq_along(pltfrm), function(i) {
           lines(dat[dat$platform == pltfrm[i], "date"],
@@ -805,7 +806,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         legend(x = legend.loc,
                legend = c("win", "mac", "src"),
-               col = c("black", "red", "blue"),
+               col = c("black", "red", "dodgerblue"),
                pch = c(1, 0, 2),
                bg = "white",
                cex = 2/3,
@@ -816,7 +817,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           invisible(lapply(seq_along(pltfrm), function(i) {
             sm.data <- stats::lowess(dat[dat$platform == pltfrm[i], "date"],
               dat[dat$platform == pltfrm[i], statistic], f = f)
-            lines(sm.data, lty = "dashed", col = pltfrm.col[i])
+            lines(sm.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
           }))
         }
 
@@ -914,15 +915,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 0) +
+          p <- p + geom_point(data = est.data, shape = 15) +
                    geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "dashed") +
+                                yend = "yend"), linetype = "solid") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
-          p <- p + geom_point(data = est.data, colour = "red", shape = 0) +
-                   geom_point(data = ip.data, colour = "gray", shape = 0) +
+          p <- p + geom_point(data = est.data, colour = "red", shape = 15) +
+                   geom_point(data = ip.data, colour = "black", shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
@@ -1022,13 +1023,13 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       if (log.count) {
         plot(complete.data$date, complete.data[, statistic], type = type,
           xlab = "Date", ylab = paste0("log10 ", ylab), xlim = xlim,
-          ylim = ylim, log = "y")
+          ylim = ylim, log = "y", pch = 16)
       } else {
         plot(complete.data$date, complete.data[, statistic], type = type,
-          xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
+          xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      points(ip.data[, "date"], ip.data[, statistic], col = "gray", pch = 0)
+      points(ip.data[, "date"], ip.data[, statistic], col = "black", pch = 0)
       points(est.data[, "date"], est.data[, statistic], col = "red", pch = 0)
 
       segments(complete.data[last.obs, "date"],
@@ -1110,10 +1111,10 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
         geom_line(data = est.seg, size = 1/3, colour = "red") +
-        geom_line(data = obs.seg,  size = 1/3, colour = "gray",
+        geom_line(data = obs.seg,  size = 1/3, colour = "black",
                   linetype = "dotted") +
         geom_point(data = est.data, colour = "red", shape = 0) +
-        geom_point(data = ip.data, colour = "gray", shape = 1)
+        geom_point(data = ip.data, colour = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
 

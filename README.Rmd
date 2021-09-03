@@ -18,7 +18,7 @@ library(packageRank)
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()`, and one set of filters that remove "invalid" entries from the download logs. I cover these topics in three parts. A fourth part covers package related issues.
+['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two functions, `cranDownloads()` and `packageRank()` (analogous but more limited functionality for Bioconductor packages is available via `bioconductorDownloads()` and  `bioconductorRank()`), and one set of filters that remove "invalid" entries from the download logs. I cover these topics in three parts. A fourth part covers package related issues.
 
 * [Part I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and providing generic R `plot()` methods to make visualization easy.
 * [Part II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer counts (i.e., downloads), to  help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
@@ -28,6 +28,29 @@ library(packageRank)
 [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection, and relies on the [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) package and [RStudio's download logs](http://cran-logs.rstudio.com/). The latter records traffic to the “0-Cloud” mirror at cloud.R-project.org, which is “currently sponsored by RStudio” and was formerly RStudio's CRAN mirror.
 
 Note that logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are typically available soon thereafter.
+
+### new in v0.5.0: plotting different units of observation
+
+When plotting cranDownloads(), you can now select "day" (the default), "month", or "year" as the the unit of observation. Here is the plot for the daily downloads of [‘HistData'](https://CRAN.R-project.org/package=HistData) from January 01 through August 15 2021.
+
+```{r day, eval = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021"))
+```
+```{r day_code, echo = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"))
+```
+
+Here is the plot for the same data aggregated by month:
+
+```{r month, eval = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "month")
+```
+
+```{r month_code, echo = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"), unit.observation = "month")
+```
+
+In plots of aggregated data, there are two things to keep in mind. First, each point, with the likely exception of the latest observation (far right), represents the total monthly count on the last day of the month. For example, in the plot above, the solid point on the far left is the total count for January 2021. Second, because it's likely that the latest observation is in-progress, two points are plotted (far right): a "grayed-out" point for the in-progress total and a highlighted point for the estimated total. Currently, I compute the estimate using the proportion of the unit of observation completed. For example, in the example above there were 2,010 downloads from August 1 through August 15; this leads to an estimate of 4,154 downloads for the month (31 / 15 * 2010).
 
 ### getting started
 
@@ -536,7 +559,7 @@ Consider the example below:
 packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 ```
 
-Here, we see that seven different versions of the package were downloaded in a sequential bloc. A little digging show that these seven versions represent _all_ prior versions of 'cholera':
+Here, we see that seven different versions of the package were downloaded in a sequential bloc. A little digging show that these seven versions represent _all_ prior versions of 'cholera' available on that date:
 
 ```{r, cholera_history}
 packageHistory(package = "cholera")
@@ -659,7 +682,7 @@ logDate()
 > [1] "2021-01-01
 ````
 
-and 
+and
 
 ```{r logPostInfo, eval = FALSE}
 logPostInfo()
@@ -719,4 +742,4 @@ R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
 or invalid.
 ```
 
-This change occasionally affected functions that download logs. This was especially true over slower internet connections and with larger log files. To fix this, functions that use `fetchCranLog()` will, if needed, temporarily set the timeout to 300 seconds.
+This change occasionally affected functions that download logs. This was especially true over slower internet connections and with larger log files. To fix this, functions that use `fetchCranLog()` will, if needed, temporarily set the timeout to 600 seconds.
