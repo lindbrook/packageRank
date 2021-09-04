@@ -74,12 +74,12 @@ First, each point, with the likely exception of the latest observation
 month. For example, in the plot above, the solid point on the far left
 is the total count for January 2021. Second, because it’s likely that
 the latest observation is in-progress, two points are plotted (far
-right): a “grayed-out” point for the in-progress total and a highlighted
-point for the estimated total. Currently, I compute the estimate using
-the proportion of the unit of observation completed. For example, in the
-example above there were 2,010 downloads from August 1 through August
-15; this leads to an estimate of 4,154 downloads for the month (31 / 15
-\* 2010).
+right): a “grayed-out” one for the in-progress total and a highlighted
+one for the estimated total. Currently, I compute the estimate using the
+proportion of the unit of observation completed. For example, in the
+plot above there were 2,010 downloads from August 1 through August 15;
+this leads to an estimated 4,154 downloads for the month (31 / 15 \*
+2010).
 
 ### getting started
 
