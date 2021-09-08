@@ -29,29 +29,6 @@ library(packageRank)
 
 Note that logs for the previous day are generally posted by 17:00 UTC. Updated results for functions that rely on [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are typically available soon thereafter.
 
-### new in v0.5.0: plotting different units of observation
-
-When plotting cranDownloads(), you can now select "day" (the default), "month", or "year" as the the unit of observation. Here is the plot for the daily downloads of [‘HistData'](https://CRAN.R-project.org/package=HistData) from January 01 through August 15 2021.
-
-```{r day, eval = FALSE}
-plot(cranDownloads(packages = "HistData", from = "2021"))
-```
-```{r day_code, echo = FALSE}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"))
-```
-
-Here is the plot for the same data aggregated by month:
-
-```{r month, eval = FALSE}
-plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "month")
-```
-
-```{r month_code, echo = FALSE}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"), unit.observation = "month")
-```
-
-In plots of aggregated data, there are two things to keep in mind. First, each point, with the likely exception of the latest observation (far right), represents the total monthly count on the last day of the month. For example, in the plot above, the solid point on the far left is the total count for January 2021. Second, because it's likely that the latest observation is in-progress, two points are plotted (far right): a "grayed-out" one for the in-progress total and a highlighted one for the estimated total. Currently, I compute the estimate using the proportion of the unit of observation completed. For example, in the plot above there were 2,010 downloads from August 1 through August 15; this leads to an estimated 4,154 downloads for the month (31 / 15 * 2010).
-
 ### getting started
 
 To install ['packageRank'](https://cran.r-project.org/package=packageRank) from CRAN:
@@ -228,6 +205,31 @@ If you want do the above on separate independent scales, set `same.xy = FALSE`:
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
+
+#### unit of observation
+
+If you want to visualize the data from a different unit of observations, you can pass "day" (the default), "month", or "year" to the `unit.observation` argument.
+
+For example, below is the plot for the daily downloads of [‘HistData'](https://CRAN.R-project.org/package=HistData) from January 01 through August 15 2021.
+
+```{r day, eval = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021"))
+```
+```{r day_code, echo = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"))
+```
+
+Here is the plot for the same data aggregated by month:
+
+```{r month, eval = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "month")
+```
+
+```{r month_code, echo = FALSE}
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-08-15"), unit.observation = "month")
+```
+
+There are three things to keep in mind with these plots of aggregated data. First, each point, with the likely exception of the latest observation (far right), represents the total monthly count on the last day of the month: in the plot above, the solid point on the far left is the total count for January 2021. Second, it's likely that the latest observation is still in-progress. In that case, two points are plotted (far right): a "grayed-out" one for the in-progress total and a highlighted one for the estimated total. Currently, I compute the estimate using the proportion of the unit of observation completed. So in the plot above, there were 2,010 recorded downloads from August 1 through August 15. This leads to an estimated 4,154 downloads for the month (31 / 15 * 2010). Third, if you include a smoother via `smooth = TRUE`, the curve only passes through complete, not in-progress, data points.
 
 #### `packages = NULL`
 
