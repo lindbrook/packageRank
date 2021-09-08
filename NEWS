@@ -1,103 +1,14 @@
-packageRank 0.4.2.9015
+packageRank 0.5.0
 ==================
 
-- remove package and r version abline().
-- amend in-progress and observed data in plot.cranDownloads(). 
-- update README.
+# Fixes #
 
+- increase fetchCranLog() timeout to 600.
 
-packageRank 0.4.2.9014
-==================
+# Function Changes #
 
-- amend estimate plot elements and restrict smooth to observed data.
-
-
-packageRank 0.4.2.9013
-==================
-
-- add plot.bioconductorDownloads(cumulative = TRUE).
-- fix ylim in singlePlot(graphics = "base").
-- amend multiPlot(graphics = "ggplot2").
-
-
-packageRank 0.4.2.9012
-==================
-
-- amend populationPlot().
-
-
-packageRank 0.4.2.9011
-==================
-
-- amend rPlot().
-
-
-packageRank 0.4.2.9010
-==================
-
-- add/use cranDownloadsPlotFunctions.R and cranDownloadsPlotAuxilliary.R.
-
-
-packageRank 0.4.2.9009
-==================
-
-- add plot.bioconductorDownloads() in-progress graphs.
-
-
-packageRank 0.4.2.9008
-==================
-
-- add rTotPlot() in-progress graphs.
-
-
-packageRank 0.4.2.9007
-==================
-
-- add rPlot() in-progress graphs.
-
-
-packageRank 0.4.2.9006
-==================
-
-- add cranDownloadsPlot() in-progress graphs.
-
-
-packageRank 0.4.2.9005
-==================
-
-- add multiPlot() in-progress graphs.
-
-
-packageRank 0.4.2.9004
-==================
-
-- add singlePlot() in-progress graphs.
-- set fetchCranLog() timeout to 600.
-
-
-packageRank 0.4.2.9003
-==================
-
-- add more dotchart prototypes.
-
-
-packageRank 0.4.2.9002
-==================
-
-- amend aggregateData() for cranDownloads(packages = "R").
-- parallelize aggregateData().
-
-
-packageRank 0.4.2.9001
-==================
-
-- add/use packageLifeFilter().
-
-
-packageRank 0.4.2.9000
-==================
-
-- add/set plot.cranDownloads(unit.observation = "day").
+- visualize different units of observation: "day" (default), "month", and "year" with plot.cranDownloads(unit.observation = "day").
+- add in-progress plots with nominal and estimated totals for aggregate units of observation.
 
 
 packageRank 0.4.2
