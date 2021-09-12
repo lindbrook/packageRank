@@ -12,7 +12,7 @@
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (2021-09-03 r80852):
+R-devel: R Under development (2021-09-09 r80873):
 * 0 errors | 0 warnings | 0 notes
 
 R-oldrelease: R version 4.0.5 (2021-03-31):
