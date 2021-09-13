@@ -8,41 +8,42 @@
 package that helps put package download counts into context. It does so
 via two functions, `cranDownloads()` and `packageRank()` (analogous but
 more limited functionality for Bioconductor packages is available via
-`bioconductorDownloads()` and `bioconductorRank()`), and one set of
-filters that remove “invalid” entries from the download logs. I cover
-these topics in three parts. A fourth part covers package related
+`bioconductorDownloads()` and `bioconductorRank()`), and a set of
+filters that removes “invalid” entries from the download logs. I cover
+these topics in the three parts below; a fourth covers package related
 issues.
 
 -   [Part I Package Download
     Counts](#i---computing-package-download-counts) describes how
     `cranDownloads()` extends the functionality of
     [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
-    adding a more user-friendly interface and providing generic R
-    `plot()` methods to make visualization easy.
+    adding a more user-friendly interface and by providing a generic R
+    `plot()` method to make visualization easy.
 -   [Part II Package Download Rank
     Percentiles](#ii---computing-package-download-rank-percentiles)
     describes how `packageRank()` uses rank percentiles, a nonparametric
     statistic that tells you the percentage of observations (i.e.,
-    packages) with fewer counts (i.e., downloads), to help you see how
-    your package is doing relative to *all* other
-    [CRAN](https://CRAN.R-project.org/) packages.
+    packages) with fewer downloads, to help you see how your package is
+    doing relative to *all* other [CRAN](https://CRAN.R-project.org/)
+    packages.
 -   [Part III Package Download
-    Filters](#iii---filtering-package-download-counts) describes how
-    filters are used to reduce the presence of software and behavioral
-    artifacts that would otherwise inflate package download counts.
--   [Part IV Notes](#iv---notes) describes some technical issues,
-    including the use of memoization, time zone issues, and internet
-    connection time out problems.
+    Filters](#iii---filtering-package-download-counts) describes how I
+    filter out software and behavioral artifacts that inflate package
+    download counts.
+-   [Part IV Notes](#iv---notes) describes technical issues, including
+    the use of memoization, time zones, and the internet connection time
+    out problem.
 
+Three things to note. First,
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
-an active internet connection, and relies on the
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package and
-[RStudio’s download logs](http://cran-logs.rstudio.com/). The latter
-records traffic to the “0-Cloud” mirror at cloud.R-project.org, which is
-“currently sponsored by RStudio” and was formerly RStudio’s CRAN mirror.
-
-Note that logs for the previous day are generally posted by 17:00 UTC.
-Updated results for functions that rely on
+an active internet connection. Second,
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) relies
+on the [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) package
+and [RStudio’s download logs](http://cran-logs.rstudio.com/), which
+records traffic to the “0-Cloud” mirror at cloud.R-project.org (formerly
+RStudio’s CRAN mirror). So these are two potential points of failure for
+this package’s functions. Third, logs for the previous day are generally
+posted to RStudio’s download logs by 17:00 UTC. Results that rely on
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are typically
 available soon thereafter.
 
@@ -274,20 +275,21 @@ plot(cranDownloads(packages = "HistData", from = "2021"), unit.observation = "mo
 
 ![](man/figures/README-month_code-1.png)<!-- -->
 
-There are three things to keep in mind with these plots of aggregated
-data. First, each point, with the likely exception of the latest
-observation (far right), represents the total monthly count on the last
-day of the month: in the plot above, the solid point on the far left is
-the total count for January 2021. Second, it’s likely that the latest
-observation is still in-progress. In that case, two points are plotted
-(far right): a “grayed-out” one for the in-progress total and a
-highlighted one for the estimated total. Currently, I compute the
-estimate using the proportion of the unit of observation completed. So
+There are three things to keep in mind with these aggregated data plots.
+First, each point, with the likely exception of the latest observation
+(far right), represents the total count on the last day of the month.
+For example, in the plot above the solid point on the far left records
+the total download count for the month of January (plotted on January
+31). Second, it’s likely that the latest observation is still
+in-progress. In that case, two points are plotted (far right): a
+“grayed-out” point for the in-progress total and a highlighted point for
+the estimated total. Currently, I compute the estimate by extrapolating
+from the proportion of the unit of observation completed. For example,
 in the plot above, there were 2,010 recorded downloads from August 1
 through August 15. This leads to an estimated 4,154 downloads for the
-month (31 / 15 \* 2010). Third, if you include a smoother via
-`smooth = TRUE`, the curve only passes through complete, not
-in-progress, data points.
+month (31 / 15 \* 2010). Third, if you include a smoother, via
+`smooth = TRUE`, the curve will only pass through complete, not
+in-progress, data.
 
 #### `packages = NULL`
 
@@ -402,7 +404,7 @@ Do Wednesday and Saturday reflect surges of interest in the package or
 surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it
 differently, how can we know if a given download count is typical or
 unusual? One way to answer these questions is to locate your package in
-the frequency distribution of download counts.
+the overall frequency distribution of download counts.
 
 Below are the distributions of logarithm of download counts for
 Wednesday and Saturday. The location of a vertical segment along the
@@ -489,10 +491,8 @@ To put it differently:
 ``` r
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["cholera"]))
 > [1] 12250
-
 (tot.pkgs <- length(downloads))
 > [1] 18038
-
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 67.9
 ```
