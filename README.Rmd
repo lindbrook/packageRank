@@ -554,8 +554,18 @@ While wrongly sized entries are fairly easy to spot, seeing the effect of effort
 
 While details and further evidence can be found in the [R-hub blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts) mentioned above, I'll try to illustrate the problem with the following example:
 
-```{r, sequence_ex}
+```{r, sequence_ex, eval = FALSE}
 packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
+```
+```
+>              date     time    size package version country ip_id
+> 132509 2020-07-31 21:03:06 3797776 cholera   0.2.1      US    14
+> 132106 2020-07-31 21:03:07 4285678 cholera   0.4.0      US    14
+> 132347 2020-07-31 21:03:07 4109051 cholera   0.3.0      US    14
+> 133198 2020-07-31 21:03:08 3766514 cholera   0.5.0      US    14
+> 132630 2020-07-31 21:03:09 3764848 cholera   0.5.1      US    14
+> 133078 2020-07-31 21:03:11 4275831 cholera   0.6.0      US    14
+> 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
 ```
 
 Here, we see that seven different versions of the package were downloaded in a sequential bloc. A little digging show that these seven versions represent _all_ versions of 'cholera' available on that date:
@@ -752,4 +762,4 @@ R_DEFAULT_INTERNET_TIMEOUT, still defaulting to 60 (seconds) if that is not set
 or invalid.
 ```
 
-This change can affect functions that download logs. This is especially true over slower internet connections or when you're dealing with large log files. To fix this, functions that use `fetchCranLog()` will, if needed, temporarily set the timeout to 600 seconds.
+This change can affect functions that download logs. This is especially true over slower internet connections or when you're dealing with large log files. To fix this, `fetchCranLog()` will, if needed, temporarily set the timeout to 600 seconds.
