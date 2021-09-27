@@ -660,17 +660,17 @@ downloaded in a narrowly defined time window.
 #### example usage
 
 To get an idea of how inflated your package’s download count may be, use
-`filteredDownloads()`. Below are the results for ‘cholera’ for 31 July
-2020.
+`filteredDownloads()`. Below are the results for ‘ggplot2’ for 15
+September 2021.
 
 ``` r
-filteredDownloads(package = "cholera", date = "2020-07-31")
+filteredDownloads(package = "ggplot2", date = "2021-09-15")
 >         date package downloads filtered.downloads inflation
-> 1 2020-07-31 cholera        14                 12     16.67
+> 1 2021-09-15 ggplot2    113842              57951     96.45
 ```
 
-While there were 14 nominal downloads, applying all the filters reduced
-the number of downloads to 5, an inflation of 180%.
+While there were 113,842 nominal downloads, applying all the filters
+reduced that number to 57,951, an inflation of 96%.
 
 Note that the filters are computationally demanding. Excluding the time
 it takes to download the log file, the filters in the above example take
