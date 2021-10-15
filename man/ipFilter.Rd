@@ -5,7 +5,7 @@
 \title{Filter Out A-Z Campaigns from IPs with many unique package downloads.}
 \usage{
 ipFilter(cran_log, campaigns = TRUE, rle.depth = 100,
-  case.sensitive = FALSE, multi.core = TRUE)
+  case.sensitive = FALSE, multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{cran_log}{Object. Package log entries.}
@@ -17,6 +17,8 @@ ipFilter(cran_log, campaigns = TRUE, rle.depth = 100,
 \item{case.sensitive}{Logical.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 Uses run length encoding, rle(), and k-means clustering, stats::kmeans().
