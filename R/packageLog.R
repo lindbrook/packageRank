@@ -13,13 +13,15 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, clean.output = FALSE, multi.core = TRUE) {
+  check.package = TRUE, clean.output = FALSE, multi.core = TRUE,
+  dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages)
   pkg.order <- packages
@@ -41,7 +43,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
@@ -51,7 +53,8 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     }, mc.cores = cores)
 
     if (triplet.filter) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
+      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores,
+        dev.mode = dev.mode)
     }
 
     if (small.filter) {
@@ -88,6 +91,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   if (length(packages) == 1) {
     out[[1]]
   } else {
-    out[pkg.order]  
+    out[pkg.order]
   }
 }
