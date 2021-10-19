@@ -10,14 +10,23 @@
 tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
   dev.mode = FALSE) {
 
-  triplets <- identifyTriplets(dat, time.window = time.window,
-    multi.core = multi.core, dev.mode = dev.mode)
+  triplets.audit <- lapply(dat, function(x) {
+    identifyTriplets(x, time.window = time.window, multi.core = multi.core,
+      dev.mode = dev.mode)
+  })
 
-  if (!is.null(triplets)) {
-    delete <- row.names(triplets[seq_len(nrow(triplets)) %% 3 != 0, ])
-    if (!is.null(delete)) {
-      dat[row.names(dat) %in% delete == FALSE, ]
-    } else dat
+  triplets.sel <- vapply(triplets.audit, function(x) !is.null(x), logical(1L))
+  triplets <- triplets.audit[triplets.sel]
+
+  if (any(triplets.sel)) {
+    lapply(which(triplets.sel), function(i) {
+      tmp <- dat[[i]]
+      trp <- triplets[[i]]
+      delete <- row.names(tmp[seq_len(nrow(trp)) %% 3 != 0, ])
+      if (!is.null(delete)) {
+        tmp[row.names(tmp) %in% delete == FALSE, ]
+      } else tmp
+    })
   } else dat
 }
 

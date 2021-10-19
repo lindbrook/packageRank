@@ -52,9 +52,8 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       cran_log[cran_log$package == p, ]
     }, mc.cores = cores)
 
-    if (triplet.filter) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores,
-        dev.mode = dev.mode)
+    if (triplet.filter) {  
+      out <- tripletFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (small.filter) {
