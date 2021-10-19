@@ -14,8 +14,10 @@ packageRank 0.5.0
 
 # Function Changes #
 
-- visualize different units of observation: "day" (default), "month", and "year" with plot.cranDownloads(unit.observation = "day").
-- add in-progress plots with nominal and estimated totals for aggregate units of observation.
+- visualize different units of observation: "day" (default), "month", and
+  "year" with plot.cranDownloads(unit.observation = "day").
+- add in-progress plots with nominal and estimated totals for aggregate units
+  of observation.
 
 
 packageRank 0.4.2
