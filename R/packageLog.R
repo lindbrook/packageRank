@@ -46,17 +46,17 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
   }
 
-  if (any(pkg_specific_filters)) {
-    out <- parallel::mclapply(packages, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
+  out <- parallel::mclapply(packages, function(p) {
+    cran_log[cran_log$package == p, ]
+  }, mc.cores = cores)
 
+  if (any(pkg_specific_filters)) {
     if (triplet.filter) {
       out <- tripletFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (small.filter) {
-      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (sequence.filter) {
@@ -74,10 +74,12 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     names(out) <- packages
 
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
-     out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
-     names(out) <- packages
+    if (small.filter) {
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
+    }
   }
+
+  names(out) <- packages
 
   out <- parallel::mclapply(out, function(x) {
     if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
