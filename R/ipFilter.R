@@ -103,17 +103,14 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
         } else NULL
       }, mc.cores = cores)
     }
-
     sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
     ratio.row.delete <- row.names(cran_log[sel, ])
     rows.delete <- c(unlist(campaign.row.delete), ratio.row.delete)
-
   } else {
     sel <- cran_log$ip_id %in% unlist(greedy.ips)
     rows.delete <- row.names(cran_log[sel, ])
   }
-
-  rows.delete
+  cran_log[!row.names(cran_log) %in% rows.delete, ]
 }
 
 #' Identify IP's that are mirroring CRAN (k-means helper prototype).
