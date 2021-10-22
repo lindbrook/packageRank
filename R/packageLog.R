@@ -11,7 +11,6 @@
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
@@ -20,8 +19,7 @@
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, clean.output = FALSE, multi.core = TRUE,
-  dev.mode = FALSE) {
+  check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages)
   pkg.order <- packages
@@ -61,7 +59,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 
     if (sequence.filter) out <- sequenceFilter(out, packages, ymd, cores)
     if (size.filter) out <- sizeFilter(out, packages, cores)
-
   } else {
     if (small.filter) smallFilter(out, multi.core = cores, dev.mode = dev.mode)
   }
