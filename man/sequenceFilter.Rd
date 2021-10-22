@@ -4,14 +4,20 @@
 \alias{sequenceFilter}
 \title{Filter downloads of full-sized sequential versions (prototype).}
 \usage{
-sequenceFilter(pkg.data, arch.pkg.history, download.time = 30)
+sequenceFilter(dat, packages, ymd, cores, download.time = 30, dev.mode = FALSE)
 }
 \arguments{
-\item{pkg.data}{Object.}
+\item{dat}{Object.}
 
-\item{arch.pkg.history}{Object.}
+\item{packages}{Object. An R vector of package names.}
+
+\item{ymd}{Date. Log date.}
+
+\item{cores}{Numeric. Number of cores to use.}
 
 \item{download.time}{Numeric. Package download time allowance (seconds).}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 Filter downloads of full-sized sequential versions (prototype).

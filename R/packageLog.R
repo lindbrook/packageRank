@@ -59,24 +59,11 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
-    if (sequence.filter) {
-      arch.pkg.history <- parallel::mclapply(packages, function(x) {
-        tmp <- packageHistory(x)
-        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-      }, mc.cores = cores)
-
-      out <- parallel::mclapply(seq_along(out), function(i) {
-        sequenceFilter(out[[i]], arch.pkg.history[[i]])
-      }, mc.cores = cores)
-    }
-
+    if (sequence.filter) out <- sequenceFilter(out, packages, ymd, cores)
     if (size.filter) out <- sizeFilter(out, packages, cores)
-    names(out) <- packages
 
   } else {
-    if (small.filter) {
-      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
-    }
+    if (small.filter) smallFilter(out, multi.core = cores, dev.mode = dev.mode)
   }
 
   names(out) <- packages
