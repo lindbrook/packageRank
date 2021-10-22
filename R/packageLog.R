@@ -11,15 +11,15 @@
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param clean.output Logical. NULL row names.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, clean.output = FALSE, multi.core = TRUE) {
+  check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages)
   pkg.order <- packages
@@ -41,42 +41,29 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
-    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+    cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
   }
 
-  if (any(pkg_specific_filters)) {
-    out <- parallel::mclapply(packages, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
+  out <- parallel::mclapply(packages, function(p) {
+    cran_log[cran_log$package == p, ]
+  }, mc.cores = cores)
 
+  if (any(pkg_specific_filters)) {
     if (triplet.filter) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
+      out <- tripletFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (small.filter) {
-      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
-    if (sequence.filter) {
-      arch.pkg.history <- parallel::mclapply(packages, function(x) {
-        tmp <- packageHistory(x)
-        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-      }, mc.cores = cores)
-
-      out <- parallel::mclapply(seq_along(out), function(i) {
-        sequenceFilter(out[[i]], arch.pkg.history[[i]])
-      }, mc.cores = cores)
-    }
-
+    if (sequence.filter) out <- sequenceFilter(out, packages, ymd, cores)
     if (size.filter) out <- sizeFilter(out, packages, cores)
-    names(out) <- packages
-
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
-     out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
-     names(out) <- packages
+    if (small.filter) smallFilter(out, multi.core = cores, dev.mode = dev.mode)
   }
+
+  names(out) <- packages
 
   out <- parallel::mclapply(out, function(x) {
     if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
@@ -88,6 +75,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   if (length(packages) == 1) {
     out[[1]]
   } else {
-    out[pkg.order]  
+    out[pkg.order]
   }
 }

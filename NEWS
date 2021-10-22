@@ -1,3 +1,11 @@
+packageRank 0.5.0.9000
+==================
+
+- add/set packageLog(dev.mode = FALSE) for parallel::parLapply().
+- add parallel::parLapply() code to ipFilter(), sequenceFilter(), sizeFilter(),
+  smallFilter(), and tripletFilter().
+
+
 packageRank 0.5.0
 ==================
 
@@ -7,8 +15,10 @@ packageRank 0.5.0
 
 # Function Changes #
 
-- visualize different units of observation: "day" (default), "month", and "year" with plot.cranDownloads(unit.observation = "day").
-- add in-progress plots with nominal and estimated totals for aggregate units of observation.
+- visualize different units of observation: "day" (default), "month", and
+  "year" with plot.cranDownloads(unit.observation = "day").
+- add in-progress plots with nominal and estimated totals for aggregate units
+  of observation.
 
 
 packageRank 0.4.2

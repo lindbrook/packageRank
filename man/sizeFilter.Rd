@@ -4,7 +4,7 @@
 \alias{sizeFilter}
 \title{Filter out size anomalies (prototype).}
 \usage{
-sizeFilter(dat, packages, cores)
+sizeFilter(dat, packages, cores, dev.mode = FALSE)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}
@@ -12,6 +12,8 @@ sizeFilter(dat, packages, cores)
 \item{packages}{Character. Vector of package name(s).}
 
 \item{cores}{Integer. Number of cores for parallelization.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/

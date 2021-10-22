@@ -4,16 +4,29 @@
 #' @param dat Object. Package log entries.
 #' @param time.window Numeric. Seconds.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-tripletFilter <- function(dat, time.window = 2, multi.core = TRUE) {
-  triplets <- identifyTriplets(dat, time.window = time.window,
-    multi.core = multi.core)
-  if (!is.null(triplets)) {
-    delete <- row.names(triplets[seq_len(nrow(triplets)) %% 3 != 0, ])
-    if (!is.null(delete)) {
-      dat[row.names(dat) %in% delete == FALSE, ]
-    } else dat
+tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
+  dev.mode = FALSE) {
+
+  triplets.audit <- lapply(dat, function(x) {
+    identifyTriplets(x, time.window = time.window, multi.core = multi.core,
+      dev.mode = dev.mode)
+  })
+
+  triplets.sel <- vapply(triplets.audit, function(x) !is.null(x), logical(1L))
+  triplets <- triplets.audit[triplets.sel]
+
+  if (any(triplets.sel)) {
+    lapply(which(triplets.sel), function(i) {
+      tmp <- dat[[i]]
+      trp <- triplets[[i]]
+      delete <- row.names(tmp[seq_len(nrow(trp)) %% 3 != 0, ])
+      if (!is.null(delete)) {
+        tmp[row.names(tmp) %in% delete == FALSE, ]
+      } else tmp
+    })
   } else dat
 }
 
@@ -25,35 +38,67 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE) {
 #' @param time.window Numeric. Seconds.
 #' @param time.sort Logical. Sort output by time.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
 identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
-  time.sort = TRUE, multi.core = TRUE) {
+  time.sort = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (all(dat$size > 1000L)) {
     out <- NULL
   } else {
     cores <- multiCore(multi.core)
-    out <- parallel::mclapply(unique(dat$version), function(v) {
-      v.data <- dat[dat$version == v, ]
-      v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",
-        v.data$r_arch, "-", v.data$r_os)
-      v.data$id <- paste0(v.data$time, "-", v.data$machine)
+    win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-      if (all(v.data$size > 1000L)) {
-        NULL
-      } else {
-        if (nrow(v.data) >= 3) {
-          if (nrow(v.data) == 3) {
-            if (length(unique(v.data$ip_id)) == 1) {
+    if (dev.mode | win.exception) {
+      cl <- parallel::makeCluster(cores)
+
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("dat", "time.window", "time.sort"))
+
+      out <- parallel::parLapply(cl, unique(dat$version), function(v) {
+        v.data <- dat[dat$version == v, ]
+        v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",
+          v.data$r_arch, "-", v.data$r_os)
+        v.data$id <- paste0(v.data$time, "-", v.data$machine)
+        if (all(v.data$size > 1000L)) NULL
+        else {
+          if (nrow(v.data) >= 3) {
+            if (nrow(v.data) == 3) {
+              if (length(unique(v.data$ip_id)) == 1) {
+                identify_triplets(v.data, time.window, time.sort)
+              } else NULL
+            } else if (nrow(v.data) > 3) {
               identify_triplets(v.data, time.window, time.sort)
             } else NULL
-          } else if (nrow(v.data) > 3) {
-            identify_triplets(v.data, time.window, time.sort)
-          } else NULL
+          }
         }
-      }
-    }, mc.cores = cores)
+      })
+
+      parallel::stopCluster(cl)
+
+    } else {
+      # if (.Platform$OS.type == "windows") cores <- 1L
+      out <- parallel::mclapply(unique(dat$version), function(v) {
+        v.data <- dat[dat$version == v, ]
+        v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",
+          v.data$r_arch, "-", v.data$r_os)
+        v.data$id <- paste0(v.data$time, "-", v.data$machine)
+
+        if (all(v.data$size > 1000L)) NULL
+        else {
+          if (nrow(v.data) >= 3) {
+            if (nrow(v.data) == 3) {
+              if (length(unique(v.data$ip_id)) == 1) {
+                identify_triplets(v.data, time.window, time.sort)
+              } else NULL
+            } else if (nrow(v.data) > 3) {
+              identify_triplets(v.data, time.window, time.sort)
+            } else NULL
+          }
+        }
+      }, mc.cores = cores)
+    }
 
     if (output == "data.frame") {
       do.call(rbind, out)
