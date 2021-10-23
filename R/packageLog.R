@@ -57,13 +57,19 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
-    if (sequence.filter) out <- sequenceFilter(out, packages, ymd, cores)
-    if (size.filter) out <- sizeFilter(out, packages, cores)
-  } else {
-    if (small.filter) smallFilter(out, multi.core = cores, dev.mode = dev.mode)
-  }
+    if (sequence.filter) {
+      out <- sequenceFilter(out, packages, ymd, cores, dev.mode = dev.mode)
+    }
 
-  names(out) <- packages
+    if (size.filter) {
+      out <- sizeFilter(out, packages, cores, dev.mode = dev.mode)
+    }
+
+  } else {
+    if (small.filter) {
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
+    }
+  }
 
   out <- parallel::mclapply(out, function(x) {
     if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
@@ -71,6 +77,8 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     tmp$date.time <- NULL
     tmp
   }, mc.cores = cores)
+
+  names(out) <- packages
 
   if (length(packages) == 1) {
     out[[1]]

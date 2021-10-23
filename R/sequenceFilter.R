@@ -20,7 +20,7 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
     arch.pkg.history <- parallel::parLapply(cl, packages, function(x) {
       tmp <- packageHistory(x)
       tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-    }, mc.cores = cores)
+    })
     parallel::stopCluster(cl)
 
   } else {
