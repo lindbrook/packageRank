@@ -19,7 +19,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("dat", "size.data", "version.data"))
 
-    parallel::parLapply(cl, seq_along(dat), function(i) {
+    out <- parallel::parLapply(cl, seq_along(dat), function(i) {
       sz <- size.data[[i]]
       ver <- version.data[[i]]
       tmp <- dat[[i]]
@@ -34,7 +34,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
 
   } else {
     # if (.Platform$OS.type == "windows") cores <- 1L
-    parallel::mclapply(seq_along(dat), function(i) {
+    out <- parallel::mclapply(seq_along(dat), function(i) {
       sz <- size.data[[i]]
       ver <- version.data[[i]]
       tmp <- dat[[i]]
@@ -45,4 +45,5 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
       rbind(tmp, leftover)
     }, mc.cores = cores)
   }
+  out
 }
