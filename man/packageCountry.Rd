@@ -7,7 +7,8 @@
 packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  na.rm = FALSE, memoization = TRUE, check.package = TRUE)
+  na.rm = FALSE, memoization = TRUE, check.package = TRUE,
+  multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -33,6 +34,10 @@ packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
