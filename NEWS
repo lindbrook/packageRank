@@ -1,8 +1,8 @@
 packageRank 0.5.0.9000
 ==================
 
-- add/set dev.mode = FALSE for parallel::parLapply(): packageLog(), 
-  packageCountry(), and packageDistribution().
+- add/set dev.mode = FALSE for parallel::parLapply(): packageCountry(),
+  packageDistribution(), packageLog() and packageRank().
 - add parallel::parLapply() code to ipFilter(), sequenceFilter(), sizeFilter(),
   smallFilter(), and tripletFilter().
 
