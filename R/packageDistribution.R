@@ -4,19 +4,18 @@
 #' @param date Character. Date. "yyyy-mm-dd".  NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param triplet.filter Logical.
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
-#' @param sequence.filter Logical.
-#' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
+#' @param threshold Numeric. Threshold for small.filter in Bytes.
 #' @export
 
 packageDistribution <- function(package = "HistData", date = NULL,
-  all.filters = FALSE, ip.filter = FALSE, triplet.filter = FALSE,
-  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = TRUE) {
+  all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
+  memoization = TRUE, check.package = TRUE, multi.core = TRUE,
+  dev.mode = FALSE, threshold = 1000L) {
 
   if (check.package) packages <- checkPackage(package)
   ymd <- logDate(date)
@@ -25,62 +24,26 @@ packageDistribution <- function(package = "HistData", date = NULL,
   cores <- multiCore(multi.core)
 
   out <- package_distribution(package, ymd, all.filters, ip.filter,
-    triplet.filter, small.filter, sequence.filter, size.filter, cran_log, cores)
+     small.filter, cran_log, cores, dev.mode, threshold)
 
   class(out) <- "packageDistribution"
   out
 }
 
 package_distribution <- function(package, ymd, all.filters, ip.filter,
-  triplet.filter, small.filter, sequence.filter, size.filter, cran_log, cores) {
+  small.filter, cran_log, cores, dev.mode, threshold) {
 
-  # N.B. using pkg_specific_filters not recommended!
   if (all.filters) {
     ip.filter <- TRUE
-    # triplet.filter <- TRUE
     small.filter <- TRUE
-    # sequence.filter <- TRUE
-    # size.filter <- TRUE
   }
-
-  pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
-    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+    cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
   }
 
-  if (any(pkg_specific_filters)) {
-    pkgs <- unique(cran_log$package)
-
-    out <- parallel::mclapply(pkgs, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
-
-    if (triplet.filter) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
-    }
-
-    if (small.filter) {
-      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
-    }
-
-    if (sequence.filter) {
-      arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
-        tmp <- packageHistory(x)
-        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-      }, mc.cores = cores)
-
-      out <- parallel::mclapply(seq_along(out), function(i) {
-        sequenceFilter(out[[i]], arch.pkg.history[[i]])
-      }, mc.cores = cores)
-    }
-
-    if (size.filter) out <- sizeFilter(out, pkgs, cores)
-    cran_log <- do.call(rbind, out)
-
-  } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
+  if (small.filter) {
+    cran_log <- cran_log[cran_log$size >= threshold, ]
   }
 
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
