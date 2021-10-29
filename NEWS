@@ -5,6 +5,7 @@ packageRank 0.5.0.9000
   packageDistribution(), packageLog() and packageRank().
 - add parallel::parLapply() code to ipFilter(), sequenceFilter(), sizeFilter(),
   smallFilter(), and tripletFilter().
+- amend fetchCranLog() message.
 
 
 packageRank 0.5.0
