@@ -25,8 +25,7 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
       }
     }
   } else {
-    msg <- " should be available but not (yet) on server."
-    stop("Log for ", date, msg, call. = FALSE)
+    stop("Log for ", date, " not (yet) on server.", call. = FALSE)
   }
 
   options(timeout = orig.timeout)
