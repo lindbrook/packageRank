@@ -15,7 +15,11 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
       dev.mode = dev.mode)
   })
 
-  triplets.sel <- vapply(triplets.audit, function(x) !is.null(x), logical(1L))
+  triplets.sel <- vapply(triplets.audit, function(x) {
+    if (!is.null(x)) nrow(x) != 0
+    else FALSE
+  }, logical(1L))
+
   triplets <- triplets.audit[triplets.sel]
 
   if (any(triplets.sel)) {
