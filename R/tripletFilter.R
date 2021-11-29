@@ -26,7 +26,7 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
     lapply(which(triplets.sel), function(i) {
       tmp <- dat[[i]]
       trp <- triplets[[i]]
-      delete <- row.names(tmp[seq_len(nrow(trp)) %% 3 != 0, ])
+      delete <- row.names(trp[seq_len(nrow(trp)) %% 3 != 0, ])
       if (!is.null(delete)) {
         tmp[row.names(tmp) %in% delete == FALSE, ]
       } else tmp
