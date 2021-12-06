@@ -20,18 +20,18 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
     else FALSE
   }, logical(1L))
 
-  triplets <- triplets.audit[triplets.sel]
-
   if (any(triplets.sel)) {
-    lapply(which(triplets.sel), function(i) {
+    filtered.data <- lapply(which(triplets.sel), function(i) {
       tmp <- dat[[i]]
-      trp <- triplets[[i]]
+      trp <- triplets.audit[[i]]
       delete <- row.names(trp[seq_len(nrow(trp)) %% 3 != 0, ])
       if (!is.null(delete)) {
         tmp[row.names(tmp) %in% delete == FALSE, ]
       } else tmp
     })
-  } else dat
+    dat[which(triplets.sel)] <- filtered.data
+  }
+  dat
 }
 
 #' Extract triplets from logs (prototype).
