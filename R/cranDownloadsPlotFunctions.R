@@ -489,12 +489,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                      complete.data[last.obs, statistic],
                      ip.data$date,
                      ip.data[, statistic],
+                     col = cbPalette[i],
                      lty = "dotted")
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
-                     col = cbPalette[i])
+                     col = cbPalette[i],
+                     lty = "longdash")
 
              points(est.data[, "date"], est.data[, statistic], col = "red",
                pch = token[i])
@@ -603,14 +605,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, linetype = "solid") +
+          geom_line(data = est.seg, size = 1/3, linetype = "longdash") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
           geom_point(data = est.data, shape = 2) +
           geom_point(data = ip.data, shape = 0) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5))
+                plot.title = element_text(hjust = 0.5)) +
+          guides(colour = guide_legend(override.aes = list(shape = NA)))
 
         if (points) {
           p <- p + geom_point(data = complete.data)

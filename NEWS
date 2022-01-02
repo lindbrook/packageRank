@@ -1,3 +1,12 @@
+packageRank 0.5.0.9002
+==================
+
+- remove points from in-progress ggplot multi.plot legend.
+- use geom_line(linetype = "longdash") and segments(lty = "longdash") for 
+  multi.plot in-progress estimates.
+- use segments(col = cbPalette[i]) for multi.plot in-progress estimates.
+
+
 packageRank 0.5.0.9001
 ==================
 
