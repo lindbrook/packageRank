@@ -45,6 +45,12 @@ packageRank <- function(packages = "HistData", date = NULL,
   if (small.filter) cran_log <- cran_log[cran_log$size >= threshold, ]
 
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
+  unobs.pkgs <- !packages %in% names(freqtab)
+
+  if (any(unobs.pkgs)) {
+    warning(packages[unobs.pkgs], " not found in log.", call. = FALSE)
+    packages <- packages[packages %in% names(freqtab)]
+  }
 
   # packages in bin
   pkg.bin <- lapply(packages, function(nm) {

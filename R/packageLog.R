@@ -44,6 +44,14 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
   }
 
+  unobs.pkgs <- !packages %in% cran_log$package
+
+  if (any(unobs.pkgs)) {
+    warning(packages[unobs.pkgs], " not found in log.", call. = FALSE)
+    packages <- packages[packages %in% cran_log$package]
+    pkg.order <- packages
+  }
+
   out <- parallel::mclapply(packages, function(p) {
     cran_log[cran_log$package == p, ]
   }, mc.cores = cores)
