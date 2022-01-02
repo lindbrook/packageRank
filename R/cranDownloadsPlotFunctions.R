@@ -495,6 +495,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                      est.data$date,
                      est.data[, statistic],
                      col = cbPalette[i])
+                     lty = "longdash")
 
              points(est.data[, "date"], est.data[, statistic], col = "red",
                pch = token[i])
