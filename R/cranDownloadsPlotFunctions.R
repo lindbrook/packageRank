@@ -489,12 +489,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                      complete.data[last.obs, statistic],
                      ip.data$date,
                      ip.data[, statistic],
+                     col = cbPalette[i],
                      lty = "dotted")
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
-                     col = cbPalette[i])
+                     col = cbPalette[i],
                      lty = "longdash")
 
              points(est.data[, "date"], est.data[, statistic], col = "red",
