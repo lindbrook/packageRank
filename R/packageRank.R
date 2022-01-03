@@ -25,8 +25,6 @@ packageRank <- function(packages = "HistData", date = NULL,
   dev.mode = FALSE, threshold = 1000L) {
 
   if (check.package) packages <- checkPackage(packages)
-  pkg.order <- packages
-
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)

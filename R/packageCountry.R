@@ -58,7 +58,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
       out <- sort(out, decreasing = TRUE)
     } else if (is.list(out)) {
       out <- lapply(out, function(x) sort(x, decreasing = TRUE))
-      names(out) <- packages
+      names(out) <- names(p.log)
     }
   }
 
