@@ -25,8 +25,6 @@ packageRank <- function(packages = "HistData", date = NULL,
   dev.mode = FALSE, threshold = 1000L) {
 
   if (check.package) packages <- checkPackage(packages)
-  pkg.order <- packages
-
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
@@ -45,6 +43,16 @@ packageRank <- function(packages = "HistData", date = NULL,
   if (small.filter) cran_log <- cran_log[cran_log$size >= threshold, ]
 
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
+
+  unobs.pkgs <- !packages %in% cran_log$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+
+  if (all(unobs.pkgs)) {
+    stop("No downloads for ", pkg.msg, " on ", ymd, ".", call. = FALSE)
+  } else if (any(unobs.pkgs)) {
+    message("No downloads for ", pkg.msg, " on ", ymd, ".")
+    packages <- packages[!unobs.pkgs]
+  }
 
   # packages in bin
   pkg.bin <- lapply(packages, function(nm) {

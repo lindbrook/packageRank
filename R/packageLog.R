@@ -22,8 +22,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages)
-  pkg.order <- packages
-
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
@@ -42,6 +40,16 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 
   if (ip.filter) {
     cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
+  }
+
+  unobs.pkgs <- !packages %in% cran_log$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+
+  if (all(unobs.pkgs)) {
+    stop("No downloads for ", pkg.msg, " on ", ymd, ".", call. = FALSE)
+  } else if (any(unobs.pkgs)) {
+    message("No downloads for ", pkg.msg, " on ", ymd, ".")
+    packages <- packages[!unobs.pkgs]
   }
 
   out <- parallel::mclapply(packages, function(p) {
@@ -83,6 +91,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   if (length(packages) == 1) {
     out[[1]]
   } else {
-    out[pkg.order]
+    out
   }
 }
