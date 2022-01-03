@@ -43,11 +43,13 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   }
 
   unobs.pkgs <- !packages %in% cran_log$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
 
-  if (any(unobs.pkgs)) {
-    warning(packages[unobs.pkgs], " not found in log.", call. = FALSE)
-    packages <- packages[packages %in% cran_log$package]
-    pkg.order <- packages
+  if (all(unobs.pkgs)) {
+    stop("No downloads for ", pkg.msg, " on ", ymd, ".", call. = FALSE)
+  } else if (any(unobs.pkgs)) {
+    message("No downloads for ", pkg.msg, " on ", ymd, ".")
+    packages <- packages[!unobs.pkgs]
   }
 
   out <- parallel::mclapply(packages, function(p) {
