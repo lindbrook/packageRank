@@ -26,7 +26,8 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
       latest.ver <- ver[nrow(ver), "Version"]
       latest.size <- sz[sz$version %in% latest.ver, ]
       leftover <- tmp[tmp$version != latest.ver, ]
-      tmp <- tmp[tmp$version == latest.ver & tmp$size >= min(latest.size$bytes), ]
+      sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
+      tmp <- tmp[sel, ]
       rbind(tmp, leftover)
     })
 
@@ -41,7 +42,8 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
       latest.ver <- ver[nrow(ver), "Version"]
       latest.size <- sz[sz$version %in% latest.ver, ]
       leftover <- tmp[tmp$version != latest.ver, ]
-      tmp <- tmp[tmp$version == latest.ver & tmp$size >= min(latest.size$bytes), ]
+      sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
+      tmp <- tmp[sel, ]
       rbind(tmp, leftover)
     }, mc.cores = cores)
   }
