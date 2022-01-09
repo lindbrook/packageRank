@@ -167,9 +167,9 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
 
       version.date <- lapply(version.date, function(x) {
         ptB <- unlist(strsplit(x[2], " "))
-        data.frame(version = unlist(strsplit(x[1], "_"))[2],
-                   date = as.Date(ptB[1]),
-                   size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+        data.frame(Version = unlist(strsplit(x[1], "_"))[2],
+                   Date = as.Date(ptB[1]),
+                   Size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
                    stringsAsFactors = FALSE)
       })
 
@@ -177,14 +177,14 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
       readme <- vapply(version.date, function(x) all(is.na(x)), logical(1L))
       if (any(readme)) version.date <- version.date[!readme]
 
-      out <- data.frame(package, do.call(rbind, version.date),
+      out <- data.frame(Package = package, do.call(rbind, version.date),
         repository = "Archive", stringsAsFactors = FALSE)
     }
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
-    out <- out[order(out$date), ]
+    out <- out[order(out$Date), ]
     if (size) out
-    else out[, names(out) != "size"]
+    else out[, names(out) != "Size"]
   }
 }
 
@@ -199,10 +199,10 @@ package_info <- function(pkg.data, repository = "CRAN") {
   dat <- unlist(strsplit(pkg.data, '.tar.gz'))
   ptA <- unlist(strsplit(dat[1], "_"))
   ptB <- unlist(strsplit(dat[2], " "))
-  data.frame(package = ptA[1],
-             version = ptA[2],
-             date = as.Date(ptB[1]),
-             size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
-             repository = "CRAN",
+  data.frame(Package = ptA[1],
+             Version = ptA[2],
+             Date = as.Date(ptB[1]),
+             Size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+             Repository = "CRAN",
              stringsAsFactors = FALSE)
 }
