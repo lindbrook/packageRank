@@ -50,7 +50,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       }
 
       points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
-      points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
+      points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
 
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, y.nm],
@@ -123,7 +123,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       p <- p + geom_line(data = complete.data, size = 1/3) +
         geom_line(data = est.seg, size = 1/3, col = "red") +
         geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-        geom_point(data = est.data, col = "red", shape = 0) +
+        geom_point(data = est.data, col = "red", shape = 1) +
         geom_point(data = ip.data, col = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
