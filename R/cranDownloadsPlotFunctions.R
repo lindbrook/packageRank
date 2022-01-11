@@ -738,7 +738,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         invisible(lapply(seq_along(est.data), function(i) {
           tmp <- est.data[[i]]
-          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 15)
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 1)
         }))
 
         invisible(lapply(seq_along(ip.data), function(i) {
@@ -757,7 +757,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], lty = "solid", col = pltfrm.col[i])
+            tmpB[, statistic], lty = "longdash", col = pltfrm.col[i])
         }))
 
         if (smooth) {
@@ -918,10 +918,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 15) +
+          p <- p + geom_point(data = est.data, shape = 1) +
                    geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "solid") +
+                                yend = "yend"), linetype = "longdash") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
