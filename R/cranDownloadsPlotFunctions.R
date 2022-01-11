@@ -738,7 +738,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         invisible(lapply(seq_along(est.data), function(i) {
           tmp <- est.data[[i]]
-          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 15)
+          points(tmp[, "date"], tmp[, statistic], col = pltfrm.col[i], pch = 1)
         }))
 
         invisible(lapply(seq_along(ip.data), function(i) {
@@ -757,7 +757,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           tmpA <- complete.data[[i]]
           tmpB <- est.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], lty = "solid", col = pltfrm.col[i])
+            tmpB[, statistic], lty = "longdash", col = pltfrm.col[i])
         }))
 
         if (smooth) {
@@ -918,10 +918,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
         obs.seg <- do.call(rbind, obs.seg)
 
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 15) +
+          p <- p + geom_point(data = est.data, shape = 1) +
                    geom_point(data = ip.data, shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "solid") +
+                                yend = "yend"), linetype = "longdash") +
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
@@ -1033,7 +1033,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       }
 
       points(ip.data[, "date"], ip.data[, statistic], col = "black", pch = 0)
-      points(est.data[, "date"], est.data[, statistic], col = "red", pch = 0)
+      points(est.data[, "date"], est.data[, statistic], col = "red", pch = 1)
 
       segments(complete.data[last.obs, "date"],
                complete.data[last.obs, statistic],
@@ -1116,7 +1116,7 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
         geom_line(data = est.seg, size = 1/3, colour = "red") +
         geom_line(data = obs.seg,  size = 1/3, colour = "black",
                   linetype = "dotted") +
-        geom_point(data = est.data, colour = "red", shape = 0) +
+        geom_point(data = est.data, colour = "red", shape = 1) +
         geom_point(data = ip.data, colour = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
