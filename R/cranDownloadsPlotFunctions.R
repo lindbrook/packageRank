@@ -235,7 +235,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
-          points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 0)
+          points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
 
           last.obs <- nrow(complete.data)
           segments(complete.data[last.obs, "date"],
@@ -374,7 +374,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, col = "red") +
           geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, colour = "red", shape = 0) +
+          geom_point(data = est.data, colour = "red", shape = 1) +
           geom_point(data = ip.data, colour = "black", shape = 0)
 
         if (points) p <- p + geom_point(data = complete.data)
