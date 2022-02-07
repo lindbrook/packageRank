@@ -607,7 +607,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, linetype = "longdash") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, shape = 2) +
+          geom_point(data = est.data, shape = 1) +
           geom_point(data = ip.data, shape = 0) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
