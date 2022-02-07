@@ -613,7 +613,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5)) +
-          guides(colour = guide_legend(override.aes = list(shape = NA)))
+          guides(colour = guide_legend(override.aes = list(shape = 16)))
 
         if (points) {
           p <- p + geom_point(data = complete.data)
