@@ -607,13 +607,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         p <- p + geom_line(data = complete.data, size = 1/3) +
           geom_line(data = est.seg, size = 1/3, linetype = "longdash") +
           geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, shape = 2) +
+          geom_point(data = est.data, shape = 1) +
           geom_point(data = ip.data, shape = 0) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5)) +
-          guides(colour = guide_legend(override.aes = list(shape = NA)))
+          guides(colour = guide_legend(override.aes = list(shape = 16)))
 
         if (points) {
           p <- p + geom_point(data = complete.data)

@@ -1,3 +1,10 @@
+packageRank 0.5.0.9007
+==================
+
+- set multiPlot() estimate point to shape = 1.
+- set multiPlot() legend point to shape = 16.
+
+
 packageRank 0.5.0.9006
 ==================
 
