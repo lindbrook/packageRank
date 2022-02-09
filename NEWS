@@ -1,3 +1,9 @@
+packageRank 0.5.0.9008
+==================
+
+- fix legend pch in multiPlot(graphics = "base").
+
+
 packageRank 0.5.0.9007
 ==================
 
