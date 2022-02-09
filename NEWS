@@ -1,3 +1,9 @@
+packageRank 0.5.0.9009
+==================
+
+- set rPlot(graphics = "ggplot2") estimate point to shape = 1.
+
+
 packageRank 0.5.0.9008
 ==================
 

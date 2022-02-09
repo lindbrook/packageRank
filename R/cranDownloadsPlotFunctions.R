@@ -925,7 +925,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                    geom_segment(data = obs.seg, aes_string(xend = "xend",
                                 yend = "yend"), linetype = "dotted")
         } else {
-          p <- p + geom_point(data = est.data, colour = "red", shape = 15) +
+          p <- p + geom_point(data = est.data, colour = "red", shape = 1) +
                    geom_point(data = ip.data, colour = "black", shape = 0) +
                    geom_segment(data = est.seg, aes_string(xend = "xend",
                                 yend = "yend"), colour = "red") +
