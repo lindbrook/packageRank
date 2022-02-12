@@ -73,7 +73,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
           ylab = paste0("log10 ", y.nm.case), log = "y")
       } else {
         plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
-          ylab = paste0("log10 ", y.nm.case))
+          ylab = y.nm.case)
       }
     }
 
@@ -127,7 +127,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
         geom_point(data = ip.data, col = "black", shape = 0)
 
       if (points) p <- p + geom_point(data = complete.data)
-      if (log.count) p <- p + scale_y_log10()
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete.data
@@ -141,7 +141,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
     } else {
       p <- p + geom_line(size = 1/3)
       if (points) p <- p + geom_point()
-      if (log.count) p <- p + scale_y_log10()
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
       if (smooth) {
         p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
           span = span)
