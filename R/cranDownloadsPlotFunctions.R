@@ -384,7 +384,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10()
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
 
       if (smooth) {
         if (any(dat$in.progress)) {
@@ -629,7 +629,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10()
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
 
       if (smooth) {
         if (any(dat$in.progress)) {
