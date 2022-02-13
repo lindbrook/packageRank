@@ -372,10 +372,25 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, col = "red") +
-          geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, colour = "red", shape = 1) +
-          geom_point(data = ip.data, colour = "black", shape = 0)
+          scale_color_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = "black",
+                                        "Estimate" = "red")) +
+          scale_shape_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = 0, "Estimate" = 1)) +
+          scale_linetype_manual(name = "In-progress",
+                            breaks = c("Observed", "Estimate"),
+                            values = c("Observed" = "dotted",
+                                       "Estimate" = "solid")) +
+          geom_line(data = est.seg, size = 1/3,
+            aes(col = "Estimate", linetype = "Estimate")) +
+          geom_line(data = obs.seg,  size = 1/3,
+            aes(col = "Observed", linetype = "Observed")) +
+          geom_point(data = est.data,
+            aes(colour = "Estimate", shape = "Estimate")) +
+          geom_point(data = ip.data,
+            aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -399,7 +414,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       p <- p + facet_wrap(~ package, nrow = 2) +
            theme_bw() +
-           theme(panel.grid.major = element_blank(),
+           theme(legend.position = "bottom",
+                 panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank())
     }
     suppressWarnings(print(p))
