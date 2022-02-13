@@ -380,12 +380,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                              breaks = c("Observed", "Estimate"),
                              values = c("Observed" = 0, "Estimate" = 1)) +
           scale_linetype_manual(name = "In-progress",
-                            breaks = c("Observed", "Estimate"),
-                            values = c("Observed" = "dotted",
-                                       "Estimate" = "solid")) +
+                                breaks = c("Observed", "Estimate"),
+                                values = c("Observed" = "dotted",
+                                           "Estimate" = "solid")) +
           geom_line(data = est.seg, size = 1/3,
             aes(col = "Estimate", linetype = "Estimate")) +
-          geom_line(data = obs.seg,  size = 1/3,
+          geom_line(data = obs.seg, size = 1/3,
             aes(col = "Observed", linetype = "Observed")) +
           geom_point(data = est.data,
             aes(colour = "Estimate", shape = "Estimate")) +
