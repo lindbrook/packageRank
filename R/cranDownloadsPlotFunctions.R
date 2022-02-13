@@ -621,15 +621,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, linetype = "longdash") +
-          geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, shape = 1) +
-          geom_point(data = ip.data, shape = 0) +
-          theme(legend.position = "bottom",
-                panel.grid.major = element_blank(),
+          scale_shape_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = 0, "Estimate" = 1)) +
+          scale_linetype_manual(name = "In-progress",
+                                breaks = c("Observed", "Estimate"),
+                                values = c("Observed" = "dotted",
+                                           "Estimate" = "longdash")) +
+          geom_line(data = est.seg, size = 1/3, aes(linetype = "Estimate")) +
+          geom_line(data = obs.seg, size = 1/3, aes(linetype = "Observed")) +
+          geom_point(data = est.data, aes(shape = "Estimate")) +
+          geom_point(data = ip.data, aes(shape = "Observed")) +
+
+          theme(panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5)) +
-          guides(colour = guide_legend(override.aes = list(shape = 16)))
+                plot.title = element_text(hjust = 0.5))
 
         if (points) {
           p <- p + geom_point(data = complete.data)
