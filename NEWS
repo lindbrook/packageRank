@@ -1,3 +1,11 @@
+packageRank 0.5.0.9011
+==================
+
+- add legend for in-progress data in singlePlot(graphics = "ggplot2").
+- add legend for in-progress data in multiPlot(graphics = "ggplot2").
+- add legend for in-progress data in cranPlot(graphics = "ggplot2").
+
+
 packageRank 0.5.0.9010
 ==================
 
