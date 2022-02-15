@@ -877,7 +877,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           p <- ggplot(data = dat, aes_string("date", "count")) +
             facet_wrap(~ platform, nrow = 2)
         }
-      } else {
+      } else if (statistic == "cumulative") {
         if (multi.plot) {
           p <- ggplot(data = dat, aes_string("date", "cumulative",
             colour = "platform"))
