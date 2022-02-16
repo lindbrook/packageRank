@@ -593,8 +593,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
       }
 
       p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
+        theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
