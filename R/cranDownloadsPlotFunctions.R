@@ -165,7 +165,8 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
 
     p <- p + theme_bw() +
       ggtitle("Total Package Downloads") +
-      theme(panel.grid.major = element_blank(),
+      theme(legend.position = "bottom",
+            panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
 
@@ -647,7 +648,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
           geom_line(data = obs.seg, size = 1/3, aes(linetype = "Observed")) +
           geom_point(data = est.data, aes(shape = "Estimate")) +
           geom_point(data = ip.data, aes(shape = "Observed")) +
-          theme(panel.grid.major = element_blank(),
+          theme(legend.position = "bottom",
+                panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
