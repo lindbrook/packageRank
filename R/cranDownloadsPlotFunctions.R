@@ -121,10 +121,25 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       obs.seg <- rbind(complete.data[last.obs, ], ip.data)
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
-        geom_line(data = est.seg, size = 1/3, col = "red") +
-        geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-        geom_point(data = est.data, col = "red", shape = 1) +
-        geom_point(data = ip.data, col = "black", shape = 0)
+        scale_color_manual(name = "In-progress",
+                           breaks = c("Observed", "Estimate"),
+                           values = c("Observed" = "black",
+                                      "Estimate" = "red")) +
+        scale_shape_manual(name = "In-progress",
+                           breaks = c("Observed", "Estimate"),
+                           values = c("Observed" = 0, "Estimate" = 1)) +
+        scale_linetype_manual(name = "In-progress",
+                              breaks = c("Observed", "Estimate"),
+                              values = c("Observed" = "dotted",
+                                         "Estimate" = "solid")) +
+        geom_line(data = est.seg, size = 1/3,
+          aes(col = "Estimate", linetype = "Estimate")) +
+        geom_line(data = obs.seg, size = 1/3,
+          aes(col = "Observed", linetype = "Observed")) +
+        geom_point(data = est.data,
+          aes(colour = "Estimate", shape = "Estimate")) +
+        geom_point(data = ip.data,
+          aes(colour = "Observed", shape = "Observed"))
 
       if (points) p <- p + geom_point(data = complete.data)
       if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
@@ -150,7 +165,8 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
 
     p <- p + theme_bw() +
       ggtitle("Total Package Downloads") +
-      theme(panel.grid.major = element_blank(),
+      theme(legend.position = "bottom",
+            panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
 
@@ -372,10 +388,25 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, col = "red") +
-          geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, colour = "red", shape = 1) +
-          geom_point(data = ip.data, colour = "black", shape = 0)
+          scale_color_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = "black",
+                                        "Estimate" = "red")) +
+          scale_shape_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = 0, "Estimate" = 1)) +
+          scale_linetype_manual(name = "In-progress",
+                                breaks = c("Observed", "Estimate"),
+                                values = c("Observed" = "dotted",
+                                           "Estimate" = "solid")) +
+          geom_line(data = est.seg, size = 1/3,
+            aes(col = "Estimate", linetype = "Estimate")) +
+          geom_line(data = obs.seg, size = 1/3,
+            aes(col = "Observed", linetype = "Observed")) +
+          geom_point(data = est.data,
+            aes(colour = "Estimate", shape = "Estimate")) +
+          geom_point(data = ip.data,
+            aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + geom_point(data = complete.data)
 
@@ -399,7 +430,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       p <- p + facet_wrap(~ package, nrow = 2) +
            theme_bw() +
-           theme(panel.grid.major = element_blank(),
+           theme(legend.position = "bottom",
+                 panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank())
     }
     suppressWarnings(print(p))
@@ -561,8 +593,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
       }
 
       p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
+        theme(panel.grid.major = element_blank(),
               panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
@@ -605,15 +636,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3) +
-          geom_line(data = est.seg, size = 1/3, linetype = "longdash") +
-          geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-          geom_point(data = est.data, shape = 1) +
-          geom_point(data = ip.data, shape = 0) +
+          scale_shape_manual(name = "In-progress",
+                             breaks = c("Observed", "Estimate"),
+                             values = c("Observed" = 0, "Estimate" = 1)) +
+          scale_linetype_manual(name = "In-progress",
+                                breaks = c("Observed", "Estimate"),
+                                values = c("Observed" = "dotted",
+                                           "Estimate" = "longdash")) +
+          geom_line(data = est.seg, size = 1/3, aes(linetype = "Estimate")) +
+          geom_line(data = obs.seg, size = 1/3, aes(linetype = "Observed")) +
+          geom_point(data = est.data, aes(shape = "Estimate")) +
+          geom_point(data = ip.data, aes(shape = "Observed")) +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5)) +
-          guides(colour = guide_legend(override.aes = list(shape = 16)))
+                plot.title = element_text(hjust = 0.5))
 
         if (points) {
           p <- p + geom_point(data = complete.data)
@@ -841,7 +878,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           p <- ggplot(data = dat, aes_string("date", "count")) +
             facet_wrap(~ platform, nrow = 2)
         }
-      } else {
+      } else if (statistic == "cumulative") {
         if (multi.plot) {
           p <- ggplot(data = dat, aes_string("date", "cumulative",
             colour = "platform"))
@@ -884,53 +921,51 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         complete.data <- lapply(p.data, function(x) x$complete.data)
         est.data <- lapply(p.data, function(x) x$est.data)
-        ip.data <- lapply(p.data, function(x) x$ip.data)
+        obs.data <- lapply(p.data, function(x) x$ip.data)
 
         complete.data <- do.call(rbind, complete.data)
         est.data <- do.call(rbind, est.data)
-        ip.data <- do.call(rbind, ip.data)
+        obs.data <- do.call(rbind, obs.data)
+
+        est.seg <- do.call(rbind, lapply(p.data, function(x) x$est.seg))
+        obs.seg <- do.call(rbind, lapply(p.data, function(x) x$obs.seg))
 
         p <- p + geom_line(data = complete.data, size = 1/3)
 
-        est.seg <- lapply(p.data, function(z) {
-          tmp <- z$est.seg
-          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
-            xend = tmp$date[2], yend = tmp[, statistic][2],
-            platform = unique(tmp$platform))
-          if (statistic == "cumulative") {
-            names(out)[names(out) == "count"] <- "cumulative"
-          }
-          out
-        })
-
-        obs.seg <- lapply(p.data, function(z) {
-          tmp <- z$obs.seg
-          out <- data.frame(date = tmp$date[1], count = tmp[, statistic][1],
-            xend = tmp$date[2], yend = tmp[, statistic][2],
-            platform = unique(tmp$platform))
-          if (statistic == "cumulative") {
-            names(out)[names(out) == "count"] <- "cumulative"
-          }
-          out
-        })
-
-        est.seg <- do.call(rbind, est.seg)
-        obs.seg <- do.call(rbind, obs.seg)
-
         if (multi.plot) {
-          p <- p + geom_point(data = est.data, shape = 1) +
-                   geom_point(data = ip.data, shape = 0) +
-                   geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "longdash") +
-                   geom_segment(data = obs.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "dotted")
+          p <- p +
+            scale_shape_manual(name = "In-progress",
+                               breaks = c("Observed", "Estimate"),
+                               values = c("Observed" = 0, "Estimate" = 1)) +
+            scale_linetype_manual(name = "In-progress",
+                                  breaks = c("Observed", "Estimate"),
+                                  values = c("Observed" = "dotted",
+                                             "Estimate" = "solid")) +
+            geom_line(data = est.seg, aes(linetype = "Estimate")) +
+            geom_line(data = obs.seg, aes(linetype = "Observed")) +
+            geom_point(data = est.data, aes(shape = "Estimate")) +
+            geom_point(data = obs.data, aes(shape = "Observed"))
         } else {
-          p <- p + geom_point(data = est.data, colour = "red", shape = 1) +
-                   geom_point(data = ip.data, colour = "black", shape = 0) +
-                   geom_segment(data = est.seg, aes_string(xend = "xend",
-                                yend = "yend"), colour = "red") +
-                   geom_segment(data = obs.seg, aes_string(xend = "xend",
-                                yend = "yend"), linetype = "dotted")
+          p <- p +
+            scale_color_manual(name = "In-progress",
+                               breaks = c("Observed", "Estimate"),
+                               values = c("Observed" = "black",
+                                          "Estimate" = "red")) +
+            scale_shape_manual(name = "In-progress",
+                               breaks = c("Observed", "Estimate"),
+                               values = c("Observed" = 0, "Estimate" = 1)) +
+            scale_linetype_manual(name = "In-progress",
+                                  breaks = c("Observed", "Estimate"),
+                                  values = c("Observed" = "dotted",
+                                             "Estimate" = "solid")) +
+            geom_line(data = est.seg,
+              aes(colour = "Estimate", linetype = "Estimate")) +
+            geom_line(data = obs.seg,
+              aes(col = "Observed", linetype = "Observed")) +
+            geom_point(data = est.data,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = obs.data,
+              aes(colour = "Observed", shape = "Observed"))
         }
 
         if (points) p <- p + geom_point(data = complete.data)
@@ -949,7 +984,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
 
         p <- p + theme_bw() +
           ggtitle("R Downloads") +
-          theme(panel.grid.major = element_blank(),
+          theme(legend.position = "bottom",
+                panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
@@ -1113,11 +1149,25 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
       obs.seg <- rbind(complete.data[last.obs, ], ip.data)
 
       p <- p + geom_line(data = complete.data, size = 1/3) +
-        geom_line(data = est.seg, size = 1/3, colour = "red") +
-        geom_line(data = obs.seg,  size = 1/3, colour = "black",
-                  linetype = "dotted") +
-        geom_point(data = est.data, colour = "red", shape = 1) +
-        geom_point(data = ip.data, colour = "black", shape = 0)
+        scale_color_manual(name = "In-progress",
+                           breaks = c("Observed", "Estimate"),
+                           values = c("Observed" = "black",
+                                      "Estimate" = "red")) +
+        scale_shape_manual(name = "In-progress",
+                           breaks = c("Observed", "Estimate"),
+                           values = c("Observed" = 0, "Estimate" = 1)) +
+        scale_linetype_manual(name = "In-progress",
+                              breaks = c("Observed", "Estimate"),
+                              values = c("Observed" = "dotted",
+                                         "Estimate" = "solid")) +
+        geom_line(data = est.seg, size = 1/3,
+          aes(colour = "Estimate", linetype = "Estimate")) +
+        geom_line(data = obs.seg,  size = 1/3,
+          aes(col = "Observed", linetype = "Observed")) +
+        geom_point(data = est.data,
+          aes(colour = "Estimate", shape = "Estimate")) +
+        geom_point(data = ip.data,
+          aes(colour = "Observed", shape = "Observed"))
 
       if (points) p <- p + geom_point(data = complete.data)
 
@@ -1146,7 +1196,8 @@ rTotPlot <- function(x, statistic, graphics, legend.loc, points,
 
     p <- p + theme_bw() +
       ggtitle("Total R Downloads") +
-      theme(panel.grid.major = element_blank(),
+      theme(legend.position = "bottom",
+            panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
 

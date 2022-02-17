@@ -1,3 +1,14 @@
+packageRank 0.5.0.9011
+==================
+
+- add legend for in-progress data in singlePlot(graphics = "ggplot2").
+- add legend for in-progress data in multiPlot(graphics = "ggplot2").
+- add legend for in-progress data in cranPlot(graphics = "ggplot2").
+- use geom_line() rather than geom_segment() in rPlot().
+- add legend for in-progress data in rPlot(graphics = "ggplot2").
+- add legend for in-progress data in rTotPlot(graphics = "ggplot2").
+
+
 packageRank 0.5.0.9010
 ==================
 
