@@ -471,7 +471,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
           "#0072B2", "#D55E00", "#CC79A7")
 
-        token <- c(1, 0, 2:7)
         vars <- c("date", statistic)
         type <- ifelse(points, "o", "l")
         xlim <- range(dat$date)
