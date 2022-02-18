@@ -149,6 +149,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param multi.plot Logical.
 #' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.loc Character.
+#' @param ip.legend.loc Character. Location of in-progress legend.
 #' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param unit.observation Character. "year", "month", or "day".
@@ -168,8 +169,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
-  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft", r.total = FALSE,
-  dev.mode = FALSE, unit.observation = "day", multi.core = TRUE, ...) {
+  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
+  ip.legend.loc = "topright", r.total = FALSE, dev.mode = FALSE,
+  unit.observation = "day", multi.core = TRUE, ...) {
 
   cores <- multiCore(multi.core)
 
@@ -232,7 +234,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.count, legend.loc,
-        points, smooth, se, f, span)
+        ip.legend.loc, points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
         span, log.count, package.version, dev.mode, r.version, same.xy)

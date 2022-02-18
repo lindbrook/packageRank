@@ -439,7 +439,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 }
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
-  points, smooth, se, f, span) {
+  ip.legend.loc, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -520,23 +520,23 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                      complete.data[last.obs, statistic],
                      ip.data$date,
                      ip.data[, statistic],
-                     col = cbPalette[i],
+                     col = "black",
                      lty = "dotted")
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
-                     col = cbPalette[i],
-                     lty = "longdash")
+                     col = "black",
+                     lty = "solid")
 
-             points(est.data[, "date"], est.data[, statistic], col = "red",
-               pch = token[i])
-             points(ip.data[, "date"], ip.data[, statistic],
-               col = "black", pch = token[i])
+             points(est.data[, "date"], est.data[, statistic],
+               col = cbPalette[i])
+             points(ip.data[, "date"], ip.data[, statistic], pch = 0,
+               col = cbPalette[i])
 
             if (points) {
               points(complete.data[, "date"], complete.data[, statistic],
-                col = cbPalette[i], pch = token[i])
+                col = cbPalette[i], pch = 16)
             }
 
             if (smooth) {
@@ -545,6 +545,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                 f = f), col = cbPalette[i])
             }
           }))
+
+          legend(x = ip.legend.loc,
+                legend = c("Observed", "Estimate"),
+                pch = 0:1,
+                bg = "white",
+                cex = 2/3,
+                title = NULL,
+                bty = "n",
+                lty = c("dotted", "solid"))
+
         } else {
           if (log.count) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
@@ -559,7 +569,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
 
             if (points) {
               points(tmp[, "date"], tmp[, statistic], col = cbPalette[i],
-                pch = token[i])
+                pch = 16)
             }
 
             if (smooth) {
@@ -570,14 +580,28 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         }
 
         id <- seq_along(x$packages)
-        legend(x = legend.loc,
+
+        if (points) {
+          legend(x = legend.loc,
+                 legend = x$packages,
+                 col = cbPalette[id],
+                 pch = 16,
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
+        } else {
+          legend(x = legend.loc,
                legend = x$packages,
                col = cbPalette[id],
-               pch = token[id],
+               pch = NA,
                bg = "white",
                cex = 2/3,
                title = NULL,
-               lwd = 1)
+               lwd = 1,
+               bty = "n")
+        }
       }
     }
   } else if (graphics == "ggplot2") {
