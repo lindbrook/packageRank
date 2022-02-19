@@ -527,7 +527,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                      est.data$date,
                      est.data[, statistic],
                      col = "black",
-                     lty = "solid")
+                     lty = "longdash")
 
              points(est.data[, "date"], est.data[, statistic],
                col = cbPalette[i])
@@ -553,7 +553,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                 cex = 2/3,
                 title = NULL,
                 bty = "n",
-                lty = c("dotted", "solid"))
+                lty = c("dotted", "longdash"))
 
         } else {
           if (log.count) {
