@@ -225,8 +225,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       rTotPlot(x, statistic, graphics, legend.location, points, log.count,
         smooth, se, r.version, f, span)
     } else {
-      rPlot(x, statistic, graphics, obs.ct, legend.location, points, log.count,
-        smooth, se, r.version, f, span, multi.plot)
+      rPlot(x, statistic, graphics, obs.ct, legend.location,
+        ip.legend.location, points, log.count, smooth, se, r.version, f, span,
+        multi.plot)
     }
   } else if (is.null(x$packages)) {
     cranPlot(x, statistic, graphics, points, log.count, smooth, se, f, span,

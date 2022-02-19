@@ -706,8 +706,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   }
 }
 
-rPlot <- function(x, statistic, graphics, obs.ct, legend.location, points, log.count,
-  smooth, se, r.version, f, span, multi.plot) {
+rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
+  ip.legend.location, points, log.count, smooth, se, r.version, f, span,
+  multi.plot) {
 
   dat <- x$cranlogs.data
   ylab <- tools::toTitleCase(statistic)
@@ -834,8 +835,18 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location, points, log.c
                pch = rep(16, 3),
                bg = "white",
                cex = 2/3,
-               title = "Platform",
-               lwd = 1)
+               title = NULL,
+               lwd = 1,
+               bty = "n")
+
+         legend(x = ip.legend.location,
+               legend = c("Obs", "Est"),
+               pch = 0:1,
+               bg = "white",
+               cex = 2/3,
+               title = NULL,
+               lty = c("dotted", "solid"),
+               bty = "n")
 
         if (r.version) {
           r_v <- rversions::r_versions()
