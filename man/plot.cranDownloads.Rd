@@ -8,9 +8,9 @@
   points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE,
   f = 1/3, span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
-  multi.plot = FALSE, same.xy = TRUE, legend.loc = "topleft",
-  r.total = FALSE, dev.mode = FALSE, unit.observation = "day",
-  multi.core = TRUE, ...)
+  multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
+  ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
+  unit.observation = "day", multi.core = TRUE, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -43,7 +43,9 @@
 
 \item{same.xy}{Logical. Use same scale for multiple packages when graphics = "base".}
 
-\item{legend.loc}{Character.}
+\item{legend.location}{Character.}
+
+\item{ip.legend.location}{Character. Location of in-progress legend.}
 
 \item{r.total}{Logical.}
 

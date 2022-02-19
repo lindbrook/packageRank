@@ -1,3 +1,11 @@
+packageRank 0.5.0.9012
+==================
+
+- add legend for in-progress data in multiPlot(graphics = "base").
+- change *legend.loc argument to *legend.location.
+- add legend for in-progress data in rPlot(graphics = "base").
+
+
 packageRank 0.5.0.9011
 ==================
 
