@@ -438,8 +438,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
-  ip.legend.loc, points, smooth, se, f, span) {
+multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
+  legend.location, ip.legend.location, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -546,7 +546,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
             }
           }))
 
-          legend(x = ip.legend.loc,
+          legend(x = ip.legend.location,
                 legend = c("Observed", "Estimate"),
                 pch = 0:1,
                 bg = "white",
@@ -582,7 +582,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
         id <- seq_along(x$packages)
 
         if (points) {
-          legend(x = legend.loc,
+          legend(x = legend.location,
                  legend = x$packages,
                  col = cbPalette[id],
                  pch = 16,
@@ -592,7 +592,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
                  lwd = 1,
                  bty = "n")
         } else {
-          legend(x = legend.loc,
+          legend(x = legend.location,
                legend = x$packages,
                col = cbPalette[id],
                pch = NA,
@@ -706,7 +706,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count, legend.loc,
   }
 }
 
-rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
+rPlot <- function(x, statistic, graphics, obs.ct, legend.location, points, log.count,
   smooth, se, r.version, f, span, multi.plot) {
 
   dat <- x$cranlogs.data
@@ -828,7 +828,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
           }))
         }
 
-        legend(x = legend.loc,
+        legend(x = legend.location,
                legend = c("win", "mac", "src"),
                col = c("black", "red", "dodgerblue"),
                pch = rep(16, 3),
@@ -867,7 +867,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
                 type = type, pch = 0, col = pltfrm.col[i])
         }))
 
-        legend(x = legend.loc,
+        legend(x = legend.location,
                legend = c("win", "mac", "src"),
                col = c("black", "red", "dodgerblue"),
                pch = c(1, 0, 2),
@@ -1034,7 +1034,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.loc, points, log.count,
   }
 }
 
-rTotPlot <- function(x, statistic, graphics, legend.loc, points,
+rTotPlot <- function(x, statistic, graphics, legend.location, points,
   log.count, smooth, se, r.version, f, span) {
 
   dat <- x$cranlogs.data
