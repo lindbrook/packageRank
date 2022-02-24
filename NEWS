@@ -1,3 +1,9 @@
+packageRank 0.5.0.9013
+==================
+
+- set data.frame(row.names = NULL) in packageHistory().
+
+
 packageRank 0.5.0.9012
 ==================
 

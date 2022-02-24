@@ -33,7 +33,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     date <- strsplit(history$date, "[ ]")
     date <- as.Date(vapply(date, function(x) x[1], character(1L)))
     out <- data.frame(history[, c("Package", "Version")], Date = date,
-      Repository = repository, stringsAsFactors = FALSE)
+      Repository = repository, row.names = NULL, stringsAsFactors = FALSE)
   }
 
   out
