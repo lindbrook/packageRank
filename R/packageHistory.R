@@ -92,12 +92,12 @@ packageCRAN <- function(package = "cholera", check.package = TRUE,
     } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
 
     if (!is.null(out)) {
-      if (identical(out$package, package)) {
+      if (identical(out$Package, package)) {
         if (size) out
-        else out[, names(out) != "size"]
+        else out[, names(out) != "Size"]
       }
-    } else NA
-  } else NA
+    }
+  }
 }
 
 #' Scrape package data from Archive.
@@ -178,7 +178,7 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
       if (any(readme)) version.date <- version.date[!readme]
 
       out <- data.frame(Package = package, do.call(rbind, version.date),
-        repository = "Archive", stringsAsFactors = FALSE)
+        Repository = "Archive", stringsAsFactors = FALSE)
     }
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
