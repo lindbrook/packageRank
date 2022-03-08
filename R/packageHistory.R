@@ -1,47 +1,75 @@
 #' Extract package or R version history.
 #'
 #' Date and version of all publications.
-#' @param package Character. Package name or "R".
+#' @param package Character. Vector of package names (including "R").
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
 packageHistory <- function(package = "cholera", check.package = TRUE) {
-  if (package != "R") {
-    if (check.package) package <- checkPackage(package)
+  package0 <- package
 
-    # Use packageHistory0() for "missing" and latest packages.
-    # e.g.,"VR" in cran_package() but not cran_package_history()
-    history <- try(pkgsearch::cran_package_history(package), silent = TRUE)
+  if ("R" %in% package) {  
+    pkg.idx <- seq_along(package)
+    r.position <- which(package == "R")
+    pkg.idx <- pkg.idx[pkg.idx != r.position]
 
-    if (any(class(history) == "try-error")) {
-      out <- packageHistory0(package)
-    } else {
-      # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-      #   "date")
-      #    Error: Can't subset columns that don't exist.
-      # x Column `Date/Publication` doesn't exist.
-      vars <- c("Package", "Version", "crandb_file_date", "date")
-      history <- data.frame(history[, vars])
-      all.archive <- pkgsearch::cran_package(package, "all")$archived
+    r_v <- rversions::r_versions()
+    names(r_v) <- tools::toTitleCase(names(r_v))
+    r_v$Date <- as.Date(r_v$Date)
+    nms <- names(r_v)
+    r_v$Package <- "R"
+    r_v <- list(r_v[, c("Package", nms)])
 
-      if (all.archive) {
-        repository <- rep("Archive", nrow(history))
+    package <- package[-r.position]
+  }
+
+  if (check.package) package <- checkPackage(package)
+
+  # Use packageHistory0() for "missing" and latest packages.
+  # e.g.,"VR" in cran_package() but not cran_package_history()
+  history <- try(lapply(package, pkgsearch::cran_package_history),
+    silent = TRUE)
+
+  if (any(class(history) == "try-error")) {
+    out <- lapply(package, packageHistory0)
+  } else {
+    # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
+    #   "date")
+    #    Error: Can't subset columns that don't exist.
+    # x Column `Date/Publication` doesn't exist.
+    vars <- c("Package", "Version", "crandb_file_date", "date")
+
+    history <- lapply(history, function(x) data.frame(x[, vars]))
+
+    all.archive <- vapply(package, function(x) {
+      pkgsearch::cran_package(x, version = "all")$archived
+    }, logical(1L))
+
+    out <- lapply(seq_along(history), function(i) {
+      h <- history[[i]]
+
+      if (all.archive[i]) {
+        repository <- rep("Archive", nrow(h))
       } else {
-        repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+        repository <- c(rep("Archive", nrow(h) - 1), "CRAN")
       }
 
-      date <- strsplit(history$crandb_file_date, "[ ]")
-      date <- strsplit(history$date, "[ ]")
+      date <- strsplit(h$crandb_file_date, "[ ]")
+      date <- strsplit(h$date, "[ ]")
       date <- as.Date(vapply(date, function(x) x[1], character(1L)))
-      out <- data.frame(history[, c("Package", "Version")], Date = date,
+      data.frame(h[, c("Package", "Version")], Date = date,
         Repository = repository, row.names = NULL, stringsAsFactors = FALSE)
-    }
-  } else {
-    out <- rversions::r_versions()
-    names(out) <- tools::toTitleCase(names(out))
-    out$Date <- as.Date(out$Date)
+    })
   }
-  out
+
+  if ("R" %in% package0) {
+    c(out[seq_along(out) < r.position],
+      r_v,
+      out[seq_along(out) >= r.position])
+  } else {
+    if (length(out) == 1) out[[1]]
+    else out
+  }
 }
 
 #' Scrape package version history CRAN and Archive.
