@@ -4,7 +4,7 @@
 \alias{tripletFilter}
 \title{Filter out small downloads triplets (prototype).}
 \usage{
-tripletFilter(dat, time.window = 2, multi.core = TRUE, dev.mode = FALSE)
+tripletFilter(dat, time.window = 2, multi.core = TRUE, dev.mode = dev.mode)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}

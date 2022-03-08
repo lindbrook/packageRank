@@ -1,3 +1,10 @@
+packageRank 0.5.0.9014
+==================
+
+- set dev.mode = dev.mode in filter functions.
+- restrict parLapply() to dev.mode = TRUE.
+
+
 packageRank 0.5.0.9013
 ==================
 

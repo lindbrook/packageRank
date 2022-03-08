@@ -4,7 +4,7 @@
 \alias{sizeFilter}
 \title{Filter out size anomalies (prototype).}
 \usage{
-sizeFilter(dat, packages, cores, dev.mode = FALSE)
+sizeFilter(dat, packages, cores, dev.mode = dev.mode)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}

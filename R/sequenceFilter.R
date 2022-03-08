@@ -9,11 +9,12 @@
 #' @export
 
 sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
-  dev.mode = FALSE) {
+  dev.mode = dev.mode) {
 
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
+  # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-  if (dev.mode | win.exception) {
+  # if (dev.mode | win.exception) {
+  if (dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("packages", "ymd"))
@@ -24,7 +25,7 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
     parallel::stopCluster(cl)
 
   } else {
-    # if (.Platform$OS.type == "windows") cores <- 1L
+    if (.Platform$OS.type == "windows") cores <- 1L
     arch.pkg.history <- parallel::mclapply(packages, function(x) {
       tmp <- packageHistory(x)
       tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]

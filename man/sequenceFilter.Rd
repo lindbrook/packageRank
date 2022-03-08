@@ -4,7 +4,8 @@
 \alias{sequenceFilter}
 \title{Filter downloads of full-sized sequential versions (prototype).}
 \usage{
-sequenceFilter(dat, packages, ymd, cores, download.time = 30, dev.mode = FALSE)
+sequenceFilter(dat, packages, ymd, cores, download.time = 30,
+  dev.mode = dev.mode)
 }
 \arguments{
 \item{dat}{Object.}

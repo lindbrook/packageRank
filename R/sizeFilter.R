@@ -7,13 +7,14 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
+sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
   size.data <- lapply(packages, cranPackageSize)
   version.data <- lapply(packages, packageHistory)
   cores <- ifelse(length(packages) > 4, cores, 1L)
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
+  # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-  if (dev.mode | win.exception) {
+  # if (dev.mode | win.exception) {
+  if (dev.mode) {
     cl <- parallel::makeCluster(cores)
 
     parallel::clusterExport(cl = cl, envir = environment(),
@@ -34,7 +35,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
     parallel::stopCluster(cl)
 
   } else {
-    # if (.Platform$OS.type == "windows") cores <- 1L
+    if (.Platform$OS.type == "windows") cores <- 1L
     out <- parallel::mclapply(seq_along(dat), function(i) {
       sz <- size.data[[i]]
       ver <- version.data[[i]]

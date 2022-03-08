@@ -8,7 +8,7 @@
 #' @export
 
 tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
-  dev.mode = FALSE) {
+  dev.mode = dev.mode) {
 
   triplets.audit <- lapply(dat, function(x) {
     identifyTriplets(x, time.window = time.window, multi.core = multi.core,
@@ -46,15 +46,16 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
 #' @noRd
 
 identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
-  time.sort = TRUE, multi.core = TRUE, dev.mode = FALSE) {
+  time.sort = TRUE, multi.core = TRUE, dev.mode = dev.mode) {
 
   if (all(dat$size > 1000L)) {
     out <- NULL
   } else {
     cores <- multiCore(multi.core)
-    win.exception <- .Platform$OS.type == "windows" & cores > 1
+    # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-    if (dev.mode | win.exception) {
+    # if (dev.mode | win.exception) {
+    if (dev.mode) {
       cl <- parallel::makeCluster(cores)
 
       parallel::clusterExport(cl = cl, envir = environment(),
@@ -82,7 +83,7 @@ identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
       parallel::stopCluster(cl)
 
     } else {
-      # if (.Platform$OS.type == "windows") cores <- 1L
+      if (.Platform$OS.type == "windows") cores <- 1L
       out <- parallel::mclapply(unique(dat$version), function(v) {
         v.data <- dat[dat$version == v, ]
         v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",
