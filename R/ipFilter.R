@@ -13,12 +13,13 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   case.sensitive = FALSE, multi.core = TRUE, dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
+  # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
   greedy.ips <- ip_filter(cran_log)
 
   if (campaigns) {
-    if (dev.mode | win.exception) {
+    # if (dev.mode | win.exception) {
+    if (dev.mode) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("greedy.ips", "cran_log"))
@@ -31,7 +32,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       parallel::stopCluster(cl)
 
     } else {
-      # if (.Platform$OS.type == "windows") cores <- 1L
+      if (.Platform$OS.type == "windows") cores <- 1L
       candidate.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
         tmp <- cran_log[cran_log$ip_id == ip, ]
         tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
@@ -48,7 +49,8 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
 
     # check for campaigns #
 
-    if (dev.mode | win.exception) {
+    # if (dev.mode | win.exception) {
+    if (dev.mode) {
       cl <- parallel::makeCluster(cores)
 
       parallel::clusterExport(cl = cl, envir = environment(),
@@ -80,7 +82,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       parallel::stopCluster(cl)
 
     } else {
-      # if (.Platform$OS.type == "windows") cores <- 1L
+      if (.Platform$OS.type == "windows") cores <- 1L
       campaign.row.delete <- parallel::mclapply(candidate.ids, function(x) {
         tmp <- rle.data[[x]]
         A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]

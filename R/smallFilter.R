@@ -10,9 +10,10 @@ smallFilter <- function(dat, threshold = 1000L, multi.core = TRUE,
   dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
+  # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-  if (dev.mode | win.exception) {
+  # if (dev.mode | win.exception) {
+  if (dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = "threshold")
@@ -21,6 +22,7 @@ smallFilter <- function(dat, threshold = 1000L, multi.core = TRUE,
     })
     parallel::stopCluster(cl)
   } else {
+    if (.Platform$OS.type == "windows") cores <- 1L    
     out <- parallel::mclapply(dat, function(x) {
       x[x$size >= threshold, ]
     }, mc.cores = cores)
