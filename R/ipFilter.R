@@ -10,7 +10,7 @@
 #' @export
 
 ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
-  case.sensitive = FALSE, multi.core = TRUE, dev.mode = FALSE) {
+  case.sensitive = FALSE, multi.core = TRUE, dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
   win.exception <- .Platform$OS.type == "windows" & cores > 1

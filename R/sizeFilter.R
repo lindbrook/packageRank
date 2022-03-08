@@ -7,7 +7,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-sizeFilter <- function(dat, packages, cores, dev.mode = FALSE) {
+sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
   size.data <- lapply(packages, cranPackageSize)
   version.data <- lapply(packages, packageHistory)
   cores <- ifelse(length(packages) > 4, cores, 1L)

@@ -7,7 +7,7 @@
 #' @export
 
 smallFilter <- function(dat, threshold = 1000L, multi.core = TRUE,
-  dev.mode = FALSE) {
+  dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
   win.exception <- .Platform$OS.type == "windows" & cores > 1

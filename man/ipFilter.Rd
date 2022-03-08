@@ -5,7 +5,7 @@
 \title{Filter Out A-Z Campaigns from IPs with many unique package downloads.}
 \usage{
 ipFilter(cran_log, campaigns = TRUE, rle.depth = 100,
-  case.sensitive = FALSE, multi.core = TRUE, dev.mode = FALSE)
+  case.sensitive = FALSE, multi.core = TRUE, dev.mode = dev.mode)
 }
 \arguments{
 \item{cran_log}{Object. Package log entries.}

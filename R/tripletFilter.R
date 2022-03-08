@@ -8,7 +8,7 @@
 #' @export
 
 tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
-  dev.mode = FALSE) {
+  dev.mode = dev.mode) {
 
   triplets.audit <- lapply(dat, function(x) {
     identifyTriplets(x, time.window = time.window, multi.core = multi.core,
@@ -46,7 +46,7 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
 #' @noRd
 
 identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
-  time.sort = TRUE, multi.core = TRUE, dev.mode = FALSE) {
+  time.sort = TRUE, multi.core = TRUE, dev.mode = dev.mode) {
 
   if (all(dat$size > 1000L)) {
     out <- NULL

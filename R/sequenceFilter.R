@@ -9,7 +9,7 @@
 #' @export
 
 sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
-  dev.mode = FALSE) {
+  dev.mode = dev.mode) {
 
   win.exception <- .Platform$OS.type == "windows" & cores > 1
 
