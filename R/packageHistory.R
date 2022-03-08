@@ -1,41 +1,46 @@
-#' Extract package version history CRAN and Archive.
+#' Extract package or R version history.
 #'
 #' Date and version of all publications.
-#' @param package Character. Package name.
+#' @param package Character. Package name or "R".
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
 packageHistory <- function(package = "cholera", check.package = TRUE) {
-  if (check.package) package <- checkPackage(package)
+  if (package != "R") {
+    if (check.package) package <- checkPackage(package)
 
-  # Use packageHistory0() for "missing" and latest packages.
-  # e.g.,"VR" in cran_package() but not cran_package_history()
-  history <- try(pkgsearch::cran_package_history(package), silent = TRUE)
+    # Use packageHistory0() for "missing" and latest packages.
+    # e.g.,"VR" in cran_package() but not cran_package_history()
+    history <- try(pkgsearch::cran_package_history(package), silent = TRUE)
 
-  if (any(class(history) == "try-error")) {
-    out <- packageHistory0(package)
-  } else {
-    # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-    #   "date")
-    #    Error: Can't subset columns that don't exist.
-    # x Column `Date/Publication` doesn't exist.
-    vars <- c("Package", "Version", "crandb_file_date", "date")
-    history <- data.frame(history[, vars])
-    all.archive <- pkgsearch::cran_package(package, "all")$archived
-
-    if (all.archive) {
-      repository <- rep("Archive", nrow(history))
+    if (any(class(history) == "try-error")) {
+      out <- packageHistory0(package)
     } else {
-      repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+      # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
+      #   "date")
+      #    Error: Can't subset columns that don't exist.
+      # x Column `Date/Publication` doesn't exist.
+      vars <- c("Package", "Version", "crandb_file_date", "date")
+      history <- data.frame(history[, vars])
+      all.archive <- pkgsearch::cran_package(package, "all")$archived
+
+      if (all.archive) {
+        repository <- rep("Archive", nrow(history))
+      } else {
+        repository <- c(rep("Archive", nrow(history) - 1), "CRAN")
+      }
+
+      date <- strsplit(history$crandb_file_date, "[ ]")
+      date <- strsplit(history$date, "[ ]")
+      date <- as.Date(vapply(date, function(x) x[1], character(1L)))
+      out <- data.frame(history[, c("Package", "Version")], Date = date,
+        Repository = repository, row.names = NULL, stringsAsFactors = FALSE)
     }
-
-    date <- strsplit(history$crandb_file_date, "[ ]")
-    date <- strsplit(history$date, "[ ]")
-    date <- as.Date(vapply(date, function(x) x[1], character(1L)))
-    out <- data.frame(history[, c("Package", "Version")], Date = date,
-      Repository = repository, row.names = NULL, stringsAsFactors = FALSE)
+  } else {
+    out <- rversions::r_versions()
+    names(out) <- tools::toTitleCase(names(out))
+    out$Date <- as.Date(out$Date)
   }
-
   out
 }
 

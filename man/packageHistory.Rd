@@ -2,12 +2,12 @@
 % Please edit documentation in R/packageHistory.R
 \name{packageHistory}
 \alias{packageHistory}
-\title{Extract package version history CRAN and Archive.}
+\title{Extract package or R version history.}
 \usage{
 packageHistory(package = "cholera", check.package = TRUE)
 }
 \arguments{
-\item{package}{Character. Package name.}
+\item{package}{Character. Package name or "R".}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 }
