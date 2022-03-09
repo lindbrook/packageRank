@@ -1,3 +1,9 @@
+packageRank 0.5.0.9016
+==================
+
+- allow multiple packages (vector) in packageMRAN().
+
+
 packageRank 0.5.0.9015
 ==================
 

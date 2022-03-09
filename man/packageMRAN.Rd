@@ -8,7 +8,7 @@ packageMRAN(package = "cholera", date = NULL, check.package = TRUE,
   multi.core = TRUE)
 }
 \arguments{
-\item{package}{Character. Package name.}
+\item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. NULL uses latest available log.}
 
