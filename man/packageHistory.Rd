@@ -7,7 +7,7 @@
 packageHistory(package = "cholera", check.package = TRUE)
 }
 \arguments{
-\item{package}{Character. Package name or "R".}
+\item{package}{Character. Vector of package names (including "R").}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 }
