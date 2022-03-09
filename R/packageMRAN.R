@@ -1,7 +1,7 @@
 #' Extract package data from MRAN (prototype).
 #'
 #' Binary or source size.
-#' @param package Character. Package name.
+#' @param package Character. Vector of package name(s).
 #' @param date Character. NULL uses latest available log.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
@@ -34,18 +34,34 @@ packageMRAN <- function(package = "cholera", date = NULL, check.package = TRUE,
 
   arguments <- list(src = src, mac = mac, win = win)
 
-  out <- parallel::mclapply(arguments, function(x) {
-    pkgData(x$url, x$extension, ymd, package)
-  }, mc.cores = cores)
+  if (length(package) == 1) {
+    out <- parallel::mclapply(arguments, function(x) {
+      pkgData(x$url, x$extension, ymd, package)
+    }, mc.cores = cores)
 
-  if (!is.null(package)) {
-    out <- do.call(rbind, out)
-    out$type <- row.names(out)
-    row.names(out) <- NULL
-  } else {
-    names(out) <- names(arguments)
+    if (!is.null(package)) {
+      out <- do.call(rbind, out)
+      out$type <- row.names(out)
+      row.names(out) <- NULL
+    } else {
+      names(out) <- names(arguments)
+    }
+  } else if (length(package) > 1) {
+    out <- parallel::mclapply(package, function(p) {
+      p.data <- lapply(arguments, function(x) {
+        pkgData(x$url, x$extension, ymd, p)
+      })
+
+      if (!is.null(p)) {
+        p.data <- do.call(rbind, p.data)
+        p.data$type <- row.names(p.data)
+        row.names(p.data) <- NULL
+      } else {
+        names(p.data) <- names(arguments)
+      }
+      p.data
+    }, mc.cores = cores)
   }
-
   out
 }
 
