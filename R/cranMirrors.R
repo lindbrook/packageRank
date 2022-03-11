@@ -14,11 +14,11 @@ cranMirrors <- function(mirror.description = FALSE) {
     gsub("<.*?>", "", x)
   }, character(1L)))
 
-  country.code <- c(NA, "dz", "ar", "au", "at", "be", "br", "bg", "ca", "cl",
-    "cn", "co", "cr", "cz", "dk", "asia", "ec", "sv", "ee", "fr", "de", "gr",
-    "hu", "is", "in", "id", "ir", "ie", "it", "jp", "kr", "my", "mx", "ma",
-    "nl", "nz", "no", "ph", "pt", "ru", "za", "es", "se", "ch", "tw", "th",
-    "tr", "uk", "us", "uy")
+  country.code <- c(NA, "ar", "au", "at", "be", "br", "bg", "ca", "cl", "cn",
+    "co", "cr", "cy", "cz", "dk", "asia", "ec", "sv", "ee", "fr", "de", "gr",
+    "hu", "is", "id", "ir", "it", "jp", "kr", "my", "mx", "ma", "nl", "nz",
+    "no", "pt", "ru", "za", "es", "se", "ch", "tw", "th", "tr", "uk", "us",
+    "uy")
 
   out <- lapply(seq_along(hosts)[-length(hosts)], function(i) {
     h1 <- hosts.id[i]
