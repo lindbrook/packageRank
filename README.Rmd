@@ -29,7 +29,7 @@ Two things to keep in mind.
 
 * [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection.
 
-* [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/) and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package. The former record traffic that passes through the [“0-Cloud” mirror](https://cloud.r-project.org/) (formerly RStudio's CRAN mirror). The latter is a software interface to a database that computes R and R package download counts using the [“0-Cloud” mirror](https://cloud.r-project.org/) logs.
+* [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/) and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package. The former record traffic that passes through the [“0-Cloud” mirror]() at cloud.r-project.org (formerly RStudio's CRAN mirror). The latter is a software interface to a database that computes R and R package download counts using the [“0-Cloud” mirror]() logs.
 
 Generally, the download logs for the _previous_ day are posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are available soon after. Occasionally, problems can emerge with either the logs or with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs). You can see the potential points of failure in the figure below:
 

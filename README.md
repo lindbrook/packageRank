@@ -50,10 +50,9 @@ Two things to keep in mind.
     logs](http://cran-logs.rstudio.com/) and 2) Gábor Csárdi’s
     [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R package.
     The former record traffic that passes through the [“0-Cloud”
-    mirror](https://cloud.r-project.org/) (formerly RStudio’s CRAN
-    mirror). The latter is a software interface to a database that
-    computes R and R package download counts using the [“0-Cloud”
-    mirror](https://cloud.r-project.org/) logs.
+    mirror]() at cloud.r-project.org (formerly RStudio’s CRAN mirror).
+    The latter is a software interface to a database that computes R and
+    R package download counts using the [“0-Cloud” mirror]() logs.
 
 Generally, the download logs for the *previous* day are posted by 17:00
 UTC and the results for
