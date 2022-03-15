@@ -44,13 +44,17 @@ remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 
 Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream online dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is a an interface to a database that computes R and R package download counts using the logs from the “0-Cloud” mirror.
 
-This has two implications for [‘packageRank'](https://CRAN.R-project.org/package=packageRank). First, [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection. Second, the two dependencies represent potential points of failure. While the download logs for the _previous_ day are posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are available soon after, problems can occasionally emerge as you might guess by looking at the figure below:
+This has two implications for [‘packageRank'](https://CRAN.R-project.org/package=packageRank). First, [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection. Second, the two dependencies represent potential points of failure. While the download logs for the _previous_ day are posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are available soon after, problems can occasionally emerge.
+
+The two downstream effects are illustrated below:
 
 ```
-CRAN Download Logs --> 'cranlogs' --> 'packageRank'
+CRAN Download Logs --> 'cranlogs' --> packageRank::cranDownalods()
+
+CRAN Download Logs --> all other 'packageRank' functions
 ```
 
-If there's a problem with the logs (e.g., not posted on time), all [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions will be affected. You'll get an unexpected zero count(s) for your package(s) (actually, it'll be zero downloads for all of CRAN), or you'll get the data from an earlier (i.e., last available) date or a "Log is not (yet) on the server" error message. If there's a problem with just [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs), just packageRank::cranDownalods() will be affected and you'll see zero downloads. All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they access the logs directly. Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner).
+If there's a problem with the CRAN logs (e.g., not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected: you'll see unexpected zero count(s) for your package(s) (actually, you'd see zero downloads for all of CRAN), or you may just get the last available date or a a "Log is not (yet) on the server" error message. If there's a problem with just [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and not the CRAN logs, only packageRank::cranDownalods() will be affected and you'll see zero downloads. All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs. Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner).
 
 ### I - computing package download counts
 

@@ -1,7 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.0.9018-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -75,23 +74,26 @@ an active internet connection. Second, the two dependencies represent
 potential points of failure. While the download logs for the *previous*
 day are posted by 17:00 UTC and the results for
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are available
-soon after, problems can occasionally emerge as you might guess by
-looking at the figure below:
+soon after, problems can occasionally emerge.
 
-    CRAN Download Logs --> 'cranlogs' --> 'packageRank'
+The two downstream effects are illustrated below:
 
-If there’s a problem with the logs (e.g., not posted on time), all
+    CRAN Download Logs --> 'cranlogs' --> packageRank::cranDownalods()
+
+    CRAN Download Logs --> all other 'packageRank' functions
+
+If there’s a problem with the CRAN logs (e.g., not posted on time), both
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) and
+[‘packageRank’](https://CRAN.R-project.org/package=packageRank) will be
+affected: you’ll see unexpected zero count(s) for your package(s)
+(actually, you’d see zero downloads for all of CRAN), or you may just
+get the last available date or a a “Log is not (yet) on the server”
+error message. If there’s a problem with just
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) and not the
+CRAN logs, only packageRank::cranDownalods() will be affected and you’ll
+see zero downloads. All the other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions will be affected. You’ll get an unexpected zero count(s) for
-your package(s) (actually, it’ll be zero downloads for all of CRAN), or
-you’ll get the data from an earlier (i.e., last available) date or a
-“Log is not (yet) on the server” error message. If there’s a problem
-with just [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs),
-just packageRank::cranDownalods() will be affected and you’ll see zero
-downloads. All other
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions should work since they access the logs directly. Usually,
+functions should work since they directly access the logs. Usually,
 these errors resolve themselves the next time the underlying scripts are
 run (typically “tomorrow”, if not sooner).
 
