@@ -1,24 +1,24 @@
 ### Test environments
 
-* local: macOS 11.5.2; R 4.1.1 (2021-08-10)
+* local: macOS 12.2.1; R 4.1.3 (2022-03-10)
 * win-builder: devel, oldrelease and release
-* R-hub: Debian Linux, Fedora Linux, Ubuntu Linux 16.04 LTS,
-         Windows Server 2008 R2 SP1
+* R-hub: Debian Linux, Fedora Linux, Ubuntu Linux 20.04.1 LTS,
+         Windows Server 2022
 
 ### R CMD check results
 
-4.1.1 (2021-08-10), x86_64-apple-darwin17.0 (64-bit):
+4.1.3 (2022-03-10), x86_64-apple-darwin17.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (2021-09-09 r80873):
+R-devel: R Under development (2022-03-14 r81896 ucrt):
 * 0 errors | 0 warnings | 0 notes
 
 R-oldrelease: R version 4.0.5 (2021-03-31):
 * 0 errors | 0 warnings | 0 notes
 
-R-release: 4.1.1 (2021-08-10):
+R-release: 4.1.3 (2022-03-10):
 * 0 errors | 0 warnings | 0 notes
 
 ### R-hub builder check results
@@ -32,7 +32,7 @@ Fedora Linux, R-devel, clang, gfortran
 Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * 0 errors | 0 warnings | 0 notes
 
-Windows Server 2008 R2 SP1, R-devel, 32/64 bit
+Windows Server 2022, R-devel, 64 bit
 * 0 errors | 0 warnings | 0 notes
 
 ### Reverse dependencies
