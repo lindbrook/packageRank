@@ -18,26 +18,14 @@ library(packageRank)
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so primarily via two functions, `cranDownloads()` and `packageRank()` (analogous but more limited functionality for Bioconductor packages is available via `bioconductorDownloads()` and `bioconductorRank()`), and a set of filters that excludes "invalid" entries in the download logs. I cover these topics in the three parts below; a fourth covers package related issues.
+['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so _primarily_ via two functions, `cranDownloads()` and `packageRank()`, and a set of functions that filter out "invalid" log entries to reduce package download count inflation. I discuss the two functions and the filters in the three sections below; a fourth discusses package related issues.
 
-* [Part I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and by providing a generic R `plot()` method to make visualization easy.
-* [Part II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer downloads, to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages. Here, I also show how to use `packageDistribution()` to plot the location of your package in the overall frequency distribution of package downloads.
-* [Part III Package Download Filters](#iii---filtering-package-download-counts) describes how I filter out software and behavioral artifacts that inflate package download counts. Along the way, I show two other [‘packageRank’](https://CRAN.R-project.org/package=packageRank) functions that others may find useful: 1) `packageHistory()` which returns a package's release history; and 2) and `packageLog()` which extracts your package's entries from the CRAN download counts log.
-* [Part IV Notes](#iv---notes) discusses issues associated with country code top-level domains, memoization, time zones, and the internet connection time out problem.
+* [I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and by providing a generic R `plot()` method to make visualization easy.
+* [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of observations (i.e., packages) with fewer downloads, to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
+* [III Package Download Filters](#iii---filtering-package-download-counts) describes how I filter out software and behavioral artifacts that inflate package download counts.
+* [IV Notes](#iv---notes) discusses issues associated with country code top-level domains, memoization, time zones, and the internet connection time out problem.
 
-Two things to keep in mind.
-
-* [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection.
-
-* [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/) and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package. The former record traffic that passes through the [“0-Cloud” mirror]() at cloud.r-project.org (formerly RStudio's CRAN mirror). The latter is a software interface to a database that computes R and R package download counts using the [“0-Cloud” mirror]() logs.
-
-Generally, the download logs for the _previous_ day are posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are available soon after. Occasionally, problems can emerge with either the logs or with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs). You can see the potential points of failure in the figure below:
-
-```
-CRAN Download Logs --> 'cranlogs' --> 'packageRank'
-```
-
-If there's a problem with the logs (typically not yet posted), all [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions are affected. You'll get an unexpected zero count(s) for your package(s) (actually, it'll be zero downloads for all of CRAN), or the data from an earlier (i.e., last available) date or a "Log is not (yet) on the server" error message. If there's a problem with just [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs), just packageRank::cranDownalods() will be affected and you'll see zero downloads. All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they access the logs directly. Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner).
+In addition to the two primary functions, I'd like to highlight five other functions that may be of interest: 1) `packageDistribution()` plots the location of your package in the overall frequency distribution of package downloads; 2) `packageHistory()` retrieves your package"s release history; 3) `packageLog()` extracts your package's entries from the CRAN download counts log; and 4) `bioconductorDownloads()` and `bioconductorRank()` offer analogous but limited functionality to the two primary functions.
 
 ### getting started
 
@@ -53,6 +41,16 @@ To install the development version from GitHub:
 # You may need to first install 'remotes' via install.packages("remotes").
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
+
+Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream online dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is a an interface to a database that computes R and R package download counts using the logs from the “0-Cloud” mirror.
+
+This has two implications for [‘packageRank'](https://CRAN.R-project.org/package=packageRank). First, [‘packageRank'](https://CRAN.R-project.org/package=packageRank) requires an active internet connection. Second, the two dependencies represent potential points of failure. While the download logs for the _previous_ day are posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are available soon after, problems can occasionally emerge as you might guess by looking at the figure below:
+
+```
+CRAN Download Logs --> 'cranlogs' --> 'packageRank'
+```
+
+If there's a problem with the logs (e.g., not posted on time), all [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions will be affected. You'll get an unexpected zero count(s) for your package(s) (actually, it'll be zero downloads for all of CRAN), or you'll get the data from an earlier (i.e., last available) date or a "Log is not (yet) on the server" error message. If there's a problem with just [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs), just packageRank::cranDownalods() will be affected and you'll see zero downloads. All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they access the logs directly. Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner).
 
 ### I - computing package download counts
 
