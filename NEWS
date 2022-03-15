@@ -1,139 +1,27 @@
-packageRank 0.5.0.9018
+packageRank 0.6.0
 ==================
 
-- copyedit README.
+# Fixes #
 
-
-packageRank 0.5.0.9017
-==================
-
-- amend/update country code top level domains in cranMirrors().
-
-
-packageRank 0.5.0.9016
-==================
-
-- allow multiple packages (vector) in packageMRAN().
-
-
-packageRank 0.5.0.9015
-==================
-
-- add packageHistory("R").
-- allow multiple packages (vector) in packageHistory().
-
-
-packageRank 0.5.0.9014
-==================
-
-- set dev.mode = dev.mode in filter functions.
-- restrict parLapply() to dev.mode = TRUE.
-
-
-packageRank 0.5.0.9013
-==================
-
-- set data.frame(row.names = NULL) in packageHistory().
-- fix variable names in packageCRAN() and packageArchive().
-
-
-packageRank 0.5.0.9012
-==================
-
-- add legend for in-progress data in multiPlot(graphics = "base").
-- change *legend.loc argument to *legend.location.
-- add legend for in-progress data in rPlot(graphics = "base").
-
-
-packageRank 0.5.0.9011
-==================
-
-- add legend for in-progress data in singlePlot(graphics = "ggplot2").
-- add legend for in-progress data in multiPlot(graphics = "ggplot2").
-- add legend for in-progress data in cranPlot(graphics = "ggplot2").
-- use geom_line() rather than geom_segment() in rPlot().
-- add legend for in-progress data in rPlot(graphics = "ggplot2").
-- add legend for in-progress data in rTotPlot(graphics = "ggplot2").
-
-
-packageRank 0.5.0.9010
-==================
-
-- fix y-axis typo and labels in cranPlot().
-- amend labels in singlePlot(log.count = TRUE) and multiPlot(log.count = TRUE).
-
-
-packageRank 0.5.0.9009
-==================
-
-- set rPlot(graphics = "ggplot2") estimate point to shape = 1.
-
-
-packageRank 0.5.0.9008
-==================
-
-- fix legend pch in multiPlot(graphics = "base").
-
-
-packageRank 0.5.0.9007
-==================
-
-- set multiPlot() estimate point to shape = 1.
-- set multiPlot() legend point to shape = 16.
-
-
-packageRank 0.5.0.9006
-==================
-
-- set singlePlot() estimate point to pch = 1.
-
-
-packageRank 0.5.0.9005
-==================
-
-- amend rPlot() in-progress graphic elements.
-- amend rTotPlot() in-progress graphic elements.
-- amend cranPlot() in-progress graphic elements.
-
-
-packageRank 0.5.0.9004
-==================
-
-- fix/capitalize variable names in packageArchive() and package_info().
-
-
-packageRank 0.5.0.9003
-==================
-
+- amend fetchCranLog() message.
+- fix tripletFilter().
 - add exception and warning for packages with zero downloads (not in log) for
   packageLog() and packageRank().
+- fix variable names in packageCRAN() and packageArchive().
+- fix y-axis typo and labels in cranPlot().
+- set data.frame(row.names = NULL) in packageHistory().
+- amend/update country code top level domains in cranMirrors().
 
+# Function Changes #
 
-packageRank 0.5.0.9002
-==================
+- add packageHistory("R").
+- allow multiple packages (vector) in packageHistory() and packageMRAN().
+- restrict parLapply() to dev.mode = TRUE.
 
-- remove points from in-progress ggplot multi.plot legend.
-- use geom_line(linetype = "longdash") and segments(lty = "longdash") for
-  multi.plot in-progress estimates.
-- use segments(col = cbPalette[i]) for multi.plot in-progress estimates.
+# Graphical Changes #
 
-
-packageRank 0.5.0.9001
-==================
-
-- fix triplets.sel in tripletFilter().
-- fix rows to delete in tripletFilter().
-- use filtered.data in tripletFilter().
-
-
-packageRank 0.5.0.9000
-==================
-
-- add/set dev.mode = FALSE for parallel::parLapply(): packageCountry(),
-  packageDistribution(), packageLog() and packageRank().
-- add parallel::parLapply() code to ipFilter(), sequenceFilter(), sizeFilter(),
-  smallFilter(), and tripletFilter().
-- amend fetchCranLog() message.
+- amend graphical elements for estimate and in-progress download counts in
+  plot.cranDownloads().
 
 
 packageRank 0.5.0
