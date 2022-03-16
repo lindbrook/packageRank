@@ -5,40 +5,34 @@
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
-*primarily* via two functions, `cranDownloads()` and `packageRank()`,
-and a set of functions that filter out “invalid” log entries to reduce
-package download count inflation. I discuss the two functions and the
-filters in the three sections below; a fourth discusses package related
-issues.
+via two core functions, `cranDownloads()` and `packageRank()`, a set of
+filters that reduces package download count inflation, and other
+assorted functions that help you assess interest in your package.
+
+I discuss these topics in four sections; a fifth discusses package
+related issues.
 
 -   [I Package Download Counts](#i---computing-package-download-counts)
     describes how `cranDownloads()` extends the functionality of
     [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
     adding a more user-friendly interface and by providing a generic R
-    `plot()` method to make visualization easy.
+    `plot()` method that makes visualization easy.
 -   [II Package Download Rank
     Percentiles](#ii---computing-package-download-rank-percentiles)
     describes how `packageRank()` uses rank percentiles, a nonparametric
-    statistic that tells you the percentage of observations (i.e.,
-    packages) with fewer downloads, to help you see how your package is
-    doing relative to *all* other [CRAN](https://CRAN.R-project.org/)
-    packages.
+    statistic that tells you the percentage of packages with fewer
+    downloads, to help you see how your package is doing relative to
+    *all* other [CRAN](https://CRAN.R-project.org/) packages.
 -   [III Package Download
-    Filters](#iii---filtering-package-download-counts) describes how I
-    filter out software and behavioral artifacts that inflate package
-    download counts.
--   [IV Notes](#iv---notes) discusses issues associated with country
-    code top-level domains, memoization, time zones, and the internet
+    Filters](#iii---filtering-package-download-counts) describes the
+    functions that filter out software and behavioral artifacts from the
+    download logs which contribute to inflated download counts.
+-   [IV Other Functions](#iv---other-functions) describes six other
+    [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+    functions that help you better understand interest in your package.
+-   [V Notes](#v---notes) discusses issues associated with country code
+    top-level domains, memoization, time zone effects, and the internet
     connection time out problem.
-
-In addition to the two primary functions, I’d like to highlight five
-other functions that may be of interest: 1) `packageDistribution()`
-plots the location of your package in the overall frequency distribution
-of package downloads; 2) `packageHistory()` retrieves your package”s
-release history; 3) `packageLog()` extracts your package’s entries from
-the CRAN download counts log; and 4) `bioconductorDownloads()` and
-`bioconductorRank()` offer analogous but limited functionality to the
-two primary functions.
 
 ### getting started
 
@@ -64,38 +58,38 @@ logs](http://cran-logs.rstudio.com/), which records traffic to the
 “0-Cloud” mirror at cloud.r-project.org (formerly RStudio’s CRAN
 mirror); and 2) Gábor Csárdi’s
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R package,
-which is a an interface to a database that computes R and R package
-download counts using the logs from the “0-Cloud” mirror.
+which is an interface to a database that computes R and R package
+download counts using the aforementioned logs.
 
-This has two implications for
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank). First,
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank) requires
-an active internet connection. Second, the two dependencies represent
-potential points of failure. While the download logs for the *previous*
-day are posted by 17:00 UTC and the results for
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are available
-soon after, problems can occasionally emerge.
+When everything is working right, the [CRAN package download
+logs](http://cran-logs.rstudio.com/) for the *previous* day will be
+posted by 17:00 UTC and the results for
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) will be
+available soon after. However, occasionally problems with “today’s” data
+can emerge due to the downstream nature of the dependencies (illustrated
+below).
 
-The two downstream effects are illustrated below:
+    CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 
-    CRAN Download Logs --> 'cranlogs' --> packageRank::cranDownalods()
-
-    CRAN Download Logs --> all other 'packageRank' functions
-
-If there’s a problem with the CRAN logs (e.g., not posted on time), both
+If there’s a problem with the [logs](http://cran-logs.rstudio.com/)
+(e.g., they’re not posted on time), both
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) and
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) will be
-affected: you’ll see unexpected zero count(s) for your package(s)
-(actually, you’d see zero downloads for all of CRAN), or you may just
-get the last available date or a a “Log is not (yet) on the server”
-error message. If there’s a problem with just
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) and not the
-CRAN logs, only packageRank::cranDownalods() will be affected and you’ll
-see zero downloads. All the other
+affected. Here, depending on the function you’ll see things like an
+unexpected zero count(s) for your package(s) (actually, it’s zero
+downloads for all of CRAN), data from “yesterday”, or a “Log is not
+(yet) on the server” error message.
+
+If there’s a problem with
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) but not with
+the [logs](http://cran-logs.rstudio.com/), only
+packageRank::cranDownalods() will be affected (the zero downloads
+problem). All the other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions should work since they directly access the logs. Usually,
-these errors resolve themselves the next time the underlying scripts are
-run (typically “tomorrow”, if not sooner).
+functions should work since they directly access the logs.
+
+Usually, these errors resolve themselves the next time the underlying
+scripts are run (typically “tomorrow”, if not sooner).
 
 ### I - computing package download counts
 
@@ -771,7 +765,19 @@ time. For this reason, when `all.filters = TRUE`, `packageRank()`,
 `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both
 CRAN and package specific filters.
 
-### IV - notes
+### IV - other functions
+
+Six other functions (some used above) may be of interest: 1)
+`packageDistribution()` plots the location of your package in the
+overall frequency distribution of package downloads; 2)
+`packageHistory()` retrieves your package”s release history; 3)
+`packageLog()` extracts your package’s entries from the CRAN download
+counts log; 4) `filteredDownloads()` computes an estimate of your
+package’s download count inflation (computationally intensive!) and 5 &
+6) `bioconductorDownloads()` and `bioconductorRank()` offer analogous
+but limited functionality to the two primary functions.
+
+### V - notes
 
 #### country codes (top level domains)
 
