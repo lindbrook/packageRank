@@ -12,7 +12,7 @@
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (2022-03-14 r81896 ucrt):
+R-devel: R Under development (2022-03-15 r81903 ucrt):
 * 0 errors | 0 warnings | 0 notes
 
 R-oldrelease: R version 4.0.5 (2021-03-31):
@@ -23,7 +23,7 @@ R-release: 4.1.3 (2022-03-10):
 
 ### R-hub builder check results
 
-Debian Linux, R-release, GCC
+Debian Linux, R-devel, GCC
 * 0 errors | 0 warnings | 0 notes
 
 Fedora Linux, R-devel, clang, gfortran
