@@ -189,7 +189,7 @@ basePlot <- function(pkg, log_count, freqtab, iqr, package.data, y.max, date) {
     labels = paste("Tot = ", format(sum(freqtab), big.mark = ",")), cex = 0.8,
     col = "dodgerblue", pos = 2)
 
-  if (class(date) == "Date" ) {
+  if (inherits(date, "Date")) {
     day <- weekdays(as.Date(date), abbreviate = TRUE)
     title(main = paste0(pkg, " @ ", date, " (", day, ")"))
   } else {
@@ -211,7 +211,7 @@ ggPlot <- function(x, log_count, freqtab, iqr, package.data, y.max, date) {
   package.data <- x$package.data
   packages <- x$packages
 
-  if (class(date) == "Date") {
+  if (inherits(date, "Date")) {
     day <- weekdays(as.Date(date), abbreviate = TRUE)
     id <- paste0(package.data$packages, " @ ", date, " (", day, ")")
   } else {
