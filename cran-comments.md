@@ -23,7 +23,7 @@ R-release: 4.1.3 (2022-03-10):
 
 ### R-hub builder check results
 
-Debian Linux, R-release, GCC
+Debian Linux, R-devel, GCC
 * 0 errors | 0 warnings | 0 notes
 
 Fedora Linux, R-devel, clang, gfortran
