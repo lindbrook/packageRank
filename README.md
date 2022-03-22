@@ -296,7 +296,8 @@ plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"))
 Here is the plot for the same data aggregated by month:
 
 ``` r
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"), unit.observation = "month")
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
+  unit.observation = "month")
 ```
 
 ![](man/figures/README-month-1.png)<!-- -->
@@ -322,7 +323,8 @@ To use the base 10 logarithm of the download count in a plot, set
 `log.count = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"), log.count = TRUE)
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
+  log.count = TRUE)
 ```
 
 ![](man/figures/README-log_count-1.png)<!-- -->

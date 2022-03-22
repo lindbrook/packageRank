@@ -229,7 +229,8 @@ plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"))
 Here is the plot for the same data aggregated by month:
 
 ```{r month}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"), unit.observation = "month")
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
+  unit.observation = "month")
 ```
 
 There are three things to notice with these aggregated plots. First, if an aggregate observation is still in-progress (e.g., in the plot above, we've only seen the first half of December), that observation is split into two separate points: 1) a "grayed-out" point for the in-progress or observed total (the black empty square) and 2) a highlighted point for the projected or estimated total (the red empty circle). The estimate is based on how much the unit of observation is completed. In the plot above, there are 2,708 downloads between December 1 and December 15. Thus, the estimate for the whole month is 5,597 or 31 / 15 * 2708. Second, all other points represents the total count at the end of an aggregate period. For example, the first solid point, on the far left, records the total download count for the month January and is plotted on January 31. Third, if you include a smoother, using the `smooth = TRUE` argument, the curve only uses complete, not in-progress, data.
@@ -239,7 +240,8 @@ There are three things to notice with these aggregated plots. First, if an aggre
 To use the base 10 logarithm of the download count in a plot, set `log.count = TRUE`:
 
 ```{r log_count}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"), log.count = TRUE)
+plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
+  log.count = TRUE)
 ```
 
 #### `packages = NULL`
