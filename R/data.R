@@ -67,3 +67,23 @@
 # blog.data$pkg.history <- pkg.history
 
 # usethis::use_data(blog.data, overwrite = TRUE, version = 3L)
+
+#' List of 8 Download Logs to Replace Duplicate Logs Errors in 'cranlogs'.
+#'
+#' October 6-8, 2012; Octoer 11, 2012; December 26-28; and January 1, 20113.
+#'
+#' @format
+#' \describe{
+#'    \item{\code{date}}{}
+#'    \item{\code{time}}{}
+#'    \item{\code{size}}{}
+#'    \item{\code{r_version}}{}
+#'    \item{\code{r_arch}}{}
+#'    \item{\code{r_os}}{}
+#'    \item{\code{package}}{}
+#'    \item{\code{version}}{}
+#'    \item{\code{country}}{}
+#'    \item{\code{ip_id}}{}
+#' }
+#' @docType data
+"cranlogs.errors"
