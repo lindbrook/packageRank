@@ -1,3 +1,9 @@
+packageRank 0.6.0.9000
+==================
+
+- add getCorrectLogs() and cranlogs.errors list object.
+
+
 packageRank 0.6.0
 ==================
 
