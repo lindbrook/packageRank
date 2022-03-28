@@ -7,11 +7,13 @@
 #' @param tz Character. Time zone. See OlsonNames().
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param warning.msg Logical. TRUE uses warning() if the function returns the date of the previous available log.
+#' @param fix.date. Fix date when directly accessing RStudio logs.
 #' @return An R date object.
 #' @export
 
 logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
-  tz = Sys.timezone(), upload.time = "17:00", warning.msg = TRUE) {
+  tz = Sys.timezone(), upload.time = "17:00", warning.msg = TRUE,
+  fix.date = TRUE) {
 
   if (is.null(date)) {
     local.time <- utc()
