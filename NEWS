@@ -2,6 +2,10 @@ packageRank 0.6.0.9000
 ==================
 
 - add getCorrectLogs() and cranlogs.errors list object.
+- add/set logDate(fix.date = TRUE).
+- add/set resolveDate(fix.date = FALSE).
+- move use of fixDate_2012() in logDate().
+- use logDate(fix.date = FALSE) in cranDownloads().
 
 
 packageRank 0.6.0
