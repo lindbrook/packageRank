@@ -29,7 +29,6 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
 
   if (repository == "CRAN") {
     first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
-    local.date <- fixDate_2012(local.date)
   } else if (repository == "MRAN") {
      first.log <- as.Date("2014-09-17") # first MRAN snapshot.
   } else stop('repository must be "CRAN" or "MRAN".', call. = FALSE)
@@ -61,7 +60,8 @@ logDate <- function(date = NULL, check.url = TRUE, repository = "CRAN",
     else stop("Date in future. Snapshot not yet available.", call. = FALSE)
   }
 
-  log.date
+  if (fix.date) fixDate_2012(log.date)
+  else log.date
 }
 
 available_log <- function(local.date, tz, upload.time, warning.msg) {
