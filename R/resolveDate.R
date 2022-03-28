@@ -3,9 +3,10 @@
 #' Check date format and validate date.
 #' @param date Character. \code{"yyyy-mm-dd"}, \code{"yyyy-mm"}, \code{"yyyy"} or \code{yyyy} (numeric).
 #' @param type Character. Type of date "to" or "from".
+#' @param fix.date. Fix date when directly accessing RStudio logs.
 #' @noRd
 
-resolveDate <- function(date, type = "from") {
+resolveDate <- function(date, type = "from", fix.date = FALSE) {
   if (!type %in% c("to", "from")) {
     stop('type must be "to" or "from".', call. = FALSE)
   }
@@ -58,7 +59,7 @@ resolveDate <- function(date, type = "from") {
     stop(msg, call. = FALSE)
   } else x.date
 
-  logDate(x.date, warning.msg = FALSE)
+  logDate(x.date, warning.msg = FALSE, fix.date = fix.date)
 }
 
 dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
