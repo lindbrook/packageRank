@@ -21,7 +21,7 @@ logDate(date = NULL, check.url = TRUE, repository = "CRAN",
 
 \item{warning.msg}{Logical. TRUE uses warning() if the function returns the date of the previous available log.}
 
-\item{fix.date.}{Fix date when directly accessing RStudio logs.}
+\item{fix.date}{Fix date when directly accessing RStudio logs.}
 }
 \value{
 An R date object.

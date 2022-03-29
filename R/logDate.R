@@ -7,7 +7,7 @@
 #' @param tz Character. Time zone. See OlsonNames().
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param warning.msg Logical. TRUE uses warning() if the function returns the date of the previous available log.
-#' @param fix.date. Fix date when directly accessing RStudio logs.
+#' @param fix.date Fix date when directly accessing RStudio logs.
 #' @return An R date object.
 #' @export
 
