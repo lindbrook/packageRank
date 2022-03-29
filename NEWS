@@ -1,7 +1,14 @@
+packageRank 0.6.0.9002
+==================
+
+- add floor date for RStudio CRAN mirror logs in cranDownloads().
+
+
 packageRank 0.6.0.9001
 ==================
 
 - fix rmarkdown typo in logDate().
+
 
 packageRank 0.6.0.9000
 ==================

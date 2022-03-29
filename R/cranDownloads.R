@@ -45,6 +45,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       first.published <- do.call(c, lapply(packages, function(pkg) {
         packageHistory(pkg)[1, "Date"]
       }))
+      first.log <- as.Date("2012-10-01")  # first RStudio CRAN mirror log.
+      if (any(first.published < first.log)) {
+        first.published[first.published < first.log] <- first.log
+      }
     }
   }
 
