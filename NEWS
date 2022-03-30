@@ -2,6 +2,7 @@ packageRank 0.6.0.9002
 ==================
 
 - add floor date for RStudio CRAN mirror logs in cranDownloads().
+- rename cranlogs.error to rstudio.logs.
 
 
 packageRank 0.6.0.9001
