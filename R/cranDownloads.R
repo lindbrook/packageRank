@@ -11,6 +11,7 @@
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param fix.cranlogs Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.
 #' @export
 #' @examples
 #' \dontrun{
@@ -29,7 +30,7 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, check.package = TRUE, dev.mode = FALSE) {
+  to = NULL, check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE) {
 
   if (length(packages) > 1) {
     if ("R" %in% packages) {
