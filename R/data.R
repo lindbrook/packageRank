@@ -68,7 +68,7 @@
 
 # usethis::use_data(blog.data, overwrite = TRUE, version = 3L)
 
-#' List of 8 Download Logs to Replace Duplicate Logs Errors in 'cranlogs'.
+#' Eight RStudio Download Logs to Fix Duplicate Logs Errors in 'cranlogs'.
 #'
 #' October 6-8, 2012; Octoer 11, 2012; December 26-28; and January 1, 20113.
 #'
@@ -86,4 +86,4 @@
 #'    \item{\code{ip_id}}{}
 #' }
 #' @docType data
-"cranlogs.errors"
+"rstudio.logs"

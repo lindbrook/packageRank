@@ -11,6 +11,7 @@
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
+#' @param fix.cranlogs Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.
 #' @export
 #' @examples
 #' \dontrun{
@@ -29,7 +30,7 @@
 #' }
 
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
-  to = NULL, check.package = TRUE, dev.mode = FALSE) {
+  to = NULL, check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE) {
 
   if (length(packages) > 1) {
     if ("R" %in% packages) {
@@ -45,6 +46,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       first.published <- do.call(c, lapply(packages, function(pkg) {
         packageHistory(pkg)[1, "Date"]
       }))
+      first.log <- as.Date("2012-10-01")  # first RStudio CRAN mirror log.
+      if (any(first.published < first.log)) {
+        first.published[first.published < first.log] <- first.log
+      }
     }
   }
 
@@ -52,7 +57,6 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if (is.null(when) & is.null(from) & is.null(to)) {
     args <- list(packages = packages, from = cal.date, to = cal.date)
-
   } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
       args <- list(packages = packages, when = when)
@@ -60,20 +64,14 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       stop('"when" must be "last-day", "last-week" or "last-month".',
         call. = FALSE)
       }
-
   } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
-
     if (!is.null(to)) end.date <- resolveDate(to, type = "to")
     else end.date <- cal.date
-
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
-
     args <- list(packages = packages, from = start.date, to = end.date)
-
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
-
     to.data <- lapply(seq_along(packages), function(i) {
       cranlogs::cran_downloads(packages[i], from = first.published[i],
         to = end.date)
@@ -82,7 +80,6 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if ("args" %in% ls()) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-
     if (is.null(args$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
     } else if ("R" %in% args$packages) {
@@ -107,15 +104,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       when = args$when, from = args$from, to = args$to)
   } else {
     cranlogs.data <- do.call(rbind, to.data)
-
     cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
       cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
     }))
-
     cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
       cranlogs.data$package)
     names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
-
     id <- which.min(first.published)
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = NULL, from = first.published[id], to = end.date)
@@ -127,6 +121,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
+  if (fix.cranlogs) out <- fixCranlogs(out)
   class(out) <- "cranDownloads"
   out
 }
