@@ -2,7 +2,7 @@
 #'
 #' Correct for eight duplicates.
 #' @param date Character. Date. "yyyy-mm-dd".
-#' @note This documents code for cranlogs.errs R list object.
+#' @note This documents code for the rstudio.logs R list object.
 #' @return A list with eight elements.
 #' @noRd
 
@@ -15,5 +15,5 @@ getCorrectLogs <- function() {
   logs
 }
 
-# cranlogs.errors <- getCorrectLogs()
-# usethis::use_data(cranlogs.errors)
+# rstudio.logs <- getCorrectLogs()
+# usethis::use_data(rstudio.logs)
