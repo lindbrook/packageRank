@@ -31,3 +31,25 @@ fixDate_2012 <- function(date = "2012-12-31") {
   }
   ymd
 }
+
+#' Reverse map filename/URL (date for 2012 download logs.
+#'
+#' To print the desired/expected date.
+#' @param file.url.date Date. "yyyy-mm-dd".
+#' @return A one unit R date vector.
+#' @noRd
+
+rev_fixDate_2012 <- function(file.url.date) {
+  offset.date <- file.url.date >= as.Date("2012-10-16") &
+                 file.url.date <= as.Date("2012-12-31")
+
+  if (offset.date) ymd <- file.url.date - 3L
+  else ymd <- file.url.date
+
+  if (file.url.date == as.Date("2012-10-12")) {
+    ymd <- as.Date("2012-10-11")
+  } else if (file.url.date == as.Date("2012-10-14")) {
+    ymd <- as.Date("2012-10-12")
+  }
+  ymd
+}
