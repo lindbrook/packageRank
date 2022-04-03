@@ -22,10 +22,11 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (check.package) packages <- checkPackage(packages)
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
+  ymd <- rev_fixDate_2012(file.url.date)
   cores <- multiCore(multi.core)
 
   if (all.filters) {

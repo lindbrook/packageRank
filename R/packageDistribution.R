@@ -18,16 +18,21 @@ packageDistribution <- function(package = "HistData", date = NULL,
   dev.mode = FALSE, threshold = 1000L) {
 
   if (check.package) packages <- checkPackage(package)
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
-  cran_log <- cleanLog(cran_log)
-  cores <- multiCore(multi.core)
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
+  ymd <- rev_fixDate_2012(file.url.date)
 
-  out <- package_distribution(package, ymd, all.filters, ip.filter,
-     small.filter, cran_log, cores, dev.mode, threshold)
-
-  class(out) <- "packageDistribution"
-  out
+  if (!package %in% cran_log$package) {
+    stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
+  } else {
+    cran_log <- cleanLog(cran_log)
+    cores <- multiCore(multi.core)
+    ymd <- rev_fixDate_2012(file.url.date)
+    out <- package_distribution(package, ymd, all.filters, ip.filter,
+      small.filter, cran_log, cores, dev.mode, threshold)
+    class(out) <- "packageDistribution"
+    out
+  }
 }
 
 package_distribution <- function(package, ymd, all.filters, ip.filter,

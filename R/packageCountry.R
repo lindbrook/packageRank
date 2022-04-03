@@ -23,8 +23,6 @@ packageCountry <- function(packages = "cholera", date = NULL,
   sort = TRUE, na.rm = FALSE, memoization = TRUE, check.package = TRUE,
   multi.core = TRUE, dev.mode = FALSE) {
 
-  ymd <- logDate(date, warning.msg = FALSE)
-
   if (all.filters) {
     ip.filter <- TRUE
     triplet.filter <- TRUE
@@ -33,7 +31,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
     size.filter <- TRUE
   }
 
-  p.log <- packageLog(packages = packages, date = ymd,
+  p.log <- packageLog(packages = packages, date = date,
     ip.filter = ip.filter, triplet.filter = triplet.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
     size.filter = size.filter, memoization = memoization,

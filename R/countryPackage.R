@@ -21,8 +21,8 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   memoization = TRUE, multi.core = TRUE) {
 
   country <- toupper(country)
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[!is.na(cran_log$country) & cran_log$country == country, ]
 
@@ -60,6 +60,8 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
     }
 
     if (sequence.filter) {
+      ymd <- rev_fixDate_2012(file.url.date)
+      
       arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
         tmp <- packageHistory(x)
         tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
