@@ -20,6 +20,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
   memoization = TRUE, multi.core = TRUE) {
 
+  country <- toupper(country)
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
   cran_log <- cleanLog(cran_log)
