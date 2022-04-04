@@ -1,3 +1,12 @@
+packageRank 0.6.0.9003
+==================
+
+- pair logDate() and rev_fixDate_2012().
+- use toupper(country) in countryPackage().
+- add rev_fixDate_2012().
+- restore stop() in fixDate_2012().
+
+
 packageRank 0.6.0.9002
 ==================
 

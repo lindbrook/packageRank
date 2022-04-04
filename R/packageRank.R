@@ -25,10 +25,11 @@ packageRank <- function(packages = "HistData", date = NULL,
   dev.mode = FALSE, threshold = 1000L) {
 
   if (check.package) packages <- checkPackage(packages)
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
+  ymd <- rev_fixDate_2012(file.url.date)
   cores <- multiCore(multi.core)
 
   if (all.filters) {
