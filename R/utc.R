@@ -58,3 +58,14 @@ logPostInfo <- function(tz = Sys.timezone()) {
   local <- as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
   list(log.date = logDate(tz = tz), GMT = x, local = local)
 }
+
+#' Compute Date and Time of Next and Currently Availabe Log.
+#'
+#' GMT and Local Posting Times.
+#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
+#' @export
+
+logInfo <- function(tz = Sys.timezone()) {
+  x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
+  list(next.log.post.time = x, available.log = logDate(Sys.Date() - 1))
+}
