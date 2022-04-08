@@ -77,7 +77,6 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
   today.log <- utc.date - 1
 
   today.upload <- as.POSIXlt(today.utc, tz = tz)
-  today.upload <- format(today.upload, "%d %b %H:%M %Z")
 
   year <- as.POSIXlt(today.log)$year + 1900
   rstudio.url <- "http://cran-logs.rstudio.com/"
@@ -91,7 +90,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     note <- paste0("Today's log should be posted in ~",
       paste(today.t.minus$Time, today.t.minus$Unit), " at ",
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
-      format(today.utc, "%H:%M %Z"), ").")
+      format(today.upload, "%d %b %H:%M %Z"), ").")
   } else if (all(rstudio.test, cranlogs.test)) {
     note <- "Everything OK."
   } else if (!rstudio.test & cranlogs.test) {
