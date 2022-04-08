@@ -59,13 +59,50 @@ logPostInfo <- function(tz = Sys.timezone()) {
   list(log.date = logDate(tz = tz), GMT = x, local = local)
 }
 
-#' Compute Date and Time of Next and Currently Availabe Log.
+#' Compute Availability, Date, Time of "Today's" Log.
 #'
-#' GMT and Local Posting Times.
+#' Also checks availability of RStudio logs and 'cranlogs' data.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @export
 
-logInfo <- function(tz = Sys.timezone()) {
-  x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
-  list(next.log.post.time = x, available.log = logDate(Sys.Date() - 1))
+logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
+  utc.data.time <- utc()
+  utc.date <- as.Date(format(utc.data.time, "%Y-%m-%d"))
+
+  today.utc <- dateTime(utc.date, time = upload.time, tz = "GMT")
+  today.date <- as.Date(format(today.utc, "%Y-%m-%d"))
+  today.delta.time <- difftime(today.utc, utc.data.time)
+  today.t.minus <- timeUnit(today.delta.time)
+  today.log <- utc.date - 1
+
+  today.upload <- as.POSIXlt(today.utc, tz = tz)
+  today.upload <- format(today.upload, "%d %b %H:%M %Z")
+
+  year <- as.POSIXlt(today.log)$year + 1900
+  rstudio.url <- "http://cran-logs.rstudio.com/"
+  log.url <- paste0(rstudio.url, year, '/', today.log, ".csv.gz")
+  rstudio.test <- RCurl::url.exists(log.url)
+
+  clogs <- cranlogs::cran_downloads(from = today.log, to = today.log)
+  cranlogs.test <- ifelse(clogs$count != 0, TRUE, FALSE)
+
+  if (today.delta.time > 0) {
+    note <- paste0("Today's log should be posted in ~",
+      paste(today.t.minus$Time, today.t.minus$Unit), " at ",
+      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
+      format(today.utc, "%H:%M %Z"), ").")
+  } else if (all(rstudio.test, cranlogs.test)) {
+    note <- "Everything OK."
+  } else if (!rstudio.test & cranlogs.test) {
+    note <- "Logs not (yet) posted."
+  } else if (!cranlogs.test & rstudio.test) {
+    note <- "cranlogs' results not (yet) available."
+  }
+
+  list("Available log" = logDate(),
+       "Today's log" = utc.date - 1,
+       "Today's log posted?" = ifelse(rstudio.test, "Yes", "No"),
+       "Today's results on 'cranlogs'?" = ifelse(cranlogs.test, "Yes", "No"),
+       note = note)
 }

@@ -2,8 +2,8 @@ Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
 Version: 0.6.0.9004
-Date: 2022-04-05
-Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
+Date: 2022-04-08
+Authors@R: person("linbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
 Description: Compute and visualize the cross-sectional and longitudinal number

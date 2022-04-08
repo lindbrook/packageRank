@@ -2,13 +2,15 @@
 % Please edit documentation in R/utc.R
 \name{logInfo}
 \alias{logInfo}
-\title{Compute Date and Time of Next and Currently Availabe Log.}
+\title{Compute Availability, Date, Time of "Today's" Log.}
 \usage{
-logInfo(tz = Sys.timezone())
+logInfo(tz = Sys.timezone(), upload.time = "17:00")
 }
 \arguments{
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
+
+\item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".}
 }
 \description{
-GMT and Local Posting Times.
+Also checks availability of RStudio logs and 'cranlogs' data.
 }
