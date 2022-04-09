@@ -90,7 +90,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     note <- paste0("Today's log should be posted in ~",
       paste(today.t.minus$Time, today.t.minus$Unit), " at ",
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
-      format(today.upload, "%d %b %H:%M %Z"), ").")
+      format(today.utc, "%d %b %H:%M %Z"), ").")
   } else if (all(rstudio.test, cranlogs.test)) {
     note <- "Everything OK."
   } else if (!rstudio.test & cranlogs.test) {
