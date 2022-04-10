@@ -47,18 +47,6 @@ localTime <- function(date = "2021-1-1", time = "12:00", tz = Sys.timezone()) {
   as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
 }
 
-#' Compute Date and Time of Latest Available Log.
-#'
-#' GMT and Local Posting Times.
-#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
-#' @export
-
-logPostInfo <- function(tz = Sys.timezone()) {
-  x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
-  local <- as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
-  list(log.date = logDate(tz = tz), GMT = x, local = local)
-}
-
 #' Compute Availability, Date, Time of "Today's" Log.
 #'
 #' Also checks availability of RStudio logs and 'cranlogs' data.

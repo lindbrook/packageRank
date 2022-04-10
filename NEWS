@@ -3,6 +3,7 @@ packageRank 0.6.0.9004
 
 - add logInfo().
 - amend logInfo().
+- deprecate logPostInfo().
 
 
 packageRank 0.6.0.9003
