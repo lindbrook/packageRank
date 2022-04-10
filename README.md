@@ -90,7 +90,8 @@ problem). All the other
 functions should work since they directly access the logs.
 
 Usually, these errors resolve themselves the next time the underlying
-scripts are run (typically “tomorrow”, if not sooner).
+scripts are run (typically “tomorrow”, if not sooner). For more details,
+see the “time zones” section in [V Notes](#v---notes).
 
 ### I - computing package download counts
 
@@ -825,8 +826,8 @@ been downloaded in your current R session will not be downloaded again.
 
 The calendar date (e.g. “2021-01-01”) is the unit of observation for
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions. However, because the typical use case involves the *latest*
-log file, time zone differences can come into play.
+functions. However, because you’re typically in *today’s* log file, time
+zone differences come into play.
 
 Let’s say that it’s 09:01 on 01 January 2021 and you want to compute the
 rank percentile for [‘ergm’](https://CRAN.R-project.org/package=ergm)
@@ -839,7 +840,7 @@ packageRank(packages = "ergm")
 However, depending on *where* you make this request, you may not get the
 data you expect. In Honolulu, USA, you will but in Sydney, Australia you
 won’t. The reason is that you’ve somehow forgotten a key piece of
-trivia: RStudio typically posts yesterday’s log around 17:00 UTC the
+trivia: RStudio typically posts *yesterday’s* log around 17:00 UTC the
 following day.
 
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is
@@ -879,64 +880,44 @@ packageRank(packages = "ergm", date = "2021-01-01")
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you check/remember when logs are posted in your
-location, there’s `logDate()` and `logPostInfo()`. The former silently
-returns the date of the current available log. The latter adds the
-approximate local and UTC times when logs of the desired date are posted
-to RStudio’s server.
+location, there’s `logInfo()`. The function returns the date of the last
+available log and the date of “today’s” log. It then checks to see if
+“today’s” log is posted on RStudio’s server and if today’s results have
+been computed in ‘cranlogs’. If either or both fail, you’ll see a range
+of contextual notes.
+
+Keep in mind that 17:00 UTC is not a hard deadline. Barring server
+issues, the logs are usually posted *before* that time. I don’t know
+when the script starts but it seems to post closer to 17:00 UTC when a
+log has many entries than when it has fewer (i.e., weekdays v.
+weekends). Again barring software issues, the ‘cranlogs’ results are
+usually available shortly *after* 17:00 UTC.
 
 Here’s what you’d see using the Honolulu example:
 
 ``` r
-logDate()
+logInfo()
 ```
 
-    > [1] "2021-01-01
+    $`Available log`
+    [1] "2021-01-01"
 
-and
+    $`Today's log`
+    [1] "2020-12-31"
 
-``` r
-logPostInfo()
-```
+    $`Today's log posted?`
+    [1] "Yes"
 
-    > $log.date
-    > [1] "2021-01-01"
-    >
-    > $GMT
-    > [1] "2021-01-01 17:00:00 GMT"
-    >
-    > $local
-    > [1] "2021-01-01 07:00:00 HST"
+    $`Today's results on 'cranlogs'?`
+    [1] "Yes"
 
-For both functions, the default is to use your local time zone. To see
-the results in a different time zone, pass the desired zone name from
-`OlsonNames()` to the `tz` argument. Here are the results for Sydney
-when the functions are called from Honolulu (19:01 UTC):
+    $note
+    [1] "Everything OK."
 
-``` r
-logDate(tz = "Australia/Sydney")
-```
-
-    > [1] "2021-01-01"
-
-and
-
-``` r
-logPostInfo(tz = "Australia/Sydney")
-```
-
-    > $log.date
-    > [1] "2021-01-01"
-    >
-    > $GMT
-    > [1] "2021-01-01 17:00:00 GMT"
-    >
-    > $local
-    > [1] "2021-01-01 04:00:00 AEDT"
-
-This functionality depends on R’s ability to to compute your local time
-and time zone (e.g., `Sys.time()`). My understanding is that there may
-be operating system or platform specific issues that could undermine
-this.
+The functions uses your local time zone, which depends on R’s ability to
+compute your local time and time zone (e.g., `Sys.time()` and
+`Sys.timezone()`). My understanding is that there may be operating
+system or platform specific issues that could undermine this ability.
 
 #### timeout
 
