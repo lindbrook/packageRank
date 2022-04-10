@@ -87,16 +87,17 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
   cranlogs.test <- ifelse(clogs$count != 0, TRUE, FALSE)
 
   if (today.delta.time > 0) {
-    note <- paste0("Today's log should be posted in ~",
-      paste(today.t.minus$Time, today.t.minus$Unit), " at ",
+    note <- paste0("Today's log is typically posted by ",
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
       format(today.utc, "%d %b %H:%M %Z"), ").")
   } else if (all(rstudio.test, cranlogs.test)) {
     note <- "Everything OK."
   } else if (!rstudio.test & cranlogs.test) {
-    note <- "Logs not (yet) posted."
+    note <- "Log not posted by expected time."
   } else if (!cranlogs.test & rstudio.test) {
-    note <- "cranlogs' results not (yet) available."
+    note <- paste0("'cranlogs' usually posts a bit after ",
+      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
+      format(today.utc, "%d %b %H:%M %Z"), ").")
   }
 
   list("Available log" = logDate(),
