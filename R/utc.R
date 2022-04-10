@@ -47,25 +47,50 @@ localTime <- function(date = "2021-1-1", time = "12:00", tz = Sys.timezone()) {
   as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
 }
 
-#' Compute Date and Time of Latest Available Log.
+#' Compute Availability, Date, Time of "Today's" Log.
 #'
-#' GMT and Local Posting Times.
+#' Also checks availability of RStudio logs and 'cranlogs' data.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
+#' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @export
 
-logPostInfo <- function(tz = Sys.timezone()) {
-  x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
-  local <- as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = tz)
-  list(log.date = logDate(tz = tz), GMT = x, local = local)
-}
+logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
+  utc.data.time <- utc()
+  utc.date <- as.Date(format(utc.data.time, "%Y-%m-%d"))
 
-#' Compute Date and Time of Next and Currently Availabe Log.
-#'
-#' GMT and Local Posting Times.
-#' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
-#' @export
+  today.utc <- dateTime(utc.date, time = upload.time, tz = "GMT")
+  today.date <- as.Date(format(today.utc, "%Y-%m-%d"))
+  today.delta.time <- difftime(today.utc, utc.data.time)
+  today.t.minus <- timeUnit(today.delta.time)
+  today.log <- utc.date - 1
 
-logInfo <- function(tz = Sys.timezone()) {
-  x <- dateTime(Sys.Date(), time = "17:00", tz = "GMT")
-  list(next.log.post.time = x, available.log = logDate(Sys.Date() - 1))
+  today.upload <- as.POSIXlt(today.utc, tz = tz)
+
+  year <- as.POSIXlt(today.log)$year + 1900
+  rstudio.url <- "http://cran-logs.rstudio.com/"
+  log.url <- paste0(rstudio.url, year, '/', today.log, ".csv.gz")
+  rstudio.test <- RCurl::url.exists(log.url)
+
+  clogs <- cranlogs::cran_downloads(from = today.log, to = today.log)
+  cranlogs.test <- ifelse(clogs$count != 0, TRUE, FALSE)
+
+  if (today.delta.time > 0) {
+    note <- paste0("Today's log is typically posted by ",
+      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
+      format(today.utc, "%d %b %H:%M %Z"), ").")
+  } else if (all(rstudio.test, cranlogs.test)) {
+    note <- "Everything OK."
+  } else if (!rstudio.test & cranlogs.test) {
+    note <- "Log not posted by expected time."
+  } else if (!cranlogs.test & rstudio.test) {
+    note <- paste0("'cranlogs' usually posts a bit after ",
+      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
+      format(today.utc, "%d %b %H:%M %Z"), ").")
+  }
+
+  list("Available log" = logDate(),
+       "Today's log" = utc.date - 1,
+       "Today's log posted?" = ifelse(rstudio.test, "Yes", "No"),
+       "Today's results on 'cranlogs'?" = ifelse(cranlogs.test, "Yes", "No"),
+       note = note)
 }
