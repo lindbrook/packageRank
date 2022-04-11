@@ -39,6 +39,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   }
 
   if (!is.null(packages)) {
+    first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
     if (!"R" %in% packages) {
       if (check.package) {
         packages <- checkPackage(packages, dev.mode)
@@ -46,7 +47,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       first.published <- do.call(c, lapply(packages, function(pkg) {
         packageHistory(pkg)[1, "Date"]
       }))
-      first.log <- as.Date("2012-10-01")  # first RStudio CRAN mirror log.
+      if (any(first.published < first.log)) {
+        first.published[first.published < first.log] <- first.log
+      }
+    } else {
+      # first non-problematic date for R download logs (RStudio).
+      first.published <- as.Date("2015-01-01")
       if (any(first.published < first.log)) {
         first.published[first.published < first.log] <- first.log
       }
@@ -104,12 +110,23 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       when = args$when, from = args$from, to = args$to)
   } else {
     cranlogs.data <- do.call(rbind, to.data)
-    cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
-      cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
-    }))
-    cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
-      cranlogs.data$package)
-    names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+
+    if ("R" %in% packages) {
+      cumulative <- unlist(lapply(unique(cranlogs.data$os), function(x) {
+        cumsum(cranlogs.data[cranlogs.data$os == x, "count"])
+      }))
+      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
+        cranlogs.data$os)
+      names(cranlogs.data)[ncol(cranlogs.data)] <- "platform"
+    } else {
+      cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
+        cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
+      }))
+      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
+        cranlogs.data$package)
+      names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+    }
+
     id <- which.min(first.published)
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = NULL, from = first.published[id], to = end.date)
