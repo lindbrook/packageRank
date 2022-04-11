@@ -8,7 +8,7 @@
 packageHistory <- function(package = "cholera", check.package = TRUE) {
   package0 <- package
 
-  if ("R" %in% package) {  
+  if ("R" %in% package) {
     pkg.idx <- seq_along(package)
     r.position <- which(package == "R")
     pkg.idx <- pkg.idx[pkg.idx != r.position]
@@ -63,13 +63,12 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   }
 
   if ("R" %in% package0) {
-    c(out[seq_along(out) < r.position],
-      r_v,
+    out <- c(out[seq_along(out) < r.position], r_v,
       out[seq_along(out) >= r.position])
-  } else {
-    if (length(out) == 1) out[[1]]
-    else out
   }
+
+  if (length(out) == 1) out[[1]]
+  else out
 }
 
 #' Scrape package version history CRAN and Archive.
