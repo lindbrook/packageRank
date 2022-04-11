@@ -1,3 +1,10 @@
+packageRank 0.6.0.9005
+==================
+
+- fix cranDownloads("R", to = ).
+- fix output for packageHistory("R").
+
+
 packageRank 0.6.0.9004
 ==================
 
