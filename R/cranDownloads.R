@@ -110,6 +110,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       when = args$when, from = args$from, to = args$to)
   } else {
     cranlogs.data <- do.call(rbind, to.data)
+    cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
 
     if ("R" %in% packages) {
       cumulative <- unlist(lapply(unique(cranlogs.data$os), function(x) {
