@@ -80,12 +80,18 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
       format(today.utc, "%d %b %H:%M %Z"), ").")
   } else if (all(rstudio.test, cranlogs.test)) {
     note <- "Everything OK."
-  } else if (!rstudio.test & cranlogs.test) {
-    note <- "Log not posted by expected time."
-  } else if (!cranlogs.test & rstudio.test) {
+  } else if (rstudio.test & !cranlogs.test) {
     note <- paste0("'cranlogs' usually posts a bit after ",
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
       format(today.utc, "%d %b %H:%M %Z"), ").")
+  } else if (!rstudio.test) {
+    file.url.date <- utc.date - 1
+    year <- format(file.url.date, "%Y-%m-%d")
+    rstudio.url <- "http://cran-logs.rstudio.com/"
+    log.url <- paste0(rstudio.url, year, '/', file.url.date, ".csv.gz")
+    if (!RCurl::url.exists(log.url)) {
+      note <- paste0("Log for ", file.url.date, " not (yet) on server.")
+    }
   }
 
   list("Available log" = logDate(),

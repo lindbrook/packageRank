@@ -1,3 +1,9 @@
+packageRank 0.6.0.9006
+==================
+
+- prioritize (RStudio) log error over 'cranlogs' in logInfo().
+
+
 packageRank 0.6.0.9005
 ==================
 
