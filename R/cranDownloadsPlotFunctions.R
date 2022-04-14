@@ -520,13 +520,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                      complete.data[last.obs, statistic],
                      ip.data$date,
                      ip.data[, statistic],
-                     col = "black",
+                     col = cbPalette[i],
                      lty = "dotted")
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
-                     col = "black",
+                     col = cbPalette[i],
                      lty = "longdash")
 
              points(est.data[, "date"], est.data[, statistic],
@@ -746,11 +746,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   } else if (obs.ct > 1) {
     if (graphics == "base") {
       if (any(dat$in.progress)) {
-        pltfrm <- unique(dat$platform)
+        pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
-
-        p.data <- lapply(seq_along(pltfrm), function(i) {
-          pkg.dat <- dat[dat$platform == pltfrm[i], ]
+        names(pltfrm.col) <- c("osx", "src", "win")
+        p.data <- lapply(pltfrm, function(x) {
+          pkg.dat <- dat[dat$platform == x, ]
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete.data <- pkg.dat[!ip.sel, ]
@@ -765,10 +765,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             est.data = est.data)
         })
 
-        est.stat <- vapply(p.data, function(x) {
-          x$est.data[, statistic]
-        }, numeric(1L))
-
+        est.stat <- vapply(p.data, function(x) x$est.data[, statistic],
+          numeric(1L))
         complete.data <- lapply(p.data, function(x) x$complete.data)
         est.data <- lapply(p.data, function(x) x$est.data)
         ip.data <- lapply(p.data, function(x) x$ip.data)
@@ -829,23 +827,34 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           }))
         }
 
-        legend(x = legend.location,
-               legend = c("win", "mac", "src"),
-               col = c("black", "red", "dodgerblue"),
-               pch = rep(16, 3),
-               bg = "white",
-               cex = 2/3,
-               title = NULL,
-               lwd = 1,
-               bty = "n")
+        if (points) {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 pch = rep(16, 3),
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
+        } else {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
+        }
 
-         legend(x = ip.legend.location,
-               legend = c("Obs", "Est"),
-               pch = 0:1,
+        legend(x = ip.legend.location,
+               legend = c("Est", "Obs"),
+               pch = 1:0,
                bg = "white",
                cex = 2/3,
                title = NULL,
-               lty = c("dotted", "solid"),
+               lty = c("longdash", "dotted"),
                bty = "n")
 
         if (r.version) {
@@ -869,23 +878,42 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                xlab = "Date", ylab = ylab)
         }
 
-        pltfrm <- unique(dat$platform)
+        pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
+        names(pltfrm.col) <- c("osx", "src", "win")
+
+        if (points) {
+          invisible(lapply(seq_along(pltfrm), function(i) {
+            points(dat[dat$platform == pltfrm[i], "date"],
+                  dat[dat$platform == pltfrm[i], statistic],
+                  pch = 16, col = pltfrm.col[i])
+          }))
+        }
 
         invisible(lapply(seq_along(pltfrm), function(i) {
           lines(dat[dat$platform == pltfrm[i], "date"],
                 dat[dat$platform == pltfrm[i], statistic],
-                type = type, pch = 0, col = pltfrm.col[i])
+                type = type, col = pltfrm.col[i])
         }))
 
-        legend(x = legend.location,
-               legend = c("win", "mac", "src"),
-               col = c("black", "red", "dodgerblue"),
-               pch = c(1, 0, 2),
-               bg = "white",
-               cex = 2/3,
-               title = "Platform",
-               lwd = 1)
+        if (points) {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 pch = rep(16, 3),
+                 bg = "white",
+                 cex = 2/3,
+                 title = "Platform",
+                 lwd = 1)
+        } else {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 bg = "white",
+                 cex = 2/3,
+                 title = "Platform",
+                 lwd = 1)
+        }
 
         if (smooth) {
           invisible(lapply(seq_along(pltfrm), function(i) {
@@ -923,9 +951,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (any(dat$in.progress)) {
-        pltfrm <- unique(dat$platform)
-        pltfrm.col <- c("red", "blue", "black")
-
+        pltfrm <- sort(unique(dat$platform))
         p.data <- lapply(seq_along(pltfrm), function(i) {
           pkg.dat <- dat[dat$platform == pltfrm[i], ]
           ip.sel <- pkg.dat$in.progress == TRUE
