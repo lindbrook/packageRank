@@ -1,3 +1,9 @@
+packageRank 0.6.0.9008
+==================
+
+- fix cranDownloads(packages = NULL, to = ).
+
+
 packageRank 0.6.0.9007
 ==================
 
