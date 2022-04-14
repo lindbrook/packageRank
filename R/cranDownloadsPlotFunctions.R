@@ -829,23 +829,34 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           }))
         }
 
-        legend(x = legend.location,
-               legend = c("win", "mac", "src"),
-               col = c("black", "red", "dodgerblue"),
-               pch = rep(16, 3),
-               bg = "white",
-               cex = 2/3,
-               title = NULL,
-               lwd = 1,
-               bty = "n")
+        if (points) {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 pch = rep(16, 3),
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
+        } else {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 bg = "white",
+                 cex = 2/3,
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
+        }
 
-         legend(x = ip.legend.location,
-               legend = c("Obs", "Est"),
-               pch = 0:1,
+        legend(x = ip.legend.location,
+               legend = c("Est", "Obs"),
+               pch = 1:0,
                bg = "white",
                cex = 2/3,
                title = NULL,
-               lty = c("dotted", "solid"),
+               lty = c("longdash", "dotted"),
                bty = "n")
 
         if (r.version) {
