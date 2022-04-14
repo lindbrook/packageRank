@@ -765,10 +765,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             est.data = est.data)
         })
 
-        est.stat <- vapply(p.data, function(x) {
-          x$est.data[, statistic]
-        }, numeric(1L))
-
+        est.stat <- vapply(p.data, function(x) x$est.data[, statistic],
+          numeric(1L))
         complete.data <- lapply(p.data, function(x) x$complete.data)
         est.data <- lapply(p.data, function(x) x$est.data)
         ip.data <- lapply(p.data, function(x) x$ip.data)
