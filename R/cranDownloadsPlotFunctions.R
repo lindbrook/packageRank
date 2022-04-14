@@ -878,23 +878,42 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                xlab = "Date", ylab = ylab)
         }
 
-        pltfrm <- unique(dat$platform)
+        pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
+        names(pltfrm.col) <- c("osx", "src", "win")
+
+        if (points) {
+          invisible(lapply(seq_along(pltfrm), function(i) {
+            points(dat[dat$platform == pltfrm[i], "date"],
+                  dat[dat$platform == pltfrm[i], statistic],
+                  pch = 16, col = pltfrm.col[i])
+          }))
+        }
 
         invisible(lapply(seq_along(pltfrm), function(i) {
           lines(dat[dat$platform == pltfrm[i], "date"],
                 dat[dat$platform == pltfrm[i], statistic],
-                type = type, pch = 0, col = pltfrm.col[i])
+                type = type, col = pltfrm.col[i])
         }))
 
-        legend(x = legend.location,
-               legend = c("win", "mac", "src"),
-               col = c("black", "red", "dodgerblue"),
-               pch = c(1, 0, 2),
-               bg = "white",
-               cex = 2/3,
-               title = "Platform",
-               lwd = 1)
+        if (points) {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 pch = rep(16, 3),
+                 bg = "white",
+                 cex = 2/3,
+                 title = "Platform",
+                 lwd = 1)
+        } else {
+          legend(x = legend.location,
+                 legend = c("win", "mac", "src"),
+                 col = c("black", "red", "dodgerblue"),
+                 bg = "white",
+                 cex = 2/3,
+                 title = "Platform",
+                 lwd = 1)
+        }
 
         if (smooth) {
           invisible(lapply(seq_along(pltfrm), function(i) {
