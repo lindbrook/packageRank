@@ -746,11 +746,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   } else if (obs.ct > 1) {
     if (graphics == "base") {
       if (any(dat$in.progress)) {
-        pltfrm <- unique(dat$platform)
+        pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
-
-        p.data <- lapply(seq_along(pltfrm), function(i) {
-          pkg.dat <- dat[dat$platform == pltfrm[i], ]
+        names(pltfrm.col) <- c("osx", "src", "win")
+        p.data <- lapply(pltfrm, function(x) {
+          pkg.dat <- dat[dat$platform == x, ]
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete.data <- pkg.dat[!ip.sel, ]
