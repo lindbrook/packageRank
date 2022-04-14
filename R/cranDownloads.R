@@ -38,8 +38,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
+  first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
+
   if (!is.null(packages)) {
-    first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
     if (!"R" %in% packages) {
       if (check.package) {
         packages <- checkPackage(packages, dev.mode)
@@ -57,7 +58,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         first.published[first.published < first.log] <- first.log
       }
     }
-  }
+  } else first.published <- first.log
 
   cal.date <- logDate(warning.msg = FALSE, fix.date = FALSE)
 
@@ -78,10 +79,15 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     args <- list(packages = packages, from = start.date, to = end.date)
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
-    to.data <- lapply(seq_along(packages), function(i) {
-      cranlogs::cran_downloads(packages[i], from = first.published[i],
+    if (is.null(packages)) {
+      to.data <- cranlogs::cran_downloads(NULL, from = first.published,
         to = end.date)
-    })
+    } else {
+      to.data <- lapply(seq_along(packages), function(i) {
+        cranlogs::cran_downloads(packages[i], from = first.published[i],
+          to = end.date)
+      })
+    }
   }
 
   if ("args" %in% ls()) {
@@ -109,8 +115,12 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
       when = args$when, from = args$from, to = args$to)
   } else {
-    cranlogs.data <- do.call(rbind, to.data)
-    
+    if (inherits(to.data, "list")) {
+      cranlogs.data <- do.call(rbind, to.data)
+    } else if (inherits(to.data, "data.frame")) {
+      cranlogs.data <- to.data
+    }
+
     if ("R" %in% packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       cumulative <- unlist(lapply(unique(cranlogs.data$os), function(x) {
@@ -120,12 +130,17 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         cranlogs.data$os)
       names(cranlogs.data)[ncol(cranlogs.data)] <- "platform"
     } else {
-      cumulative <- unlist(lapply(unique(cranlogs.data$package), function(pkg) {
-        cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
-      }))
-      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
-        cranlogs.data$package)
-      names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+      if (is.null(packages)) {
+        cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
+      } else {
+        pkg <- unique(cranlogs.data$package)
+        cumulative <- unlist(lapply(pkg, function(p) {
+          cumsum(cranlogs.data[cranlogs.data$package == p, "count"])
+        }))
+        cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
+          cranlogs.data$package)
+        names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
+      }
     }
 
     id <- which.min(first.published)
