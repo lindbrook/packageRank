@@ -932,9 +932,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (any(dat$in.progress)) {
-        pltfrm <- unique(dat$platform)
-        pltfrm.col <- c("red", "blue", "black")
-
+        pltfrm <- sort(unique(dat$platform))
         p.data <- lapply(seq_along(pltfrm), function(i) {
           pkg.dat <- dat[dat$platform == pltfrm[i], ]
           ip.sel <- pkg.dat$in.progress == TRUE
