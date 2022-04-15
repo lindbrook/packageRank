@@ -53,7 +53,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       }
     } else {
       # first non-problematic date for R download logs (RStudio).
-      first.published <- as.Date("2015-01-01")
+      # first.published <- as.Date("2015-01-01")
+      first.published <- as.Date("2014-05-23")
+      
       if (any(first.published < first.log)) {
         first.published[first.published < first.log] <- first.log
       }

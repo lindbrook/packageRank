@@ -1,3 +1,10 @@
+packageRank 0.6.0.9009
+==================
+
+- add fetchRLog().
+- (temporarily) push back first available R download log to "2014-05-23".
+
+
 packageRank 0.6.0.9008
 ==================
 
