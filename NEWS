@@ -1,3 +1,10 @@
+packageRank 0.6.0.9010
+==================
+ 
+ - match 'cranlogs' starting date for cranDownloads(packages = "R").
+ - fix output for cranDownloads(packages = "R", to = ).
+
+
 packageRank 0.6.0.9009
 ==================
 
