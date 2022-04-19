@@ -125,12 +125,13 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
     if ("R" %in% packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
-      cumulative <- unlist(lapply(unique(cranlogs.data$os), function(x) {
-        cumsum(cranlogs.data[cranlogs.data$os == x, "count"])
-      }))
-      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
-        cranlogs.data$os)
-      names(cranlogs.data)[ncol(cranlogs.data)] <- "platform"
+      count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
+        cranlogs.data$os), sum)
+      cumulative <- apply(count, 2, cumsum)
+      dts <- rep(as.Date(row.names(count)), ncol(count))
+      plt <- rep(colnames(count), each = nrow(count))
+      cranlogs.data <- data.frame(date = dts, count = c(count),
+        cumulative = c(cumulative), platform = plt, row.names = NULL)
     } else {
       if (is.null(packages)) {
         cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
