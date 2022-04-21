@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9010-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS) 
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9011-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -795,6 +795,53 @@ number one) and “A2” (A + number 2). According to [RStudio’s
 documentation](http://cran-logs.rstudio.com/), this coding was done
 using MaxMind’s free database, which no longer seems to be available and
 may be a bit out of date.
+
+#### log files 2012/13
+
+For those who may be interested in directly using the [RStudio download
+logs](http://cran-logs.rstudio.com/), this section describes some issues
+that may be of use.
+
+The logs begin on 01 October 2012. Each day’s log is stored as a
+separate file with a name/URL that embeds the log’s date:
+
+    http://cran-logs.rstudio.com/2022/2022-01-01.csv.gz
+
+For the logs of 2012, this convention was broken: 1) some logs are
+duplicated (same log, multiple names), 2) at least one is mis-labelled,
+and 3) the logs from 13 October through 28 December are offset by +3
+days (e.g., the file with the name/URL “2012-12-01” contains the log for
+“2012-11-28”). You can read the details
+[here](https://github.com/lindbrook/packageRank/blob/logs/docs/logs.md).
+Fortunately despite all this, only the last 3 logs of 2012 were lost.
+
+For ‘packageRank’ functions that access logs through their filename/URL,
+like `packageRank()` or `packageLog()`,
+[fixDate_2012()](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R)
+re-maps and resolves the issues above so that you’ll get the log you
+expect.
+
+The situation for `packageRank::cranDownloads()` is different because
+that function is a modified wrapper of cranlogs::cran_download(). As
+such, it is dependent on ‘cranlogs’. On the plus side, it’s my
+understanding that ‘cranlogs’ uses the date in the log rather than log’s
+filename/URL. This means that ‘cranlogs’ and any functions and packages
+that depend on it (i.e., ‘adjustedcranlogs’, ‘dlstats’,
+packageRank::cranDownloads()) will not be affected by the second and
+third problem. On the minus side, it’s likely that functions and
+packages that depend on ‘cranlogs’ will be susceptible to the duplicate
+log problem. Because it relies on the date in the log and ignores the
+log’s name/URL, ‘cranlogs’ can’t detect multiple instances of a given
+date’s log. While I found 3 logs with duplicate filename/URLs, my
+analysis turned up 5 additional instances of overcounting (including one
+tripling).
+
+I’ve patched packageRank::cranDownloads() with
+[fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R)
+to fix this overcounting problem. The function recomputes the data using
+the actual logs when any of the eight problematic dates are requested.
+The details about the 8 days and `fixCranlogs()` can be found
+[here](https://github.com/lindbrook/packageRank/blob/logs/docs/logs.md).
 
 #### memoization
 
