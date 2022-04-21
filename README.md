@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9011-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9011-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS) 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -812,7 +812,7 @@ duplicated (same log, multiple names), 2) at least one is mis-labelled,
 and 3) the logs from 13 October through 28 December are offset by +3
 days (e.g., the file with the name/URL “2012-12-01” contains the log for
 “2012-11-28”). You can read the details
-[here](https://github.com/lindbrook/packageRank/blob/logs/docs/logs.md).
+[here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 Fortunately despite all this, only the last 3 logs of 2012 were lost.
 
 For ‘packageRank’ functions that access logs through their filename/URL,
@@ -841,7 +841,7 @@ I’ve patched packageRank::cranDownloads() with
 to fix this overcounting problem. The function recomputes the data using
 the actual logs when any of the eight problematic dates are requested.
 The details about the 8 days and `fixCranlogs()` can be found
-[here](https://github.com/lindbrook/packageRank/blob/logs/docs/logs.md).
+[here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
 #### memoization
 
@@ -936,7 +936,7 @@ of contextual notes.
 Keep in mind that 17:00 UTC is not a hard deadline. Barring server
 issues, the logs are usually posted *before* that time. I don’t know
 when the script starts but it seems to post closer to 17:00 UTC when a
-log has many entries than when it has fewer (i.e., weekdays v.
+log has more entries than when it has fewer (i.e., weekdays v.
 weekends). Again barring software issues, the ‘cranlogs’ results are
 usually available shortly *after* 17:00 UTC.
 
