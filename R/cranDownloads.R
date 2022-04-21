@@ -39,6 +39,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   }
 
   first.log <- as.Date("2012-10-01") # first RStudio CRAN mirror log.
+  # first.rlog <- as.Date("2014-05-23") # first non-problematic candidate
+  first.r_log <- as.Date("2015-01-01") # match 'cranlogs'
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
@@ -52,13 +54,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         first.published[first.published < first.log] <- first.log
       }
     } else {
-      # first non-problematic date for R download logs (RStudio).
-      # first.published <- as.Date("2015-01-01")
-      first.published <- as.Date("2014-05-23")
-      
-      if (any(first.published < first.log)) {
-        first.published[first.published < first.log] <- first.log
-      }
+      first.published <- packageHistory("R")[1, "Date"]
+      if (first.r_log >= first.published) first.published <- first.r_log
     }
   } else first.published <- first.log
 
@@ -75,6 +72,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       }
   } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
+    if ("R" %in% packages) {
+      if (start.date < first.r_log) {
+        message("Logs for R download begin ", first.r_log, ".")
+      }
+    }
     if (!is.null(to)) end.date <- resolveDate(to, type = "to")
     else end.date <- cal.date
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
@@ -89,6 +91,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         cranlogs::cran_downloads(packages[i], from = first.published[i],
           to = end.date)
       })
+      if ("R" %in% packages) {
+        if (end.date < first.r_log) {
+          stop("Logs for R download begin ", first.r_log, ".", call. = FALSE)
+        }
+      }
     }
   }
 
@@ -125,12 +132,13 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
     if ("R" %in% packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
-      cumulative <- unlist(lapply(unique(cranlogs.data$os), function(x) {
-        cumsum(cranlogs.data[cranlogs.data$os == x, "count"])
-      }))
-      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
-        cranlogs.data$os)
-      names(cranlogs.data)[ncol(cranlogs.data)] <- "platform"
+      count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
+        cranlogs.data$os), sum)
+      cumulative <- apply(count, 2, cumsum)
+      dts <- rep(as.Date(row.names(count)), ncol(count))
+      plt <- rep(colnames(count), each = nrow(count))
+      cranlogs.data <- data.frame(date = dts, count = c(count),
+        cumulative = c(cumulative), platform = plt, row.names = NULL)
     } else {
       if (is.null(packages)) {
         cranlogs.data$cumulative <- cumsum(cranlogs.data$count)

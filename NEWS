@@ -1,7 +1,13 @@
-packageRank 0.6.0.9010
+packageRank 0.6.0.9011
 ==================
 
 - draft filename/URL discussion in "Logs" and README.
+
+
+packageRank 0.6.0.9010
+==================
+ - match 'cranlogs' starting date for cranDownloads(packages = "R").
+ - fix output for cranDownloads(packages = "R", to = ).
 
 
 packageRank 0.6.0.9009
