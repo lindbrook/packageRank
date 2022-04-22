@@ -143,10 +143,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (is.null(packages)) {
         cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
       } else {
-        pkg <- unique(cranlogs.data$package)
-        cumulative <- unlist(lapply(pkg, function(p) {
+        cumulative <- vapply(packages, function(p) {
           cumsum(cranlogs.data[cranlogs.data$package == p, "count"])
-        }))
+        }, integer(1L))
         cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
           cranlogs.data$package)
         names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
