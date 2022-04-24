@@ -1,7 +1,7 @@
 Logs
 ================
 lindbrook
-2022-04-21
+2022-04-24
 
 ## Filename/URL 2012
 
@@ -22,7 +22,7 @@ filenames/URLs:
     2012-10-11 ----- 2012-10-12
     2012-10-11 ----- 2012-10-15
 
-    (*) the log for "2012-10-11" is found in the file/URL "2012-10-12" and 
+    (*) the log for "2012-10-11" is found in the file/URL "2012-10-12" and
     "2012-10-15" but not in "2012-10-11".
 
 Second, one log is simply mis-labelled:
@@ -43,7 +43,7 @@ because ‘cranlogs’ doesn’t seem to use the file/URLs, the log for
 “2012-10-07” is present twice and gets double counted. Above, I found 3
 instances of the same log with different names.
 
-I include fixDate_2012() here because it is not exported to NAMESPACE.
+I include `fixDate_2012()` here because it is not exported to NAMESPACE.
 
 ``` r
 fixDate_2012 <- function(date = "2012-12-31") {
@@ -83,8 +83,8 @@ d <- seq(from = as.Date(start.date), to = as.Date(end.date), by = "day")
 # fetchCranLog() retrieves RStudio download logs
 # fixDate_2012() fixes filename/URLs so you get the log for the date you want
 
-# The expression below retrieves the logs directly from RStudio and counts the 
-# number of rows in the log (i.e., number of downloads), excluding those rows 
+# The expression below retrieves the logs directly from RStudio and counts the
+# number of rows in the log (i.e., number of downloads), excluding those rows
 # where the package is NA.
 
 packageRank.data <- vapply(d, function(x) {

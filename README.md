@@ -84,7 +84,7 @@ downloads for all of CRAN), data from “yesterday”, or a “Log is not
 If there’s a problem with
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) but not with
 the [logs](http://cran-logs.rstudio.com/), only
-packageRank::cranDownalods() will be affected (the zero downloads
+`packageRank::cranDownalods()` will be affected (the zero downloads
 problem). All the other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
 functions should work since they directly access the logs.
@@ -822,12 +822,12 @@ re-maps and resolves the issues above so that you’ll get the log you
 expect.
 
 The situation for `packageRank::cranDownloads()` is different because
-that function is a modified wrapper of cranlogs::cran_download(). As
+that function is a modified wrapper of `cranlogs::cran_download()`. As
 such, it is dependent on ‘cranlogs’. On the plus side, it’s my
 understanding that ‘cranlogs’ uses the date in the log rather than log’s
 filename/URL. This means that ‘cranlogs’ and any functions and packages
 that depend on it (i.e., ‘adjustedcranlogs’, ‘dlstats’,
-packageRank::cranDownloads()) will not be affected by the second and
+`packageRank::cranDownloads()`) will not be affected by the second and
 third problem. On the minus side, it’s likely that functions and
 packages that depend on ‘cranlogs’ will be susceptible to the duplicate
 log problem. Because it relies on the date in the log and ignores the
@@ -836,7 +836,7 @@ date’s log. While I found 3 logs with duplicate filename/URLs, my
 analysis turned up 5 additional instances of overcounting (including one
 tripling).
 
-I’ve patched packageRank::cranDownloads() with
+I’ve patched `packageRank::cranDownloads()` with
 [fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R)
 to fix this overcounting problem. The function recomputes the data using
 the actual logs when any of the eight problematic dates are requested.

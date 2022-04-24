@@ -26,7 +26,7 @@ Log           	 Filename/URL
 2012-10-11 ----- 2012-10-12
 2012-10-11 ----- 2012-10-15
 
-(*) the log for "2012-10-11" is found in the file/URL "2012-10-12" and 
+(*) the log for "2012-10-11" is found in the file/URL "2012-10-12" and
 "2012-10-15" but not in "2012-10-11".
 ```
 
@@ -38,14 +38,11 @@ Log           	 Filename/URL
 
 Third, the filenames/URLs for logs from October 13 through December 31 2012 are offset by +3 days. For example, the log for "2012-11-28" is found in the file/URL "2012-12-01".
 
-
 ## 'cranlogs' and duplicate logs
 
-Functions that rely on 'cranlogs' will be susceptible to duplicate logs (same log, different name). For example, because the log for "2012-10-07" exists in two files "2012-10-07" and "2012-10-11" and because 'cranlogs' doesn't seem to use the file/URLs, the log for "2012-10-07" is present twice and gets double counted. Above, I found 3 instances of the same log with different names. 
+Functions that rely on 'cranlogs' will be susceptible to duplicate logs (same log, different name). For example, because the log for "2012-10-07" exists in two files "2012-10-07" and "2012-10-11" and because 'cranlogs' doesn't seem to use the file/URLs, the log for "2012-10-07" is present twice and gets double counted. Above, I found 3 instances of the same log with different names.
 
-
-I include fixDate_2012() here because it is not exported to NAMESPACE.
-
+I include `fixDate_2012()` here because it is not exported to NAMESPACE.
 
 ```{r, fixDate_2012}
 fixDate_2012 <- function(date = "2012-12-31") {
@@ -74,7 +71,6 @@ fixDate_2012 <- function(date = "2012-12-31") {
 }
 ```
 
-
 ```{r, data}
 start.date <- "2012-10-01"
 end.date <- "2013-01-05"
@@ -86,8 +82,8 @@ d <- seq(from = as.Date(start.date), to = as.Date(end.date), by = "day")
 # fetchCranLog() retrieves RStudio download logs
 # fixDate_2012() fixes filename/URLs so you get the log for the date you want
 
-# The expression below retrieves the logs directly from RStudio and counts the 
-# number of rows in the log (i.e., number of downloads), excluding those rows 
+# The expression below retrieves the logs directly from RStudio and counts the
+# number of rows in the log (i.e., number of downloads), excluding those rows
 # where the package is NA.
 
 packageRank.data <- vapply(d, function(x) {
@@ -109,5 +105,3 @@ errors$ratio <- errors$cranlogs / errors$packageRank
 
 errors
 ```
-
-
