@@ -113,11 +113,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       cranlogs.data <- data.frame(date = dts, count = c(count),
         cumulative = c(cumulative), platform = plt, row.names = NULL)
     } else {
-      cumulative <- lapply(unique(cranlogs.data$package), function(pkg) {
+      cumulative <- unlist(lapply(packages, function(pkg) {
         cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
-      })
+      }))
       cranlogs.data <- cbind(cranlogs.data[, c("date", "count")],
-        unlist(cumulative), cranlogs.data$package)
+        cumulative, cranlogs.data$package)
       sel <- (ncol(cranlogs.data) - 1):ncol(cranlogs.data)
       names(cranlogs.data)[sel] <- c("cumulative", "package")
     }
@@ -143,9 +143,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (is.null(packages)) {
         cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
       } else {
-        cumulative <- vapply(packages, function(p) {
+        cumulative <- unlist(lapply(packages, function(p) {
           cumsum(cranlogs.data[cranlogs.data$package == p, "count"])
-        }, integer(1L))
+        }))
         cranlogs.data <- cbind(cranlogs.data[, c("date", "count")], cumulative,
           cranlogs.data$package)
         names(cranlogs.data)[ncol(cranlogs.data)] <- "package"
