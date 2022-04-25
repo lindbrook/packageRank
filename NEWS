@@ -1,3 +1,10 @@
+packageRank 0.6.0.9012
+==================
+
+- amend fixCranlogs() for multiple packages using for loop.
+- add end.date.test in cranDownload(to = ).
+
+
 packageRank 0.6.0.9011
 ==================
 
