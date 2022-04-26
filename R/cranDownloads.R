@@ -77,8 +77,15 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         message("Logs for R download begin ", first.r_log, ".")
       }
     }
-    if (!is.null(to)) end.date <- resolveDate(to, type = "to")
-    else end.date <- cal.date
+    if (!is.null(to)) {
+      end.date <- resolveDate(to, type = "to")
+      end.date.test <- first.published > end.date
+      if (any(end.date.test)) {
+        drop.pkgs <- paste(packages[end.date.test], collapse = ", ")
+        message("Note: ", drop.pkgs, " not published by selected end date.")
+        packages <- packages[!end.date.test]
+      }
+    } else end.date <- cal.date
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
     args <- list(packages = packages, from = start.date, to = end.date)
   } else if (is.null(when) & !is.null(to)) {

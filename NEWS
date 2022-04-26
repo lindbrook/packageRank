@@ -1,7 +1,7 @@
 packageRank 0.6.0.9013
 ==================
 
-- add/use end.date.test in cranDownload(to = ).
+- add/use end.date.test in cranDownload(from = ) and cranDownload(to = ).
 
 
 packageRank 0.6.0.9012
