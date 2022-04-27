@@ -84,6 +84,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         drop.pkgs <- paste(packages[end.date.test], collapse = ", ")
         message("Note: ", drop.pkgs, " not published by selected end date.")
         packages <- packages[!end.date.test]
+        first.published <- first.published[!end.date.test]
       }
     } else end.date <- cal.date
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
