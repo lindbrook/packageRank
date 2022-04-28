@@ -26,7 +26,7 @@ I discuss these topics in four sections; a fifth discusses package related issue
 * [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
 * [III Package Download Filters](#iii---filtering-package-download-counts) describes the functions that filter out software and behavioral artifacts from the download logs which contribute to inflated download counts.
 * [IV Other Functions](#iv---other-functions) describes six other ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions that help you better understand interest in your package.
-* [V Notes](#v---notes) discusses issues associated with country code top-level domains, memoization, time zone effects, and the internet connection time out problem.
+* [V Notes](#v---notes) discusses issues associated with country code top-level domains; the direct use of and problems with RStudio log files; memoization; time zones and `logInfo()`; and the internet connection time out problem.
 
 ### getting started
 
@@ -55,7 +55,7 @@ If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they'
 
 If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs.
 
-Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner). For more details, see the "time zones" section in [V Notes](#v---notes).
+Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner). For more details, see the "time zones and `logInfo()`" section in [V Notes](#v---notes).
 
 ### I - computing package download counts
 
@@ -654,9 +654,9 @@ Six other functions (some used above) may be of interest: 1) `packageDistributio
 
 While IP addresses are anonymized, `packageCountry()` and `countryPackage()` make use of the fact that the logs provide corresponding ISO country codes or top level domains (e.g., AT, JP, US). Note that coverage extends to about 85% of observations (i.e., approximately 15% country codes are NA). Also, for what it's worth, there seems to be a a couple of typos for country codes: "A1" (A + number one) and "A2" (A + number 2). According to [RStudio's documentation](http://cran-logs.rstudio.com/), this coding was done using MaxMind's free database, which no longer seems to be available and may be a bit out of date.
 
-#### log files 2012/13
+#### log files (2012/13), `fixDate_2012()`, and `fixCranlogs()`
 
-For those who may be interested in directly using the [RStudio download logs](http://cran-logs.rstudio.com/), this section describes some issues that may be of use.
+For those interested in directly using the [RStudio download logs](http://cran-logs.rstudio.com/), this section describes some issues that may be of use.
 
 The logs begin on 01 October 2012. Each day's log is stored as a separate file with a name/URL that embeds the log's date:
 
@@ -692,7 +692,7 @@ if (RCurl::url.exists(url)) {
 
 This means that logs are intelligently cached; those that have already been downloaded in your current R session will not be downloaded again.
 
-#### time zones
+#### time zones and `logInfo()`
 
 The calendar date (e.g. "2021-01-01") is the unit of observation for ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions. However, because you're typically in _today's_ log file, time zone differences come into play.
 
