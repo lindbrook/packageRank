@@ -128,30 +128,54 @@ With `cranDownloads()`, you can just specify the year and month:
 cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 ```
 
-##### "yyyy" or yyyy
-Let's say you want the year-to-date download counts for ['rstan'](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
+##### yyyy or "yyyy"
+Let's say you want the download counts for ['rstan'](https://CRAN.R-project.org/package=rstan) for 2020. With `cranlogs::cran_downloads()`, you'd type something like:
 
 ```{r yyyy_1, eval = FALSE}
 cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
-  to = Sys.Date() - 1)
+  to = "2022-12-31")
 ```
 
 <br/>
 With `cranDownloads()`, you can use:
 
 ```{r yyyy_2, eval = FALSE}
-cranDownloads(packages = "rstan", from = "2022")
+cranDownloads(packages = "rstan", from = 2020, to = 2020)
 ```
 
 or
 
 ```{r yyyy_3, eval = FALSE}
-cranDownloads(packages = "rstan", from = 2022)
+cranDownloads(packages = "rstan", from = "2020", to = "2020")
 ```
 
 <br/>
 
-#### iii) check date validity
+#### iii) shortcuts with `from = ` and `to = ` in `cranDownloads()`
+
+These additional date formats help to create convenient shortcuts. Let's say you want the year-to-date download counts for ['rstan'](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
+
+```{r yyyy_4, eval = FALSE}
+cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
+  to = Sys.Date() - 1)
+```
+
+<br/>
+With `cranDownloads()`, you can just pass the current year to `from =`:
+
+```{r yyyy_5, eval = FALSE}
+cranDownloads(packages = "rstan", from = 2022)
+```
+
+And if you wanted the entire download history, pass the current year to `to =`:
+
+```{r yyyy_6, eval = FALSE}
+cranDownloads(packages = "rstan", to = 2022)
+```
+
+Note that because the RStudio logs begin on 01 October 2012, download data for packages published before that date are unavailable.
+
+#### iv) check date validity
 
 ```{r check_date, eval = FALSE}
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -161,7 +185,7 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ## Error in resolveDate(to, type = "to") : Not a valid date.
 ```
 
-#### iv) cumulative count
+#### v) cumulative count for selected time frame
 
 ```{r cranDownloads_cumulative, eval = FALSE}
 cranDownloads(packages = "HistData", when = "last-week")
