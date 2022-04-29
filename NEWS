@@ -1,7 +1,7 @@
 packageRank 0.6.0.9014
 ==================
 
-- add discussion of shortcuts with 'from = '  and 'to = ' in cranDownloads() in
+- add discussion of shortcuts with 'from = ' and 'to = ' in cranDownloads() in
   README.
 
 
