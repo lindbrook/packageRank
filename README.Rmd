@@ -43,19 +43,25 @@ To install the development version from GitHub:
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream online dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is an interface to a database that computes R and R package download counts using the aforementioned logs.
+Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two sets of online upstream dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is an interface to a database that computes R and R package download counts using the aforementioned logs.
 
-When everything is working right, the [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day will be posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) will be available soon after. However, occasionally problems with "today's" data can emerge due to the downstream nature of the dependencies (illustrated below).
+When everything is working right, the [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day will be posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) will be available soon after. 
+
+However, occasionally problems with "today's" data can emerge due to the downstream nature of the dependencies (illustrated below).
 
 ```
 CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 ```
 
-If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. Here, depending on the function you'll see things like an unexpected zero count(s) for your package(s) (actually, it's zero downloads for all of CRAN), data from "yesterday", or a "Log is not (yet) on the server" error message.
+If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. Here, you'll see things like an unexpected zero count(s) for your package(s) (actually, it'll be zero downloads for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
 
-If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs.
+```
+'cranlogs' --> packageRank::cranDownloads()
+```
 
-Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner). For more details, see the "time zones and `logInfo()`" section in [V Notes](#v---notes).
+If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs or other sources.
+
+Usually, these errors resolve themselves when the underlying scripts are run ("tomorrow", if not sooner). For more details, see the "time zones and `logInfo()`" section in [V Notes](#v---notes).
 
 ### I - computing package download counts
 
