@@ -30,7 +30,7 @@ I discuss these topics in four sections; a fifth discusses package related issue
 
 ### getting started
 
-To install ['packageRank'](https://cran.r-project.org/package=packageRank) from CRAN:
+To install ['packageRank'](https://cran.r-project.org/package=packageRank) from [CRAN](https://cran.r-project.org/):
 
 ```{r cran_install, eval = FALSE}
 install.packages("packageRank")
@@ -111,7 +111,7 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 
 #### ii) two additional date formats
 
-With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
+With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or yyyy ("yyyy" also works).
 
 ##### "yyyy-mm"
 Let's say you want the download counts for ['HistData'](https://CRAN.R-project.org/package=HistData) for February 2020. With `cranlogs::cran_downloads()`, you'd have to type out the whole date and remember that 2020 was a leap year:
@@ -188,7 +188,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-If you pass a vector of package names for multiple days, `plot()` uses `ggplot2` facets:
+If you pass a vector of package names for multiple days, `plot()` uses ['ggplot2'](https://CRAN.R-project.org/package=ggplot2) facets:
 
 ```{r cranDownloads_viz2, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -567,7 +567,7 @@ packageLog(date = "2020-07-01")[4:6, -(4:6)]
 
 The "medium" entry is the first observation (99,622 bytes). The full download is the second entry (4,161,948 bytes). The "small" entry is the last observation (536 bytes). At a minimum, what makes a triplet a triplet (or a pair a pair) is that all members share system configuration (e.g. IP address, etc.) and have identical or adjacent time stamps.
 
-To deal with the inflationary effect of "small" entries, I filter out observations smaller than 1,000 bytes (the smallest package on CRAN appears to be ['source.gist'](https://cran.r-project.org/package=source.gist), which weighs in at 1,200 bytes). "Medium" entries are harder to handle. I remove them using either a triplet-specific filter or a filter that looks up a package's actual size.
+To deal with the inflationary effect of "small" entries, I filter out observations smaller than 1,000 bytes (the smallest package on [CRAN](https://cran.r-project.org/) appears to be ['source.gist'](https://cran.r-project.org/package=source.gist), which weighs in at 1,200 bytes). "Medium" entries are harder to handle. I remove them using either a triplet-specific filter or a filter that looks up a package's actual size.
 
 #### behavioral artifacts
 
@@ -642,11 +642,11 @@ packageRank(package = "cholera", all.filters = TRUE)
 
 Note that the `all.filters = TRUE` is contextual. Depending on the function used, you'll either get the CRAN-specific or the package-specific set of filters. The former sets `ip.filter = TRUE` and `size.filter = TRUE`; it works independently of packages at the level of the entire log. The latter sets `triplet.filter = TRUE`, `sequence.filter = TRUE` and `size.filter TRUE`; it relies on package specific information (e.g., size of source or binary file).
 
-Ideally, we'd like to use both sets. However, the package-specific set is computationally expensive because they need to be applied individually to all packages in the log, which can involve tens of thousands of packages. While not unfeasible, currently this takes a long time. For this reason, when `all.filters = TRUE`, `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()` use only CRAN specific filters while `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both CRAN and package specific filters.
+Ideally, we'd like to use both sets. However, the package-specific set is computationally expensive because they need to be applied individually to all packages in the log, which can involve tens of thousands of packages. While not unfeasible, currently this takes a long time. For this reason, when `all.filters = TRUE`, `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()` use only CRAN specific filters while `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both [CRAN](https://cran.r-project.org/) and package specific filters.
 
 ### IV - other functions
 
-Six other functions (some used above) may be of interest: 1) `packageDistribution()` plots the location of your package in the overall frequency distribution of package downloads; 2) `packageHistory()` retrieves your package"s release history; 3) `packageLog()` extracts your package's entries from the CRAN download counts log; 4) `filteredDownloads()` computes an estimate of your package's download count inflation (computationally intensive!) and 5 & 6) `bioconductorDownloads()` and `bioconductorRank()` offer analogous but limited functionality to the two primary functions.
+Six other functions (some used above) may be of interest: 1) `packageDistribution()` plots the location of your package in the overall frequency distribution of package downloads; 2) `packageHistory()` retrieves your package"s release history; 3) `packageLog()` extracts your package's entries from the [CRAN](https://cran.r-project.org/) download counts log; 4) `filteredDownloads()` computes an estimate of your package's download count inflation (computationally intensive!) and 5 & 6) `bioconductorDownloads()` and `bioconductorRank()` offer analogous but limited functionality to the two primary functions.
 
 ### V - notes
 
