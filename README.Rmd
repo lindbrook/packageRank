@@ -26,11 +26,11 @@ I discuss these topics in four sections; a fifth discusses package related issue
 * [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
 * [III Package Download Filters](#iii---filtering-package-download-counts) describes the functions that filter out software and behavioral artifacts from the download logs which contribute to inflated download counts.
 * [IV Other Functions](#iv---other-functions) describes six other ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions that help you better understand interest in your package.
-* [V Notes](#v---notes) discusses issues associated with country code top-level domains, memoization, time zone effects, and the internet connection time out problem.
+* [V Notes](#v---notes) discusses issues associated with country code top-level domains; the direct use of and problems with RStudio log files; memoization; time zones and `logInfo()`; and the internet connection time out problem.
 
 ### getting started
 
-To install ['packageRank'](https://cran.r-project.org/package=packageRank) from CRAN:
+To install ['packageRank'](https://cran.r-project.org/package=packageRank) from [CRAN](https://cran.r-project.org/):
 
 ```{r cran_install, eval = FALSE}
 install.packages("packageRank")
@@ -43,19 +43,25 @@ To install the development version from GitHub:
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream online dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is an interface to a database that computes R and R package download counts using the aforementioned logs.
+Note that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two sets of online upstream dependencies: 1) RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which records traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly RStudio's CRAN mirror); and 2) Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which is an interface to a database that computes R and R package download counts using the aforementioned logs.
 
-When everything is working right, the [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day will be posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) will be available soon after. However, occasionally problems with "today's" data can emerge due to the downstream nature of the dependencies (illustrated below).
+When everything is working right, the [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day will be posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) will be available soon after. 
+
+However, occasionally problems with "today's" data can emerge due to the downstream nature of the dependencies (illustrated below).
 
 ```
 CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 ```
 
-If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. Here, depending on the function you'll see things like an unexpected zero count(s) for your package(s) (actually, it's zero downloads for all of CRAN), data from "yesterday", or a "Log is not (yet) on the server" error message.
+If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. Here, you'll see things like an unexpected zero count(s) for your package(s) (actually, it'll be zero downloads for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
 
-If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs.
+```
+'cranlogs' --> packageRank::cranDownloads()
+```
 
-Usually, these errors resolve themselves the next time the underlying scripts are run (typically "tomorrow", if not sooner). For more details, see the "time zones" section in [V Notes](#v---notes).
+If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they directly access the logs or other sources.
+
+Usually, these errors resolve themselves when the underlying scripts are run ("tomorrow", if not sooner). For more details, see the "time zones and `logInfo()`" section in [V Notes](#v---notes).
 
 ### I - computing package download counts
 
@@ -111,7 +117,7 @@ cranDownloads(packages = "VR", from = "2020-05-01", to = "2020-05-01")
 
 #### ii) two additional date formats
 
-With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or "yyyy" (yyyy also works).
+With `cranlogs::cran_downloads()`, you specify a time frame using the `from` and `to` arguments. The downside of this is that you _must_ use the "yyyy-mm-dd" date format. For convenience's sake, `cranDownloads()` also allows you to use "yyyy-mm" or yyyy ("yyyy" also works).
 
 ##### "yyyy-mm"
 Let's say you want the download counts for ['HistData'](https://CRAN.R-project.org/package=HistData) for February 2020. With `cranlogs::cran_downloads()`, you'd have to type out the whole date and remember that 2020 was a leap year:
@@ -128,30 +134,54 @@ With `cranDownloads()`, you can just specify the year and month:
 cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
 ```
 
-##### "yyyy" or yyyy
-Let's say you want the year-to-date download counts for ['rstan'](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
+##### yyyy or "yyyy"
+Let's say you want the download counts for ['rstan'](https://CRAN.R-project.org/package=rstan) for 2020. With `cranlogs::cran_downloads()`, you'd type something like:
 
 ```{r yyyy_1, eval = FALSE}
 cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
-  to = Sys.Date() - 1)
+  to = "2022-12-31")
 ```
 
 <br/>
 With `cranDownloads()`, you can use:
 
 ```{r yyyy_2, eval = FALSE}
-cranDownloads(packages = "rstan", from = "2022")
+cranDownloads(packages = "rstan", from = 2020, to = 2020)
 ```
 
 or
 
 ```{r yyyy_3, eval = FALSE}
-cranDownloads(packages = "rstan", from = 2022)
+cranDownloads(packages = "rstan", from = "2020", to = "2020")
 ```
 
 <br/>
 
-#### iii) check date validity
+#### iii) shortcuts with `from = ` and `to = ` in `cranDownloads()`
+
+These additional date formats help to create convenient shortcuts. Let's say you want the year-to-date download counts for ['rstan'](https://CRAN.R-project.org/package=rstan). With `cranlogs::cran_downloads()`, you'd type something like:
+
+```{r yyyy_4, eval = FALSE}
+cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
+  to = Sys.Date() - 1)
+```
+
+<br/>
+With `cranDownloads()`, you can just pass the current year to `from =`:
+
+```{r yyyy_5, eval = FALSE}
+cranDownloads(packages = "rstan", from = 2022)
+```
+
+And if you wanted the entire download history, pass the current year to `to =`:
+
+```{r yyyy_6, eval = FALSE}
+cranDownloads(packages = "rstan", to = 2022)
+```
+
+Note that because the RStudio logs begin on 01 October 2012, download data for packages published before that date are unavailable.
+
+#### iv) check date validity
 
 ```{r check_date, eval = FALSE}
 cranDownloads(packages = "HistData", from = "2019-01-15",
@@ -161,7 +191,7 @@ cranDownloads(packages = "HistData", from = "2019-01-15",
 ## Error in resolveDate(to, type = "to") : Not a valid date.
 ```
 
-#### iv) cumulative count
+#### v) cumulative count for selected time frame
 
 ```{r cranDownloads_cumulative, eval = FALSE}
 cranDownloads(packages = "HistData", when = "last-week")
@@ -188,7 +218,7 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-If you pass a vector of package names for multiple days, `plot()` uses `ggplot2` facets:
+If you pass a vector of package names for multiple days, `plot()` uses ['ggplot2'](https://CRAN.R-project.org/package=ggplot2) facets:
 
 ```{r cranDownloads_viz2, fig.align = "center"}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
@@ -204,49 +234,32 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 ```
 
 <br/>
-If you want plot those data in separate plots but use the same scale, set `graphics = "base"` (you'll be prompted for each plot):
+If you want plot those data in separate plots but use the same scale, set `graphics = "base"` and you'll be prompted for each plot:
 
 ```{r cranDownloads_viz4, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-If you want do the above on separate independent scales, set `same.xy = FALSE`:
+If you want do the above but on separate independent scales, set `same.xy = FALSE`:
 
 ```{r cranDownloads_viz5, eval = FALSE}
 plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
 
-#### unit of observation
-
-If you want to visualize the data from a unit of observation other than the default ("day"), pass "month", or "year" to the `unit.observation` argument. For example, below is the plot for the daily downloads of [‘HistData'](https://CRAN.R-project.org/package=HistData) from January 2021 through December 15 2021.
-
-```{r day}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"))
-```
-
-Here is the plot for the same data aggregated by month:
-
-```{r month}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
-  unit.observation = "month")
-```
-
-There are three things to notice with these aggregated plots. First, if an aggregate observation is still in-progress (e.g., in the plot above, we've only seen the first half of December), that observation is split into two separate points: 1) a "grayed-out" point for the in-progress or observed total (the black empty square) and 2) a highlighted point for the projected or estimated total (the red empty circle). The estimate is based on how much the unit of observation is completed. In the plot above, there are 2,708 downloads between December 1 and December 15. Thus, the estimate for the whole month is 5,597 or 31 / 15 * 2708. Second, all other points represents the total count at the end of an aggregate period. For example, the first solid point, on the far left, records the total download count for the month January and is plotted on January 31. Third, if you include a smoother, using the `smooth = TRUE` argument, the curve only uses complete, not in-progress, data.
-
 #### logarithm of download counts
 
 To use the base 10 logarithm of the download count in a plot, set `log.count = TRUE`:
 
 ```{r log_count}
-plot(cranDownloads(packages = "HistData", from = "2021", to = "2021-12-15"),
+plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"),
   log.count = TRUE)
 ```
 
 #### `packages = NULL`
 
-`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from CRAN. You can plot these data by using:
+`cranlogs::cran_download(packages = NULL)` computes the total number of package downloads from [CRAN](https://cran.r-project.org/). You can plot these data by using:
 
 ```{r null_packages}
 plot(cranDownloads(from = 2019, to = 2019))
@@ -322,8 +335,33 @@ plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE, population.seed = 1)
 ```
 
-This longitudinal view of package downloads plots the date (x-axis) against the base 10 logarithm of the selected package's downloads (y-axis). To get a sense of how the selected package's performance stacks up against all other packages, a set of smoothed curves representing a stratified random sample of packages is plotted in gray in the background (the "typical" pattern of downloads on CRAN for the selected time period). Specifically, within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked.
+This longitudinal view of package downloads plots the date (x-axis) against the base 10 logarithm of the selected package's downloads (y-axis). To get a sense of how the selected package's performance stacks up against all other packages, a set of smoothed curves representing a stratified random sample of packages is plotted in gray in the background (the "typical" pattern of downloads on [CRAN](https://cran.r-project.org/) for the selected time period). Specifically, within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked.
 
+#### unit of observation
+
+The default unit of observation for `cranDownloads()` is the "day". Sometimes, however, viewing the data from a less granular perspectives can be illuminating. To do so, pass "month", or "year" to the function's `unit.observation` argument.
+
+Consider the example below. In the first graph, I plot the daily downloads for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) over its entire history (let's imagine today's date is "2022-04-15").
+
+```{r day, eval = FALSE, echo = TRUE}
+plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE)
+```
+```{r day_code, eval = TRUE, echo = FALSE}
+plot(cranDownloads(packages = "cranlogs", to = "2022-04-15"), package.version = TRUE)
+```
+
+Here's the plot for the same data aggregated by month (with a smoother added):
+
+```{r month, eval = FALSE, echo = TRUE}
+plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE,
+  smooth = TRUE, unit.observation = "month")
+```
+```{r month_code, eval = TRUE, echo = FALSE}
+plot(cranDownloads(packages = "cranlogs", to = "2022-04-15"),
+	package.version = TRUE, smooth = TRUE, unit.observation = "month")
+```
+
+Three things to notice about the aggregated plot. First, if an observation is still in-progress, that observation will be split in two (far right): 1) a point for the in-progress total (the black empty square) and 2) a point for the projected or estimated total (the red empty circle). The estimate is based on the proportion of the unit of observation completed. In the plot above, the 635 total downloads from April 1 through April 15 translates into an estimate of 1,270 downloads for the entire month (30 / 15 * 635). Second, all other points (if plotted) represent the total count at the end of an aggregate period. For example, the first observation (far left) records the total download count for ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) for its first month on [CRAN](https://cran.r-project.org/) (May 2015). Not that each point is plotted on the x-axis on the final date of the aggregate period (on May 31 for the example above). Third, if you include a smoother, the curve only uses complete, not in-progress data.
 
 ### II - computing package download rank percentiles
 
@@ -567,7 +605,7 @@ packageLog(date = "2020-07-01")[4:6, -(4:6)]
 
 The "medium" entry is the first observation (99,622 bytes). The full download is the second entry (4,161,948 bytes). The "small" entry is the last observation (536 bytes). At a minimum, what makes a triplet a triplet (or a pair a pair) is that all members share system configuration (e.g. IP address, etc.) and have identical or adjacent time stamps.
 
-To deal with the inflationary effect of "small" entries, I filter out observations smaller than 1,000 bytes (the smallest package on CRAN appears to be ['source.gist'](https://cran.r-project.org/package=source.gist), which weighs in at 1,200 bytes). "Medium" entries are harder to handle. I remove them using either a triplet-specific filter or a filter that looks up a package's actual size.
+To deal with the inflationary effect of "small" entries, I filter out observations smaller than 1,000 bytes (the smallest package on [CRAN](https://cran.r-project.org/) appears to be ['source.gist'](https://cran.r-project.org/package=source.gist), which weighs in at 1,200 bytes). "Medium" entries are harder to handle. I remove them using either a triplet-specific filter or a filter that looks up a package's actual size.
 
 #### behavioral artifacts
 
@@ -642,11 +680,11 @@ packageRank(package = "cholera", all.filters = TRUE)
 
 Note that the `all.filters = TRUE` is contextual. Depending on the function used, you'll either get the CRAN-specific or the package-specific set of filters. The former sets `ip.filter = TRUE` and `size.filter = TRUE`; it works independently of packages at the level of the entire log. The latter sets `triplet.filter = TRUE`, `sequence.filter = TRUE` and `size.filter TRUE`; it relies on package specific information (e.g., size of source or binary file).
 
-Ideally, we'd like to use both sets. However, the package-specific set is computationally expensive because they need to be applied individually to all packages in the log, which can involve tens of thousands of packages. While not unfeasible, currently this takes a long time. For this reason, when `all.filters = TRUE`, `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()` use only CRAN specific filters while `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both CRAN and package specific filters.
+Ideally, we'd like to use both sets. However, the package-specific set is computationally expensive because they need to be applied individually to all packages in the log, which can involve tens of thousands of packages. While not unfeasible, currently this takes a long time. For this reason, when `all.filters = TRUE`, `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()` use only CRAN specific filters while `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both [CRAN](https://cran.r-project.org/) and package specific filters.
 
 ### IV - other functions
 
-Six other functions (some used above) may be of interest: 1) `packageDistribution()` plots the location of your package in the overall frequency distribution of package downloads; 2) `packageHistory()` retrieves your package"s release history; 3) `packageLog()` extracts your package's entries from the CRAN download counts log; 4) `filteredDownloads()` computes an estimate of your package's download count inflation (computationally intensive!) and 5 & 6) `bioconductorDownloads()` and `bioconductorRank()` offer analogous but limited functionality to the two primary functions.
+Six other functions (some used above) may be of interest: 1) `packageDistribution()` plots the location of your package in the overall frequency distribution of package downloads; 2) `packageHistory()` retrieves your package"s release history; 3) `packageLog()` extracts your package's entries from the [CRAN](https://cran.r-project.org/) download counts log; 4) `filteredDownloads()` computes an estimate of your package's download count inflation (computationally intensive!) and 5 & 6) `bioconductorDownloads()` and `bioconductorRank()` offer analogous but limited functionality to the two primary functions.
 
 ### V - notes
 
@@ -654,9 +692,9 @@ Six other functions (some used above) may be of interest: 1) `packageDistributio
 
 While IP addresses are anonymized, `packageCountry()` and `countryPackage()` make use of the fact that the logs provide corresponding ISO country codes or top level domains (e.g., AT, JP, US). Note that coverage extends to about 85% of observations (i.e., approximately 15% country codes are NA). Also, for what it's worth, there seems to be a a couple of typos for country codes: "A1" (A + number one) and "A2" (A + number 2). According to [RStudio's documentation](http://cran-logs.rstudio.com/), this coding was done using MaxMind's free database, which no longer seems to be available and may be a bit out of date.
 
-#### log files 2012/13
+#### log files (2012/13), `fixDate_2012()`, and `fixCranlogs()`
 
-For those who may be interested in directly using the [RStudio download logs](http://cran-logs.rstudio.com/), this section describes some issues that may be of use.
+For those interested in directly using the [RStudio download logs](http://cran-logs.rstudio.com/), this section describes some issues that may be of use.
 
 The logs begin on 01 October 2012. Each day's log is stored as a separate file with a name/URL that embeds the log's date:
 
@@ -664,13 +702,15 @@ The logs begin on 01 October 2012. Each day's log is stored as a separate file w
 http://cran-logs.rstudio.com/2022/2022-01-01.csv.gz
 ```
 
-For the logs of 2012, this convention was broken: 1) some logs are duplicated (same log, multiple names), 2) at least one is mis-labelled, and 3) the logs from 13 October through 28 December are offset by +3 days (e.g., the file with the name/URL "2012-12-01" contains the log for "2012-11-28"). You can read the details [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md). Fortunately despite all this, only the last 3 logs of 2012 were lost.
+For the logs of 2012, this convention was broken: 1) some logs are duplicated (same log, multiple names), 2) at least one is mis-labelled, and 3) the logs from 13 October through 28 December are offset by +3 days (e.g., the file with the name/URL "2012-12-01" contains the log for "2012-11-28"). You can read the details [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md). Despite all this, only the last 3 logs of 2012 were lost.
 
-For 'packageRank' functions that access logs through their filename/URL, like `packageRank()` or `packageLog()`, [fixDate_2012()](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R) re-maps and resolves the issues above so that you'll get the log you expect.
+For ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions that directly access logs via their filename/URL, like `packageRank()` or `packageLog()`, [fixDate_2012()](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R) re-maps and resolves the issues above so that you'll get the log you expect.
 
-The situation for `packageRank::cranDownloads()` is different because that function is a modified wrapper of `cranlogs::cran_download()`. As such, it is dependent on 'cranlogs'. On the plus side, it's my understanding that 'cranlogs' uses the date in the log rather than log's filename/URL. This means that 'cranlogs' and any functions and packages that depend on it (i.e., 'adjustedcranlogs', 'dlstats', `packageRank::cranDownloads()`) will not be affected by the second and third problem. On the minus side, it's likely that functions and packages that depend on 'cranlogs' will be susceptible to the duplicate log problem. Because it relies on the date in the log and ignores the log's name/URL, 'cranlogs' can't detect multiple instances of a given date's log. While I found 3 logs with duplicate filename/URLs, my analysis turned up 5 additional instances of overcounting (including one tripling).
+The situation for `packageRank::cranDownloads()` is different because that function is a modified wrapper of `cranlogs::cran_download()`. On the plus side, it's not affected by the second and third problems. It's my understanding that this is because ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) uses the date in the log rather than log's filename/URL. On the minus side, it's likely that functions and packages that depend on ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) (e.g., ['adjustedcranlogs'](https://CRAN.R-project.org/package=adjustedcranlogs), ['dlstats'](https://CRAN.R-project.org/package=dlstats), [`packageRank::cranDownloads()`](https://github.com/lindbrook/packageRank/blob/master/R/cranDownloads.R)) will be susceptible to the duplicate log problem.
 
-I've patched `packageRank::cranDownloads()` with [fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R) to fix this overcounting problem. The function recomputes the data using the actual logs when any of the eight problematic dates are requested. The details about the 8 days and `fixCranlogs()` can be found [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
+Because ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) relies on the date in the log and effectively ignores the log's name/URL, it appears that ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) can't detect multiple instances of the same date's log. While I found 3 logs with duplicate filename/URLs, my analysis turned up 5 additional instances of overcounting (including one of tripling).
+
+I've patched this overcounting problem in [`packageRank::cranDownloads()`](https://github.com/lindbrook/packageRank/blob/master/R/cranDownloads.R) with [fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R). This function recomputes the data using the actual logs when any of the eight problematic dates are requested. The details about the 8 days and `fixCranlogs()` can be found [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
 #### memoization
 
@@ -692,7 +732,7 @@ if (RCurl::url.exists(url)) {
 
 This means that logs are intelligently cached; those that have already been downloaded in your current R session will not be downloaded again.
 
-#### time zones
+#### time zones and `logInfo()`
 
 The calendar date (e.g. "2021-01-01") is the unit of observation for ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions. However, because you're typically in _today's_ log file, time zone differences come into play.
 
