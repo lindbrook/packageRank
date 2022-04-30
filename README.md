@@ -470,10 +470,10 @@ for the entire month (30 / 15 \* 635). Second, all other points (if
 plotted) represent the total count at the end of an aggregate period.
 For example, the first observation (far left) records the total download
 count for [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) for
-its first month on [CRAN](https://cran.r-project.org/) (May 2015). Not
+its first month on [CRAN](https://cran.r-project.org/) (May 2015). Note
 that each point is plotted on the x-axis on the final date of the
-aggregate period (on May 31 for the example above). Third, if you
-include a smoother, the curve only uses complete, not in-progress data.
+aggregate period (May 31 in the example above). Third, if you include a
+smoother, the curve only uses complete, not in-progress data.
 
 ### II - computing package download rank percentiles
 
