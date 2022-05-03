@@ -53,9 +53,15 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     packages <- packages[!unobs.pkgs]
   }
 
-  out <- parallel::mclapply(packages, function(p) {
-    cran_log[cran_log$package == p, ]
-  }, mc.cores = cores)
+  if (.Platform$OS.type == "windows") {
+    out <- lapply(packages, function(p) {
+      cran_log[cran_log$package == p, ]
+    })
+  } else {
+    out <- parallel::mclapply(packages, function(p) {
+      cran_log[cran_log$package == p, ]
+    }, mc.cores = cores)
+  }
 
   if (any(pkg_specific_filters)) {
     if (triplet.filter) {
