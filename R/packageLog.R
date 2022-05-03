@@ -86,12 +86,21 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     }
   }
 
-  out <- parallel::mclapply(out, function(x) {
-    if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
-    tmp <- x[order(x$date.time), ]
-    tmp$date.time <- NULL
-    tmp
-  }, mc.cores = cores)
+  if (.Platform$OS.type == "windows") {
+    out <- lapply(out, function(x) {
+      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
+      tmp <- x[order(x$date.time), ]
+      tmp$date.time <- NULL
+      tmp
+    })
+  } else {
+    out <- parallel::mclapply(out, function(x) {
+      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
+      tmp <- x[order(x$date.time), ]
+      tmp$date.time <- NULL
+      tmp
+    }, mc.cores = cores)
+  }
 
   names(out) <- packages
 
