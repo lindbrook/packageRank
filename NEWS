@@ -1,3 +1,11 @@
+packageRank 0.6.0.9016
+==================
+
+- use packageLog(multi.core = cores) in filteredDownloads().
+- add another Windows exception in packageLog().
+- return cores = 1L on Windows with multiCore().
+
+
 packageRank 0.6.0.9015
 ==================
 
