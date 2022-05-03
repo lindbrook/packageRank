@@ -37,7 +37,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
     all.filters = all.filters, ip.filter = ip.filter,
     triplet.filter = triplet.filter, small.filter = small.filter,
     sequence.filter = sequence.filter, size.filter = size.filter,
-    memoization = memoization, multi.core = multi.core)
+    memoization = memoization, multi.core = cores)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)
