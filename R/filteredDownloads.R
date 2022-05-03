@@ -32,11 +32,12 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
     ct <- vapply(cran_log, nrow, integer(1L))
   }
 
+  if (.Platform$OS.type == "windows") cores <- 1L
   f.cran_log <- packageLog(packages = packages, date = ymd,
     all.filters = all.filters, ip.filter = ip.filter,
     triplet.filter = triplet.filter, small.filter = small.filter,
     sequence.filter = sequence.filter, size.filter = size.filter,
-    memoization = memoization, multi.core = multi.core)
+    memoization = memoization, multi.core = cores)
 
   if (is.data.frame(f.cran_log)) {
     f.ct <- nrow(f.cran_log)
