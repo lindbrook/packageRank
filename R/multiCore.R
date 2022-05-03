@@ -23,5 +23,6 @@ multiCore <- function(x = TRUE) {
       }
     } else stop("'x' must either be logical or numeric.")
   }
+  if (.Platform$OS.type == "windows") cores <- 1L
   cores
 }
