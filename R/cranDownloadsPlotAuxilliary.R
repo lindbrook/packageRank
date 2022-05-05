@@ -51,8 +51,28 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
+      do.call(rbind, out)
+    } else if (unit.observation == "week") {
+      out <- parallel::mclapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
+        unit <- as.Date(cut(tmp$date, breaks = "week", start.on.monday = FALSE))
+        unit.ct <- tapply(tmp$count, unit, sum)
+        grp.data <- data.frame(unit.obs = names(unit.ct),
+          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+          date = unique(unit), group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
+      }, mc.cores = cores)
+      do.call(rbind, out)
     }
-    do.call(rbind, out)
   } else {
     if (unit.observation == "year") {
       unit <- format(dat$date, "%Y")
@@ -69,6 +89,11 @@ aggregateData <- function(unit.observation, dat, cores) {
       unit.ct <- tapply(dat$count, unit, sum)
       data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)), lastDayMonth(dat$date))
+    } else if (unit.observation == "week") {
+      unit <- as.Date(cut(dat$date, breaks = "week", start.on.monday = FALSE))
+      unit.ct <- tapply(dat$count, unit, sum)
+      data.frame(unit.obs = names(unit.ct),count = unname(unit.ct),
+        cumulative = cumsum(unname(unit.ct)), date = unique(unit))
     }
   }
 }
