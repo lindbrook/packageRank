@@ -31,7 +31,6 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
-      do.call(rbind, out)
     } else if (unit.observation == "month") {
       out <- parallel::mclapply(grp, function(g) {
         if ("package" %in% names(dat)) {
@@ -51,7 +50,6 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
-      do.call(rbind, out)
     } else if (unit.observation == "week") {
       out <- parallel::mclapply(grp, function(g) {
         if ("package" %in% names(dat)) {
@@ -71,8 +69,8 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
-      do.call(rbind, out)
     }
+    out <- do.call(rbind, out)
   } else {
     if (unit.observation == "year") {
       unit <- format(dat$date, "%Y")
@@ -81,21 +79,22 @@ aggregateData <- function(unit.observation, dat, cores) {
       max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
       if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
       else ip <- rep(FALSE, length(unit.ct))
-      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+      out <- data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)),
         date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip)
     } else if (unit.observation == "month") {
       unit <- format(dat$date, "%Y-%m")
       unit.ct <- tapply(dat$count, unit, sum)
-      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+      out <- data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)), lastDayMonth(dat$date))
     } else if (unit.observation == "week") {
       unit <- as.Date(cut(dat$date, breaks = "week", start.on.monday = FALSE))
       unit.ct <- tapply(dat$count, unit, sum)
-      data.frame(unit.obs = names(unit.ct),count = unname(unit.ct),
+      out <- data.frame(unit.obs = names(unit.ct),count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)), date = unique(unit))
     }
   }
+  out
 }
 
 lastDayMonth <- function(dates) {
