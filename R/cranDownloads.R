@@ -204,7 +204,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param ip.legend.location Character. Location of in-progress legend.
 #' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
-#' @param unit.observation Character. "year", "month", or "day".
+#' @param unit.observation Character. "year", "month", "week", or "day".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
@@ -256,9 +256,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
 
-  if (unit.observation %in% c("month", "year")) {
+  if (unit.observation %in% c("week", "month", "year")) {
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
-    x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
+    x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }
 
   obs.ct <- length(unique(x$cranlogs.data$date))

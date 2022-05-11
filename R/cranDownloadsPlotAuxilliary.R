@@ -1,9 +1,10 @@
 # Auxiliary functions for plot.cranDownloads() #
 
-aggregateData <- function(unit.observation, dat, cores) {
+aggregateData <- function(x, unit.observation, cores) {
+  dat <- x$cranlogs.data
   if ("package" %in% names(dat) | "platform" %in% names(dat)) {
     if ("package" %in% names(dat)) {
-      grp <- unique(dat$package)
+      grp <- x$packages
     } else if ("platform" %in% names(dat)) {
       grp <- unique(dat$platform)
     }
@@ -31,7 +32,6 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
-      do.call(rbind, out)
     } else if (unit.observation == "month") {
       out <- parallel::mclapply(grp, function(g) {
         if ("package" %in% names(dat)) {
@@ -51,8 +51,27 @@ aggregateData <- function(unit.observation, dat, cores) {
         }
         grp.data
       }, mc.cores = cores)
+    } else if (unit.observation == "week") {
+      out <- parallel::mclapply(grp, function(g) {
+        if ("package" %in% names(dat)) {
+          tmp <- dat[dat$package == g, ]
+        } else if ("platform" %in% names(dat)) {
+          tmp <- dat[dat$platform == g, ]
+        }
+        unit <- as.Date(cut(tmp$date, breaks = "week", start.on.monday = FALSE))
+        unit.ct <- tapply(tmp$count, unit, sum)
+        grp.data <- data.frame(unit.obs = names(unit.ct),
+          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
+          date = unique(unit), group = g)
+        if ("package" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "package"
+        } else if ("platform" %in% names(dat)) {
+          names(grp.data)[names(grp.data) == "group"] <- "platform"
+        }
+        grp.data
+      }, mc.cores = cores)
     }
-    do.call(rbind, out)
+    out <- do.call(rbind, out)
   } else {
     if (unit.observation == "year") {
       unit <- format(dat$date, "%Y")
@@ -61,16 +80,22 @@ aggregateData <- function(unit.observation, dat, cores) {
       max.exp <- as.Date(paste0(max(as.numeric(names(unit.ct))), "-12-31"))
       if (max.obs < max.exp) ip <- c(rep(FALSE, length(unit.ct) - 1), TRUE)
       else ip <- rep(FALSE, length(unit.ct))
-      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+      out <- data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)),
         date = as.Date(paste0(names(unit.ct), "-12-31")), in.progress = ip)
     } else if (unit.observation == "month") {
       unit <- format(dat$date, "%Y-%m")
       unit.ct <- tapply(dat$count, unit, sum)
-      data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
+      out <- data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
         cumulative = cumsum(unname(unit.ct)), lastDayMonth(dat$date))
+    } else if (unit.observation == "week") {
+      unit <- as.Date(cut(dat$date, breaks = "week", start.on.monday = FALSE))
+      unit.ct <- tapply(dat$count, unit, sum)
+      out <- data.frame(unit.obs = names(unit.ct),count = unname(unit.ct),
+        cumulative = cumsum(unname(unit.ct)), date = unique(unit))
     }
   }
+  out
 }
 
 lastDayMonth <- function(dates) {

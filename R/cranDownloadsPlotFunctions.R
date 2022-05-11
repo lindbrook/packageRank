@@ -32,6 +32,8 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
       est.data$cumulative <- last.cumulative + est.ct
 
+      ip.data$date <- last.obs.date
+
       xlim <- range(dat$date)
 
       if (statistic == "count") {
@@ -116,6 +118,8 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       est.data$count <- est.ct
       last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
       est.data$cumulative <- last.cumulative + est.ct
+
+      ip.data$date <- last.obs.date
 
       est.seg <- rbind(complete.data[last.obs, ], est.data)
       obs.seg <- rbind(complete.data[last.obs, ], ip.data)
@@ -226,6 +230,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           est.data$count <- est.ct
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
+
+          ip.data$date <- last.obs.date
 
           list(complete.data = complete.data, ip.data = ip.data,
             est.data = est.data)
@@ -374,6 +380,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
+          ip.data$date <- last.obs.date
+
           list(ip.data = ip.data,
                complete.data = complete.data,
                est.data = est.data,
@@ -491,6 +499,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             est.data$count <- est.ct
             last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
             est.data$cumulative <- last.cumulative + est.ct
+
+            ip.data$date <- last.obs.date
 
             list(complete.data = complete.data, est.data = est.data,
               ip.data = ip.data)
@@ -645,6 +655,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
+          ip.data$date <- last.obs.date
+
           list(ip.data = ip.data,
                complete.data = complete.data,
                est.data = est.data,
@@ -759,6 +771,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           est.ct <- round(ip.data$count * exp.days / obs.days)
           est.data <- ip.data
           est.data$count <- est.ct
+
+          ip.data$date <- last.obs.date
+
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
           list(ip.data = ip.data, complete.data = complete.data,
@@ -963,6 +978,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           est.ct <- round(ip.data$count * exp.days / obs.days)
           est.data <- ip.data
           est.data$count <- est.ct
+
+          ip.data$date <- last.obs.date
+
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
@@ -1111,6 +1129,8 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
       est.data$cumulative <- last.cumulative + est.ct
 
+      ip.data$date <- last.obs.date
+
       if (statistic == "count") {
         ylim <- range(c(dat[, statistic], est.data$count))
       } else if (statistic == "cumulative") {
@@ -1204,6 +1224,8 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       est.data$count <- est.ct
       last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
       est.data$cumulative <- last.cumulative + est.ct
+
+      ip.data$date <- last.obs.date
 
       est.seg <- rbind(complete.data[last.obs, ], est.data)
       obs.seg <- rbind(complete.data[last.obs, ], ip.data)

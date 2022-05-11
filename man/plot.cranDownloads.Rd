@@ -51,7 +51,7 @@
 
 \item{dev.mode}{Logical. Use packageHistory0() to scrape CRAN.}
 
-\item{unit.observation}{Character. "year", "month", or "day".}
+\item{unit.observation}{Character. "year", "month", "week", or "day".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 
