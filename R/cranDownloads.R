@@ -258,7 +258,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
 
   if (unit.observation %in% c("week", "month", "year")) {
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
-    x$cranlogs.data <- aggregateData(unit.observation, x$cranlogs.data, cores)
+    x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }
 
   obs.ct <- length(unique(x$cranlogs.data$date))

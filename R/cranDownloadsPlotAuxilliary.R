@@ -1,9 +1,10 @@
 # Auxiliary functions for plot.cranDownloads() #
 
-aggregateData <- function(unit.observation, dat, cores) {
+aggregateData <- function(x, unit.observation, cores) {
+  dat <- x$cranlogs.data
   if ("package" %in% names(dat) | "platform" %in% names(dat)) {
     if ("package" %in% names(dat)) {
-      grp <- unique(dat$package)
+      grp <- x$packages
     } else if ("platform" %in% names(dat)) {
       grp <- unique(dat$platform)
     }
