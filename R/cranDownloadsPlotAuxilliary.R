@@ -60,9 +60,17 @@ aggregateData <- function(x, unit.observation, cores) {
         }
         unit <- as.Date(cut(tmp$date, breaks = "week", start.on.monday = FALSE))
         unit.ct <- tapply(tmp$count, unit, sum)
+        unit.date <- as.Date(names(unit.ct))
+        partial <- rep(FALSE, length(unit.ct))
+        if (x$from != unit.date[1]) {
+          partial[1] <- TRUE
+        }
+        if (x$to != unit.date[length(unit.date)]) {
+          partial[length(partial)] <- TRUE
+        }
         grp.data <- data.frame(unit.obs = names(unit.ct),
           count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-          date = unique(unit), group = g)
+          date = unit.date, partial = partial, group = g)
         if ("package" %in% names(dat)) {
           names(grp.data)[names(grp.data) == "group"] <- "package"
         } else if ("platform" %in% names(dat)) {
