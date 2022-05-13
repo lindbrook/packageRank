@@ -1,7 +1,17 @@
+packageRank 0.6.0.9018
+==================
+
+- add singlePlot(graphics = "base", unit.observation = "week") prototype.
+- add singlePlot(graphics = "ggplot2", unit.observation = "week") prototype.
+- amend aggregateData(unit.observation = "week").
+
+
 packageRank 0.6.0.9017
 ==================
 
 - plot in-progress observations at actual date.
+- set up unit.observation = "week".
+- amend aggregateData() arguments.
 
 
 packageRank 0.6.0.9016
