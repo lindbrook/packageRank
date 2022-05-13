@@ -300,6 +300,106 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           title(main = est.data$package)
         }))
 
+      } else if (any(dat$partial)) { # unit.observation = "week"
+        plot.data <- lapply(x$package, function(pkg) {
+          pkg.dat <- dat[dat$package == pkg, ]
+          unit.date <- pkg.dat$date
+
+          alpha.date <- pkg.dat$date[1]
+          omega.date <- pkg.dat$date[2] - 1
+          alpha.wk <- cranDownloads(pkg, from = alpha.date, to = omega.date)
+          alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+          partial.alpha <- pkg.dat[which(pkg.dat$partial)[1], ]
+          backdate.alpha <- partial.alpha
+          backdate.alpha$count <- alpha.ct
+
+          current.wk <- pkg.dat[nrow(pkg.dat), ]
+          weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+          current.wk.est <- current.wk
+          current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+            current.wk$count
+
+          list(pkg.dat = pkg.dat, backdate.alpha = backdate.alpha,
+            current.wk.est = current.wk.est)
+        })
+
+        invisible(lapply(seq_along(plot.data), function(i) {
+          pkg.dat <- plot.data[[i]]$pkg.dat
+          backdate.alpha <- plot.data[[i]]$backdate.alpha
+          current.wk.est <- plot.data[[i]]$current.wk.est
+          complete <- pkg.dat[!pkg.dat$partial, ]
+
+          ylim <- range(c(pkg.dat$count, backdate.alpha$count,
+            current.wk.est$count))
+
+          if (log.count) {
+            plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+              ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+              pch = 16, log = "y")
+          } else {
+            plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+              ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
+          }
+
+          points(backdate.alpha[, c("date", y.nm)], col = "dodgerblue",
+            pch = 16)
+          points(current.wk.est$date, current.wk.est$count, col = "red")
+          points(x$from, pkg.dat[1, y.nm], pch = 15, col = "gray")
+          points(pkg.dat[nrow(pkg.dat), "date"], pkg.dat[nrow(pkg.dat), y.nm],
+            pch = 0)
+          lines(complete[, c("date", y.nm)])
+          segments(backdate.alpha$date,
+                   backdate.alpha[, y.nm],
+                   complete[1, "date"],
+                   complete[1, y.nm],
+                   col = "dodgerblue")
+          segments(x$from,
+                   pkg.dat[1, y.nm],
+                   complete[1, "date"],
+                   complete[1, y.nm],
+                   col = "gray")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   current.wk.est$date,
+                   current.wk.est[, y.nm],
+                   col = "red")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   pkg.dat[nrow(pkg.dat), "date"],
+                   pkg.dat[nrow(pkg.dat), y.nm],
+                   lty = "dotted")
+          axis(4, at = pkg.dat[nrow(pkg.dat), y.nm], labels = "obs")
+          axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
+            col.ticks = "red")
+
+          if (package.version) {
+            if (dev.mode) p_v <- packageHistory0(current.wk.est$package)
+            else p_v <- packageHistory(current.wk.est$package)
+            axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
+              padj = 0.9, col.axis = "red", col.ticks = "red")
+          }
+
+          if (r.version) {
+            r_v <- rversions::r_versions()
+            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+              cex.axis = 2/3, padj = 0.9)
+          }
+
+          if (smooth) {
+            if (any(pkg.dat$partial)) {
+              smooth.data <- rbind(backdate.alpha, complete)
+              lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
+                f = f), col = "blue")
+            } else {
+              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
+                col = "blue")
+            }
+          }
+
+          title(main = backdate.alpha$package)
+        }))
+
       } else {
         ylim <- range(dat[, y.nm])
 
