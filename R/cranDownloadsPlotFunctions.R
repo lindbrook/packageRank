@@ -324,14 +324,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             current.wk.est = current.wk.est)
         })
 
+        all.data <- lapply(plot.data, function(x) do.call(rbind, x))
+        all.data <- do.call(rbind, all.data)
+        ylim <- range(all.data[, y.nm])
+
         invisible(lapply(seq_along(plot.data), function(i) {
           pkg.dat <- plot.data[[i]]$pkg.dat
           backdate.alpha <- plot.data[[i]]$backdate.alpha
           current.wk.est <- plot.data[[i]]$current.wk.est
           complete <- pkg.dat[!pkg.dat$partial, ]
-
-          ylim <- range(c(pkg.dat$count, backdate.alpha$count,
-            current.wk.est$count))
 
           if (log.count) {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
