@@ -540,8 +540,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
 
-
-
           list(pkg.dat = pkg.dat,
                omega.date = omega.date,
                complete = complete,
@@ -585,7 +583,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         sel <- pkg.dat$partial
         ip.data <- pkg.dat[sel & pkg.dat$date == max(pkg.dat$date), ]
-        back.data <- pkg.dat[sel & pkg.dat$date == min(pkg.dat$date), ]
+
+        back.data <- do.call(rbind, lapply(g, function(z) {
+          tmp <- z$pkg.dat
+          tmp[tmp$partial & tmp$date == min(tmp$date), ]
+        }))
+
         back.data$date <- omega.date
         backdate.obs.seg[backdate.obs.seg$partial, "date"] <- omega.date
 
