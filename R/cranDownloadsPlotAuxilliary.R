@@ -65,7 +65,9 @@ aggregateData <- function(x, unit.observation, cores) {
         if (x$from != unit.date[1]) {
           partial[1] <- TRUE
         }
-        if (x$to != unit.date[length(unit.date)]) {
+        if (x$to == unit.date[length(unit.date)] - 1) {
+          partial[length(partial)] <- FALSE
+        } else {
           partial[length(partial)] <- TRUE
         }
         grp.data <- data.frame(unit.obs = names(unit.ct),
