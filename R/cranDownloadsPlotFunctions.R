@@ -581,8 +581,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           x$current.obs.seg
         }))
 
-        sel <- pkg.dat$partial
-        ip.data <- pkg.dat[sel & pkg.dat$date == max(pkg.dat$date), ]
+        sel <- pkg.dat$partial & pkg.dat$date == max(pkg.dat$date)
+        ip.data <- pkg.dat[sel, ]
 
         back.data <- do.call(rbind, lapply(g, function(z) {
           tmp <- z$pkg.dat
