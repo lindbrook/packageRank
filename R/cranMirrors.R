@@ -29,16 +29,16 @@ cranMirrors <- function(mirror.description = FALSE) {
   if (any(!hosts %in% tld$name)) stop("Update mirrors!", call. = FALSE)
 
   out <- lapply(seq_along(hosts), function(i) {
-    h1 <- start.line[i]
-    h2 <- stop.line[i]
-    host.tmp <- web_page[h1:h2]
+    start <- start.line[i]
+    stop <- stop.line[i]
+    host.tmp <- web_page[start:stop]
     data.tmp <- host.tmp[grep("href", host.tmp)]
 
     url <- unname(vapply(data.tmp, function(x) {
       gsub("<.*?>", "", x)
     }, character(1L)))
 
-    mirror <- gsub("<.*?>", "", web_page[h1])
+    mirror <- gsub("<.*?>", "", web_page[start])
     desc <- host.tmp[grep("<td>", host.tmp) + 1]
     data.frame(country = hosts[i],
                url = url,
