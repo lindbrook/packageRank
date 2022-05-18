@@ -5,7 +5,13 @@ packageRank 0.6.0.9018
 - add singlePlot(graphics = "base", unit.observation = "week") prototype.
 - add singlePlot(graphics = "ggplot2", unit.observation = "week") prototype.
 - fix ylim in singlePlot(graphics = "base", unit.observation = "week").
-- fix back.data for omega.date in singlePlot(graphics = "ggplot2", 
+- fix back.data for omega.date in singlePlot(graphics = "ggplot2",
+  unit.observation = "week").
+- fix x$to in aggregateData(unit.observation = "week").
+- fix ip.data in singlePlot(graphics = "ggplot2", unit.observation = "week").
+- add and use first.obs.date in plot.cranDownloads() and
+  singlePlot(graphics = "base", unit.observation = "week").
+- fix omega.date for singlePlot(graphics = "ggplot2",
   unit.observation = "week").
 
 
