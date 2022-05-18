@@ -7,35 +7,42 @@
 cranMirrors <- function(mirror.description = FALSE) {
   mirrors.url <- "https://cran.r-project.org/mirrors.html"
   web_page <- readLines(mirrors.url)
+  start.line <- grep("<dt>", web_page)
+  stop.line <- grep("</dd>", web_page)
 
-  hosts.id <- grep("<dt>", web_page)
-  hosts <- web_page[hosts.id]
+  hosts <- web_page[start.line]
   hosts <- unname(vapply(hosts, function(x) {
     gsub("<.*?>", "", x)
   }, character(1L)))
 
-  country.code <- c(NA, "ar", "au", "at", "be", "br", "bg", "ca", "cl", "cn",
-    "co", "cr", "cy", "cz", "dk", "asia", "ec", "sv", "ee", "fr", "de", "gr",
-    "hu", "is", "id", "ir", "it", "jp", "kr", "my", "mx", "ma", "nl", "nz",
-    "no", "pt", "ru", "za", "es", "se", "ch", "tw", "th", "tr", "uk", "us",
-    "uy")
+  tld_etc <- data.frame(name = hosts[!hosts %in% ISOcodes::ISO_3166_1$Name],
+    tld = c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "GB", "US"))
 
-  out <- lapply(seq_along(hosts)[-length(hosts)], function(i) {
-    h1 <- hosts.id[i]
-    h2 <- hosts.id[i + 1] - 1
-    host.tmp <- web_page[h1:h2]
+  vars <- c("Name", "Alpha_2")
+  tld <- ISOcodes::ISO_3166_1[ISOcodes::ISO_3166_1$Name %in% hosts, vars]
+
+  tld <- stats::setNames(tld, c("name", "tld"))
+  tld <- rbind(tld, tld_etc)
+  tld <- tld[order(tld$name), ]
+  row.names(tld) <- NULL
+
+  if (any(!hosts %in% tld$name)) stop("Update mirrors!", call. = FALSE)
+
+  out <- lapply(seq_along(hosts), function(i) {
+    start <- start.line[i]
+    stop <- stop.line[i]
+    host.tmp <- web_page[start:stop]
     data.tmp <- host.tmp[grep("href", host.tmp)]
 
-    urls <- unname(vapply(data.tmp, function(x) {
+    url <- unname(vapply(data.tmp, function(x) {
       gsub("<.*?>", "", x)
     }, character(1L)))
 
-    mirror <- gsub("<.*?>", "", web_page[h1])
+    mirror <- gsub("<.*?>", "", web_page[start])
     desc <- host.tmp[grep("<td>", host.tmp) + 1]
-
     data.frame(country = hosts[i],
-               url = urls,
-               country.code = country.code[i],
+               url = url,
+               country.code = tolower(tld[tld$name == mirror, "tld"]),
                description = desc)
   })
 
