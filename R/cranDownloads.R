@@ -257,6 +257,10 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   }
 
   if (unit.observation %in% c("week", "month", "year")) {
+    x$first.obs.date <- do.call(c, lapply(x$packages, function(pkg) {
+      tmp <- x$cranlogs.data[x$cranlogs.data$package == pkg, ]
+      tmp[1, "date"]
+    }))
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
     x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }

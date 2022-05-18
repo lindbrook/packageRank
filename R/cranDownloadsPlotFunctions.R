@@ -346,7 +346,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           points(backdate.alpha[, c("date", y.nm)], col = "dodgerblue",
             pch = 16)
           points(current.wk.est$date, current.wk.est$count, col = "red")
-          points(x$from, pkg.dat[1, y.nm], pch = 15, col = "gray")
+          points(x$first.obs.date[i], pkg.dat[1, y.nm], pch = 15, col = "gray")
           points(pkg.dat[nrow(pkg.dat), "date"], pkg.dat[nrow(pkg.dat), y.nm],
             pch = 0)
           lines(complete[, c("date", y.nm)])
@@ -355,7 +355,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                    complete[1, "date"],
                    complete[1, y.nm],
                    col = "dodgerblue")
-          segments(x$from,
+          segments(x$first.obs.date[i],
                    pkg.dat[1, y.nm],
                    complete[1, "date"],
                    complete[1, y.nm],
