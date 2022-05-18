@@ -554,7 +554,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         })
 
         pkg.dat <- do.call(rbind, lapply(g, function(x) x$pkg.dat))
-        omega.date <- unique(do.call(c, lapply(g, function(x) x$omega.date)))
+        omega.date <- do.call(c, lapply(g, function(x) x$omega.date))
         complete <- do.call(rbind, lapply(g, function(x) x$complete))
 
         backdate.alpha <- do.call(rbind, lapply(g, function(x) {
