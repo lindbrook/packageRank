@@ -7,7 +7,7 @@
 #' @noRd
 
 fixDate_2012 <- function(date = "2012-12-31") {
-  if (class(date) != "Date") ymd <- as.Date(date)
+  if (!inherits(date, "Date")) ymd <- as.Date(date)
   else ymd <- date
 
   if (format(ymd, "%Y") == "2012") {
