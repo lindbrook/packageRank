@@ -109,11 +109,11 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
                complete[1, "date"],
                complete[1, y.nm],
                col = "dodgerblue")
-        segments(x$first.obs.date,
-                 dat[1, y.nm],
-                 complete[1, "date"],
-                 complete[1, y.nm],
-                 col = "gray")
+      segments(x$first.obs.date,
+               dat[1, y.nm],
+               complete[1, "date"],
+               complete[1, y.nm],
+               col = "gray")
       segments(complete[nrow(complete), "date"],
                complete[nrow(complete), y.nm],
                current.wk.est$date,
