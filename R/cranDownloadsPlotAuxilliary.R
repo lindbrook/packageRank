@@ -101,8 +101,19 @@ aggregateData <- function(x, unit.observation, cores) {
     } else if (unit.observation == "week") {
       unit <- as.Date(cut(dat$date, breaks = "week", start.on.monday = FALSE))
       unit.ct <- tapply(dat$count, unit, sum)
+      unit.date <- as.Date(names(unit.ct))
+      partial <- rep(FALSE, length(unit.ct))
+      if (x$from != unit.date[1]) {
+        partial[1] <- TRUE
+      }
+      if (x$to == unit.date[length(unit.date)] - 1) {
+        partial[length(partial)] <- FALSE
+      } else {
+        partial[length(partial)] <- TRUE
+      }
       out <- data.frame(unit.obs = names(unit.ct),count = unname(unit.ct),
-        cumulative = cumsum(unname(unit.ct)), date = unique(unit))
+        cumulative = cumsum(unname(unit.ct)), date = unique(unit),
+        partial = partial)
     }
   }
   out
