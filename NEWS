@@ -1,3 +1,9 @@
+packageRank 0.6.0.9020
+==================
+
+- add cranPlot(graphics = "base", unit.observation = "week") prototype.
+
+
 packageRank 0.6.0.9019
 ==================
 

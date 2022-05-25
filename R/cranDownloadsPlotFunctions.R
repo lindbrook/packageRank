@@ -68,6 +68,66 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
         col.ticks = "red")
 
+    } else if (any(dat$partial)) { # unit.observation = "week"
+      unit.date <- dat$date
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      partial.alpha <- dat[which(dat$partial)[1], ]
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      xlim <- range(dat$date)
+      ylim <- range(dat[, y.nm])
+      complete <- dat[!dat$partial, ]
+
+      if (log.count) {
+        plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+          ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+          pch = 16, log = "y")
+      } else {
+        plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+          ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
+      }
+
+      points(backdate.alpha[, c("date", y.nm)], col = "dodgerblue", pch = 16)
+      points(current.wk.est$date, current.wk.est$count, col = "red")
+      points(x$first.obs.date, dat[1, y.nm], pch = 15, col = "gray")
+      points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0)
+
+      # lines(complete[, c("date", y.nm)])
+      segments(backdate.alpha$date,
+               backdate.alpha[, y.nm],
+               complete[1, "date"],
+               complete[1, y.nm],
+               col = "dodgerblue")
+        segments(x$first.obs.date,
+                 dat[1, y.nm],
+                 complete[1, "date"],
+                 complete[1, y.nm],
+                 col = "gray")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), y.nm],
+               current.wk.est$date,
+               current.wk.est[, y.nm],
+               col = "red")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), y.nm],
+               dat[nrow(dat), "date"],
+               dat[nrow(dat), y.nm],
+               lty = "dotted")
+      axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
+      axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
+        col.ticks = "red")
+
     } else {
       if (log.count) {
         plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
@@ -87,6 +147,10 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
     if (smooth) {
       if (any(dat$in.progress)) {
         smooth.data <- complete.data
+        lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+          col = "blue")
+      } else if (any(dat$partial)) {
+        smooth.data <- rbind(backdate.alpha, complete)
         lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
           col = "blue")
       } else {
