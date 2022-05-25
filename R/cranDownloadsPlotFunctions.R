@@ -5,6 +5,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
+  type <- ifelse(points, "o", "l")
 
   if (statistic == "count") {
     y.nm.case <- "Count"
@@ -13,8 +14,6 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
     y.nm.case <- "Cumulative"
     y.nm <- tolower(y.nm.case)
   }
-
-  type <- ifelse(points, "o", "l")
 
   if (graphics == "base") {
     if (any(dat$in.progress)) {
@@ -69,6 +68,66 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
         col.ticks = "red")
 
+    } else if (any(dat$partial)) { # unit.observation = "week"
+      unit.date <- dat$date
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      partial.alpha <- dat[which(dat$partial)[1], ]
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      xlim <- range(dat$date)
+      ylim <- range(dat[, y.nm])
+      complete <- dat[!dat$partial, ]
+
+      if (log.count) {
+        plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+          ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+          pch = 16, log = "y")
+      } else {
+        plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
+          ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
+      }
+
+      points(backdate.alpha[, c("date", y.nm)], col = "dodgerblue", pch = 16)
+      points(current.wk.est$date, current.wk.est$count, col = "red")
+      points(x$first.obs.date, dat[1, y.nm], pch = 15, col = "gray")
+      points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0)
+
+      # lines(complete[, c("date", y.nm)])
+      segments(backdate.alpha$date,
+               backdate.alpha[, y.nm],
+               complete[1, "date"],
+               complete[1, y.nm],
+               col = "dodgerblue")
+      segments(x$first.obs.date,
+               dat[1, y.nm],
+               complete[1, "date"],
+               complete[1, y.nm],
+               col = "gray")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), y.nm],
+               current.wk.est$date,
+               current.wk.est[, y.nm],
+               col = "red")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), y.nm],
+               dat[nrow(dat), "date"],
+               dat[nrow(dat), y.nm],
+               lty = "dotted")
+      axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
+      axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
+        col.ticks = "red")
+
     } else {
       if (log.count) {
         plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
@@ -88,6 +147,10 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
     if (smooth) {
       if (any(dat$in.progress)) {
         smooth.data <- complete.data
+        lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+          col = "blue")
+      } else if (any(dat$partial)) {
+        smooth.data <- rbind(backdate.alpha, complete)
         lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
           col = "blue")
       } else {
@@ -145,11 +208,69 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
         geom_point(data = ip.data,
           aes(colour = "Observed", shape = "Observed"))
 
-      if (points) p <- p + geom_point(data = complete.data)
+    } else if (any(dat$partial)) {
+      complete <- dat[!dat$partial, ]
+      unit.date <- dat$date
+
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      partial.alpha <- dat[which(dat$partial)[1], ]
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      backdate.seg <- rbind(complete[1, ], backdate.alpha)
+      backdate.obs.seg <- rbind(complete[1, ], dat[1, ])
+      current.obs.seg <- rbind(complete[nrow(complete), ], dat[nrow(dat), ])
+      current.est.seg = rbind(complete[nrow(complete), ], current.wk.est)
+
+      ip.data <- dat[dat$partial & dat$date == max(dat$date), ]
+      back.data <- dat[dat$partial & dat$date == min(dat$date), ]
+      back.data$date <- omega.date
+      backdate.obs.seg[backdate.obs.seg$partial, "date"] <- omega.date
+
+      p <- p + geom_line(data = complete, size = 1/3) +
+        scale_color_manual(name = "Other Data",
+                           breaks = c("Backdate", "Observed", "Estimate"),
+                           values = c("Backdate" = "dodgerblue",
+                                      "Observed" = "gray",
+                                      "Estimate" = "red")) +
+         scale_shape_manual(name = "Other Data",
+                            breaks = c("Backdate", "Observed", "Estimate"),
+                            values = c("Backdate" = 16,
+                                       "Observed" = 0,
+                                       "Estimate" = 1)) +
+        geom_line(data = current.est.seg, size = 1/3, aes(col = "Estimate")) +
+        geom_line(data = current.obs.seg, size = 1/3, aes(col = "Observed")) +
+        geom_point(data = current.wk.est,
+          aes(colour = "Estimate", shape = "Estimate")) +
+        geom_point(data = ip.data,
+           aes(colour = "Observed", shape = "Observed")) +
+        geom_line(data = backdate.seg, size = 1/3, aes(col = "Backdate")) +
+        geom_line(data = backdate.obs.seg, size = 1/3,
+          aes(col = "Observed")) +
+        geom_point(data = backdate.alpha,
+           aes(colour = "Backdate", shape = "Backdate")) +
+        geom_point(data = back.data,
+           aes(colour = "Observed", shape = "Observed"))
+
+      if (points) p <- p + geom_point(data = complete)
       if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete.data
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else if (any(dat$partial)) {
+          smooth.data <- rbind(backdate.alpha, complete)
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
