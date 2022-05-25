@@ -5,6 +5,7 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
+  type <- ifelse(points, "o", "l")
 
   if (statistic == "count") {
     y.nm.case <- "Count"
@@ -13,8 +14,6 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
     y.nm.case <- "Cumulative"
     y.nm <- tolower(y.nm.case)
   }
-
-  type <- ifelse(points, "o", "l")
 
   if (graphics == "base") {
     if (any(dat$in.progress)) {
