@@ -1,3 +1,11 @@
+packageRank 0.6.0.9021
+==================
+
+- add rTotPlot(unit.observation = "week") prototype.
+- add exception for packages = "R" in
+  plot.cranDownloads(unit.observation = "month")
+
+
 packageRank 0.6.0.9020
 ==================
 
@@ -100,10 +108,10 @@ packageRank 0.6.0.9007
 ==================
 
 - use colors for estimate segment with multiPlot(graphics = "base").
-- fix and set os/platform colors in rPlot(graphics = "base") & 
+- fix and set os/platform colors in rPlot(graphics = "base") &
   plot.cranDownloads(unit.observation != "day")
 - tweak rPlot(graphics = "base") legends.
-- fix graph elements with rPlot(graphics = "base") & 
+- fix graph elements with rPlot(graphics = "base") &
   plot.cranDownloads(unit.observation = "day").
 
 

@@ -1435,6 +1435,13 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
                       cumulative = cumsum(ct),
                       in.progress = dat[dat$platform == "win", "in.progress"],
                       row.names = NULL)
+  } else if (any(dat$partial)) {
+    dat <- data.frame(date = unique(dat$date),
+                      count = ct,
+                      cumulative = cumsum(ct),
+                      partial = dat[dat$platform == "win", "partial"],
+                      row.names = NULL)
+
   } else {
     dat <- data.frame(date = unique(dat$date),
                       count = ct,
@@ -1499,19 +1506,78 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       axis(4, at = est.data[, statistic], labels = "est", col.axis = "red",
         col.ticks = "red")
 
-      if (smooth) {
-        smooth.data <- complete.data
-        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
-          col = "blue")
+    } else if (any(dat$partial)) {
+      unit.date <- dat$date
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(x$packages, from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      sunday.alpha <- dat$date == alpha.date & dat$partial == FALSE
+
+      if (any(sunday.alpha)) {
+        partial.alpha <- dat[dat$date == alpha.date, ]
+      } else {
+        partial.alpha <- dat[which(dat$partial)[1], ]
       }
 
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      xlim <- range(dat$date)
+      ylim <- range(dat[, statistic])
+      complete <- dat[!dat$partial, ]
+
+      if (log.count) {
+        plot(complete[, c("date", statistic)], type = type, xlab = "Date",
+          ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim,
+          pch = 16, log = "y")
+      } else {
+        plot(complete[, c("date", statistic)], type = type, xlab = "Date",
+          ylab = ylab, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      title(main = "Total R Downloads")
+      if (any(sunday.alpha)) {
+        points(backdate.alpha[, c("date", statistic)], col = "dodgerblue",
+          lwd = 2.5)
+      } else {
+        points(backdate.alpha[, c("date", statistic)], col = "dodgerblue",
+          pch = 16)
+        points(x$first.obs.date, dat[1, statistic], pch = 15, col = "gray")
+        segments(backdate.alpha$date,
+               backdate.alpha[, statistic],
+               complete[1, "date"],
+               complete[1, statistic],
+               col = "dodgerblue")
+        segments(x$first.obs.date,
+               dat[1, statistic],
+               complete[1, "date"],
+               complete[1, statistic],
+               col = "gray")
+      }
+
+      points(current.wk.est$date, current.wk.est$count, col = "red")
+      points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
+        col = "gray", pch = 0)
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), statistic],
+               current.wk.est$date,
+               current.wk.est[, statistic],
+               col = "red")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), statistic],
+               dat[nrow(dat), "date"],
+               dat[nrow(dat), statistic],
+               lty = "dotted")
+      axis(4, at = dat[nrow(dat), statistic], labels = "obs")
+      axis(4, at = current.wk.est[, statistic], labels = "est",
+        col.axis = "red", col.ticks = "red")
 
     } else {
       if (log.count) {
@@ -1521,20 +1587,30 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
         plot(dat$date, dat[, statistic], type = type, xlab = "Date",
           ylab = ylab)
       }
+    }
 
-      if (smooth) {
-        lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
+    if (smooth) {
+      if (any(dat$in.progress)) {
+        smooth.data <- complete.data
+        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
+          col = "blue", lwd = 1.25)
+      } else if (any(dat$partial)) {
+        smooth.data <- rbind(backdate.alpha, complete)
+        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
+          col = "blue", lwd = 1.25)
+      } else {
+         lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
           lwd = 1.25)
       }
-
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
-      }
-
-      title(main = "Total R Downloads")
     }
+
+    if (r.version) {
+      r_v <- rversions::r_versions()
+      axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+        cex.axis = 2/3, padj = 0.9)
+    }
+
+    title(main = "Total R Downloads")
 
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
@@ -1586,6 +1662,78 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
 
       if (points) p <- p + geom_point(data = complete.data)
 
+    } else if (any(dat$partial)) {
+      unit.date <- dat$date
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(x$packages, from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      sunday.alpha <- dat$date == alpha.date & dat$partial == FALSE
+
+      if (any(sunday.alpha)) {
+        partial.alpha <- dat[dat$date == alpha.date, ]
+      } else {
+        partial.alpha <- dat[which(dat$partial)[1], ]
+      }
+
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      complete <- dat[!dat$partial, ]
+
+      if (all(!sunday.alpha)) {
+        backdate.seg <- rbind(complete[1, ], backdate.alpha)
+        backdate.obs.seg <- rbind(complete[1, ], dat[1, ])
+        back.data <- dat[dat$partial & dat$date == min(dat$date), ]
+        back.data$date <- omega.date
+        backdate.obs.seg[backdate.obs.seg$partial, "date"] <- omega.date
+      }
+
+      current.obs.seg <- rbind(complete[nrow(complete), ], dat[nrow(dat), ])
+      current.est.seg = rbind(complete[nrow(complete), ], current.wk.est)
+      ip.data <- dat[dat$partial & dat$date == max(dat$date), ]
+
+      p <- p + geom_line(data = complete, size = 1/3) +
+        scale_color_manual(name = "Other Data",
+                           breaks = c("Backdate", "Observed", "Estimate"),
+                           values = c("Backdate" = "dodgerblue",
+                                      "Observed" = "gray",
+                                      "Estimate" = "red")) +
+         scale_shape_manual(name = "Other Data",
+                            breaks = c("Backdate", "Observed", "Estimate"),
+                            values = c("Backdate" = 16,
+                                       "Observed" = 0,
+                                       "Estimate" = 1)) +
+        geom_line(data = current.est.seg, size = 1/3, aes(col = "Estimate")) +
+        geom_line(data = current.obs.seg, size = 1/3, aes(col = "Observed")) +
+        geom_point(data = current.wk.est,
+          aes(colour = "Estimate", shape = "Estimate")) +
+        geom_point(data = ip.data,
+           aes(colour = "Observed", shape = "Observed"))
+
+      if (all(!sunday.alpha)) {
+        p <- p + geom_line(data = backdate.seg, size = 1/3,
+          aes(col = "Backdate")) +
+        geom_line(data = backdate.obs.seg, size = 1/3,
+          aes(col = "Observed")) +
+        geom_point(data = backdate.alpha,
+           aes(colour = "Backdate", shape = "Backdate")) +
+        geom_point(data = back.data,
+           aes(colour = "Observed", shape = "Observed"))
+      } else {
+        p <- p + geom_point(data = backdate.alpha, colour = "dodgerblue",
+          shape = 1, size = 3)
+      }
+
+      if (points) p <- p + geom_point(data = complete)
+
     } else {
       p <- p + geom_line(size = 0.5) +
         theme_bw() +
@@ -1601,6 +1749,10 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
     if (smooth) {
       if (any(dat$in.progress)) {
         smooth.data <- complete.data
+        p <- p + geom_smooth(data = smooth.data, method = "loess",
+          formula = "y ~ x", se = se, span = span)
+      } else if (any(dat$partial)) {
+        smooth.data <- rbind(backdate.alpha, complete)
         p <- p + geom_smooth(data = smooth.data, method = "loess",
           formula = "y ~ x", se = se, span = span)
       } else {
