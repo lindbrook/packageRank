@@ -1506,19 +1506,78 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       axis(4, at = est.data[, statistic], labels = "est", col.axis = "red",
         col.ticks = "red")
 
-      if (smooth) {
-        smooth.data <- complete.data
-        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
-          col = "blue")
+    } else if (any(dat$partial)) {
+      unit.date <- dat$date
+      alpha.date <- dat$date[1]
+      omega.date <- dat$date[2] - 1
+      alpha.wk <- cranDownloads(x$packages, from = alpha.date, to = omega.date)
+      alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+      sunday.alpha <- dat$date == alpha.date & dat$partial == FALSE
+
+      if (any(sunday.alpha)) {
+        partial.alpha <- dat[dat$date == alpha.date, ]
+      } else {
+        partial.alpha <- dat[which(dat$partial)[1], ]
       }
 
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
+      backdate.alpha <- partial.alpha
+      backdate.alpha$count <- alpha.ct
+
+      current.wk <- dat[nrow(dat), ]
+      weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+      current.wk.est <- current.wk
+      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+        current.wk$count
+
+      xlim <- range(dat$date)
+      ylim <- range(dat[, statistic])
+      complete <- dat[!dat$partial, ]
+
+      if (log.count) {
+        plot(complete[, c("date", statistic)], type = type, xlab = "Date",
+          ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim,
+          pch = 16, log = "y")
+      } else {
+        plot(complete[, c("date", statistic)], type = type, xlab = "Date",
+          ylab = ylab, xlim = xlim, ylim = ylim, pch = 16)
       }
 
-      title(main = "Total R Downloads")
+      if (any(sunday.alpha)) {
+        points(backdate.alpha[, c("date", statistic)], col = "dodgerblue",
+          lwd = 2.5)
+      } else {
+        points(backdate.alpha[, c("date", statistic)], col = "dodgerblue",
+          pch = 16)
+        points(x$first.obs.date, dat[1, statistic], pch = 15, col = "gray")
+        segments(backdate.alpha$date,
+               backdate.alpha[, statistic],
+               complete[1, "date"],
+               complete[1, statistic],
+               col = "dodgerblue")
+        segments(x$first.obs.date,
+               dat[1, statistic],
+               complete[1, "date"],
+               complete[1, statistic],
+               col = "gray")
+      }
+
+      points(current.wk.est$date, current.wk.est$count, col = "red")
+      points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
+        col = "gray", pch = 0)
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), statistic],
+               current.wk.est$date,
+               current.wk.est[, statistic],
+               col = "red")
+      segments(complete[nrow(complete), "date"],
+               complete[nrow(complete), statistic],
+               dat[nrow(dat), "date"],
+               dat[nrow(dat), statistic],
+               lty = "dotted")
+      axis(4, at = dat[nrow(dat), statistic], labels = "obs")
+      axis(4, at = current.wk.est[, statistic], labels = "est",
+        col.axis = "red", col.ticks = "red")
 
     } else {
       if (log.count) {
@@ -1528,20 +1587,30 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
         plot(dat$date, dat[, statistic], type = type, xlab = "Date",
           ylab = ylab)
       }
+    }
 
-      if (smooth) {
-        lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
+    if (smooth) {
+      if (any(dat$in.progress)) {
+        smooth.data <- complete.data
+        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
+          col = "blue", lwd = 1.25)
+      } else if (any(dat$partial)) {
+        smooth.data <- rbind(backdate.alpha, complete)
+        lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
+          col = "blue", lwd = 1.25)
+      } else {
+         lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
           lwd = 1.25)
       }
-
-      if (r.version) {
-        r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
-      }
-
-      title(main = "Total R Downloads")
     }
+
+    if (r.version) {
+      r_v <- rversions::r_versions()
+      axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+        cex.axis = 2/3, padj = 0.9)
+    }
+
+    title(main = "Total R Downloads")
 
   } else if (graphics == "ggplot2") {
     if (statistic == "count") {
