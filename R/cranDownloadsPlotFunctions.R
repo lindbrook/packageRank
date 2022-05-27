@@ -1435,6 +1435,13 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
                       cumulative = cumsum(ct),
                       in.progress = dat[dat$platform == "win", "in.progress"],
                       row.names = NULL)
+  } else if (any(dat$partial)) {
+    dat <- data.frame(date = unique(dat$date),
+                      count = ct,
+                      cumulative = cumsum(ct),
+                      partial = dat[dat$platform == "win", "partial"],
+                      row.names = NULL)
+
   } else {
     dat <- data.frame(date = unique(dat$date),
                       count = ct,
