@@ -1090,10 +1090,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
   } else if (obs.ct > 1) {
     if (graphics == "base") {
+      pltfrm.col <- c("red", "dodgerblue", "black")
+      names(pltfrm.col) <- c("osx", "src", "win")
+
       if (any(dat$in.progress)) {
         pltfrm <- sort(unique(dat$platform))
-        pltfrm.col <- c("red", "dodgerblue", "black")
-        names(pltfrm.col) <- c("osx", "src", "win")
+
         p.data <- lapply(pltfrm, function(x) {
           pkg.dat <- dat[dat$platform == x, ]
           ip.sel <- pkg.dat$in.progress == TRUE
@@ -1104,9 +1106,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           est.ct <- round(ip.data$count * exp.days / obs.days)
           est.data <- ip.data
           est.data$count <- est.ct
-
           ip.data$date <- last.obs.date
-
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
           list(ip.data = ip.data, complete.data = complete.data,
