@@ -1,9 +1,14 @@
+packageRank 0.6.0.9022
+==================
+
+- add rPlot(unit.observation = "week") prototype.
+
+
 packageRank 0.6.0.9021
 ==================
 
 - add rTotPlot(unit.observation = "week") prototype.
-- add exception for packages = "R" in
-  plot.cranDownloads(unit.observation = "month")
+- add exception for packages = "R" in plot.cranDownloads().
 
 
 packageRank 0.6.0.9020
