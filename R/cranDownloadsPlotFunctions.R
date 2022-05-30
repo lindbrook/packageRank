@@ -1167,14 +1167,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             tmpB[, statistic], lty = "longdash", col = pltfrm.col[i])
         }))
 
-        if (smooth) {
-          invisible(lapply(seq_along(complete.data), function(i) {
-            smooth.data <- complete.data[[i]]
-            lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
-              f = f), col = pltfrm.col[i], lty = "solid", lwd = 1.5)
-          }))
-        }
-
         if (points) {
           legend(x = legend.location,
                  legend = c("win", "mac", "src"),
