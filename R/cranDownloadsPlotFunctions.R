@@ -1533,6 +1533,115 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
+
+      } else if (any(dat$partial)) {
+        unit.date <- unique(dat$date)
+        alpha.date <- dat$date[1]
+        omega.date <- dat$date[2] - 1
+        alpha.wk <- cranDownloads(x$packages, from = alpha.date,
+          to = omega.date)
+        alpha.ct <- tapply(alpha.wk$cranlogs.data$count,
+          alpha.wk$cranlogs.data$platform, sum)
+
+        sunday.alpha <- dat$date == alpha.date & dat$partial == FALSE
+
+        if (any(sunday.alpha)) {
+          partial.alpha <- dat[dat$date == alpha.date, ]
+        } else {
+          partial.alpha <- dat[dat$partial & dat$date == alpha.date, ]
+        }
+
+        backdate.alpha <- partial.alpha
+        backdate.alpha$count <- alpha.ct
+
+        current.wk <- dat[dat$date == max(dat$date), ]
+        weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
+        current.wk.est <- current.wk
+        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+          current.wk$count
+
+        complete <- dat[!dat$partial, ]
+
+        last.complete <- complete[complete$date == max(complete$date), ]
+        last.observed <- dat[dat$date == max(dat$date), ]
+        current.obs.seg <- rbind(last.complete, last.observed)
+        current.est.seg <- rbind(last.complete, current.wk.est)
+
+        first.complete <- complete[complete$date == min(complete$date), ]
+        first.observed <- dat[dat$date == min(dat$date), ]
+        backdate.seg <- rbind(backdate.alpha, first.complete)
+        backdate.obs.seg <- rbind(first.observed, first.complete)
+
+        p <- p + geom_line(data = complete, size = 1/3)
+
+        if (multi.plot) {
+          p <- p + scale_linetype_manual(name = "Other Data",
+                                         breaks = c("Backdate",
+                                                    "Estimate",
+                                                    "Observed"),
+                                         values = c("Backdate" = "dashed",
+                                                    "Estimate" = "dotted",
+                                                    "Observed" = "dashed")) +
+            scale_shape_manual(name = "Other Data",
+                               breaks = c("Backdate", "Estimate", "Observed"),
+                               values = c("Backdate" = 16,
+                                          "Estimate" = 16,
+                                          "Observed" = 0)) +
+            geom_line(data = backdate.seg, aes(linetype = "Backdate")) +
+            geom_line(data = current.est.seg, aes(linetype = "Estimate")) +
+            geom_line(data = current.obs.seg, aes(linetype = "Observed")) +
+            geom_point(data = backdate.alpha, aes(shape = "Backdate")) +
+            geom_point(data = current.wk.est, aes(shape = "Estimate")) +
+            geom_point(data = last.observed, aes(shape = "Observed"))
+
+          if (all(!sunday.alpha)) {
+            p <- p + geom_line(data = backdate.obs.seg,
+                               aes(linetype = "Observed")) +
+              geom_point(data = first.observed, aes(shape = "Observed"))
+          }
+        } else {
+          p <- p + scale_colour_manual(name = "Other Data",
+                                       breaks = c("Backdate",
+                                                  "Estimate",
+                                                  "Observed"),
+                                      values = c("Backdate" = "dodgerblue",
+                                                 "Estimate" = "red",
+                                                 "Observed" = "black")) +
+            scale_linetype_manual(name = "Other Data",
+                                  breaks = c("Backdate",
+                                             "Estimate",
+                                             "Observed"),
+                                  values = c("Backdate" = "dotted",
+                                             "Estimate" = "solid",
+                                             "Observed" = "dotted")) +
+            scale_shape_manual(name = "Other Data",
+                               breaks = c("Backdate", "Estimate", "Observed"),
+                               values = c("Backdate" = 16,
+                                          "Estimate" = 16,
+                                          "Observed" = 0)) +
+            geom_line(data = backdate.seg, size = 1/3,
+              aes(colour = "Backdate", linetype = "Backdate")) +
+            geom_line(data = current.est.seg,
+              aes(colour = "Estimate", linetype = "Estimate")) +
+            geom_line(data = current.obs.seg,
+              aes(colour = "Observed", linetype = "Observed")) +
+            geom_point(data = backdate.alpha,
+              aes(colour = "Backdate", shape = "Backdate")) +
+            geom_point(data = current.wk.est,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = last.observed,
+              aes(colour = "Observed", shape = "Observed"))
+
+            if (all(!sunday.alpha)) {
+              p <- p + geom_line(data = backdate.obs.seg,
+                                 aes(linetype = "Observed")) +
+                geom_point(data = first.observed, aes(colour = "Observed",
+                                                      shape = "Observed"))
+            }
+        }
+
+        if (points) p <- p + geom_point(data = complete)
+
       } else {
         p <- p + geom_line(size = 0.5) +
           ggtitle("R Downloads") +
@@ -1544,11 +1653,30 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (points) p <- p + geom_point()
         if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
         if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
-        if (smooth) {
+      }
+
+      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (smooth) {
+        if (any(dat$in.progress)) {
+          smooth.data <- complete.data
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else if (any(dat$partial)) {
+          smooth.data <- rbind(backdate.alpha, complete)
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else {
           p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
             span = span)
         }
       }
+
+      p <- p + theme_bw() +
+        ggtitle("Total R Downloads") +
+        theme(legend.position = "bottom",
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              plot.title = element_text(hjust = 0.5))
 
       suppressWarnings(print(p))
     }
