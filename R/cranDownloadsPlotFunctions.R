@@ -898,6 +898,89 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                 bty = "n",
                 lty = c("dotted", "longdash"))
 
+        } else if (any(dat$partial)) {
+          plot.data <- lapply(x$package, function(pkg) {
+            pkg.dat <- dat[dat$package == pkg, ]
+            unit.date <- pkg.dat$date
+
+            alpha.date <- pkg.dat$date[1]
+            omega.date <- pkg.dat$date[2] - 1
+            alpha.wk <- cranDownloads(pkg, from = alpha.date, to = omega.date)
+            alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+
+            partial.alpha <- pkg.dat[which(pkg.dat$partial)[1], ]
+            backdate.alpha <- partial.alpha
+            backdate.alpha$count <- alpha.ct
+
+            current.wk <- pkg.dat[nrow(pkg.dat), ]
+            weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)]
+              + 1
+            current.wk.est <- current.wk
+            current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+              current.wk$count
+
+            list(pkg.dat = pkg.dat, backdate.alpha = backdate.alpha,
+              current.wk.est = current.wk.est)
+          })
+
+          all.data <- lapply(plot.data, function(x) do.call(rbind, x))
+          all.data <- do.call(rbind, all.data)
+          ylim <- range(all.data[, statistic])
+
+          if (log.count) {
+            plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
+              main = ttl)
+          } else {
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+          }
+
+          invisible(lapply(seq_along(plot.data), function(i) {
+            pkg.dat <- plot.data[[i]]$pkg.dat
+            backdate.alpha <- plot.data[[i]]$backdate.alpha
+            current.wk.est <- plot.data[[i]]$current.wk.est
+            complete <- pkg.dat[!pkg.dat$partial, ]
+
+            if (points) points(complete[, vars], col = cbPalette[i], pch = 16)
+            points(backdate.alpha[, vars], pch = 8, col = cbPalette[i])
+            points(x$first.obs.date[i], pkg.dat[1, statistic], pch = 0,
+              col = cbPalette[i])
+            points(pkg.dat[nrow(pkg.dat), vars], pch = 0, col = cbPalette[i])
+            points(current.wk.est[, vars], col = cbPalette[i])
+
+            lines(complete[, vars], col = cbPalette[i])
+            segments(backdate.alpha$date, backdate.alpha[, statistic],
+                     complete[1, "date"], complete[1, statistic],
+                     col = cbPalette[i], lty = "longdash")
+            segments(x$first.obs.date[i], pkg.dat[1, statistic],
+                     complete[1, "date"], complete[1, statistic],
+                     col = cbPalette[i], lty = "dotted")
+            segments(complete[nrow(complete), "date"],
+                     complete[nrow(complete), statistic],
+                     current.wk.est[, "date"],
+                     current.wk.est[, statistic],
+                     col = cbPalette[i], lty = "longdash")
+            segments(complete[nrow(complete), "date"],
+                     complete[nrow(complete), statistic],
+                     pkg.dat[nrow(pkg.dat), "date"],
+                     pkg.dat[nrow(pkg.dat), statistic],
+                     lty = "dotted")
+
+            if (smooth) {
+              smooth.data <- rbind(backdate.alpha, complete)
+              lines(stats::lowess(smooth.data[, vars], f = f),
+                col = cbPalette[i])
+            }
+          }))
+
+          legend(x = ip.legend.location,
+                legend = c("Backdate", "Observed", "Estimate"),
+                pch = c(8, 0, 1),
+                bg = "white",
+                cex = 2/3,
+                title = NULL,
+                bty = "n",
+                lty = c("longdash", "dotted", "longdash"))
+
         } else {
           if (log.count) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
