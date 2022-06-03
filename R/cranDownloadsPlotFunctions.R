@@ -653,14 +653,21 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           complete <- pkg.dat[!pkg.dat$partial, ]
           unit.date <- pkg.dat$date
 
-          alpha.date <- pkg.dat$date[1]
-          omega.date <- pkg.dat$date[2] - 1
-          alpha.wk <- cranDownloads(pkg, from = alpha.date, to = omega.date)
-          alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+          wk1.start <- pkg.dat$date[1]
+          wk1.end <- pkg.dat$date[2] - 1
+          wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
 
-          partial.alpha <- pkg.dat[which(pkg.dat$partial)[1], ]
-          backdate.alpha <- partial.alpha
-          backdate.alpha$count <- alpha.ct
+          wk1.sunday <- pkg.dat$date == wk1.start & pkg.dat$partial == FALSE
+
+          if (any(wk1.sunday)) {
+            wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
+          } else {
+            sel <- pkg.dat$partial & pkg.dat$date == wk1.start
+            wk1.partial <- pkg.dat[sel, ]
+          }
+
+          wk1.backdate <- wk1.partial
+          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
 
           current.wk <- pkg.dat[nrow(pkg.dat), ]
           weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
@@ -669,88 +676,82 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             current.wk$count
 
           list(pkg.dat = pkg.dat,
-               omega.date = omega.date,
                complete = complete,
-               backdate.alpha = backdate.alpha,
+               wk1.sunday = any(wk1.sunday),
+               wk1.partial = wk1.partial,
+               wk1.backdate = wk1.backdate,
+               current.wk = current.wk,
                current.wk.est = current.wk.est,
-               backdate.seg = rbind(complete[1, ], backdate.alpha),
+               backdate.seg = rbind(complete[1, ], wk1.backdate),
                backdate.obs.seg = rbind(complete[1, ], pkg.dat[1, ]),
-               current.obs.seg = rbind(complete[nrow(complete), ],
-                                       pkg.dat[nrow(pkg.dat), ]),
-               current.est.seg = rbind(complete[nrow(complete), ],
-                                       current.wk.est))
+               current.wk.obs.seg = rbind(complete[nrow(complete), ],
+                                          current.wk),
+               current.wk.est.seg = rbind(complete[nrow(complete), ],
+                                          current.wk.est))
         })
 
-        pkg.dat <- do.call(rbind, lapply(g, function(x) x$pkg.dat))
-        omega.date <- do.call(c, lapply(g, function(x) x$omega.date))
         complete <- do.call(rbind, lapply(g, function(x) x$complete))
+        wk1.sunday <- do.call(c, lapply(g, function(x) x$wk1.sunday))
+        wk1.partial <- do.call(rbind, lapply(g, function(x) x$wk1.partial))
+        wk1.backdate <- do.call(rbind, lapply(g, function(x) x$wk1.backdate))
 
-        backdate.alpha <- do.call(rbind, lapply(g, function(x) {
-          x$backdate.alpha
-        }))
+        current.wk <- do.call(rbind, lapply(g, function(x) x$current.wk))
+        current.wk.est <- do.call(rbind, lapply(g, function(x)
+          x$current.wk.est))
 
-        current.wk.est <- do.call(rbind, lapply(g, function(x) {
-          x$current.wk.est
-        }))
+        backdate.seg <- do.call(rbind, lapply(g, function(x) x$backdate.seg))
+        backdate.obs.seg <- do.call(rbind, lapply(g, function(x)
+          x$backdate.obs.seg))
 
-        backdate.seg <- do.call(rbind, lapply(g, function(x) {
-          x$backdate.seg
-        }))
-
-        backdate.obs.seg <- do.call(rbind, lapply(g, function(x) {
-          x$backdate.obs.seg
-        }))
-
-        current.est.seg <- do.call(rbind, lapply(g, function(x) {
-          x$current.est.seg
-        }))
-
-        current.obs.seg <- do.call(rbind, lapply(g, function(x) {
-          x$current.obs.seg
-        }))
-
-        sel <- pkg.dat$partial & pkg.dat$date == max(pkg.dat$date)
-        ip.data <- pkg.dat[sel, ]
-
-        back.data <- do.call(rbind, lapply(g, function(z) {
-          tmp <- z$pkg.dat
-          tmp[tmp$partial & tmp$date == min(tmp$date), ]
-        }))
-
-        back.data$date <- omega.date
-        backdate.obs.seg[backdate.obs.seg$partial, "date"] <- omega.date
+        current.wk.obs.seg <- do.call(rbind, lapply(g, function(x)
+          x$current.wk.obs.seg))
+        current.wk.est.seg <- do.call(rbind, lapply(g, function(x)
+          x$current.wk.est.seg))
 
         p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "Other Data",
-                             breaks = c("Backdate", "Observed", "Estimate"),
+          scale_color_manual(name = "Other:",
+                             breaks = c("Backdate",
+                                        "Partial/In-Progress",
+                                        "Estimate"),
                              values = c("Backdate" = "dodgerblue",
-                                        "Observed" = "gray",
+                                        "Partial/In-Progress" = "black",
                                         "Estimate" = "red")) +
-           scale_shape_manual(name = "Other Data",
-                              breaks = c("Backdate", "Observed", "Estimate"),
-                              values = c("Backdate" = 16,
-                                         "Observed" = 0,
-                                         "Estimate" = 1)) +
-          geom_line(data = current.est.seg, size = 1/3, aes(col = "Estimate")) +
-          geom_line(data = current.obs.seg, size = 1/3, aes(col = "Observed")) +
+          scale_linetype_manual(name = "Other:",
+                                breaks = c("Backdate",
+                                           "Partial/In-Progress",
+                                           "Estimate"),
+                                values = c("Backdate" = "dashed",
+                                           "Partial/In-Progress" = "dotted",
+                                           "Estimate" = "dashed")) +
+          scale_shape_manual(name = "Other:",
+                             breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+                             values = c("Backdate" = 8,
+                                        "Partial/In-Progress" = 0,
+                                        "Estimate" = 16)) +
+          geom_line(data = current.wk.est.seg, size = 1/3,
+                    aes(colour = "Estimate", linetype = "Estimate")) +
+          geom_line(data = current.wk.obs.seg, size = 1/3,
+                    aes(colour = "Partial/In-Progress",
+                        linetype = "Partial/In-Progress")) +
+          geom_point(data = current.wk.est, size = 1.5,
+                     aes(colour = "Estimate", shape = "Estimate")) +
+          geom_point(data = current.wk,
+                     aes(colour = "Partial/In-Progress",
+                         shape = "Partial/In-Progress")) +
+          geom_point(data = wk1.backdate, # size = 2,
+                       aes(colour = "Backdate", shape = "Backdate"))
 
-          geom_point(data = current.wk.est,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-             aes(colour = "Observed", shape = "Observed")) +
-
-          geom_line(data = backdate.seg, size = 1/3, aes(col = "Backdate")) +
-          geom_line(data = backdate.obs.seg, size = 1/3,
-            aes(col = "Observed")) +
-          geom_point(data = backdate.alpha,
-             aes(colour = "Backdate", shape = "Backdate")) +
-          geom_point(data = back.data,
-             aes(colour = "Observed", shape = "Observed")) +
-          facet_wrap(~ package, nrow = 2) +
-          theme_bw() +
-          theme(legend.position = "bottom",
-                panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank())
+        if (any(!wk1.sunday)) {
+          p <- p +
+            geom_line(data = backdate.seg, size = 1/3,
+                      aes(colour = "Backdate", linetype = "Backdate")) +
+            geom_line(data = backdate.obs.seg, size = 1/3,
+                      aes(colour = "Partial/In-Progress",
+                          linetype = "Partial/In-Progress")) +
+            geom_point(data = wk1.partial,
+                       aes(colour = "Partial/In-Progress",
+                           shape = "Partial/In-Progress"))
+        }
 
         if (points) p <- p + geom_point(data = complete)
 
@@ -767,7 +768,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else if (any(dat$partial)) {
-          smooth.data <- rbind(complete, backdate.alpha)
+          smooth.data <- rbind(complete, backdate.seg)
           p <- p + geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
