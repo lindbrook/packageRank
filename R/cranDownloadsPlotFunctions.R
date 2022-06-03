@@ -426,14 +426,22 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat <- dat[dat$package == pkg, ]
           unit.date <- pkg.dat$date
 
-          alpha.date <- pkg.dat$date[1]
-          omega.date <- pkg.dat$date[2] - 1
-          alpha.wk <- cranDownloads(pkg, from = alpha.date, to = omega.date)
-          alpha.ct <- sum(alpha.wk$cranlogs.data$count)
+          wk1.start <- pkg.dat$date[1]
+          wk1.end <- pkg.dat$date[2] - 1
+          wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
 
-          partial.alpha <- pkg.dat[which(pkg.dat$partial)[1], ]
-          backdate.alpha <- partial.alpha
-          backdate.alpha$count <- alpha.ct
+          wk1.sunday <- pkg.dat$date == wk1.start & pkg.dat$partial == FALSE
+
+          if (any(wk1.sunday)) {
+            wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
+          } else {
+            sel <- pkg.dat$partial & pkg.dat$date == wk1.start
+            wk1.partial <- pkg.dat[sel, ]
+          }
+
+          # wk1.partial <- pkg.dat[which(pkg.dat$partial)[1], ]
+          wk1.backdate <- wk1.partial
+          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
 
           current.wk <- pkg.dat[nrow(pkg.dat), ]
           weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
@@ -441,7 +449,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
 
-          list(pkg.dat = pkg.dat, backdate.alpha = backdate.alpha,
+          list(pkg.dat = pkg.dat, wk1.backdate = wk1.backdate,
             current.wk.est = current.wk.est)
         })
 
@@ -451,7 +459,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         invisible(lapply(seq_along(plot.data), function(i) {
           pkg.dat <- plot.data[[i]]$pkg.dat
-          backdate.alpha <- plot.data[[i]]$backdate.alpha
+          wk1.backdate <- plot.data[[i]]$wk1.backdate
           current.wk.est <- plot.data[[i]]$current.wk.est
           complete <- pkg.dat[!pkg.dat$partial, ]
 
@@ -464,15 +472,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
           }
 
-          points(backdate.alpha[, c("date", y.nm)], col = "dodgerblue",
-            pch = 16)
+          points(wk1.backdate[, c("date", y.nm)], col = "dodgerblue", pch = 16)
           points(current.wk.est$date, current.wk.est$count, col = "red")
           points(x$first.obs.date[i], pkg.dat[1, y.nm], pch = 15, col = "gray")
           points(pkg.dat[nrow(pkg.dat), "date"], pkg.dat[nrow(pkg.dat), y.nm],
             pch = 0)
           lines(complete[, c("date", y.nm)])
-          segments(backdate.alpha$date,
-                   backdate.alpha[, y.nm],
+          segments(wk1.backdate$date,
+                   wk1.backdate[, y.nm],
                    complete[1, "date"],
                    complete[1, y.nm],
                    col = "dodgerblue")
@@ -510,7 +517,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (smooth) {
             if (any(pkg.dat$partial)) {
-              smooth.data <- rbind(backdate.alpha, complete)
+              smooth.data <- rbind(wk1.backdate, complete)
               lines(stats::lowess(smooth.data$date, smooth.data[, y.nm],
                 f = f), col = "blue")
             } else {
@@ -519,7 +526,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             }
           }
 
-          title(main = backdate.alpha$package)
+          title(main = wk1.backdate$package)
         }))
 
       } else {
