@@ -1389,8 +1389,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             cex.axis = 2/3, padj = 0.9)
         }
 
-        title(main = "R Downloads")
-
       } else if (any(dat$partial)) {
         unit.date <- dat[dat$platform == "win", "date"]
         alpha.date <- unit.date[1]
@@ -1595,8 +1593,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
             cex.axis = 2/3, padj = 0.9)
         }
-        title(main = "R Downloads")
       }
+
+      title(main = "R Downloads")
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
