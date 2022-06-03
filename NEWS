@@ -1,3 +1,9 @@
+packageRank 0.6.0.9024
+==================
+
+- use wk1.sunday and amend graphics in singlePlot(unit.observation = "week").
+
+
 packageRank 0.6.0.9023
 ==================
 
