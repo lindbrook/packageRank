@@ -1,3 +1,10 @@
+packageRank 0.6.0.9025
+==================
+
+- add sunday and monday exceptions and amend graphics in 
+  multiPlot(unit.observation = "week").
+
+
 packageRank 0.6.0.9024
 ==================
 
