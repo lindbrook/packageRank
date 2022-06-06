@@ -866,7 +866,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
             lines(complete.data$date, complete.data[, statistic],
               col = cbPalette[i])
-
             segments(complete.data[last.obs, "date"],
                      complete.data[last.obs, statistic],
                      ip.data$date,
@@ -879,7 +878,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                      est.data[, statistic],
                      col = cbPalette[i],
                      lty = "longdash")
-
              points(est.data[, "date"], est.data[, statistic],
                col = cbPalette[i])
              points(ip.data[, "date"], ip.data[, statistic], pch = 0,
