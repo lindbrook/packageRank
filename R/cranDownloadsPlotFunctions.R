@@ -1498,12 +1498,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }))
 
         if (any(sunday.alpha)) {
-          points(backdate.alpha[, c("date", statistic)], pch = 5, cex = 1.5,
+          points(backdate.alpha[, c("date", statistic)], pch = 8, cex = 1.5,
             col = pltfrm.col)
         } else {
-          points(partial.alpha[, c("date", statistic)], pch = 5,
-            col = "gray")
-          points(backdate.alpha[, c("date", statistic)], pch = 5,
+          points(partial.alpha[, c("date", statistic)], pch = 0,
+            col = pltfrm.col)
+          points(backdate.alpha[, c("date", statistic)], pch = 8,
             col = pltfrm.col)
         }
 
@@ -1511,7 +1511,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           tmp <- complete[[i]]
           segments(tmp[1, "date"], tmp[1, statistic],
                    partial.alpha[i, "date"], partial.alpha[i, statistic],
-                   lty = "dotted", col = "gray")
+                   lty = "dotted", col = pltfrm.col[i])
         }))
 
         invisible(lapply(seq_along(complete), function(i) {
@@ -1544,7 +1544,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         legend(x = ip.legend.location,
                legend = c("Backdate", "Est", "Obs"),
-               pch = c(5, 1, 0),
+               pch = c(8, 1, 0),
                bg = "white",
                cex = 2/3,
                title = NULL,
@@ -1586,7 +1586,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           legend(x = legend.location,
                  legend = c("win", "mac", "src"),
                  col = c("black", "red", "dodgerblue"),
-                 pch = rep(16, 3),
+                 pch = rep(16, 8),
                  bg = "white",
                  cex = 2/3,
                  title = "Platform",
