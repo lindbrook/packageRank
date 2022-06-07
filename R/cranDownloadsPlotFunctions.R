@@ -1800,13 +1800,13 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                                          breaks = c("Backdate",
                                                     "Estimate",
                                                     "Observed"),
-                                         values = c("Backdate" = "dashed",
-                                                    "Estimate" = "dotted",
-                                                    "Observed" = "dashed")) +
+                                         values = c("Backdate" = "longdash",
+                                                    "Estimate" = "longdash",
+                                                    "Observed" = "dotted")) +
             scale_shape_manual(name = "Other Data",
                                breaks = c("Backdate", "Estimate", "Observed"),
-                               values = c("Backdate" = 16,
-                                          "Estimate" = 16,
+                               values = c("Backdate" = 8,
+                                          "Estimate" = 1,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, aes(linetype = "Backdate")) +
             geom_line(data = current.est.seg, aes(linetype = "Estimate")) +
@@ -1827,18 +1827,18 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                                                   "Observed"),
                                       values = c("Backdate" = "dodgerblue",
                                                  "Estimate" = "red",
-                                                 "Observed" = "black")) +
+                                                 "Observed" = "gray")) +
             scale_linetype_manual(name = "Other Data",
                                   breaks = c("Backdate",
                                              "Estimate",
                                              "Observed"),
-                                  values = c("Backdate" = "dotted",
+                                  values = c("Backdate" = "solid",
                                              "Estimate" = "solid",
                                              "Observed" = "dotted")) +
             scale_shape_manual(name = "Other Data",
                                breaks = c("Backdate", "Estimate", "Observed"),
-                               values = c("Backdate" = 16,
-                                          "Estimate" = 16,
+                               values = c("Backdate" = 8,
+                                          "Estimate" = 1,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, size = 1/3,
               aes(colour = "Backdate", linetype = "Backdate")) +
@@ -1855,7 +1855,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
             if (all(!sunday.alpha)) {
               p <- p + geom_line(data = backdate.obs.seg,
-                                 aes(linetype = "Observed")) +
+                                 aes(colour = "Observed",
+                                     linetype = "Observed")) +
                 geom_point(data = first.observed, aes(colour = "Observed",
                                                       shape = "Observed"))
             }
