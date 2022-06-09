@@ -107,7 +107,6 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       points(x$first.obs.date, dat[1, y.nm], pch = 15, col = "gray")
       points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0)
 
-      # lines(complete[, c("date", y.nm)])
       segments(backdate.alpha$date,
                backdate.alpha[, y.nm],
                complete[1, "date"],
@@ -447,7 +446,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             wk1.partial <- pkg.dat[sel, ]
           }
 
-          # wk1.partial <- pkg.dat[which(pkg.dat$partial)[1], ]
           wk1.backdate <- wk1.partial
           wk1.backdate$count <- sum(wk1$cranlogs.data$count)
 
@@ -740,7 +738,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "dashed")) +
           scale_shape_manual(name = "Other:",
-                             breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+                             breaks = c("Backdate",
+                                        "Partial/In-Progress",
+                                        "Estimate"),
                              values = c("Backdate" = 8,
                                         "Partial/In-Progress" = 0,
                                         "Estimate" = 16)) +
@@ -1568,7 +1568,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                bg = "white",
                cex = 2/3,
                title = NULL,
-               # lty = c("dashed", "longdash", "dotted"),
                bty = "n")
 
       } else {
