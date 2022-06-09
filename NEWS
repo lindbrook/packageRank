@@ -1,3 +1,9 @@
+packageRank 0.6.0.9027
+==================
+
+- add monday exception to cranPlot(), singlePlot(), rPlot(), rTotPlot().
+
+
 packageRank 0.6.0.9026
 ==================
 

@@ -82,8 +82,12 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       current.wk <- dat[nrow(dat), ]
       weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
       current.wk.est <- current.wk
-      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-        current.wk$count
+      if (as.integer(weekdays.elapsed) != 0) { # monday exception
+        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+          current.wk$count
+      } else {
+         current.wk.est$count <- 7L * current.wk$count
+      }
 
       xlim <- range(dat$date)
       ylim <- range(dat[, y.nm])
@@ -224,8 +228,12 @@ cranPlot <- function(x, statistic, graphics, points, log.count, smooth, se, f,
       current.wk <- dat[nrow(dat), ]
       weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
       current.wk.est <- current.wk
-      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-        current.wk$count
+      if (as.integer(weekdays.elapsed) != 0) { # monday exception
+        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+          current.wk$count
+      } else {
+         current.wk.est$count <- 7L * current.wk$count
+      }
 
       backdate.seg <- rbind(complete[1, ], backdate.alpha)
       backdate.obs.seg <- rbind(complete[1, ], dat[1, ])
@@ -446,8 +454,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           current.wk <- pkg.dat[nrow(pkg.dat), ]
           weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
           current.wk.est <- current.wk
-          current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-            current.wk$count
+          if (as.integer(weekdays.elapsed) != 0) { # monday exception
+            current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+              current.wk$count
+          } else {
+             current.wk.est$count <- 7L * current.wk$count
+          }
 
           list(pkg.dat = pkg.dat, wk1.backdate = wk1.backdate,
             current.wk.est = current.wk.est)
@@ -672,8 +684,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           current.wk <- pkg.dat[nrow(pkg.dat), ]
           weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
           current.wk.est <- current.wk
-          current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-            current.wk$count
+          if (as.integer(weekdays.elapsed) != 0) { # monday exception
+            current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+              current.wk$count
+          } else {
+             current.wk.est$count <- 7L * current.wk$count
+          }
 
           list(pkg.dat = pkg.dat,
                complete = complete,
@@ -1448,8 +1464,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         current.wk <- dat[dat$date == max(dat$date), ]
         weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
         current.wk.est <- current.wk
-        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-          current.wk$count
+        if (as.integer(weekdays.elapsed) != 0) { # monday exception
+          current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+            current.wk$count
+        } else {
+           current.wk.est$count <- 7L * current.wk$count
+        }
 
         xlim <- range(dat$date)
         ylim <- range(dat[, statistic])
@@ -1778,8 +1798,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         current.wk <- dat[dat$date == max(dat$date), ]
         weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
         current.wk.est <- current.wk
-        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-          current.wk$count
+        if (as.integer(weekdays.elapsed) != 0) { # monday exception
+          current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+            current.wk$count
+        } else {
+           current.wk.est$count <- 7L * current.wk$count
+        }
 
         complete <- dat[!dat$partial, ]
 
@@ -2010,8 +2034,12 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       current.wk <- dat[nrow(dat), ]
       weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
       current.wk.est <- current.wk
-      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-        current.wk$count
+      if (as.integer(weekdays.elapsed) != 0) { # monday exception
+        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+          current.wk$count
+      } else {
+         current.wk.est$count <- 7L * current.wk$count
+      }
 
       xlim <- range(dat$date)
       ylim <- range(dat[, statistic])
@@ -2166,8 +2194,12 @@ rTotPlot <- function(x, statistic, graphics, legend.location, points,
       current.wk <- dat[nrow(dat), ]
       weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)] + 1
       current.wk.est <- current.wk
-      current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
-        current.wk$count
+      if (as.integer(weekdays.elapsed) != 0) { # monday exception
+        current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
+          current.wk$count
+      } else {
+         current.wk.est$count <- 7L * current.wk$count
+      }
 
       complete <- dat[!dat$partial, ]
 
