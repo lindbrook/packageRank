@@ -269,7 +269,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         }))
       }
     }
-    
+
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
     x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }
@@ -287,8 +287,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     if (r.total) {
-      rTotPlot(x, statistic, graphics, legend.location, points, log.count,
-        smooth, se, r.version, f, span)
+      rTotPlot(x, statistic, graphics, obs.ct, legend.location, points, 
+        log.count, smooth, se, r.version, f, span)
     } else {
       rPlot(x, statistic, graphics, obs.ct, legend.location,
         ip.legend.location, points, log.count, smooth, se, r.version, f, span,
