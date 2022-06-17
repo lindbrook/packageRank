@@ -1941,9 +1941,6 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
   last.obs.date <- x$last.obs.date
   ct <-  tapply(dat$count, dat$date, sum)
 
-
-
-
   if (any(dat$in.progress)) {
     dat <- data.frame(date = unique(dat$date),
                       count = ct,
@@ -1956,7 +1953,6 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
                       cumulative = cumsum(ct),
                       partial = dat[dat$platform == "win", "partial"],
                       row.names = NULL)
-
   } else {
     dat <- data.frame(date = unique(dat$date),
                       count = ct,
@@ -1971,9 +1967,11 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
       if (log.count) {
         dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
           main = paste("R Downloads:", unique(dat$date)))
+        mtext("R", side = 2, las = 1, line = 1)
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
           main = paste("R Downloads:", unique(dat$date)))
+        mtext("R", side = 2, las = 1, line = 1)
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  "R"
@@ -1981,7 +1979,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab("log10 Count")
+          geom_point(size = 2) + xlab("log10 Count") + ylab(NULL)
       } else {
         p <- ggplot(data = dat, aes_string("count", "platform")) +
           geom_point(size = 2) + ylab(NULL)
