@@ -1,3 +1,10 @@
+packageRank 0.6.0.9029
+==================
+
+- add unit.observation = "year" for rTotPlot().
+- add unit.observation = "year" for cranPlot().
+
+
 packageRank 0.6.0.9028
 ==================
 
