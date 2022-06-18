@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9029-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9030-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -434,14 +434,18 @@ and tracked.
 
 #### unit of observation
 
-The default unit of observation for `cranDownloads()` is the “day”.
-Sometimes, however, viewing the data from a less granular perspectives
-can be illuminating. To do so, pass “month”, or “year” to the function’s
-`unit.observation` argument.
+The default unit of observation for `cranDownloads()` and
+`cranlogs::cran_dowanlods()` is the “day”. Sometimes, however, viewing
+the data from a less granular perspectives can be useful. To do so, pass
+“week”, “month”, or “year” to plot.cranDownloads()’s `unit.observation`
+argument. In the two examples below, I highlight the “week” and “month”
+units of observation because they have additional graphical annotations.
 
-Consider the example below. In the first graph, I plot the daily
-downloads for [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs)
-over its entire history (let’s imagine today’s date is “2022-04-15”).
+##### `unit.observation = "month"`
+
+In the graph below, I plot the total daily downloads for
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) over its
+entire history (let’s imagine today’s date is “2022-04-15”).
 
 ``` r
 plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE)
@@ -449,8 +453,7 @@ plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE)
 
 ![](man/figures/README-day_code-1.png)<!-- -->
 
-Here’s the plot for the same data aggregated by month (with a smoother
-added):
+I then plot the same data aggregated by month (with an added smoother):
 
 ``` r
 plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE,
@@ -459,21 +462,57 @@ plot(cranDownloads(packages = "cranlogs", to = 2022), package.version = TRUE,
 
 ![](man/figures/README-month_code-1.png)<!-- -->
 
-Three things to notice about the aggregated plot. First, if an
-observation is still in-progress, that observation will be split in two
-(far right): 1) a point for the in-progress total (the black empty
-square) and 2) a point for the projected or estimated total (the red
-empty circle). The estimate is based on the proportion of the unit of
-observation completed. In the plot above, the 635 total downloads from
-April 1 through April 15 translates into an estimate of 1,270 downloads
-for the entire month (30 / 15 \* 635). Second, all other points (if
-plotted) represent the total count at the end of an aggregate period.
-For example, the first observation (far left) records the total download
-count for [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) for
-its first month on [CRAN](https://cran.r-project.org/) (May 2015). Note
-that each point is plotted on the x-axis on the final date of the
-aggregate period (May 31 in the example above). Third, if you include a
-smoother, the curve only uses complete, not in-progress data.
+There are three things to notice about the monthly plot. First, if the
+current month (far right) is still in-progress, that observation will be
+split in two: one point (the empty black square) for the in-progress
+total, the other (the empty red circle) for the estimated total. The
+estimate is based on the proportion of the month completed. For example,
+in the plot above, the 635 downloads from April 1 through April 15
+translates into an estimate of 1,270 downloads for the month (30 / 15 \*
+635). Second, if plotted all other points represent the total count at
+the end of that month. For example, the first observation (far left)
+records the total download count for
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) for its first
+month on [CRAN](https://cran.r-project.org/) (May 2015). Note that each
+point is plotted on the final date of the month (May 31 in the example
+above). Third, if you include a smoother, the curve only uses complete,
+not in-progress data.
+
+##### `unit.observation = "week"`
+
+In the graph below, I plot the daily downloads for ‘cranlogs’ from 01
+January through 15 June 2022.
+
+``` r
+plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"))
+```
+
+![](man/figures/README-daily_2022-1.png)<!-- -->
+
+I then plots the same data aggregated by week (weeks begin on Sunday).
+
+``` r
+plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"), 
+    unit.observation = "week", smooth = TRUE)
+```
+
+![](man/figures/README-week-1.png)<!-- -->
+
+With a weekly unit of observation, it’s likely that both the start and
+end date will be truncated and/or in-progress. To give a more
+representative picture of the data, I add two sets of graphical
+annotations that highlight the *backdated* and estimated points
+(completed weeks) and gray-out the nominal endpoints (incomplete weeks).
+The first annotation splits the first observation into an observed point
+(gray empty square) and a *backdated* point (blue asterisk) if the first
+week is not complete (i.e., the start date is not a Sunday). The
+backdated point pushes the first observation back to include the
+previous Sunday so we can have complete a week’s worth of data. The
+second annotation splits the current observation into an observed (gray
+empty square) and an estimated point (red empty circle) if the current
+week is not complete (i.e., the end date is not a Sunday). Also, just
+like the monthly plot, any added smoother will include only “complete”
+data points.
 
 ### II - computing package download rank percentiles
 
@@ -757,7 +796,7 @@ September 2021.
 ``` r
 filteredDownloads(package = "ggplot2", date = "2021-09-15")
 >         date package downloads filtered.downloads inflation
-> 1 2021-09-15 ggplot2    113842              57951     96.45
+> 1 2021-09-15 ggplot2    113842              58067     96.05
 ```
 
 While there were 113,842 nominal downloads, applying all the filters
