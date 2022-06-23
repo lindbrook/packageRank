@@ -1,3 +1,9 @@
+packageRank 0.6.0.9031
+==================
+
+- amend aggregateData(unit.observation = "month") to use first of month as date.
+
+
 packageRank 0.6.0.9030
 ==================
 
