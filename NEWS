@@ -3,6 +3,7 @@ packageRank 0.6.0.9031
 
 - amend aggregateData(unit.observation = "month") to use first of month as date.
 - amend cranPlot() to use first of month for montly unit of observation.
+- amend singlePlot() to use first of month for montly unit of observation.
 
 
 packageRank 0.6.0.9030

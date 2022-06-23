@@ -408,7 +408,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           complete.data <- pkg.dat[!ip.sel, ]
 
           obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
           est.ct <- round(ip.data$count * exp.days / obs.days)
 
           est.data <- ip.data
@@ -416,14 +416,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
-          ip.data$date <- last.obs.date
-
           list(complete.data = complete.data, ip.data = ip.data,
             est.data = est.data)
          })
 
         tmp <- lapply(plot.data, function(x) do.call(rbind, x))
         tmp <- do.call(rbind, tmp)
+        xlim <- range(tmp$date)
         ylim <- range(tmp[, y.nm])
 
         invisible(lapply(seq_along(plot.data), function(i) {
@@ -667,15 +666,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           last.obs <- nrow(complete.data)
 
           obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
           est.ct <- round(ip.data$count * exp.days / obs.days)
 
           est.data <- ip.data
           est.data$count <- est.ct
           last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
-
-          ip.data$date <- last.obs.date
 
           list(ip.data = ip.data,
                complete.data = complete.data,
