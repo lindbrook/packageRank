@@ -899,22 +899,20 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           pkg.data <- lapply(x$package, function(pkg) {
             tmp <- dat[dat$package == pkg, ]
             ip.data <- tmp[tmp$in.progress == TRUE, ]
-            complete.data <- tmp[tmp$in.progress == FALSE, ]
-            last.obs <- nrow(complete.data)
+            complete <- tmp[tmp$in.progress == FALSE, ]
+            last.obs <- nrow(complete)
 
             obs.days <- as.numeric(format(last.obs.date , "%d"))
-            exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+            exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date,
+              "%d"))
             est.ct <- round(ip.data$count * exp.days / obs.days)
 
             est.data <- ip.data
             est.data$count <- est.ct
-            last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+            last.cumulative <- complete[nrow(complete), "cumulative"]
             est.data$cumulative <- last.cumulative + est.ct
 
-            ip.data$date <- last.obs.date
-
-            list(complete.data = complete.data, est.data = est.data,
-              ip.data = ip.data)
+            list(complete = complete, est.data = est.data, ip.data = ip.data)
           })
 
           est.stat <- lapply(pkg.data, function(x) x$est.data)
@@ -929,21 +927,20 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           }
 
           invisible(lapply(seq_along(pkg.data), function(i) {
-            complete.data <- pkg.data[[i]]$complete.data
+            complete <- pkg.data[[i]]$complete
             est.data <- pkg.data[[i]]$est.data
             ip.data <- pkg.data[[i]]$ip.data
-            last.obs <- nrow(complete.data)
+            last.obs <- nrow(complete)
 
-            lines(complete.data$date, complete.data[, statistic],
-              col = cbPalette[i])
-            segments(complete.data[last.obs, "date"],
-                     complete.data[last.obs, statistic],
+            lines(complete$date, complete[, statistic], col = cbPalette[i])
+            segments(complete[last.obs, "date"],
+                     complete[last.obs, statistic],
                      ip.data$date,
                      ip.data[, statistic],
                      col = cbPalette[i],
                      lty = "dotted")
-            segments(complete.data[last.obs, "date"],
-                     complete.data[last.obs, statistic],
+            segments(complete[last.obs, "date"],
+                     complete[last.obs, statistic],
                      est.data$date,
                      est.data[, statistic],
                      col = cbPalette[i],
@@ -954,12 +951,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                col = cbPalette[i])
 
             if (points) {
-              points(complete.data[, "date"], complete.data[, statistic],
+              points(complete[, "date"], complete[, statistic],
                 col = cbPalette[i], pch = 16)
             }
 
             if (smooth) {
-              smooth.data <- complete.data
+              smooth.data <- complete
               lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
                 f = f), col = cbPalette[i])
             }
@@ -1157,34 +1154,32 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           pkg.data <- dat[dat$package == pkg, ]
           ip.sel <- pkg.data$in.progress == TRUE
           ip.data <- pkg.data[ip.sel, ]
-          complete.data <- pkg.data[!ip.sel, ]
-          last.obs <- nrow(complete.data)
+          complete <- pkg.data[!ip.sel, ]
+          last.obs <- nrow(complete)
 
           obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
           est.ct <- round(ip.data$count * exp.days / obs.days)
 
           est.data <- ip.data
           est.data$count <- est.ct
-          last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+          last.cumulative <- complete[nrow(complete), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
 
-          ip.data$date <- last.obs.date
-
           list(ip.data = ip.data,
-               complete.data = complete.data,
+               complete = complete,
                est.data = est.data,
-               est.seg = rbind(complete.data[last.obs, ], est.data),
-               obs.seg = rbind(complete.data[last.obs, ], ip.data))
+               est.seg = rbind(complete[last.obs, ], est.data),
+               obs.seg = rbind(complete[last.obs, ], ip.data))
         })
 
         ip.data <- do.call(rbind, lapply(g, function(x) x$ip.data))
-        complete.data <- do.call(rbind, lapply(g, function(x) x$complete.data))
+        complete <- do.call(rbind, lapply(g, function(x) x$complete))
         est.data <- do.call(rbind, lapply(g, function(x) x$est.data))
         est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
-        p <- p + geom_line(data = complete.data, size = 1/3) +
+        p <- p + geom_line(data = complete, size = 1/3) +
           scale_shape_manual(name = "In-progress",
                              breaks = c("Observed", "Estimate"),
                              values = c("Observed" = 0, "Estimate" = 1)) +
@@ -1201,9 +1196,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5))
 
-        if (points) {
-          p <- p + geom_point(data = complete.data)
-        }
+        if (points) p <- p + geom_point(data = complete)
 
       } else if (any(dat$partial)) {
         g <- lapply(x$package, function(pkg) {
@@ -1316,7 +1309,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
       if (smooth) {
         if (smooth) {
           if (any(dat$in.progress)) {
-            smooth.data <- complete.data
+            smooth.data <- complete
             p <- p + geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
           } else if (any(dat$partial)) {
