@@ -52,15 +52,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         last.obs <- nrow(complete.data)
 
         obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
         est.ct <- round(ip.data$count * exp.days / obs.days)
 
         est.data <- ip.data
         est.data$count <- est.ct
         last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
         est.data$cumulative <- last.cumulative + est.ct
-
-        ip.data$date <- last.obs.date
 
         xlim <- range(dat$date)
 
@@ -202,24 +200,22 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
         ip.data <- dat[ip.sel, ]
-        complete.data <- dat[!ip.sel, ]
-        last.obs <- nrow(complete.data)
+        complete <- dat[!ip.sel, ]
+        last.obs <- nrow(complete)
 
         obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
         est.ct <- round(ip.data$count * exp.days / obs.days)
 
         est.data <- ip.data
         est.data$count <- est.ct
-        last.cumulative <- complete.data[nrow(complete.data), "cumulative"]
+        last.cumulative <- complete[nrow(complete), "cumulative"]
         est.data$cumulative <- last.cumulative + est.ct
 
-        ip.data$date <- last.obs.date
+        est.seg <- rbind(complete[last.obs, ], est.data)
+        obs.seg <- rbind(complete[last.obs, ], ip.data)
 
-        est.seg <- rbind(complete.data[last.obs, ], est.data)
-        obs.seg <- rbind(complete.data[last.obs, ], ip.data)
-
-        p <- p + geom_line(data = complete.data, size = 1/3) +
+        p <- p + geom_line(data = complete, size = 1/3) +
           scale_color_manual(name = "In-progress",
                              breaks = c("Observed", "Estimate"),
                              values = c("Observed" = "black",
@@ -239,6 +235,23 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
             aes(colour = "Estimate", shape = "Estimate")) +
           geom_point(data = ip.data,
             aes(colour = "Observed", shape = "Observed"))
+
+        if (points) p <- p + geom_point(data = complete)
+        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (smooth) {
+          if (any(dat$in.progress)) {
+            smooth.data <- complete
+            p <- p + geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x", se = se, span = span)
+          } else if (any(dat$partial)) {
+            smooth.data <- rbind(wk1.backdate, complete)
+            p <- p + geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x", se = se, span = span)
+          } else {
+            p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+              span = span)
+          }
+        }
 
       } else if (any(dat$partial)) {
         complete <- dat[!dat$partial, ]
@@ -316,7 +329,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
         if (smooth) {
           if (any(dat$in.progress)) {
-            smooth.data <- complete.data
+            smooth.data <- complete
             p <- p + geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
           } else if (any(dat$partial)) {
