@@ -41,9 +41,14 @@ aggregateData <- function(x, unit.observation, cores) {
         }
         unit <- format(tmp$date, "%Y-%m")
         unit.ct <- tapply(tmp$count, unit, sum)
+        last.day.mo <- lastDayMonth(tmp$date)
         grp.data <- data.frame(unit.obs = names(unit.ct),
-          count = unname(unit.ct), cumulative = cumsum(unname(unit.ct)),
-          lastDayMonth(tmp$date), group = g)
+                               count = unname(unit.ct),
+                               cumulative = cumsum(unname(unit.ct)),
+                               date = as.Date(paste0(names(unit.ct), "-01")),
+                               in.progress = last.day.mo$in.progress,
+                               end.date = last.day.mo$date,
+                               group = g)
         if ("package" %in% names(dat)) {
           names(grp.data)[names(grp.data) == "group"] <- "package"
         } else if ("platform" %in% names(dat)) {
@@ -96,8 +101,13 @@ aggregateData <- function(x, unit.observation, cores) {
     } else if (unit.observation == "month") {
       unit <- format(dat$date, "%Y-%m")
       unit.ct <- tapply(dat$count, unit, sum)
-      out <- data.frame(unit.obs = names(unit.ct), count = unname(unit.ct),
-        cumulative = cumsum(unname(unit.ct)), lastDayMonth(dat$date))
+      last.day.mo <- lastDayMonth(dat$date)
+      out <- data.frame(unit.obs = names(unit.ct),
+                        count = unname(unit.ct),
+                        date = as.Date(paste0(names(unit.ct), "-01")),
+                        cumulative = cumsum(unname(unit.ct)),
+                        in.progress = last.day.mo$in.progress,
+                        end.date = last.day.mo$date)
     } else if (unit.observation == "week") {
       unit <- as.Date(cut(dat$date, breaks = "week", start.on.monday = FALSE))
       unit.ct <- tapply(dat$count, unit, sum)
