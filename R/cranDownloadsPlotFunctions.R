@@ -1384,11 +1384,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           ip.data <- pkg.dat[ip.sel, ]
           complete <- pkg.dat[!ip.sel, ]
           obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
           est.ct <- round(ip.data$count * exp.days / obs.days)
           est.data <- ip.data
           est.data$count <- est.ct
-          ip.data$date <- last.obs.date
           last.cumulative <- complete[nrow(complete), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
           list(ip.data = ip.data, complete = complete,
@@ -1439,14 +1438,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           tmpA <- complete[[i]]
           tmpB <- ip.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic],
-            tmpB$date, tmpB[, statistic], lty = "dotted")
+                   tmpB$date, tmpB[, statistic], lty = "dotted")
         }))
 
         invisible(lapply(seq_along(complete), function(i) {
           tmpA <- complete[[i]]
           tmpB <- est.data[[i]]
           segments(tmpA[last.obs, "date"], tmpA[last.obs, statistic], tmpB$date,
-            tmpB[, statistic], lty = "longdash", col = pltfrm.col[i])
+                   tmpB[, statistic], lty = "longdash", col = pltfrm.col[i])
         }))
 
         if (points) {
@@ -1723,12 +1722,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           complete <- pkg.dat[!ip.sel, ]
           last.obs <- nrow(complete)
           obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
           est.ct <- round(ip.data$count * exp.days / obs.days)
           est.data <- ip.data
           est.data$count <- est.ct
-
-          ip.data$date <- last.obs.date
 
           last.cumulative <- complete[nrow(complete), "cumulative"]
           est.data$cumulative <- last.cumulative + est.ct
@@ -2038,15 +2035,13 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         last.obs <- nrow(complete)
 
         obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
         est.ct <- round(ip.data$count * exp.days / obs.days)
 
         est.data <- ip.data
         est.data$count <- est.ct
         last.cumulative <- complete[nrow(complete), "cumulative"]
         est.data$cumulative <- last.cumulative + est.ct
-
-        ip.data$date <- last.obs.date
 
         if (statistic == "count") {
           ylim <- range(c(dat[, statistic], est.data$count))
@@ -2172,12 +2167,12 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
-          lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
-            col = "blue", lwd = 1.25)
+          lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
+            f = f), col = "blue", lwd = 1.25)
         } else if (any(dat$partial)) {
           smooth.data <- rbind(wk1.backdate, complete)
-          lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
-            col = "blue", lwd = 1.25)
+          lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
+            f = f), col = "blue", lwd = 1.25)
         } else {
            lines(stats::lowess(dat$date, dat[, statistic], f), col = "blue",
             lwd = 1.25)
@@ -2206,15 +2201,13 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         last.obs <- nrow(complete)
 
         obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(ip.data[, "date"], "%d"))
+        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
         est.ct <- round(ip.data$count * exp.days / obs.days)
 
         est.data <- ip.data
         est.data$count <- est.ct
         last.cumulative <- complete[nrow(complete), "cumulative"]
         est.data$cumulative <- last.cumulative + est.ct
-
-        ip.data$date <- last.obs.date
 
         est.seg <- rbind(complete[last.obs, ], est.data)
         obs.seg <- rbind(complete[last.obs, ], ip.data)
@@ -2304,7 +2297,8 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         if (all(!sunday.alpha)) {
           p <- p + geom_line(data = backdate.seg, size = 1/3,
             aes(col = "Backdate")) +
-          geom_line(data = backdate.obs.seg, size = 1/3, aes(col = "Observed")) +
+          geom_line(data = backdate.obs.seg, size = 1/3,
+            aes(col = "Observed")) +
           geom_point(data = wk1.backdate,
             aes(colour = "Backdate", shape = "Backdate")) +
           geom_point(data = back.data,

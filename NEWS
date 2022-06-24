@@ -5,6 +5,8 @@ packageRank 0.6.0.9031
 - amend cranPlot() to use first of month for monthly unit of observation.
 - amend singlePlot() to use first of month for monthly unit of observation.
 - amend multiPlot() to use first of month for monthly unit of observation.
+- amend rPlot() and rTotPlot() to use first of month for monthly unit of 
+  observation.
 
 
 packageRank 0.6.0.9030
