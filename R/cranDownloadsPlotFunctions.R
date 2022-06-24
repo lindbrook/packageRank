@@ -1514,7 +1514,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         xlim <- range(dat$date)
-        ylim <- range(dat[, statistic])
+        ylim <- range(dat[, statistic], wk1.backdate$count,
+          current.wk.est$count)
 
         complete <- dat[!dat$partial, ]
         complete <- lapply(unique(complete$platform), function(p) {
@@ -2106,7 +2107,8 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         }
 
         xlim <- range(dat$date)
-        ylim <- range(dat[, statistic])
+        ylim <- range(dat[, statistic], wk1.backdate$count,
+          current.wk.est$count)
         complete <- dat[!dat$partial, ]
 
         if (log.count) {

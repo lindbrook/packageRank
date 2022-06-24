@@ -1,3 +1,9 @@
+packageRank 0.6.0.9032
+==================
+
+- fix ylim for rPlot() and rTotPlot() weekly unit of observation.
+
+
 packageRank 0.6.0.9031
 ==================
 
