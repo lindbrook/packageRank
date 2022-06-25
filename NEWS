@@ -1,7 +1,7 @@
 packageRank 0.6.0.9033
 ==================
 
-- update README about plot.cranDownloads(unit.observation = "month").
+- update README about unit.observation with plot.cranDownloads().
 
 
 packageRank 0.6.0.9032
@@ -17,7 +17,7 @@ packageRank 0.6.0.9031
 - amend cranPlot() to use first of month for monthly unit of observation.
 - amend singlePlot() to use first of month for monthly unit of observation.
 - amend multiPlot() to use first of month for monthly unit of observation.
-- amend rPlot() and rTotPlot() to use first of month for monthly unit of 
+- amend rPlot() and rTotPlot() to use first of month for monthly unit of
   observation.
 
 
@@ -38,7 +38,7 @@ packageRank 0.6.0.9029
 packageRank 0.6.0.9028
 ==================
 
-- standardize graphics and object names in 
+- standardize graphics and object names in
   plot.cranDownloads(unit.observation = "week").
 
 
@@ -57,7 +57,7 @@ packageRank 0.6.0.9026
 packageRank 0.6.0.9025
 ==================
 
-- add sunday and monday exceptions and amend graphics in 
+- add sunday and monday exceptions and amend graphics in
   multiPlot(unit.observation = "week").
 
 
