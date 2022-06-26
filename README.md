@@ -437,8 +437,8 @@ and tracked.
 The default unit of observation for `cranDownloads()` and
 `cranlogs::cran_dowanlods()` is the “day”. The graph below plots the
 daily downloads for
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) between 01
-January 2021 and 15 April 2022.
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) from 01
+January 2022 through 15 April 2022.
 
 ``` r
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"))
@@ -446,13 +446,14 @@ plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"))
 
 ![](man/figures/README-day-1.png)<!-- -->
 
-To view the data from a less granular perspective, pass “week”, “month”,
-or “year” to plot.cranDownloads()’s `unit.observation` argument.
+To view the data from a less granular perspective than “day”, set
+plot.cranDownloads()’s `unit.observation` argument to “week”, “month”,
+or “year”.
 
 ##### `unit.observation = "month"`
 
-The next graph plots the same data aggregated by month (using ‘ggplot2’
-and adding a smoother):
+The graph below plots the data aggregated by month (with an added
+smoother):
 
 ``` r
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"), 
@@ -461,20 +462,20 @@ plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"),
 
 ![](man/figures/README-month-1.png)<!-- -->
 
-Three things are worth noticing. First, because the last month (far
-right) is still in-progress, it’s split in two: one point (empty black
-square) for the in-progress total, another point (empty red circle) for
-the estimated total. The estimate is based on the proportion of the
-month completed: in the example above, the 635 observed downloads from
-April 1 through April 15 translates into an estimate of 1,270 downloads
-for the month (30 / 15 \* 635). Second, all points are plotted on the
-x-axis on the first of the month. Third, if a smoother in included, it
-only uses “complete”, not in-progress or estimated data.
+Three things to note. First, because the last/current month (far right)
+is in-progress, I split the observation in two: one point for the
+in-progress total (empty black square), another for the estimated total
+(empty red circle). The estimate is based on the proportion of the month
+completed. In the example above, the 635 observed downloads from April 1
+through April 15 translates into an estimate of 1,270 downloads for the
+entire month (30 / 15 \* 635). Second, if a smoother in used, it only
+uses “complete”, not in-progress or estimated data. Third, all points
+are plotted along the x-axis on the first day of the month.
 
 ##### `unit.observation = "week"`
 
-The final graph plots the same data aggregated by week (the week begin
-on Sundays).
+The graph below plots the same data aggregated by week (weeks begin on
+Sunday).
 
 ``` r
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"),
@@ -483,21 +484,25 @@ plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"),
 
 ![](man/figures/README-week-1.png)<!-- -->
 
-Three things are worth noticing. First, just like the monthly plot, if
-the last/current last/current week is still in-progress (it’s not a
-Sunday), that observation is split into an observed count (gray empty
-square) and an estimated count (red empty circle). Second, if needed,
-the first observation (far left) is split into an observed count (gray
-empty square) and a *backdated* count (blue asterisk). Backdating is
-useful because, with a weekly unit of observation, it’s likely that
-start date will truncate the first week. In the example, the start date
-(01 January 2022) is actually a Saturday (that plus the fact traffic to
-CRAN is low at the end/beginning of the calendar year is why the first
-observed count is so small). To “complete” the week, I backdate the
-first observation to include data through the previous Sunday (26
-December 2021). This way, the first observation will have a complete set
-of data and will give a more representative count of the data. Third,
-smoothers only use “complete” and backdated data.
+Four things to note. First, if the first week (far left) is incomplete
+(the start date is not a Sunday), that observation is split in two: one
+point for the observed total on the nominal start date (gray empty
+square); another point for *backdated* total.Backdating involves
+completing the week by pushing the nominal start date back to include
+the previous Sunday (blue asterisk). In the example bove, the nominal
+start date (01 January 2022) is moved back to include data through the
+previous Sunday (26 December 2021). Backdating is useful because with a
+weekly unit of observation the first observation is likely to be
+truncated and would give a unrepresentative picture of the data. Second,
+similar to the monthly plot, if the last/current week (far right) is
+in-progress (the end date is not a Saturday), that observation will be
+split in two: the observed total (gray empty square) and the estimated
+total based on the proportion of week completed (red empty circle).
+Third, again like the monthly plot, smoothers only use “complete”
+(including backdated data) and excluding in-progress or estimated data.
+Fourth, with the exception of in-progress observed totals, points are
+plotted along the x-axis on the calendar date of Sundays, the first day
+of the week.
 
 ### II - computing package download rank percentiles
 
