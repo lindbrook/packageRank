@@ -489,7 +489,7 @@ Four things to note. First, if the first week (far left) is incomplete
 point for the observed total on the nominal start date (gray empty
 square); another point for *backdated* total.Backdating involves
 completing the week by pushing the nominal start date back to include
-the previous Sunday (blue asterisk). In the example bove, the nominal
+the previous Sunday (blue asterisk). In the example above, the nominal
 start date (01 January 2022) is moved back to include data through the
 previous Sunday (26 December 2021). Backdating is useful because with a
 weekly unit of observation the first observation is likely to be

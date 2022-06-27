@@ -70,7 +70,7 @@
 
 #' Eight RStudio Download Logs to Fix Duplicate Logs Errors in 'cranlogs'.
 #'
-#' October 6-8, 2012; Octoer 11, 2012; December 26-28; and January 1, 20113.
+#' October 6-8, 2012; October 11, 2012; December 26-28; and January 1, 20113.
 #'
 #' @format
 #' \describe{

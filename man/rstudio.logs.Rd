@@ -22,6 +22,6 @@
 rstudio.logs
 }
 \description{
-October 6-8, 2012; Octoer 11, 2012; December 26-28; and January 1, 20113.
+October 6-8, 2012; October 11, 2012; December 26-28; and January 1, 20113.
 }
 \keyword{datasets}
