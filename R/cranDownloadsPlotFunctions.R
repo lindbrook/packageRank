@@ -96,6 +96,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           col.ticks = "red")
 
       } else if (any(dat$partial)) { # unit.observation = "week"
+        if (weekdays(last.obs.date) == "Saturday") {
+          sel <- dat$partial
+          sel[length(sel)] <- FALSE
+          complete <- dat[!sel, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
+
         unit.date <- dat$date
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
@@ -117,7 +125,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 
         xlim <- range(dat$date)
         ylim <- range(dat[, y.nm])
-        complete <- dat[!dat$partial, ]
 
         if (log.count) {
           plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
@@ -129,10 +136,26 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
         points(wk1.backdate[, c("date", y.nm)], col = "dodgerblue", pch = 8)
-        points(current.wk.est$date, current.wk.est$count, col = "red")
         points(x$first.obs.date, dat[1, y.nm], pch = 0, col = "gray")
-        points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0,
-          col = "gray")
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est$date, current.wk.est$count, col = "red")
+          points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0,
+            col = "gray")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   current.wk.est$date,
+                   current.wk.est[, y.nm],
+                   col = "red")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   dat[nrow(dat), "date"],
+                   dat[nrow(dat), y.nm],
+                   lty = "dotted")
+          axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
+          axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
+            col.ticks = "red")
+        }
 
         segments(wk1.backdate$date,
                  wk1.backdate[, y.nm],
@@ -144,19 +167,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
                  complete[1, "date"],
                  complete[1, y.nm],
                  lty = "dotted")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), y.nm],
-                 current.wk.est$date,
-                 current.wk.est[, y.nm],
-                 col = "red")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), y.nm],
-                 dat[nrow(dat), "date"],
-                 dat[nrow(dat), y.nm],
-                 lty = "dotted")
-        axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
-        axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
-          col.ticks = "red")
 
       } else {
         if (log.count) {
@@ -254,9 +264,15 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
       } else if (any(dat$partial)) {
-        complete <- dat[!dat$partial, ]
-        unit.date <- dat$date
+        if (weekdays(last.obs.date) == "Saturday") {
+          sel <- dat$partial
+          sel[length(sel)] <- FALSE
+          complete <- dat[!sel, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
 
+        unit.date <- dat$date
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
         wk1 <- cranDownloads(from = wk1.start, to = wk1.end)

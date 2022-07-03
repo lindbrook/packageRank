@@ -1,3 +1,9 @@
+packageRank 0.6.0.9034
+==================
+
+- amend cranPlot() for unit.observation = "week" & last observation is Satuday.
+
+
 packageRank 0.6.0.9033
 ==================
 
