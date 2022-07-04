@@ -268,6 +268,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           sel <- dat$partial
           sel[length(sel)] <- FALSE
           complete <- dat[!sel, ]
+          complete$partial <- FALSE
         } else {
           complete <- dat[!dat$partial, ]
         }
@@ -316,30 +317,32 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
                                 values = c("Backdate" = "solid",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "solid")) +
-           scale_shape_manual(name = "Other Data",
-                              breaks = c("Backdate",
-                                         "Partial/In-Progress",
-                                         "Estimate"),
-                              values = c("Backdate" = 8,
-                                         "Partial/In-Progress" = 0,
-                                         "Estimate" = 1)) +
-          geom_line(data = current.est.seg, size = 1/3,
-            aes(colour = "Estimate", linetype = "Estimate")) +
-          geom_line(data = current.obs.seg, size = 1/3, aes(colour =
-            "Partial/In-Progress", linetype = "Partial/In-Progress")) +
+          scale_shape_manual(name = "Other Data",
+                             breaks = c("Backdate",
+                                        "Partial/In-Progress",
+                                        "Estimate"),
+                             values = c("Backdate" = 8,
+                                        "Partial/In-Progress" = 0,
+                                        "Estimate" = 1)) +
           geom_line(data = backdate.seg, size = 1/3,
             aes(colour = "Backdate", linetype = "Backdate")) +
           geom_line(data = backdate.obs.seg, size = 1/3, aes(colour =
             "Partial/In-Progress", linetype = "Partial/In-Progress")) +
+          geom_point(data = wk1.backdate, aes(colour = "Backdate",
+            shape = "Backdate")) +
+           geom_point(data = back.data, aes(colour = "Partial/In-Progress",
+            shape = "Partial/In-Progress"))
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          p <- p + geom_line(data = current.est.seg, size = 1/3,
+            aes(colour = "Estimate", linetype = "Estimate")) +
+          geom_line(data = current.obs.seg, size = 1/3, aes(colour =
+            "Partial/In-Progress", linetype = "Partial/In-Progress")) +
           geom_point(data = current.wk.est, size = 1.5,
             aes(colour = "Estimate", shape = "Estimate")) +
           geom_point(data = ip.data,
-             aes(colour = "Partial/In-Progress",
-                 shape = "Partial/In-Progress")) +
-          geom_point(data = wk1.backdate,
-             aes(colour = "Backdate", shape = "Backdate")) +
-          geom_point(data = back.data,
-             aes(colour = "Partial/In-Progress", shape = "Partial/In-Progress"))
+            aes(colour = "Partial/In-Progress", shape = "Partial/In-Progress"))
+         }
 
         if (points) p <- p + geom_point(data = complete)
         if (log.count) p <- p + scale_y_log10() + ylab("log10 count")

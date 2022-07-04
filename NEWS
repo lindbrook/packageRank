@@ -2,7 +2,8 @@ packageRank 0.6.0.9034
 ==================
 
 - amend cranPlot() for unit.observation = "week" & last observation is Satuday.
-
+- fix Satuday exception for cranPlot(graphics = "ggplot2") & unit.observation = 
+  "week". 
 
 packageRank 0.6.0.9033
 ==================
