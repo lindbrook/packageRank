@@ -6,6 +6,7 @@ packageRank 0.6.0.9034
   "week". 
 - amend singlePlot() for unit.observation = "week" & last observation is 
   Satuday.
+- amend multiPlot() for unit.observation = "week" & last observation is Satuday.
   
 
 packageRank 0.6.0.9033
