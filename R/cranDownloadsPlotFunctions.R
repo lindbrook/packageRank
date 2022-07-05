@@ -330,7 +330,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
             "Partial/In-Progress", linetype = "Partial/In-Progress")) +
           geom_point(data = wk1.backdate, aes(colour = "Backdate",
             shape = "Backdate")) +
-           geom_point(data = back.data, aes(colour = "Partial/In-Progress",
+          geom_point(data = back.data, aes(colour = "Partial/In-Progress",
             shape = "Partial/In-Progress"))
 
         if (weekdays(last.obs.date) != "Saturday") {
