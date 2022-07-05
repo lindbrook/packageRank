@@ -744,7 +744,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       } else if (any(dat$partial)) {
         g <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-          complete <- pkg.dat[!pkg.dat$partial, ]
+
+          if (weekdays(last.obs.date) == "Saturday") {
+            sel <- pkg.dat$partial
+            sel[length(sel)] <- FALSE
+            complete <- pkg.dat[!sel, ]
+          } else {
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          }
+
           unit.date <- pkg.dat$date
 
           wk1.start <- pkg.dat$date[1]
@@ -789,13 +797,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         })
 
         complete <- do.call(rbind, lapply(g, function(x) x$complete))
-        if (weekdays(last.obs.date) == "Saturday") {
-          sel <- dat$partial
-          sel[length(sel)] <- FALSE
-          complete <- dat[!sel, ]
-        } else {
-          complete <- dat[!dat$partial, ]
-        }
+
 
         wk1.sunday <- do.call(c, lapply(g, function(x) x$wk1.sunday))
         wk1.partial <- do.call(rbind, lapply(g, function(x) x$wk1.partial))
