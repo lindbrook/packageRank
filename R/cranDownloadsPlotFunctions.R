@@ -1036,8 +1036,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             wk1.backdate$count <- sum(wk1$cranlogs.data$count)
 
             current.wk <- pkg.dat[nrow(pkg.dat), ]
-            weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)]
-              + 1
+            weekdays.elapsed <- x$last.obs.date - 
+              unit.date[length(unit.date)] + 1
             current.wk.est <- current.wk
             if (as.integer(weekdays.elapsed) != 0) { # monday exception
               current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
