@@ -97,9 +97,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 
       } else if (any(dat$partial)) { # unit.observation = "week"
         if (weekdays(last.obs.date) == "Saturday") {
-          sel <- dat$partial
-          sel[length(sel)] <- FALSE
-          complete <- dat[!sel, ]
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
         } else {
           complete <- dat[!dat$partial, ]
         }
@@ -265,10 +264,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 
       } else if (any(dat$partial)) {
         if (weekdays(last.obs.date) == "Saturday") {
-          sel <- dat$partial
-          sel[length(sel)] <- FALSE
-          complete <- dat[!sel, ]
-          complete$partial <- FALSE
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
         } else {
           complete <- dat[!dat$partial, ]
         }
@@ -547,9 +544,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat <- plot.data[[i]]$pkg.dat
 
           if (weekdays(last.obs.date) == "Saturday") {
-            sel <- pkg.dat$partial
-            sel[length(sel)] <- FALSE
-            complete <- pkg.dat[!sel, ]
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
           } else {
             complete <- pkg.dat[!pkg.dat$partial, ]
           }
@@ -747,9 +744,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat <- dat[dat$package == pkg, ]
 
           if (weekdays(last.obs.date) == "Saturday") {
-            sel <- pkg.dat$partial
-            sel[length(sel)] <- FALSE
-            complete <- pkg.dat[!sel, ]
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
           } else {
             complete <- pkg.dat[!pkg.dat$partial, ]
           }
@@ -1065,9 +1062,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             pkg.dat <- plot.data[[i]]$pkg.dat
 
             if (weekdays(last.obs.date) == "Saturday") {
-              sel <- pkg.dat$partial
-              sel[length(sel)] <- FALSE
-              complete <- pkg.dat[!sel, ]
+              sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+              pkg.dat[sel, "partial"] <- FALSE
+              complete <- pkg.dat[!pkg.dat$partial, ]
             } else {
               complete <- pkg.dat[!pkg.dat$partial, ]
             }
@@ -1257,9 +1254,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           pkg.dat <- dat[dat$package == pkg, ]
 
           if (weekdays(last.obs.date) == "Saturday") {
-            sel <- pkg.dat$partial
-            sel[length(sel)] <- FALSE
-            complete <- pkg.dat[!sel, ]
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
           } else {
             complete <- pkg.dat[!pkg.dat$partial, ]
           }
