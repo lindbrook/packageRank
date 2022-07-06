@@ -1608,22 +1608,24 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           lines(tmp$date, tmp[, statistic], type = type, col = pltfrm.col[i])
         }))
 
-        points(current.wk.est[, c("date", "count")], col = pltfrm.col)
-        points(current.wk[, c("date", "count")], col = pltfrm.col, pch = 0)
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est[, c("date", "count")], col = pltfrm.col)
+          points(current.wk[, c("date", "count")], col = pltfrm.col, pch = 0)
 
-        invisible(lapply(seq_along(complete), function(i) {
-          tmp <- complete[[i]]
-          segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
-                   current.wk[i, "date"], current.wk[i, statistic],
-                   lty = "dotted", col = pltfrm.col[i])
-        }))
+          invisible(lapply(seq_along(complete), function(i) {
+            tmp <- complete[[i]]
+            segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
+                     current.wk[i, "date"], current.wk[i, statistic],
+                     lty = "dotted", col = pltfrm.col[i])
+          }))
 
-        invisible(lapply(seq_along(complete), function(i) {
-          tmp <- complete[[i]]
-          segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
-                   current.wk.est[i, "date"], current.wk.est[i, statistic],
-                   lty = "dashed", col = pltfrm.col[i])
-        }))
+          invisible(lapply(seq_along(complete), function(i) {
+            tmp <- complete[[i]]
+            segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
+                     current.wk.est[i, "date"], current.wk.est[i, statistic],
+                     lty = "dashed", col = pltfrm.col[i])
+          }))
+        }
 
         if (any(sunday.alpha)) {
           points(wk1.backdate[, c("date", statistic)], pch = 8, cex = 1.5,
@@ -1928,24 +1930,29 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         p <- p + geom_line(data = complete, size = 1/3)
 
         if (multi.plot) {
-          p <- p + scale_linetype_manual(name = "Other Data",
-                                         breaks = c("Backdate",
-                                                    "Estimate",
-                                                    "Observed"),
-                                         values = c("Backdate" = "longdash",
-                                                    "Estimate" = "longdash",
-                                                    "Observed" = "dotted")) +
+          p <- p +
+            scale_linetype_manual(name = "Other Data",
+                                  breaks = c("Backdate",
+                                             "Estimate",
+                                             "Observed"),
+                                  values = c("Backdate" = "longdash",
+                                             "Estimate" = "longdash",
+                                             "Observed" = "dotted")) +
             scale_shape_manual(name = "Other Data",
                                breaks = c("Backdate", "Estimate", "Observed"),
                                values = c("Backdate" = 8,
                                           "Estimate" = 1,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, aes(linetype = "Backdate")) +
-            geom_line(data = current.est.seg, aes(linetype = "Estimate")) +
-            geom_line(data = current.obs.seg, aes(linetype = "Observed")) +
             geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
-            geom_point(data = current.wk.est, aes(shape = "Estimate")) +
             geom_point(data = last.observed, aes(shape = "Observed"))
+
+            if (weekdays(last.obs.date) != "Saturday") {
+              p <- p + geom_line(data = current.est.seg,
+                                 aes(linetype = "Estimate")) +
+              geom_line(data = current.obs.seg, aes(linetype = "Observed")) +
+              geom_point(data = current.wk.est, aes(shape = "Estimate"))
+            }
 
           if (all(!sunday.alpha)) {
             p <- p + geom_line(data = backdate.obs.seg,
@@ -1953,13 +1960,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               geom_point(data = first.observed, aes(shape = "Observed"))
           }
         } else {
-          p <- p + scale_colour_manual(name = "Other Data",
-                                       breaks = c("Backdate",
-                                                  "Estimate",
-                                                  "Observed"),
-                                      values = c("Backdate" = "dodgerblue",
-                                                 "Estimate" = "red",
-                                                 "Observed" = "gray")) +
+          p <- p +
+            scale_colour_manual(name = "Other Data",
+                                breaks = c("Backdate",
+                                          "Estimate",
+                                          "Observed"),
+                                values = c("Backdate" = "dodgerblue",
+                                           "Estimate" = "red",
+                                           "Observed" = "gray")) +
             scale_linetype_manual(name = "Other Data",
                                   breaks = c("Backdate",
                                              "Estimate",
@@ -1974,23 +1982,25 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, size = 1/3,
               aes(colour = "Backdate", linetype = "Backdate")) +
-            geom_line(data = current.est.seg,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_line(data = current.obs.seg,
-              aes(colour = "Observed", linetype = "Observed")) +
             geom_point(data = wk1.backdate,
               aes(colour = "Backdate", shape = "Backdate")) +
-            geom_point(data = current.wk.est,
-              aes(colour = "Estimate", shape = "Estimate")) +
             geom_point(data = last.observed,
               aes(colour = "Observed", shape = "Observed"))
 
+            if (weekdays(last.obs.date) != "Saturday") {
+              p <- p + geom_line(data = current.est.seg,
+                  aes(colour = "Estimate", linetype = "Estimate")) +
+                geom_line(data = current.obs.seg,
+                  aes(colour = "Observed", linetype = "Observed")) +
+                geom_point(data = current.wk.est,
+                  aes(colour = "Estimate", shape = "Estimate"))
+            }
+
           if (all(!sunday.alpha)) {
             p <- p + geom_line(data = backdate.obs.seg,
-                               aes(colour = "Observed",
-                                   linetype = "Observed")) +
-              geom_point(data = first.observed, aes(colour = "Observed",
-                                                    shape = "Observed"))
+                aes(colour = "Observed", linetype = "Observed")) +
+              geom_point(data = first.observed,
+                aes(colour = "Observed", shape = "Observed"))
           }
         }
 
@@ -2215,23 +2225,24 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
                    lty = "dotted")
         }
 
-        points(current.wk.est$date, current.wk.est$count, col = "red")
-        points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
-          col = "gray", pch = 0)
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), statistic],
-                 current.wk.est$date,
-                 current.wk.est[, statistic],
-                 col = "red")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), statistic],
-                 dat[nrow(dat), "date"],
-                 dat[nrow(dat), statistic],
-                 lty = "dotted")
-        axis(4, at = dat[nrow(dat), statistic], labels = "obs")
-        axis(4, at = current.wk.est[, statistic], labels = "est",
-          col.axis = "red", col.ticks = "red")
-
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est$date, current.wk.est$count, col = "red")
+          points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
+            col = "gray", pch = 0)
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), statistic],
+                   current.wk.est$date,
+                   current.wk.est[, statistic],
+                   col = "red")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), statistic],
+                   dat[nrow(dat), "date"],
+                   dat[nrow(dat), statistic],
+                   lty = "dotted")
+          axis(4, at = dat[nrow(dat), statistic], labels = "obs")
+          axis(4, at = current.wk.est[, statistic], labels = "est",
+            col.axis = "red", col.ticks = "red")
+        }
       } else {
         if (log.count) {
           plot(dat$date, dat[, statistic], type = type, xlab = "Date",
@@ -2364,23 +2375,28 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
                               breaks = c("Backdate", "Observed", "Estimate"),
                               values = c("Backdate" = 8,
                                          "Observed" = 0,
-                                         "Estimate" = 1)) +
-          geom_line(data = current.est.seg, size = 1/3, aes(col = "Estimate")) +
-          geom_line(data = current.obs.seg, size = 1/3, aes(col = "Observed")) +
-          geom_point(data = current.wk.est,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-             aes(colour = "Observed", shape = "Observed"))
+                                         "Estimate" = 1))
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          p <- p + geom_line(data = current.est.seg, size = 1/3,
+              aes(col = "Estimate")) +
+            geom_line(data = current.obs.seg, size = 1/3,
+              aes(col = "Observed")) +
+            geom_point(data = current.wk.est,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = ip.data,
+              aes(colour = "Observed", shape = "Observed"))
+        }
 
         if (all(!sunday.alpha)) {
           p <- p + geom_line(data = backdate.seg, size = 1/3,
-            aes(col = "Backdate")) +
-          geom_line(data = backdate.obs.seg, size = 1/3,
-            aes(col = "Observed")) +
-          geom_point(data = wk1.backdate,
-            aes(colour = "Backdate", shape = "Backdate")) +
-          geom_point(data = back.data,
-             aes(colour = "Observed", shape = "Observed"))
+              aes(col = "Backdate")) +
+            geom_line(data = backdate.obs.seg, size = 1/3,
+              aes(col = "Observed")) +
+            geom_point(data = wk1.backdate,
+              aes(colour = "Backdate", shape = "Backdate")) +
+            geom_point(data = back.data,
+               aes(colour = "Observed", shape = "Observed"))
         } else {
           p <- p + geom_point(data = wk1.backdate, colour = "dodgerblue",
             shape = 1, size = 3)
