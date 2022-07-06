@@ -96,6 +96,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           col.ticks = "red")
 
       } else if (any(dat$partial)) { # unit.observation = "week"
+        if (weekdays(last.obs.date) == "Saturday") {
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
+
         unit.date <- dat$date
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
@@ -112,12 +119,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
         xlim <- range(dat$date)
         ylim <- range(dat[, y.nm])
-        complete <- dat[!dat$partial, ]
 
         if (log.count) {
           plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
@@ -129,10 +135,26 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
         points(wk1.backdate[, c("date", y.nm)], col = "dodgerblue", pch = 8)
-        points(current.wk.est$date, current.wk.est$count, col = "red")
         points(x$first.obs.date, dat[1, y.nm], pch = 0, col = "gray")
-        points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0,
-          col = "gray")
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est$date, current.wk.est$count, col = "red")
+          points(dat[nrow(dat), "date"], dat[nrow(dat), y.nm], pch = 0,
+            col = "gray")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   current.wk.est$date,
+                   current.wk.est[, y.nm],
+                   col = "red")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), y.nm],
+                   dat[nrow(dat), "date"],
+                   dat[nrow(dat), y.nm],
+                   lty = "dotted")
+          axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
+          axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
+            col.ticks = "red")
+        }
 
         segments(wk1.backdate$date,
                  wk1.backdate[, y.nm],
@@ -144,19 +166,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
                  complete[1, "date"],
                  complete[1, y.nm],
                  lty = "dotted")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), y.nm],
-                 current.wk.est$date,
-                 current.wk.est[, y.nm],
-                 col = "red")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), y.nm],
-                 dat[nrow(dat), "date"],
-                 dat[nrow(dat), y.nm],
-                 lty = "dotted")
-        axis(4, at = dat[nrow(dat), y.nm], labels = "obs")
-        axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
-          col.ticks = "red")
 
       } else {
         if (log.count) {
@@ -254,9 +263,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
       } else if (any(dat$partial)) {
-        complete <- dat[!dat$partial, ]
-        unit.date <- dat$date
+        if (weekdays(last.obs.date) == "Saturday") {
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
 
+        unit.date <- dat$date
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
         wk1 <- cranDownloads(from = wk1.start, to = wk1.end)
@@ -272,7 +286,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
         backdate.seg <- rbind(complete[1, ], wk1.backdate)
@@ -300,30 +314,33 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
                                 values = c("Backdate" = "solid",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "solid")) +
-           scale_shape_manual(name = "Other Data",
-                              breaks = c("Backdate",
-                                         "Partial/In-Progress",
-                                         "Estimate"),
-                              values = c("Backdate" = 8,
-                                         "Partial/In-Progress" = 0,
-                                         "Estimate" = 1)) +
-          geom_line(data = current.est.seg, size = 1/3,
-            aes(colour = "Estimate", linetype = "Estimate")) +
-          geom_line(data = current.obs.seg, size = 1/3, aes(colour =
-            "Partial/In-Progress", linetype = "Partial/In-Progress")) +
+          scale_shape_manual(name = "Other Data",
+                             breaks = c("Backdate",
+                                        "Partial/In-Progress",
+                                        "Estimate"),
+                             values = c("Backdate" = 8,
+                                        "Partial/In-Progress" = 0,
+                                        "Estimate" = 1)) +
           geom_line(data = backdate.seg, size = 1/3,
             aes(colour = "Backdate", linetype = "Backdate")) +
           geom_line(data = backdate.obs.seg, size = 1/3, aes(colour =
             "Partial/In-Progress", linetype = "Partial/In-Progress")) +
-          geom_point(data = current.wk.est, size = 1.5,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-             aes(colour = "Partial/In-Progress",
-                 shape = "Partial/In-Progress")) +
-          geom_point(data = wk1.backdate,
-             aes(colour = "Backdate", shape = "Backdate")) +
-          geom_point(data = back.data,
-             aes(colour = "Partial/In-Progress", shape = "Partial/In-Progress"))
+          geom_point(data = wk1.backdate, aes(colour = "Backdate",
+            shape = "Backdate")) +
+          geom_point(data = back.data, aes(colour = "Partial/In-Progress",
+            shape = "Partial/In-Progress"))
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          p <- p + geom_line(data = current.est.seg, size = 1/3,
+              aes(colour = "Estimate", linetype = "Estimate")) +
+            geom_line(data = current.obs.seg, size = 1/3, aes(colour =
+              "Partial/In-Progress", linetype = "Partial/In-Progress")) +
+            geom_point(data = current.wk.est, size = 1.5,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = ip.data,
+              aes(colour = "Partial/In-Progress",
+                  shape = "Partial/In-Progress"))
+         }
 
         if (points) p <- p + geom_point(data = complete)
         if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
@@ -512,7 +529,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
               current.wk$count
           } else {
-             current.wk.est$count <- 7L * current.wk$count
+            current.wk.est$count <- 7L * current.wk$count
           }
 
           list(pkg.dat = pkg.dat, wk1.backdate = wk1.backdate,
@@ -525,9 +542,17 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         invisible(lapply(seq_along(plot.data), function(i) {
           pkg.dat <- plot.data[[i]]$pkg.dat
+
+          if (weekdays(last.obs.date) == "Saturday") {
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          } else {
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          }
+
           wk1.backdate <- plot.data[[i]]$wk1.backdate
           current.wk.est <- plot.data[[i]]$current.wk.est
-          complete <- pkg.dat[!pkg.dat$partial, ]
 
           if (log.count) {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
@@ -539,33 +564,37 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           points(wk1.backdate[, c("date", y.nm)], col = "dodgerblue", pch = 8)
-          points(current.wk.est$date, current.wk.est$count, col = "red")
           points(x$first.obs.date[i], pkg.dat[1, y.nm], pch = 0, col = "gray")
-          points(pkg.dat[nrow(pkg.dat), "date"], pkg.dat[nrow(pkg.dat), y.nm],
-            pch = 0, col = "gray")
-          segments(wk1.backdate$date,
-                   wk1.backdate[, y.nm],
-                   complete[1, "date"],
-                   complete[1, y.nm],
-                   col = "dodgerblue")
-          segments(x$first.obs.date[i],
-                   pkg.dat[1, y.nm],
-                   complete[1, "date"],
-                   complete[1, y.nm],
-                   lty = "dotted")
-          segments(complete[nrow(complete), "date"],
-                   complete[nrow(complete), y.nm],
-                   current.wk.est$date,
-                   current.wk.est[, y.nm],
-                   col = "red")
-          segments(complete[nrow(complete), "date"],
-                   complete[nrow(complete), y.nm],
-                   pkg.dat[nrow(pkg.dat), "date"],
-                   pkg.dat[nrow(pkg.dat), y.nm],
-                   lty = "dotted")
-          axis(4, at = pkg.dat[nrow(pkg.dat), y.nm], labels = "obs")
-          axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
-            col.ticks = "red")
+
+          if (weekdays(last.obs.date) != "Saturday") {
+            points(current.wk.est$date, current.wk.est$count, col = "red")
+            points(pkg.dat[nrow(pkg.dat), "date"], pkg.dat[nrow(pkg.dat), y.nm],
+              pch = 0, col = "gray")
+            segments(complete[nrow(complete), "date"],
+                     complete[nrow(complete), y.nm],
+                     current.wk.est$date,
+                     current.wk.est[, y.nm],
+                     col = "red")
+            segments(complete[nrow(complete), "date"],
+                     complete[nrow(complete), y.nm],
+                     pkg.dat[nrow(pkg.dat), "date"],
+                     pkg.dat[nrow(pkg.dat), y.nm],
+                     lty = "dotted")
+            axis(4, at = pkg.dat[nrow(pkg.dat), y.nm], labels = "obs")
+            axis(4, at = current.wk.est[, y.nm], labels = "est",
+              col.axis = "red", col.ticks = "red")
+          }
+
+            segments(wk1.backdate$date,
+                     wk1.backdate[, y.nm],
+                     complete[1, "date"],
+                     complete[1, y.nm],
+                     col = "dodgerblue")
+            segments(x$first.obs.date[i],
+                     pkg.dat[1, y.nm],
+                     complete[1, "date"],
+                     complete[1, y.nm],
+                     lty = "dotted")
 
           if (package.version) {
             if (dev.mode) p_v <- packageHistory0(current.wk.est$package)
@@ -713,7 +742,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       } else if (any(dat$partial)) {
         g <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-          complete <- pkg.dat[!pkg.dat$partial, ]
+
+          if (weekdays(last.obs.date) == "Saturday") {
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          } else {
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          }
+
           unit.date <- pkg.dat$date
 
           wk1.start <- pkg.dat$date[1]
@@ -739,7 +776,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
               current.wk$count
           } else {
-             current.wk.est$count <- 7L * current.wk$count
+            current.wk.est$count <- 7L * current.wk$count
           }
 
           list(pkg.dat = pkg.dat,
@@ -797,18 +834,21 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                              values = c("Backdate" = 8,
                                         "Partial/In-Progress" = 0,
                                         "Estimate" = 1)) +
-          geom_line(data = current.wk.est.seg, size = 1/3,
-                    aes(colour = "Estimate", linetype = "Estimate")) +
-          geom_line(data = current.wk.obs.seg, size = 1/3,
-                    aes(colour = "Partial/In-Progress",
-                        linetype = "Partial/In-Progress")) +
-          geom_point(data = current.wk.est, size = 1.5,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = current.wk,
-            aes(colour = "Partial/In-Progress",
-                shape = "Partial/In-Progress")) +
-          geom_point(data = wk1.backdate,
-            aes(colour = "Backdate", shape = "Backdate"))
+          geom_point(data = wk1.backdate, aes(colour = "Backdate",
+            shape = "Backdate"))
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          p <- p + geom_line(data = current.wk.est.seg, size = 1/3,
+              aes(colour = "Estimate", linetype = "Estimate")) +
+            geom_line(data = current.wk.obs.seg, size = 1/3,
+              aes(colour = "Partial/In-Progress",
+                  linetype = "Partial/In-Progress")) +
+            geom_point(data = current.wk.est, size = 1.5,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = current.wk,
+              aes(colour = "Partial/In-Progress",
+                  shape = "Partial/In-Progress"))
+        }
 
         if (any(!wk1.sunday)) {
           p <- p +
@@ -848,10 +888,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       }
 
       p <- p + facet_wrap(~ package, nrow = 2) +
-           theme_bw() +
-           theme(legend.position = "bottom",
-                 panel.grid.major = element_blank(),
-                 panel.grid.minor = element_blank())
+               theme_bw() +
+               theme(legend.position = "bottom",
+                    panel.grid.major = element_blank(),
+                    panel.grid.minor = element_blank())
     }
     suppressWarnings(print(p))
   }
@@ -993,14 +1033,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             wk1.backdate$count <- sum(wk1$cranlogs.data$count)
 
             current.wk <- pkg.dat[nrow(pkg.dat), ]
-            weekdays.elapsed <- x$last.obs.date - unit.date[length(unit.date)]
-              + 1
+            weekdays.elapsed <- x$last.obs.date - 
+              unit.date[length(unit.date)] + 1
             current.wk.est <- current.wk
             if (as.integer(weekdays.elapsed) != 0) { # monday exception
               current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
                 current.wk$count
             } else {
-               current.wk.est$count <- 7L * current.wk$count
+              current.wk.est$count <- 7L * current.wk$count
             }
 
             list(pkg.dat = pkg.dat, wk1.backdate = wk1.backdate,
@@ -1020,22 +1060,25 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
           invisible(lapply(seq_along(plot.data), function(i) {
             pkg.dat <- plot.data[[i]]$pkg.dat
+
+            if (weekdays(last.obs.date) == "Saturday") {
+              sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+              pkg.dat[sel, "partial"] <- FALSE
+              complete <- pkg.dat[!pkg.dat$partial, ]
+            } else {
+              complete <- pkg.dat[!pkg.dat$partial, ]
+            }
+
             wk1.backdate <- plot.data[[i]]$wk1.backdate
             current.wk.est <- plot.data[[i]]$current.wk.est
-            complete <- pkg.dat[!pkg.dat$partial, ]
 
             if (points) points(complete[, vars], col = cbPalette[i], pch = 16)
-            points(wk1.backdate[, c("date", statistic)], col = cbPalette[i],
-              pch = 8)
-            points(current.wk.est$date, current.wk.est$count, pch = 1,
-              col = cbPalette[i])
-            points(x$first.obs.date[i], pkg.dat[1, statistic], pch = 0,
-              col = cbPalette[i])
-            points(pkg.dat[nrow(pkg.dat), "date"],
-                   pkg.dat[nrow(pkg.dat), statistic],
-                   pch = 0, col = cbPalette[i])
 
             lines(complete[, c("date", statistic)], col = cbPalette[i])
+            points(wk1.backdate[, c("date", statistic)], col = cbPalette[i],
+              pch = 8)
+            points(x$first.obs.date[i], pkg.dat[1, statistic], pch = 0,
+              col = cbPalette[i])
             segments(wk1.backdate$date,
                      wk1.backdate[, statistic],
                      complete[1, "date"],
@@ -1048,17 +1091,25 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                      complete[1, statistic],
                      col = cbPalette[i],
                      lty = "dotted")
-            segments(complete[nrow(complete), "date"],
-                     complete[nrow(complete), statistic],
-                     current.wk.est$date,
-                     current.wk.est[, statistic],
-                     col = cbPalette[i],
-                     lty = "longdash")
-            segments(complete[nrow(complete), "date"],
-                     complete[nrow(complete), statistic],
-                     pkg.dat[nrow(pkg.dat), "date"],
+
+            if (weekdays(last.obs.date) != "Saturday") {
+              points(current.wk.est$date, current.wk.est$count, pch = 1,
+                col = cbPalette[i])
+              points(pkg.dat[nrow(pkg.dat), "date"],
                      pkg.dat[nrow(pkg.dat), statistic],
-                     lty = "dotted")
+                     pch = 0, col = cbPalette[i])
+              segments(complete[nrow(complete), "date"],
+                       complete[nrow(complete), statistic],
+                       current.wk.est$date,
+                       current.wk.est[, statistic],
+                       col = cbPalette[i],
+                       lty = "longdash")
+              segments(complete[nrow(complete), "date"],
+                       complete[nrow(complete), statistic],
+                       pkg.dat[nrow(pkg.dat), "date"],
+                       pkg.dat[nrow(pkg.dat), statistic],
+                       lty = "dotted")
+             }
 
             if (smooth) {
               smooth.data <- rbind(wk1.backdate, complete)
@@ -1201,13 +1252,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
       } else if (any(dat$partial)) {
         g <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-          complete <- pkg.dat[!pkg.dat$partial, ]
-          unit.date <- pkg.dat$date
 
+          if (weekdays(last.obs.date) == "Saturday") {
+            sel <- pkg.dat$partial & pkg.dat$pkg.date == max(pkg.dat$date)
+            pkg.dat[sel, "partial"] <- FALSE
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          } else {
+            complete <- pkg.dat[!pkg.dat$partial, ]
+          }
+
+          unit.date <- pkg.dat$date
           wk1.start <- pkg.dat$date[1]
           wk1.end <- pkg.dat$date[2] - 1
           wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
-
           wk1.sunday <- pkg.dat$date == wk1.start & pkg.dat$partial == FALSE
 
           if (any(wk1.sunday)) {
@@ -1227,7 +1284,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
               current.wk$count
           } else {
-             current.wk.est$count <- 7L * current.wk$count
+            current.wk.est$count <- 7L * current.wk$count
           }
 
           list(pkg.dat = pkg.dat,
@@ -1278,19 +1335,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                              values = c("Backdate" = 8,
                                         "Partial/In-Progress" = 0,
                                         "Estimate" = 1)) +
-          geom_line(data = current.wk.est.seg, size = 1/3,
-            aes(linetype = "Estimate")) +
-          geom_line(data = current.wk.obs.seg, size = 1/3,
-            aes(linetype = "Partial/In-Progress")) +
+          geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
+          geom_point(data = wk1.partial, aes(shape = "Partial/In-Progress")) +
           geom_line(data = backdate.obs.seg, size = 1/3,
             aes(linetype = "Partial/In-Progress")) +
-          geom_line(data = backdate.seg, size = 1/3,
-            aes(linetype = "Backdate")) +
-          geom_point(data = current.wk.est, size = 1.5,
-            aes(shape = "Estimate")) +
-          geom_point(data = current.wk, aes(shape = "Partial/In-Progress")) +
-          geom_point(data = wk1.partial, aes(shape = "Partial/In-Progress")) +
-          geom_point(data = wk1.backdate, aes(shape = "Backdate"))
+          geom_line(data = backdate.seg, size = 1/3, aes(linetype = "Backdate"))
+
+          if (weekdays(last.obs.date) != "Saturday") {
+            p <- p + geom_line(data = current.wk.est.seg, size = 1/3,
+                aes(linetype = "Estimate")) +
+              geom_line(data = current.wk.obs.seg, size = 1/3,
+                aes(linetype = "Partial/In-Progress")) +
+              geom_point(data = current.wk.est, size = 1.5,
+                aes(shape = "Estimate")) +
+              geom_point(data = current.wk, aes(shape = "Partial/In-Progress"))
+          }
 
         if (points) p <- p + geom_point(data = complete)
 
@@ -1510,14 +1569,20 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
         xlim <- range(dat$date)
         ylim <- range(dat[, statistic], wk1.backdate$count,
           current.wk.est$count)
 
-        complete <- dat[!dat$partial, ]
+        if (weekdays(last.obs.date) == "Saturday") {
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
+
         complete <- lapply(unique(complete$platform), function(p) {
           complete[complete$platform == p, ]
         })
@@ -1543,22 +1608,24 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           lines(tmp$date, tmp[, statistic], type = type, col = pltfrm.col[i])
         }))
 
-        points(current.wk.est[, c("date", "count")], col = pltfrm.col)
-        points(current.wk[, c("date", "count")], col = pltfrm.col, pch = 0)
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est[, c("date", "count")], col = pltfrm.col)
+          points(current.wk[, c("date", "count")], col = pltfrm.col, pch = 0)
 
-        invisible(lapply(seq_along(complete), function(i) {
-          tmp <- complete[[i]]
-          segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
-                   current.wk[i, "date"], current.wk[i, statistic],
-                   lty = "dotted", col = pltfrm.col[i])
-        }))
+          invisible(lapply(seq_along(complete), function(i) {
+            tmp <- complete[[i]]
+            segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
+                     current.wk[i, "date"], current.wk[i, statistic],
+                     lty = "dotted", col = pltfrm.col[i])
+          }))
 
-        invisible(lapply(seq_along(complete), function(i) {
-          tmp <- complete[[i]]
-          segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
-                   current.wk.est[i, "date"], current.wk.est[i, statistic],
-                   lty = "dashed", col = pltfrm.col[i])
-        }))
+          invisible(lapply(seq_along(complete), function(i) {
+            tmp <- complete[[i]]
+            segments(tmp[nrow(tmp), "date"], tmp[nrow(tmp), statistic],
+                     current.wk.est[i, "date"], current.wk.est[i, statistic],
+                     lty = "dashed", col = pltfrm.col[i])
+          }))
+        }
 
         if (any(sunday.alpha)) {
           points(wk1.backdate[, c("date", statistic)], pch = 8, cex = 1.5,
@@ -1840,10 +1907,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
-        complete <- dat[!dat$partial, ]
+        if (weekdays(last.obs.date) == "Saturday") {
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
 
         last.complete <- complete[complete$date == max(complete$date), ]
         last.observed <- dat[dat$date == max(dat$date), ]
@@ -1858,24 +1930,29 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         p <- p + geom_line(data = complete, size = 1/3)
 
         if (multi.plot) {
-          p <- p + scale_linetype_manual(name = "Other Data",
-                                         breaks = c("Backdate",
-                                                    "Estimate",
-                                                    "Observed"),
-                                         values = c("Backdate" = "longdash",
-                                                    "Estimate" = "longdash",
-                                                    "Observed" = "dotted")) +
+          p <- p +
+            scale_linetype_manual(name = "Other Data",
+                                  breaks = c("Backdate",
+                                             "Estimate",
+                                             "Observed"),
+                                  values = c("Backdate" = "longdash",
+                                             "Estimate" = "longdash",
+                                             "Observed" = "dotted")) +
             scale_shape_manual(name = "Other Data",
                                breaks = c("Backdate", "Estimate", "Observed"),
                                values = c("Backdate" = 8,
                                           "Estimate" = 1,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, aes(linetype = "Backdate")) +
-            geom_line(data = current.est.seg, aes(linetype = "Estimate")) +
-            geom_line(data = current.obs.seg, aes(linetype = "Observed")) +
             geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
-            geom_point(data = current.wk.est, aes(shape = "Estimate")) +
             geom_point(data = last.observed, aes(shape = "Observed"))
+
+            if (weekdays(last.obs.date) != "Saturday") {
+              p <- p + geom_line(data = current.est.seg,
+                                 aes(linetype = "Estimate")) +
+              geom_line(data = current.obs.seg, aes(linetype = "Observed")) +
+              geom_point(data = current.wk.est, aes(shape = "Estimate"))
+            }
 
           if (all(!sunday.alpha)) {
             p <- p + geom_line(data = backdate.obs.seg,
@@ -1883,13 +1960,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               geom_point(data = first.observed, aes(shape = "Observed"))
           }
         } else {
-          p <- p + scale_colour_manual(name = "Other Data",
-                                       breaks = c("Backdate",
-                                                  "Estimate",
-                                                  "Observed"),
-                                      values = c("Backdate" = "dodgerblue",
-                                                 "Estimate" = "red",
-                                                 "Observed" = "gray")) +
+          p <- p +
+            scale_colour_manual(name = "Other Data",
+                                breaks = c("Backdate",
+                                          "Estimate",
+                                          "Observed"),
+                                values = c("Backdate" = "dodgerblue",
+                                           "Estimate" = "red",
+                                           "Observed" = "gray")) +
             scale_linetype_manual(name = "Other Data",
                                   breaks = c("Backdate",
                                              "Estimate",
@@ -1904,23 +1982,25 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                                           "Observed" = 0)) +
             geom_line(data = backdate.seg, size = 1/3,
               aes(colour = "Backdate", linetype = "Backdate")) +
-            geom_line(data = current.est.seg,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_line(data = current.obs.seg,
-              aes(colour = "Observed", linetype = "Observed")) +
             geom_point(data = wk1.backdate,
               aes(colour = "Backdate", shape = "Backdate")) +
-            geom_point(data = current.wk.est,
-              aes(colour = "Estimate", shape = "Estimate")) +
             geom_point(data = last.observed,
               aes(colour = "Observed", shape = "Observed"))
 
+            if (weekdays(last.obs.date) != "Saturday") {
+              p <- p + geom_line(data = current.est.seg,
+                  aes(colour = "Estimate", linetype = "Estimate")) +
+                geom_line(data = current.obs.seg,
+                  aes(colour = "Observed", linetype = "Observed")) +
+                geom_point(data = current.wk.est,
+                  aes(colour = "Estimate", shape = "Estimate"))
+            }
+
           if (all(!sunday.alpha)) {
             p <- p + geom_line(data = backdate.obs.seg,
-                               aes(colour = "Observed",
-                                   linetype = "Observed")) +
-              geom_point(data = first.observed, aes(colour = "Observed",
-                                                    shape = "Observed"))
+                aes(colour = "Observed", linetype = "Observed")) +
+              geom_point(data = first.observed,
+                aes(colour = "Observed", shape = "Observed"))
           }
         }
 
@@ -2103,13 +2183,19 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
         xlim <- range(dat$date)
         ylim <- range(dat[, statistic], wk1.backdate$count,
           current.wk.est$count)
-        complete <- dat[!dat$partial, ]
+        # complete <- dat[!dat$partial, ]
+        if (weekdays(last.obs.date) == "Saturday") {
+          dat[dat$partial & dat$date == max(dat$date), "partial"] <- FALSE
+          complete <- dat[!dat$partial, ]
+        } else {
+          complete <- dat[!dat$partial, ]
+        }
 
         if (log.count) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
@@ -2139,23 +2225,24 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
                    lty = "dotted")
         }
 
-        points(current.wk.est$date, current.wk.est$count, col = "red")
-        points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
-          col = "gray", pch = 0)
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), statistic],
-                 current.wk.est$date,
-                 current.wk.est[, statistic],
-                 col = "red")
-        segments(complete[nrow(complete), "date"],
-                 complete[nrow(complete), statistic],
-                 dat[nrow(dat), "date"],
-                 dat[nrow(dat), statistic],
-                 lty = "dotted")
-        axis(4, at = dat[nrow(dat), statistic], labels = "obs")
-        axis(4, at = current.wk.est[, statistic], labels = "est",
-          col.axis = "red", col.ticks = "red")
-
+        if (weekdays(last.obs.date) != "Saturday") {
+          points(current.wk.est$date, current.wk.est$count, col = "red")
+          points(dat[nrow(dat), "date"], dat[nrow(dat), statistic],
+            col = "gray", pch = 0)
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), statistic],
+                   current.wk.est$date,
+                   current.wk.est[, statistic],
+                   col = "red")
+          segments(complete[nrow(complete), "date"],
+                   complete[nrow(complete), statistic],
+                   dat[nrow(dat), "date"],
+                   dat[nrow(dat), statistic],
+                   lty = "dotted")
+          axis(4, at = dat[nrow(dat), statistic], labels = "obs")
+          axis(4, at = current.wk.est[, statistic], labels = "est",
+            col.axis = "red", col.ticks = "red")
+        }
       } else {
         if (log.count) {
           plot(dat$date, dat[, statistic], type = type, xlab = "Date",
@@ -2261,7 +2348,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
           current.wk.est$count <- 7L / as.integer(weekdays.elapsed) *
             current.wk$count
         } else {
-           current.wk.est$count <- 7L * current.wk$count
+          current.wk.est$count <- 7L * current.wk$count
         }
 
         complete <- dat[!dat$partial, ]
@@ -2288,23 +2375,28 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
                               breaks = c("Backdate", "Observed", "Estimate"),
                               values = c("Backdate" = 8,
                                          "Observed" = 0,
-                                         "Estimate" = 1)) +
-          geom_line(data = current.est.seg, size = 1/3, aes(col = "Estimate")) +
-          geom_line(data = current.obs.seg, size = 1/3, aes(col = "Observed")) +
-          geom_point(data = current.wk.est,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-             aes(colour = "Observed", shape = "Observed"))
+                                         "Estimate" = 1))
+
+        if (weekdays(last.obs.date) != "Saturday") {
+          p <- p + geom_line(data = current.est.seg, size = 1/3,
+              aes(col = "Estimate")) +
+            geom_line(data = current.obs.seg, size = 1/3,
+              aes(col = "Observed")) +
+            geom_point(data = current.wk.est,
+              aes(colour = "Estimate", shape = "Estimate")) +
+            geom_point(data = ip.data,
+              aes(colour = "Observed", shape = "Observed"))
+        }
 
         if (all(!sunday.alpha)) {
           p <- p + geom_line(data = backdate.seg, size = 1/3,
-            aes(col = "Backdate")) +
-          geom_line(data = backdate.obs.seg, size = 1/3,
-            aes(col = "Observed")) +
-          geom_point(data = wk1.backdate,
-            aes(colour = "Backdate", shape = "Backdate")) +
-          geom_point(data = back.data,
-             aes(colour = "Observed", shape = "Observed"))
+              aes(col = "Backdate")) +
+            geom_line(data = backdate.obs.seg, size = 1/3,
+              aes(col = "Observed")) +
+            geom_point(data = wk1.backdate,
+              aes(colour = "Backdate", shape = "Backdate")) +
+            geom_point(data = back.data,
+               aes(colour = "Observed", shape = "Observed"))
         } else {
           p <- p + geom_point(data = wk1.backdate, colour = "dodgerblue",
             shape = 1, size = 3)
