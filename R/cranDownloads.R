@@ -271,6 +271,12 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
 
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
+
+    if (!is.null(x$when)) {
+      x$from <- x$cranlogs.data$date[1]
+      x$to <- x$cranlogs.data$date[length(x$cranlogs.data$date)]
+    }
+
     x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }
 
