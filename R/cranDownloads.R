@@ -227,6 +227,12 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
 
   cores <- multiCore(multi.core)
 
+  if (!is.null(x$when)) {
+    if (x$when == "last-week" & unit.observation != "day") {
+      stop('With when = "last-week", only unit.observation = "day" available.')
+    }
+  }
+
   if (graphics == "auto") {
     if (is.null(x$packages)) {
       graphics <- "base"
