@@ -8,6 +8,9 @@ packageRank 0.6.0.9034
   Satuday.
 - amend rPlot() and rTotPlot() for unit.observation = "week" & last observation
   is Satuday.
+- with when = "last-week", only unit.observation = "day" available.
+- with when = "last-month") & graphics = "ggplot2", unit.observation = "month"
+  not available.
 
 
 packageRank 0.6.0.9033

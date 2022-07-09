@@ -237,6 +237,19 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   }
 
+  if (!is.null(x$when)) {
+    if (x$when == "last-week" & unit.observation != "day") {
+      stop('With when = "last-week", only unit.observation = "day" available.',
+        call. = FALSE)
+    }
+    if (x$when == "last-month" & unit.observation == "month" &
+      graphics == "ggplot2") {
+        msg1 <- 'With when = "last-month" and graphics = "ggplot2", only'
+        msg2 <- 'unit.observation = "month" is not available.'
+      stop(paste(msg1, msg2), call. = FALSE)
+    }
+  }
+
   if (is.logical(log.count) == FALSE) {
     stop("log.count must be TRUE or FALSE.", call. = FALSE)
   }
@@ -271,6 +284,12 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
 
     x$last.obs.date <- x$cranlogs.data[nrow(x$cranlogs.data), "date"]
+
+    if (!is.null(x$when)) {
+      x$from <- x$cranlogs.data$date[1]
+      x$to <- x$cranlogs.data$date[length(x$cranlogs.data$date)]
+    }
+
     x$cranlogs.data <- aggregateData(x, unit.observation, cores)
   }
 
