@@ -387,15 +387,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   last.obs.date <- x$last.obs.date
   type <- ifelse(points, "o", "l")
 
+  y.nm <- statistic
+  y.var <- dat[, y.nm]
+  st <- strsplit(statistic, " ")[[1]]
+  y.nm.case <- paste(toupper(substring(st, 1, 1)), substring(st, 2), sep = "",
+    collapse = " ")
+
   if (statistic == "count") {
-    y.var <- dat$count
-    y.nm.case <- "Count"
-    y.nm <- tolower(y.nm.case)
     ttl <- "Package Download Counts"
   } else if (statistic == "cumulative") {
-    y.var <- dat$cumulative
-    y.nm.case <- "Cumulative"
-    y.nm <- tolower(y.nm.case)
     ttl <- "Cumulative Package Downloads"
   }
 
@@ -820,13 +820,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                current.wk.est = current.wk.est,
                pkg.dat.recompute = pkg.dat.recompute,
                complete = complete,
-
                backdate.seg = rbind(complete[1, ], wk1.backdate),
                backdate.obs.seg = rbind(complete[1, ], wk1.partial),
                current.wk.obs.seg = rbind(complete[nrow(complete), ],
-                                          current.wk),
+                 current.wk),
                current.wk.est.seg = rbind(complete[nrow(complete), ],
-                                          current.wk.est),
+                 current.wk.est),
                pkg.dat.recompute = pkg.dat.recompute)
         })
 
