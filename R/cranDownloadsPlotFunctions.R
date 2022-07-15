@@ -94,7 +94,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           col.ticks = "red")
 
       } else if (any(dat$partial)) { # unit.observation = "week"
-                unit.date <- dat$date
+        unit.date <- dat$date
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
         wk1 <- cranDownloads(from = wk1.start, to = wk1.end)
@@ -113,9 +113,10 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
         current.wk <- dat[nrow(dat), ]
+        current.wk.est <- current.wk
+
         weekdays.elapsed <- as.integer(x$last.obs.date -
           unit.date[length(unit.date)] + 1)
-        current.wk.est <- current.wk
 
         if (as.integer(weekdays.elapsed) != 0) { # monday exception
           current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
@@ -296,11 +297,12 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         }
 
         current.wk <- dat[nrow(dat), ]
-        weekdays.elapsed <- as.integer(x$last.obs.date -
-          unit.date[length(unit.date)] + 1)
         current.wk.est <- current.wk
 
-        if (as.integer(weekdays.elapsed) != 0) { # monday exception
+        weekdays.elapsed <- as.integer(x$last.obs.date -
+          unit.date[length(unit.date)] + 1)
+
+        if (weekdays.elapsed != 0) { # monday exception
           current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
         } else {
           current.wk.est$count <- 7L * current.wk$count
@@ -562,9 +564,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           current.wk <- pkg.dat[nrow(pkg.dat), ]
+          current.wk.est <- current.wk
+
           weekdays.elapsed <- as.integer(last.obs.date -
             unit.date[length(unit.date)] + 1)
-          current.wk.est <- current.wk
 
           if (weekdays.elapsed != 0) {
             current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
@@ -822,9 +825,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           current.wk <- pkg.dat[nrow(pkg.dat), ]
+          current.wk.est <- current.wk
+
           weekdays.elapsed <- as.integer(last.obs.date -
             unit.date[length(unit.date)] + 1)
-          current.wk.est <- current.wk
 
           if (weekdays.elapsed != 0) {
             current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
@@ -1107,11 +1111,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
             }
 
             current.wk <- pkg.dat[nrow(pkg.dat), ]
-            weekdays.elapsed <- as.integer(x$last.obs.date -
-              unit.date[length(unit.date)] + 1)
             current.wk.est <- current.wk
 
-            if (as.integer(weekdays.elapsed) != 0) { # monday exception
+            weekdays.elapsed <- as.integer(x$last.obs.date -
+              unit.date[length(unit.date)] + 1)
+
+            if (weekdays.elapsed != 0) { # monday exception
               current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
             } else {
               current.wk.est$count <- 7L * current.wk$count
@@ -1365,9 +1370,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           }
 
           current.wk <- pkg.dat[nrow(pkg.dat), ]
+          current.wk.est <- current.wk
+
           weekdays.elapsed <- as.integer(x$last.obs.date -
             unit.date[length(unit.date)] + 1)
-          current.wk.est <- current.wk
 
           if (weekdays.elapsed != 0) { # monday exception
             current.wk.est$count <- 7L / weekdays.elapsed * current.wk$count
