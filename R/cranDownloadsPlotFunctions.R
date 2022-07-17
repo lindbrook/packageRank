@@ -1929,15 +1929,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           x$est.data[, statistic]
         }, numeric(1L))
 
-        ylim <- range(c(dat[, statistic], est.stat))
-
-        complete <- lapply(p.data, function(x) x$complete)
-        est.data <- lapply(p.data, function(x) x$est.data)
-        obs.data <- lapply(p.data, function(x) x$ip.data)
-
-        complete <- do.call(rbind, complete)
-        est.data <- do.call(rbind, est.data)
-        obs.data <- do.call(rbind, obs.data)
+        complete <- do.call(rbind, lapply(p.data, function(x) x$complete))
+        est.data <- do.call(rbind, lapply(p.data, function(x) x$est.data))
+        obs.data <- do.call(rbind, lapply(p.data, function(x) x$ip.data))
 
         est.seg <- do.call(rbind, lapply(p.data, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(p.data, function(x) x$obs.seg))
