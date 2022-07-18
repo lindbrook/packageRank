@@ -591,7 +591,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             pkg.dat.recompute <- pkg.dat
           }
 
-          complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
+          if (weekdays.elapsed == 7) {
+            sel <- pkg.dat.recompute$date != min(pkg.dat.recompute$date)
+            complete <- pkg.dat.recompute[sel, ]
+          } else {
+            complete <- pkg.dat.recompute[!pkg.dat.recompute$partial, ]
+          }
 
           list(pkg.dat = pkg.dat,
                wk1.partial = wk1.partial,
@@ -1138,7 +1143,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
               pkg.dat.recompute <- pkg.dat
             }
 
-            complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
+            if (weekdays.elapsed == 7) {
+              sel <- pkg.dat.recompute$date != min(pkg.dat.recompute$date)
+              complete <- pkg.dat.recompute[sel, ]
+            } else {
+              complete <- pkg.dat.recompute[!pkg.dat.recompute$partial, ]
+            }
 
             list(pkg.dat = pkg.dat,
                  wk1.partial = wk1.partial,
