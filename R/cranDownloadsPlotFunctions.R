@@ -381,7 +381,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
                    shape = "Partial/In-Progress"))
          }
 
-
         if (points) p <- p + geom_point(data = complete)
         if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
         if (smooth) {
