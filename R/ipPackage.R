@@ -75,6 +75,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     if (small.filter) cran_log <- smallFilter(cran_log)
   }
 
+  cran_log <- cran_log[cran_log$ip_id == ip, ]
   freqtab <- table(cran_log$package)
   if (sort) sort(freqtab, decreasing = TRUE)
   else freqtab
