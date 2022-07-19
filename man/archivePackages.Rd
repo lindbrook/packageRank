@@ -4,7 +4,8 @@
 \alias{archivePackages}
 \title{Packages in CRAN archive.}
 \usage{
-archivePackages(include.date = FALSE, multi.core = TRUE, dev.mode = FALSE)
+archivePackages(include.date = FALSE, multi.core = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{include.date}{Logical. Return data frame with package name and last publication date.}

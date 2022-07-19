@@ -4,7 +4,8 @@
 \alias{smallFilter}
 \title{Filter out small downloads (prototype).}
 \usage{
-smallFilter(dat, threshold = 1000L, multi.core = TRUE, dev.mode = dev.mode)
+smallFilter(dat, threshold = 1000L, multi.core = TRUE,
+  dev.mode = dev.mode)
 }
 \arguments{
 \item{dat}{Object. Package log entries.}
