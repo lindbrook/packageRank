@@ -4,7 +4,8 @@
 \alias{bioconductorRank}
 \title{Package download counts and rank percentiles.}
 \usage{
-bioconductorRank(packages = "monocle", date = "2019-01", count = "download")
+bioconductorRank(packages = "monocle", date = "2019-01",
+  count = "download")
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}

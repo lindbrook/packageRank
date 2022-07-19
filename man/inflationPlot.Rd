@@ -4,7 +4,8 @@
 \alias{inflationPlot}
 \title{Inflation plots of effects of "small" downloads and prior versions for October 2019: 'cholera', 'ggplot2', and 'VR'.}
 \usage{
-inflationPlot(package = "cholera", filter = "size", legend.loc = "topleft")
+inflationPlot(package = "cholera", filter = "size",
+  legend.loc = "topleft")
 }
 \arguments{
 \item{package}{Character.}
