@@ -857,7 +857,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
-          # wk1.partial$date <- x$from
+          wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
 
           list(pkg.dat = pkg.dat,
                wk1.partial = wk1.partial,
@@ -1407,7 +1407,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           }
 
           complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
-          # wk1.partial$date <- x$from
+          wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
 
           list(pkg.dat = pkg.dat,
                wk1.partial = wk1.partial,
