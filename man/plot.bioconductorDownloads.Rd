@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{bioconductorDownloads}(x, graphics = NULL,
   count = "download", cumulative = FALSE, points = "auto",
-  smooth = FALSE, f = 2/3, span = 3/4, se = FALSE, log.count = FALSE,
+  smooth = FALSE, f = 2/3, span = 3/4, se = FALSE, log.y = FALSE,
   r.version = FALSE, same.xy = TRUE, multi.plot = FALSE,
   legend.loc = "topleft", ...)
 }
@@ -29,7 +29,7 @@
 
 \item{se}{Logical. Works only with graphics = "ggplot2".}
 
-\item{log.count}{Logical. Logarithm of package downloads.}
+\item{log.y}{Logical. Logarithm of package downloads.}
 
 \item{r.version}{Logical. Add R release dates.}
 

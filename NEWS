@@ -1,9 +1,10 @@
 packageRank 0.6.0.9038
 ==================
 
- - rename 'log.count' argument to 'log.y' in plot.cranDownloads().
- - amend xy labels for "count" or "cumulative" in plot.cranDownloads().
- - set 0s to 1s when plot.cranDownloads(log.y = TRUE).
+- rename 'log.count' argument to 'log.y' in plot.cranDownloads().
+- amend xy labels for "count" or "cumulative" in plot.cranDownloads().
+- set 0s to 1s when plot.cranDownloads(log.y = TRUE).
+- rename 'log.count' argument to 'log.y' in plot.bioconductorDownloads().
 
 
 packageRank 0.6.0.9037
