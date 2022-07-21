@@ -3,7 +3,7 @@
 #' Uses a stratified random sample cohort of packages plus top ten packages.
 #' @param x object.
 #' @param graphics Character. NULL, "base" or "ggplot2".
-#' @param log.count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param sample.smooth Logical. Add smoother.
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
@@ -13,7 +13,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @noRd
 
-populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
+populationPlot <- function(x, graphics = NULL, log.y = TRUE, smooth = TRUE,
   sample.smooth = TRUE, f = 1/3, span = 3/4, sample.pct = 2.5,
   population.seed = as.numeric(Sys.Date()), multi.core = TRUE) {
 
@@ -79,7 +79,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
   pkg.data <- out$pkg.data
   packages <- out$packages
 
-  if (log.count) {
+  if (log.y) {
     zero.test <- any(cran.smpl$count == 0) | any(pkg.data$count == 0)
     if (zero.test) {
       cran.smpl$count <- cran.smpl$count + 1
@@ -99,12 +99,12 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
         pkg.data.sel <- pkg.data[pkg.data$package == pkg, ]
-        basePlotTime(out, log.count, cran.smpl, pkg.data.sel, smooth,
+        basePlotTime(out, log.y, cran.smpl, pkg.data.sel, smooth,
           sample.smooth, f)
         title(main = pkg)
       }))
     } else if (length(packages) == 1) {
-      basePlotTime(out, log.count, cran.smpl, pkg.data, smooth, sample.smooth,
+      basePlotTime(out, log.y, cran.smpl, pkg.data, smooth, sample.smooth,
         f)
       title(main = packages)
     }
@@ -143,7 +143,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
     if (smooth) p <- p + geom_smooth(colour = "blue", method = "loess",
       formula = "y ~ x", se = FALSE, size = 0.75, span = span)
 
-    if (log.count) p <- p + scale_y_log10()
+    if (log.y) p <- p + scale_y_log10()
 
     p
   } else stop('graphics must be "base" or "ggplot2"')
@@ -152,7 +152,7 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
 
 #' Base R Graphics Plot (Longitudinal).
 #' @param x Object.
-#' @param log.count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param cran.smpl Object.
 #' @param pkg.data Object.
 #' @param smooth Logical. Add smoother for selected package.
@@ -160,10 +160,10 @@ populationPlot <- function(x, graphics = NULL, log.count = TRUE, smooth = TRUE,
 #' @param f Numeric. stats::lowess() smoother window.
 #' @noRd
 
-basePlotTime <- function(x, log.count, cran.smpl, pkg.data, smooth,
+basePlotTime <- function(x, log.y, cran.smpl, pkg.data, smooth,
   sample.smooth, f) {
 
-  if (log.count) {
+  if (log.y) {
     plot(cran.smpl$date, log10(cran.smpl$count), pch = NA,
       ylim = c(0, max(log10(x$y.max))), xlab = "Date", ylab = "log10(Count)")
 
