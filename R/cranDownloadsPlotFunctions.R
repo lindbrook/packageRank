@@ -333,21 +333,21 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         current.est.seg = rbind(complete[nrow(complete), ], current.wk.est)
 
         p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "Other Data",
+          scale_color_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
                              values = c("Backdate" = "dodgerblue",
                                         "Partial/In-Progress" = "black",
                                         "Estimate" = "red")) +
-          scale_linetype_manual(name = "Other Data",
+          scale_linetype_manual(name = "",
                                 breaks = c("Backdate",
                                            "Partial/In-Progress",
                                            "Estimate"),
                                 values = c("Backdate" = "solid",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "solid")) +
-          scale_shape_manual(name = "Other Data",
+          scale_shape_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
@@ -428,9 +428,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
   y.nm <- statistic
   y.var <- dat[, y.nm]
-  st <- strsplit(statistic, " ")[[1]]
-  y.nm.case <- paste(toupper(substring(st, 1, 1)), substring(st, 2), sep = "",
-    collapse = " ")
+  y.nm.case <- tools::toTitleCase(statistic)
 
   if (statistic == "count") {
     ttl <- "Package Download Counts"
@@ -965,21 +963,21 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           function(x) x$current.wk.est.seg))
 
         p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "Other:",
+          scale_color_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
                              values = c("Backdate" = "dodgerblue",
                                         "Partial/In-Progress" = "black",
                                         "Estimate" = "red")) +
-          scale_linetype_manual(name = "Other:",
+          scale_linetype_manual(name = "",
                                 breaks = c("Backdate",
                                            "Partial/In-Progress",
                                            "Estimate"),
                                 values = c("Backdate" = "solid",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "solid")) +
-          scale_shape_manual(name = "Other:",
+          scale_shape_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
@@ -1054,6 +1052,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
+  y.nm.case <- tools::toTitleCase(statistic)
 
   if (statistic == "count") {
     ttl <- "Package Download Counts"
@@ -1580,14 +1579,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           function(x) x$current.wk.est.seg))
 
         p <- p + geom_line(data = complete, size = 1/3) +
-          scale_linetype_manual(name = "Other:",
+          scale_linetype_manual(name = "",
                                 breaks = c("Backdate",
                                            "Partial/In-Progress",
                                            "Estimate"),
                                 values = c("Backdate" = "dashed",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "dashed")) +
-          scale_shape_manual(name = "Other:",
+          scale_shape_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
@@ -1682,7 +1681,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2) +
-          xlab(paste("log10", y.nm.case))
+          xlab(paste("log10", ylab))
       } else {
         p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2)
@@ -2136,7 +2135,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
 
         if (smooth) {
           if (any(dat$in.progress)) {
@@ -2242,14 +2241,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         if (multi.plot) {
           p <- p +
-            scale_linetype_manual(name = "Other Data",
+            scale_linetype_manual(name = "",
                                   breaks = c("Backdate",
                                              "Partial/In-Progress",
                                              "Observed"),
                                   values = c("Backdate" = "longdash",
                                              "Partial/In-Progress" = "longdash",
                                              "Observed" = "dotted")) +
-            scale_shape_manual(name = "Other Data",
+            scale_shape_manual(name = "",
                                breaks = c("Backdate",
                                           "Partial/In-Progress",
                                           "Observed"),
@@ -2258,21 +2257,21 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                                           "Observed" = 0))
         } else {
           p <- p +
-            scale_colour_manual(name = "Other Data",
+            scale_colour_manual(name = "",
                                 breaks = c("Backdate",
                                           "Partial/In-Progress",
                                           "Observed"),
                                 values = c("Backdate" = "dodgerblue",
                                            "Partial/In-Progress" = "red",
                                            "Observed" = "gray")) +
-            scale_linetype_manual(name = "Other Data",
+            scale_linetype_manual(name = "",
                                   breaks = c("Backdate",
                                              "Partial/In-Progress",
                                              "Observed"),
                                   values = c("Backdate" = "longdash",
                                              "Partial/In-Progress" = "longdash",
                                              "Observed" = "dotted")) +
-            scale_shape_manual(name = "Other Data",
+            scale_shape_manual(name = "",
                                breaks = c("Backdate",
                                           "Partial/In-Progress",
                                           "Observed"),
@@ -2339,11 +2338,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
         if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
       }
 
-      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
@@ -2717,21 +2716,21 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         current.est.seg = rbind(complete[nrow(complete), ], current.wk.est)
 
         p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "Other Data",
+          scale_color_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
                              values = c("Backdate" = "dodgerblue",
                                         "Partial/In-Progress" = "black",
                                         "Estimate" = "red")) +
-          scale_linetype_manual(name = "Other Data",
+          scale_linetype_manual(name = "",
                                 breaks = c("Backdate",
                                            "Partial/In-Progress",
                                            "Estimate"),
                                 values = c("Backdate" = "solid",
                                            "Partial/In-Progress" = "dotted",
                                            "Estimate" = "solid")) +
-          scale_shape_manual(name = "Other Data",
+          scale_shape_manual(name = "",
                              breaks = c("Backdate",
                                         "Partial/In-Progress",
                                         "Estimate"),
