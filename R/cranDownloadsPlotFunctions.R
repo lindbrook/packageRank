@@ -15,8 +15,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), xlab = paste("log10", y.nm.case),
           main = paste("R Package Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, xlab = "Count",
@@ -24,11 +24,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  ""
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab("log10 Count") + ylab(NULL)
+          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
       } else {
         p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2) + ylab(NULL)
@@ -260,7 +260,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
@@ -382,7 +382,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
          }
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
@@ -400,7 +400,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       } else {
         p <- p + geom_line(size = 1/3)
         if (points) p <- p + geom_point()
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
             span = span)
@@ -951,7 +951,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
 
       if (smooth) {
         if (any(dat$in.progress)) {
@@ -1492,7 +1492,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
 
       if (smooth) {
         if (smooth) {
@@ -1522,7 +1522,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 }
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
-  ip.legend.location, points, log.count, smooth, se, r.version, f, span,
+  ip.legend.location, points, log.y, smooth, se, r.version, f, span,
   multi.plot) {
 
   dat <- x$cranlogs.data
@@ -1532,20 +1532,21 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), labels = dat$platform,
+          xlab = paste("log10", statistic),
           main = paste("R Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
           main = paste("R Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2) +
-          xlab("log10 Count")
+          xlab(paste("log10", y.nm.case))
       } else {
         p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2)
@@ -1999,7 +2000,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
 
         if (smooth) {
           if (any(dat$in.progress)) {
@@ -2202,11 +2203,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
         if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
@@ -2264,8 +2265,9 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), labels = dat$platform,
+          xlab = paste("log10", y.nm.case),
           main = paste("R Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       } else {
@@ -2275,11 +2277,11 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  "R"
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab("log10 Count") + ylab(NULL)
+          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
       } else {
         p <- ggplot(data = dat, aes_string("count", "platform")) +
           geom_point(size = 2) + ylab(NULL)
@@ -2640,7 +2642,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
