@@ -5,7 +5,7 @@
 \title{Plot method for cranDownloads().}
 \usage{
 \method{plot}{cranDownloads}(x, statistic = "count", graphics = "auto",
-  points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE,
+  points = "auto", log.y = FALSE, smooth = FALSE, se = FALSE,
   f = 1/3, span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
@@ -21,7 +21,7 @@
 
 \item{points}{Character of Logical. Plot points. "auto", TRUE, FALSE.}
 
-\item{log.count}{Logical. Logarithm of package downloads.}
+\item{log.y}{Logical. Logarithm of package downloads.}
 
 \item{smooth}{Logical. Add smoother.}
 

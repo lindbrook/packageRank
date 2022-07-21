@@ -1,6 +1,6 @@
 # Plot functions for plot.cranDownloads() #
 
-cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
+cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   se, f, span, r.version) {
 
   dat <- x$cranlogs.data
@@ -66,7 +66,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           ylim <- range(c(dat[, y.nm], est.data$cumulative))
         }
 
-        if (log.count) {
+        if (log.y) {
           plot(complete$date, complete[, y.nm], type = type,
             xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
             ylim = ylim, log = "y", pch = 16)
@@ -146,7 +146,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         ylim.data <- rbind(dat, dat.recompute)
         ylim <- range(ylim.data[, y.nm])
 
-        if (log.count) {
+        if (log.y) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
@@ -182,7 +182,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
             col.ticks = "red")
         }
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), log = "y")
         } else {
@@ -420,7 +420,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
+  se, f, span, log.y, package.version, dev.mode, r.version, same.xy) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -486,7 +486,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ip.data <- plot.data[[i]]$ip.data
           est.data <- plot.data[[i]]$est.data
 
-          if (log.count) {
+          if (log.y) {
             plot(complete$date, complete[, y.nm], type = type,
               xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
               ylim = ylim, log = "y", pch = 16)
@@ -625,7 +625,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat.recompute <- plot.data[[i]]$pkg.dat.recompute
           complete <- plot.data[[i]]$complete
 
-          if (log.count) {
+          if (log.y) {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
               ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
               pch = 16, log = "y")
@@ -978,7 +978,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
+multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
@@ -1040,7 +1040,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           est.stat <- do.call(rbind, est.stat)[, statistic]
           ylim <- range(c(ylim, est.stat))
 
-          if (log.count) {
+          if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
@@ -1168,7 +1168,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
           ylim <- range(ylim.data[, statistic])
 
-          if (log.count) {
+          if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
@@ -1591,7 +1591,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         last.obs <- unique(vapply(complete, nrow, integer(1L)))
         ylim <- range(c(dat[, statistic], est.stat))
 
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
             ylab = paste("log10", ylab), ylim = ylim, log = "y")
         } else {
@@ -1740,7 +1740,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         xlim <- range(range.data$date)
         ylim <- range(range.data[, statistic])
 
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
             ylab = paste("log10", ylab), ylim = ylim, log = "y")
         } else {
@@ -1825,7 +1825,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                bty = "n")
 
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat[dat$platform == "win", "date"],
                dat[dat$platform == "win", statistic],
                pch = NA, ylim = range(dat[, statistic]),
@@ -2235,7 +2235,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 }
 
 rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
-  log.count, smooth, se, r.version, f, span) {
+  log.y, smooth, se, r.version, f, span) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -2319,7 +2319,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
 
         xlim <- range(dat$date)
 
-        if (log.count) {
+        if (log.y) {
           plot(complete$date, complete[, statistic], type = type,
             xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
             ylim = ylim, log = "y", pch = 16)
@@ -2404,7 +2404,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         ylim.data <- rbind(dat, dat.recompute)
         ylim <- range(ylim.data[, statistic])
 
-        if (log.count) {
+        if (log.y) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
@@ -2442,7 +2442,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
             col.axis = "red", col.ticks = "red")
         }
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], type = type, xlab = "Date",
             ylab = y.nm.case, log = "y")
         } else {

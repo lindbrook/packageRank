@@ -189,7 +189,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param statistic Character. "count" or "cumulative".
 #' @param graphics Character. "auto", "base" or "ggplot2".
 #' @param points Character of Logical. Plot points. "auto", TRUE, FALSE.
-#' @param log.count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param smooth Logical. Add smoother.
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
@@ -218,7 +218,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' }
 
 plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
-  points = "auto", log.count = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
+  points = "auto", log.y = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   span = 3/4, package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
@@ -250,8 +250,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   }
 
-  if (is.logical(log.count) == FALSE) {
-    stop("log.count must be TRUE or FALSE.", call. = FALSE)
+  if (is.logical(log.y) == FALSE) {
+    stop("log.y must be TRUE or FALSE.", call. = FALSE)
   }
   if (is.logical(smooth) == FALSE) {
     stop("smooth must be TRUE or FALSE.", call. = FALSE)
@@ -306,23 +306,23 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
        population.seed = population.seed)
   } else if ("R" %in% x$packages) {
     if (r.total) {
-      rTotPlot(x, statistic, graphics, obs.ct, legend.location, points, 
-        log.count, smooth, se, r.version, f, span)
+      rTotPlot(x, statistic, graphics, obs.ct, legend.location, points,
+        log.y, smooth, se, r.version, f, span)
     } else {
       rPlot(x, statistic, graphics, obs.ct, legend.location,
-        ip.legend.location, points, log.count, smooth, se, r.version, f, span,
+        ip.legend.location, points, log.y, smooth, se, r.version, f, span,
         multi.plot)
     }
   } else if (is.null(x$packages)) {
-    cranPlot(x, statistic, graphics, obs.ct, points, log.count, smooth, se, f,
+    cranPlot(x, statistic, graphics, obs.ct, points, log.y, smooth, se, f,
       span, r.version)
   } else {
     if (multi.plot) {
-      multiPlot(x, statistic, graphics, obs.ct, log.count, legend.location,
+      multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,
         ip.legend.location, points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.count, package.version, dev.mode, r.version, same.xy)
+        span, log.y, package.version, dev.mode, r.version, same.xy)
     }
   }
 }
