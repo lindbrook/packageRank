@@ -91,7 +91,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param se Logical. Works only with graphics = "ggplot2".
-#' @param log.count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param r.version Logical. Add R release dates.
 #' @param same.xy Logical.  Use same scale for multiple packages when graphics = "base".
 #' @param multi.plot Logical. Plot all data in a single window frame.
@@ -109,7 +109,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   cumulative = FALSE, points = "auto", smooth = FALSE, f = 2/3, span = 3/4,
-  se = FALSE, log.count = FALSE, r.version = FALSE, same.xy = TRUE,
+  se = FALSE, log.y = FALSE, r.version = FALSE, same.xy = TRUE,
   multi.plot = FALSE, legend.loc = "topleft", ...) {
 
   if(x$unit.observation == "month") {
@@ -146,22 +146,22 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
 
   if (graphics == "base") {
     if (is.null(x$packages) | length(x$packages) == 1) {
-      bioc_plot(x, graphics, count, points, smooth, f, log.count,
+      bioc_plot(x, graphics, count, points, smooth, f, log.y,
         obs.in.progress, r.version, same.xy, cumulative)
     } else if (length(x$packages) > 1) {
       if (multi.plot) {
-        bioc_plot_multi(x, count, points, smooth, f, log.count,
+        bioc_plot_multi(x, count, points, smooth, f, log.y,
           obs.in.progress, r.version, legend.loc, cumulative)
       } else {
         grDevices::devAskNewPage(ask = TRUE)
-        bioc_plot(x, graphics, count, points, smooth, f, log.count,
+        bioc_plot(x, graphics, count, points, smooth, f, log.y,
           obs.in.progress, r.version, same.xy, cumulative)
         grDevices::devAskNewPage(ask = FALSE)
       }
     }
   } else if (graphics == "ggplot2") {
     gg_bioc_plot(x, graphics, count, points, smooth, span, se,
-      log.count, obs.in.progress, multi.plot, cumulative)
+      log.y, obs.in.progress, multi.plot, cumulative)
   }
 }
 
@@ -319,7 +319,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
   dat[dat$date <= current.date, ]
 }
 
-bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
+bioc_plot <- function(x, graphics, count, points, smooth, f, log.y,
   obs.in.progress, r.version, same.xy, cumulative) {
 
   obs <- x$unit.observation
@@ -380,7 +380,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
       est.data <- ip.data
       est.data[, y.var] <- est.ct[i]
 
-      if (log.count) {
+      if (log.y) {
         plot(complete.data$date, complete.data[, y.var], type = type,
           xlab = "Date", ylab = paste0("log10 ", ylab), xlim = xlim,
           ylim = ylim, log = "y")
@@ -433,7 +433,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
     invisible(lapply(seq_along(x$data), function(i) {
       dat <- x$data[[i]]
 
-      if (log.count) {
+      if (log.y) {
         plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
           ylab = paste0("log10(", ylab, ")"), log = "y")
       } else {
@@ -459,7 +459,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.count,
   if (is.null(x$packages)) title(main = "All Packages")
 }
 
-bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
+bioc_plot_multi <- function(x, count, points, smooth, f, log.y,
   obs.in.progress, r.version, legend.loc, cumulative) {
 
   obs <- x$unit.observation
@@ -518,7 +518,7 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
 
     ylim <- range(c(ylim, est.ct))
 
-    if (log.count) {
+    if (log.y) {
       plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA, xlab = "Date",
         ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim, log = "y")
     } else {
@@ -555,7 +555,7 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
     }))
 
   } else {
-    if (log.count) {
+    if (log.y) {
       plot(x$data[[1]]$date, x$data[[1]][, y.var], pch = NA, xlab = "Date",
         ylab = paste0("log10 ", ylab), xlim = xlim, ylim = ylim, log = "y")
     } else {
@@ -591,7 +591,7 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.count,
 }
 
 gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
-  log.count, obs.in.progress, multi.plot, cumulative) {
+  log.y, obs.in.progress, multi.plot, cumulative) {
 
   obs <- x$unit.observation
   date <- x$current.date
@@ -699,7 +699,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
     if (points) p <- p + geom_point(data = complete.data)
-    if (log.count) p <- p + scale_y_log10()
+    if (log.y) p <- p + scale_y_log10()
     if (smooth) {
       smooth.data <- rbind(complete.data, est.data)
       p <- p + geom_smooth(data = smooth.data, method = "loess",
@@ -740,7 +740,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
     if (points) p <- p + geom_point()
-    if (log.count) p <- p + scale_y_log10()
+    if (log.y) p <- p + scale_y_log10()
     if (smooth) {
       p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
         span = span)

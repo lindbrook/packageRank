@@ -1,15 +1,24 @@
+packageRank 0.6.0.9038
+==================
+
+- rename 'log.count' argument to 'log.y' in plot.cranDownloads().
+- amend xy labels for "count" or "cumulative" in plot.cranDownloads().
+- set 0s to 1s when plot.cranDownloads(log.y = TRUE).
+- rename 'log.count' argument to 'log.y' in plot.bioconductorDownloads().
+
+
 packageRank 0.6.0.9037
 ==================
 
-- use first observed date as 'from' in ggplot2 versions of singlePlot() and 
+- use first observed date as 'from' in ggplot2 versions of singlePlot() and
   multiPlot().
-  
-  
+
+
 packageRank 0.6.0.9036
 ==================
 
 - recompute cumulative count for rTotPlot() with unit.observation = "week".
-- use nominal "week" date as 'from' in ggplot2 versions of singlePlot() and 
+- use nominal "week" date as 'from' in ggplot2 versions of singlePlot() and
   multiPlot().
 - enable ipPackage().
 

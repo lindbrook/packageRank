@@ -1,6 +1,6 @@
 # Plot functions for plot.cranDownloads() #
 
-cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
+cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   se, f, span, r.version) {
 
   dat <- x$cranlogs.data
@@ -15,8 +15,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), xlab = paste("log10", y.nm.case),
           main = paste("R Package Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, xlab = "Count",
@@ -24,11 +24,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  ""
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab("log10 Count") + ylab(NULL)
+          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
       } else {
         p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2) + ylab(NULL)
@@ -66,7 +66,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
           ylim <- range(c(dat[, y.nm], est.data$cumulative))
         }
 
-        if (log.count) {
+        if (log.y) {
           plot(complete$date, complete[, y.nm], type = type,
             xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
             ylim = ylim, log = "y", pch = 16)
@@ -146,7 +146,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
         ylim.data <- rbind(dat, dat.recompute)
         ylim <- range(ylim.data[, y.nm])
 
-        if (log.count) {
+        if (log.y) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
@@ -182,7 +182,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
             col.ticks = "red")
         }
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), log = "y")
         } else {
@@ -260,7 +260,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
             aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
@@ -382,7 +382,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
          }
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
@@ -400,7 +400,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
       } else {
         p <- p + geom_line(size = 1/3)
         if (points) p <- p + geom_point()
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
         if (smooth) {
           p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
             span = span)
@@ -420,7 +420,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.count, smooth,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.count, package.version, dev.mode, r.version, same.xy) {
+  se, f, span, log.y, package.version, dev.mode, r.version, same.xy) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -440,9 +440,16 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
   if (graphics == "base") {
     if (obs.ct == 1) {
-      if (log.count) {
+      if (log.y) {
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+          }
+        }
         dotchart(log10(dat$count), labels = dat$package,
-          xlab = "log10 Count", main = paste(ttl, unique(dat$date)))
+          xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
           main = paste(ttl, unique(dat$date)))
@@ -459,6 +466,16 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (any(dat$in.progress)) {
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
+
+          if (any(pkg.dat$count == 0)) {
+            zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
+            pkg.dat[pkg.dat$count == 0, "count"] <- 1
+            for (p in zero.ct.pkg) {
+              pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
+                "count"])
+            }
+          }
+
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete <- pkg.dat[!ip.sel, ]
@@ -486,7 +503,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ip.data <- plot.data[[i]]$ip.data
           est.data <- plot.data[[i]]$est.data
 
-          if (log.count) {
+          if (log.y) {
             plot(complete$date, complete[, y.nm], type = type,
               xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
               ylim = ylim, log = "y", pch = 16)
@@ -543,6 +560,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       } else if (any(dat$partial)) { # unit.observation = "week"
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
+
+          if (log.y) {
+            if (any(pkg.dat$count == 0)) {
+              zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
+              pkg.dat[pkg.dat$count == 0, "count"] <- 1
+              for (p in zero.ct.pkg) {
+                pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
+                  "count"])
+              }
+            }
+          }
+
           unit.date <- pkg.dat$date
 
           wk1.start <- pkg.dat$date[1]
@@ -625,7 +654,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat.recompute <- plot.data[[i]]$pkg.dat.recompute
           complete <- plot.data[[i]]$complete
 
-          if (log.count) {
+          if (log.y) {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
               ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
               pch = 16, log = "y")
@@ -690,16 +719,26 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
 
       } else {
+        if (log.y) {
+          if (any(dat$count == 0)) {
+            zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+            dat[dat$count == 0, "count"] <- 1
+            for (p in zero.ct.pkg) {
+              dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+            }
+          }
+        }
+
         ylim <- range(dat[, y.nm])
 
         invisible(lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
           type <- ifelse(points, "o", "l")
 
-          if (log.count) {
+          if (log.y) {
             plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
-              ylab = paste0("log10 ", y.nm.case), log = "y", xlim = xlim,
-              ylim = ylim)
+              ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+              log = "y")
           } else {
             plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
               ylab = y.nm.case, xlim = xlim, ylim = ylim)
@@ -731,6 +770,16 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
+      if (log.y) {
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+          }
+        }
+      }
+
       p <- ggplot(data = dat) +
            theme_bw() +
            theme(panel.grid.major.x = element_blank(),
@@ -743,9 +792,19 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         p <- p + geom_point(aes_string("cumulative", "package"), size = 1.5)
       }
 
-      if (log.count) p <- p + scale_x_log10() + xlab("log10 Count")
+      if (log.y) p <- p + scale_x_log10() + xlab(paste("log10", y.nm.case))
 
     } else if (obs.ct > 1) {
+      if (log.y) {
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+          }
+        }
+      }
+
       if (statistic == "count") {
         p <- ggplot(data = dat, aes_string("date", "count"))
       } else if (statistic == "cumulative") {
@@ -808,6 +867,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       } else if (any(dat$partial)) {
         ggplot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
+
+          if (log.y) {
+            if (any(pkg.dat$count == 0)) {
+              zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
+              pkg.dat[pkg.dat$count == 0, "count"] <- 1
+              for (p in zero.ct.pkg) {
+                pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
+                  "count"])
+              }
+            }
+          }
+
           unit.date <- pkg.dat$date
 
           wk1.start <- pkg.dat$date[1]
@@ -951,7 +1022,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
 
       if (smooth) {
         if (any(dat$in.progress)) {
@@ -978,7 +1049,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   }
 }
 
-multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
+multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span) {
 
   dat <- x$cranlogs.data
@@ -992,9 +1063,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
   if (graphics == "base") {
     if (obs.ct == 1) {
-      if (log.count) {
-        dotchart(log10(dat$count), labels = dat$package, xlab = "log10 Count",
-          main = paste(ttl, unique(dat$date)))
+      if (log.y) {
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+          }
+        }
+        dotchart(log10(dat$count), labels = dat$package,
+          xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$package, xlab = "Count",
            main = paste(ttl, unique(dat$date)))
@@ -1019,6 +1097,17 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         if (any(dat$in.progress)) {
           pkg.data <- lapply(x$package, function(pkg) {
             tmp <- dat[dat$package == pkg, ]
+
+            if (log.y) {
+              if (any(tmp$count == 0)) {
+                zero.ct.pkg <- unique(tmp[tmp$count == 0, "package"])
+                tmp[tmp$count == 0, "count"] <- 1
+                for (p in zero.ct.pkg) {
+                  tmp$cumulative <- cumsum(tmp[tmp$package == p, "count"])
+                }
+              }
+            }
+
             ip.data <- tmp[tmp$in.progress == TRUE, ]
             complete <- tmp[tmp$in.progress == FALSE, ]
             last.obs <- nrow(complete)
@@ -1040,7 +1129,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
           est.stat <- do.call(rbind, est.stat)[, statistic]
           ylim <- range(c(ylim, est.stat))
 
-          if (log.count) {
+          if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
@@ -1095,6 +1184,18 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         } else if (any(dat$partial)) {
           plot.data <- lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
+
+            if (log.y) {
+              if (any(pkg.dat$count == 0)) {
+                zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
+                pkg.dat[pkg.dat$count == 0, "count"] <- 1
+                for (p in zero.ct.pkg) {
+                  pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
+                    "count"])
+                }
+              }
+            }
+
             unit.date <- pkg.dat$date
 
             wk1.start <- pkg.dat$date[1]
@@ -1168,7 +1269,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 
           ylim <- range(ylim.data[, statistic])
 
-          if (log.count) {
+          if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
@@ -1234,7 +1335,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
                 lty = c("longdash", "dotted", "longdash"))
 
         } else {
-          if (log.count) {
+          if (log.y) {
+            if (any(dat$count == 0)) {
+              zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+              dat[dat$count == 0, "count"] <- 1
+              for (p in zero.ct.pkg) {
+                dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+              }
+            }
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl)
           } else {
@@ -1285,12 +1393,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
       p <- ggplot(data = dat, aes_string("count", y = "package"))
-      if (log.count) {
+      if (log.y) {
         # p + scale_x_log10() + xlab("log10(count)") doesn't work!
         dat2 <- dat
+        if (any(dat2$count == 0)) {
+          zero.ct.pkg <- unique(dat2[dat2$count == 0, "package"])
+          dat2[dat2$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat2$cumulative <- cumsum(dat2[dat2$package == p, "count"])
+          }
+        }
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "package")) +
-             xlab("log10 Count")
+             xlab(paste("log10", y.nm.case))
       }
 
       p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
@@ -1298,6 +1413,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
               panel.grid.minor = element_blank())
 
     } else if (obs.ct > 1) {
+      if (log.y) {
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
+          for (p in zero.ct.pkg) {
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
+          }
+        }
+      }
       if (statistic == "count") {
         p <- ggplot(data = dat, aes_string(x = "date", y = "count",
           colour = "package")) + ggtitle("Package Download Counts")
@@ -1358,6 +1482,18 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
       } else if (any(dat$partial)) {
         ggplot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
+
+          if (log.y) {
+            if (any(pkg.dat$count == 0)) {
+              zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
+              pkg.dat[pkg.dat$count == 0, "count"] <- 1
+              for (p in zero.ct.pkg) {
+                pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
+                  "count"])
+              }
+            }
+          }
+
           unit.date <- pkg.dat$date
 
           wk1.start <- pkg.dat$date[1]
@@ -1492,7 +1628,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
 
       if (smooth) {
         if (smooth) {
@@ -1522,7 +1658,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.count,
 }
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
-  ip.legend.location, points, log.count, smooth, se, r.version, f, span,
+  ip.legend.location, points, log.y, smooth, se, r.version, f, span,
   multi.plot) {
 
   dat <- x$cranlogs.data
@@ -1532,20 +1668,21 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), labels = dat$platform,
+          xlab = paste("log10", statistic),
           main = paste("R Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
           main = paste("R Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2) +
-          xlab("log10 Count")
+          xlab(paste("log10", y.nm.case))
       } else {
         p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
           geom_point(size = 2)
@@ -1591,7 +1728,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         last.obs <- unique(vapply(complete, nrow, integer(1L)))
         ylim <- range(c(dat[, statistic], est.stat))
 
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
             ylab = paste("log10", ylab), ylim = ylim, log = "y")
         } else {
@@ -1740,7 +1877,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         xlim <- range(range.data$date)
         ylim <- range(range.data[, statistic])
 
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
             ylab = paste("log10", ylab), ylim = ylim, log = "y")
         } else {
@@ -1825,7 +1962,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                bty = "n")
 
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat[dat$platform == "win", "date"],
                dat[dat$platform == "win", statistic],
                pch = NA, ylim = range(dat[, statistic]),
@@ -1999,7 +2136,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (points) p <- p + geom_point(data = complete)
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
 
         if (smooth) {
           if (any(dat$in.progress)) {
@@ -2202,11 +2339,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 plot.title = element_text(hjust = 0.5))
 
         if (points) p <- p + geom_point()
-        if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
         if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
@@ -2235,7 +2372,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 }
 
 rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
-  log.count, smooth, se, r.version, f, span) {
+  log.y, smooth, se, r.version, f, span) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -2264,8 +2401,9 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
 
   if (obs.ct == 1) {
     if (graphics == "base") {
-      if (log.count) {
-        dotchart(log10(dat$count), labels = dat$platform, xlab = "log10 Count",
+      if (log.y) {
+        dotchart(log10(dat$count), labels = dat$platform,
+          xlab = paste("log10", y.nm.case),
           main = paste("R Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       } else {
@@ -2275,11 +2413,11 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  "R"
-      if (log.count) {
+      if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
         p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab("log10 Count") + ylab(NULL)
+          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
       } else {
         p <- ggplot(data = dat, aes_string("count", "platform")) +
           geom_point(size = 2) + ylab(NULL)
@@ -2319,7 +2457,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
 
         xlim <- range(dat$date)
 
-        if (log.count) {
+        if (log.y) {
           plot(complete$date, complete[, statistic], type = type,
             xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
             ylim = ylim, log = "y", pch = 16)
@@ -2404,7 +2542,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         ylim.data <- rbind(dat, dat.recompute)
         ylim <- range(ylim.data[, statistic])
 
-        if (log.count) {
+        if (log.y) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
             ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
@@ -2442,7 +2580,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
             col.axis = "red", col.ticks = "red")
         }
       } else {
-        if (log.count) {
+        if (log.y) {
           plot(dat$date, dat[, statistic], type = type, xlab = "Date",
             ylab = y.nm.case, log = "y")
         } else {
@@ -2640,7 +2778,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         if (points) p <- p + geom_point()
       }
 
-      if (log.count) p <- p + scale_y_log10() + ylab("log10 Count")
+      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
