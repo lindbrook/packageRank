@@ -3,6 +3,7 @@ packageRank 0.6.0.9041
 
 - amend endpoints with unit.observation = "week" in singlePlot() and
   multiPlot().
+- amend endpoints with unit.observation = "week" in cranPlot().
 
 
 packageRank 0.6.0.9040
