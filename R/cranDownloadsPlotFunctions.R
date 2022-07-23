@@ -127,13 +127,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (weekdays(x$from) != "Sunday") {
           current.wk.est$cumulative <-
             cumulative.recompute[(nrow(dat) - 1)] + current.wk.est$count
-
           first.last <- c(1, nrow(dat))
           dat.recompute <- rbind(wk1.backdate, dat[-first.last, ],
             current.wk.est)
           dat.recompute$cumulative[-first.last] <-
             cumulative.recompute[-first.last]
-
           current.wk$cumulative <- current.wk$count +
             rev(cumulative.recompute[-first.last])[1]
         } else {
@@ -311,13 +309,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (weekdays(x$from) != "Sunday") {
           current.wk.est$cumulative <-
             cumulative.recompute[(nrow(dat) - 1)] + current.wk.est$count
-
           first.last <- c(1, nrow(dat))
           dat.recompute <- rbind(wk1.backdate, dat[-first.last, ],
             current.wk.est)
           dat.recompute$cumulative[-first.last] <-
             cumulative.recompute[-first.last]
-
           current.wk$cumulative <- current.wk$count +
             rev(cumulative.recompute[-first.last])[1]
         } else {
@@ -604,13 +600,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (weekdays(x$from) != "Sunday") {
             current.wk.est$cumulative <-
               cumulative.recompute[(nrow(pkg.dat) - 1)] + current.wk.est$count
-
             first.last <- c(1, nrow(pkg.dat))
             pkg.dat.recompute <- rbind(wk1.backdate, pkg.dat[-first.last, ],
               current.wk.est)
             pkg.dat.recompute$cumulative[-first.last] <-
               cumulative.recompute[-first.last]
-
             current.wk$cumulative <- current.wk$count +
               rev(cumulative.recompute[-first.last])[1]
           } else {
@@ -912,13 +906,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (weekdays(x$from) != "Sunday") {
             current.wk.est$cumulative <-
               cumulative.recompute[(nrow(pkg.dat) - 1)] + current.wk.est$count
-
             first.last <- c(1, nrow(pkg.dat))
             pkg.dat.recompute <- rbind(wk1.backdate, pkg.dat[-first.last, ],
               current.wk.est)
             pkg.dat.recompute$cumulative[-first.last] <-
               cumulative.recompute[-first.last]
-
             current.wk$cumulative <- current.wk$count +
               rev(cumulative.recompute[-first.last])[1]
           } else {
@@ -1229,13 +1221,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (weekdays(x$from) != "Sunday") {
               current.wk.est$cumulative <-
                 cumulative.recompute[(nrow(pkg.dat) - 1)] + current.wk.est$count
-
               first.last <- c(1, nrow(pkg.dat))
               pkg.dat.recompute <- rbind(wk1.backdate, pkg.dat[-first.last, ],
                 current.wk.est)
               pkg.dat.recompute$cumulative[-first.last] <-
                 cumulative.recompute[-first.last]
-
               current.wk$cumulative <- current.wk$count +
                 rev(cumulative.recompute[-first.last])[1]
             } else {
@@ -1528,13 +1518,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           if (weekdays(x$from) != "Sunday") {
             current.wk.est$cumulative <-
               cumulative.recompute[(nrow(pkg.dat) - 1)] + current.wk.est$count
-
             first.last <- c(1, nrow(pkg.dat))
             pkg.dat.recompute <- rbind(wk1.backdate, pkg.dat[-first.last, ],
               current.wk.est)
             pkg.dat.recompute$cumulative[-first.last] <-
               cumulative.recompute[-first.last]
-
             current.wk$cumulative <- current.wk$count +
               rev(cumulative.recompute[-first.last])[1]
           } else {
@@ -2517,13 +2505,11 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         if (weekdays(x$from) != "Sunday") {
           current.wk.est$cumulative <-
             cumulative.recompute[(nrow(dat) - 1)] + current.wk.est$count
-
           first.last <- c(1, nrow(dat))
           dat.recompute <- rbind(wk1.backdate, dat[-first.last, ],
             current.wk.est)
           dat.recompute$cumulative[-first.last] <-
             cumulative.recompute[-first.last]
-
           current.wk$cumulative <- current.wk$count +
             rev(cumulative.recompute[-first.last])[1]
         } else {
@@ -2694,13 +2680,11 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         if (weekdays(x$from) != "Sunday") {
           current.wk.est$cumulative <-
             cumulative.recompute[(nrow(dat) - 1)] + current.wk.est$count
-
           first.last <- c(1, nrow(dat))
           dat.recompute <- rbind(wk1.backdate, dat[-first.last, ],
             current.wk.est)
           dat.recompute$cumulative[-first.last] <-
             cumulative.recompute[-first.last]
-
           current.wk$cumulative <- current.wk$count +
             rev(cumulative.recompute[-first.last])[1]
         } else {
