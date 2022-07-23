@@ -663,8 +663,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                      complete[1, "date"], complete[1, y.nm])
           } else {
             points(wk1.backdate[, c("date", y.nm)], col = "dodgerblue", pch = 8)
-            points(wk1.partial$date, wk1.partial[, y.nm], pch = 0,
-                   col = "gray")
+            points(wk1.partial$date, wk1.partial[, y.nm], pch = 0, col = "gray")
             segments(wk1.backdate$date, wk1.backdate[, y.nm],
                      complete[1, "date"], complete[1, y.nm],
                      col = "dodgerblue")
@@ -673,7 +672,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                      lty = "dotted")
           }
 
-          if (weekdays(last.obs.date) != "Saturday") {
+          if (weekdays(last.obs.date) == "Saturday") {
+            points(current.wk$date, current.wk[, y.nm], pch = 16)
+            segments(complete[nrow(complete), "date"],
+                     complete[nrow(complete), y.nm],
+                     current.wk$date,
+                     current.wk[, y.nm])
+          } else {
             points(current.wk.est$date, current.wk.est[, y.nm], col = "red")
             points(current.wk$date, current.wk[, y.nm], pch = 0, col = "gray")
             segments(complete[nrow(complete), "date"],
@@ -1307,7 +1312,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                        col = cbPalette[i], lty = "dotted")
             }
 
-            if (weekdays(last.obs.date) != "Saturday") {
+            if (weekdays(last.obs.date) == "Saturday") {
+              points(current.wk$date, current.wk[, statistic], pch = 16,
+                col = cbPalette[i])
+              segments(complete[nrow(complete), "date"],
+                       complete[nrow(complete), statistic],
+                       current.wk$date,
+                       current.wk[, statistic],
+                       col = cbPalette[i])
+            } else {
               points(current.wk.est$date, current.wk.est[, statistic], pch = 1,
                 col = cbPalette[i])
               points(current.wk$date, current.wk[, statistic], pch = 0,
@@ -1328,6 +1341,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               smooth.data <- rbind(wk1.backdate, complete)
+              if (weekdays(last.obs.date) == "Saturday") {
+                smooth.data <- rbind(smooth.data, current.wk)
+              }
               lines(stats::lowess(smooth.data[, vars], f = f),
                 col = cbPalette[i])
             }
