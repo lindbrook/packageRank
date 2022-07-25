@@ -326,6 +326,10 @@ plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"),
 
 ![](man/figures/README-log_count-1.png)<!-- -->
 
+Note that for the sake of the plot, zero counts are replaced by ones so
+that the logarithm can be computed. This does not affect the data
+returned by `cranDownloads()`.
+
 #### `packages = NULL`
 
 `cranlogs::cran_download(packages = NULL)` computes the total number of
