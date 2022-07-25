@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9041-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -317,11 +317,11 @@ plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
 #### logarithm of download counts
 
 To use the base 10 logarithm of the download count in a plot, set
-`log.count = TRUE`:
+`log.y = TRUE`:
 
 ``` r
 plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"),
-  log.count = TRUE)
+  log.y = TRUE)
 ```
 
 ![](man/figures/README-log_count-1.png)<!-- -->
@@ -434,7 +434,7 @@ and tracked.
 
 #### unit of observation
 
-The default unit of observation for `cranDownloads()` and
+The unit of observation for both `cranDownloads()` and
 `cranlogs::cran_dowanlods()` is the “day”. The graph below plots the
 daily downloads for
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) from 01
@@ -446,7 +446,7 @@ plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"))
 
 ![](man/figures/README-day-1.png)<!-- -->
 
-To view the data from a less granular perspective than “day”, set
+To view the data from a less granular perspective, set
 plot.cranDownloads()’s `unit.observation` argument to “week”, “month”,
 or “year”.
 
@@ -456,25 +456,26 @@ The graph below plots the data aggregated by month (with an added
 smoother):
 
 ``` r
-plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"), 
+plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"),
   unit.observation = "month", smooth = TRUE, graphics = "ggplot2")
 ```
 
 ![](man/figures/README-month-1.png)<!-- -->
 
-Three things to note. First, because the last/current month (far right)
-is in-progress, I split the observation in two: one point for the
-in-progress total (empty black square), another for the estimated total
-(empty red circle). The estimate is based on the proportion of the month
-completed. In the example above, the 635 observed downloads from April 1
-through April 15 translates into an estimate of 1,270 downloads for the
-entire month (30 / 15 \* 635). Second, if a smoother in used, it only
-uses “complete”, not in-progress or estimated data. Third, all points
-are plotted along the x-axis on the first day of the month.
+Three things to note. First, if the last/current month (far right) is
+still in-progress (it’s not the end of the month), that observation will
+be split in two: one point for the in-progress total (empty black
+square), another for the estimated total (empty red circle). The
+estimate is based on the proportion of the month completed. In the
+example above, the 635 observed downloads from April 1 through April 15
+translates into an estimate of 1,270 downloads for the entire month (30
+/ 15 \* 635). Second, if a smoother is included, it will only use
+“complete”, not in-progress or estimated data. Third, all points are
+plotted along the x-axis on the first day of the month.
 
 ##### `unit.observation = "week"`
 
-The graph below plots the same data aggregated by week (weeks begin on
+The graph below plots the data aggregated by week (weeks begin on
 Sunday).
 
 ``` r
@@ -485,24 +486,24 @@ plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"),
 ![](man/figures/README-week-1.png)<!-- -->
 
 Four things to note. First, if the first week (far left) is incomplete
-(the start date is not a Sunday), that observation is split in two: one
-point for the observed total on the nominal start date (gray empty
-square); another point for *backdated* total.Backdating involves
-completing the week by pushing the nominal start date back to include
-the previous Sunday (blue asterisk). In the example above, the nominal
-start date (01 January 2022) is moved back to include data through the
-previous Sunday (26 December 2021). Backdating is useful because with a
-weekly unit of observation the first observation is likely to be
-truncated and would give a unrepresentative picture of the data. Second,
-similar to the monthly plot, if the last/current week (far right) is
-in-progress (the end date is not a Saturday), that observation will be
-split in two: the observed total (gray empty square) and the estimated
-total based on the proportion of week completed (red empty circle).
-Third, again like the monthly plot, smoothers only use “complete”
-(including backdated data) and excluding in-progress or estimated data.
-Fourth, with the exception of in-progress observed totals, points are
-plotted along the x-axis on the calendar date of Sundays, the first day
-of the week.
+(the ‘from’ date is not a Sunday), that observation will be split in
+two: one point for the observed total on the nominal start date (gray
+empty square) and another point for the *backdated* total. Backdating
+involves completing the week by pushing the nominal start date back to
+include the previous Sunday (blue asterisk). In the example above, the
+nominal start date (01 January 2022) is moved back to include data
+through the previous Sunday (26 December 2021). This is useful because
+with a weekly unit of observation the first observation is likely to be
+truncated and would not give the most representative picture of the
+data. Second, if the last week (far right) is in-progress (the ‘to’ date
+is not a Saturday), that observation will be split in two: the observed
+total (gray empty square) and the estimated total based on the
+proportion of week completed (red empty circle). Third, just like the
+monthly plot, smoothers only use complete data, including backdated data
+but excluding in-progress and estimated data. Fourth, with the exception
+of first week’s observed count, which is plotted at its nominal date,
+points are plotted along the x-axis on Sundays, the first day of the
+week.
 
 ### II - computing package download rank percentiles
 
@@ -879,7 +880,7 @@ separate file with a name/URL that embeds the log’s date:
     http://cran-logs.rstudio.com/2022/2022-01-01.csv.gz
 
 For the logs of 2012, this convention was broken: 1) some logs are
-duplicated (same log, multiple names), 2) at least one is mis-labelled,
+duplicated (same log, multiple names), 2) at least one is mislabeled,
 and 3) the logs from 13 October through 28 December are offset by +3
 days (e.g., the file with the name/URL “2012-12-01” contains the log for
 “2012-11-28”). You can read the details
