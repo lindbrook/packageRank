@@ -1,324 +1,52 @@
-packageRank 0.6.0.9041
+packageRank 0.7.0
 ==================
 
-- amend endpoints with unit.observation = "week" in singlePlot() and
-  multiPlot().
-- amend endpoints with unit.observation = "week" in cranPlot().
-- amend endpoints with unit.observation = "week" in rPlot() and rTotPlot().
+# New Features #
 
+- add plot.cranDownloads(unit.observation = "week").
+- discuss 'from =' and 'to =' cranDownloads() shortcuts in README.
 
-packageRank 0.6.0.9040
-==================
+# Fixes #
 
-- clean ylab/y.nm.case.
-
-
-packageRank 0.6.0.9039
-==================
-
-- amend plot.cranDownloads(graphics = "ggplot2") legends.
-
-
-packageRank 0.6.0.9038
-==================
-
-- rename 'log.count' argument to 'log.y' in plot.cranDownloads().
-- amend xy labels for "count" or "cumulative" in plot.cranDownloads().
-- set 0s to 1s when plot.cranDownloads(log.y = TRUE).
-- rename 'log.count' argument to 'log.y' in plot.bioconductorDownloads().
-
-
-packageRank 0.6.0.9037
-==================
-
-- use first observed date as 'from' in ggplot2 versions of singlePlot() and
-  multiPlot().
-
-
-packageRank 0.6.0.9036
-==================
-
-- recompute cumulative count for rTotPlot() with unit.observation = "week".
-- use nominal "week" date as 'from' in ggplot2 versions of singlePlot() and
-  multiPlot().
 - enable ipPackage().
-
-
-packageRank 0.6.0.9035
-==================
-
-- recompute cumulative count for singlePlot() with unit.observation = "week".
-- recompute cumulative count for multiPlot() with unit.observation = "week".
-- recompute cumulative count for cranPlot() with unit.observation = "week".
-- recompute cumulative count for rPlot() with unit.observation = "week".
-
-
-packageRank 0.6.0.9034
-==================
-
-- amend cranPlot() for unit.observation = "week" & last observation is Satuday.
-- fix Satuday exception for cranPlot(graphics = "ggplot2") & unit.observation =
-  "week".
-- amend singlePlot() for unit.observation = "week" & last observation is
-  Satuday.
-- amend rPlot() and rTotPlot() for unit.observation = "week" & last observation
-  is Satuday.
-- with when = "last-week", only unit.observation = "day" available.
-- with when = "last-month") & graphics = "ggplot2", unit.observation = "month"
-  not available.
-
-
-packageRank 0.6.0.9033
-==================
-
-- update README about unit.observation in plot.cranDownloads().
-
-
-packageRank 0.6.0.9032
-==================
-
-- fix ylim for rPlot() and rTotPlot() weekly unit of observation.
-
-
-packageRank 0.6.0.9031
-==================
-
-- amend aggregateData(unit.observation = "month") to use first of month as date.
-- amend cranPlot() to use first of month for monthly unit of observation.
-- amend singlePlot() to use first of month for monthly unit of observation.
-- amend multiPlot() to use first of month for monthly unit of observation.
-- amend rPlot() and rTotPlot() to use first of month for monthly unit of
-  observation.
-
-
-packageRank 0.6.0.9030
-==================
-
-- draft README section on plot.cranDownloads(unit.observation = week).
-- copyedit README section on plot.cranDownloads(unit.observation = week).
-
-
-packageRank 0.6.0.9029
-==================
-
-- add unit.observation = "year" for rTotPlot().
-- add unit.observation = "year" for cranPlot().
-
-
-packageRank 0.6.0.9028
-==================
-
-- standardize graphics and object names in
-  plot.cranDownloads(unit.observation = "week").
-
-
-packageRank 0.6.0.9027
-==================
-
-- add monday exception to cranPlot(), singlePlot(), rPlot(), rTotPlot().
-
-
-packageRank 0.6.0.9026
-==================
-
-- amend graphic elements in rPlot(unit.observation = "week").
-
-
-packageRank 0.6.0.9025
-==================
-
-- add sunday and monday exceptions and amend graphics in
-  multiPlot(unit.observation = "week").
-
-
-packageRank 0.6.0.9024
-==================
-
-- use wk1.sunday and amend graphics in singlePlot(unit.observation = "week").
-
-
-packageRank 0.6.0.9023
-==================
-
-- add multiPlot(unit.observation = "week") prototype.
-
-
-packageRank 0.6.0.9022
-==================
-
-- add rPlot(unit.observation = "week") prototype.
-
-
-packageRank 0.6.0.9021
-==================
-
-- add rTotPlot(unit.observation = "week") prototype.
-- add exception for packages = "R" in plot.cranDownloads().
-
-
-packageRank 0.6.0.9020
-==================
-
-- add cranPlot(unit.observation = "week") prototype.
-
-
-packageRank 0.6.0.9019
-==================
-
-- use 'ISOcodes' in cranMirrors().
-
-
-packageRank 0.6.0.9018
-==================
-
-- amend aggregateData(unit.observation = "week").
-- add singlePlot(graphics = "base", unit.observation = "week") prototype.
-- add singlePlot(graphics = "ggplot2", unit.observation = "week") prototype.
-- fix ylim in singlePlot(graphics = "base", unit.observation = "week").
-- fix back.data for omega.date in singlePlot(graphics = "ggplot2",
-  unit.observation = "week").
-- fix x$to in aggregateData(unit.observation = "week").
-- fix ip.data in singlePlot(graphics = "ggplot2", unit.observation = "week").
-- add and use first.obs.date in plot.cranDownloads() and
-  singlePlot(graphics = "base", unit.observation = "week").
-- fix omega.date for singlePlot(graphics = "ggplot2",
-  unit.observation = "week").
-
-
-packageRank 0.6.0.9017
-==================
-
-- plot in-progress observations at actual date.
-- set up unit.observation = "week".
-- amend aggregateData() arguments.
-
-
-packageRank 0.6.0.9016
-==================
-
-- use packageLog(multi.core = cores) in filteredDownloads().
-- add another Windows exception in packageLog().
-- return cores = 1L on Windows with multiCore().
-
-
-packageRank 0.6.0.9015
-==================
-
-- fix error in filteredDownloads(): pass 'cores' not 'multi.core'.
-- add (temporary) Windows exception in packageLog().
-- add (temporary) Windows exception in filteredDownloads().
-
-
-packageRank 0.6.0.9014
-==================
-
-- add discussion of shortcuts with 'from = ' and 'to = ' in cranDownloads() in
-  README.
-
-
-packageRank 0.6.0.9013
-==================
-
-- add/use end.date.test in cranDownload(from = ) and cranDownload(to = ).
-
-
-packageRank 0.6.0.9012
-==================
-
-- amend fixCranlogs() for multiple packages using for loop.
-
-
-packageRank 0.6.0.9011
-==================
-
-- draft filename/URL discussion in "Logs" and README.
-
-
-packageRank 0.6.0.9010
-==================
-
- - match 'cranlogs' starting date for cranDownloads(packages = "R").
- - fix output for cranDownloads(packages = "R", to = ).
-
-
-packageRank 0.6.0.9009
-==================
-
-- add fetchRLog().
-- (temporarily) push back first available R download log to "2014-05-23".
-
-
-packageRank 0.6.0.9008
-==================
-
-- fix cranDownloads(packages = NULL, to = ).
-
-
-packageRank 0.6.0.9007
-==================
-
-- use colors for estimate segment with multiPlot(graphics = "base").
-- fix and set os/platform colors in rPlot(graphics = "base") &
-  plot.cranDownloads(unit.observation != "day")
-- tweak rPlot(graphics = "base") legends.
-- fix graph elements with rPlot(graphics = "base") &
-  plot.cranDownloads(unit.observation = "day").
-
-
-packageRank 0.6.0.9006
-==================
-
-- prioritize (RStudio) log error over 'cranlogs' in logInfo().
-
-
-packageRank 0.6.0.9005
-==================
-
 - fix cranDownloads("R", to = ).
 - fix output for packageHistory("R").
 
+# Function Changes #
 
-packageRank 0.6.0.9004
-==================
+- add logInfo() and deprecate logPostInfo().
+- change 'log.count' to 'log.y' in plot.bioconductorDownloads() and
+  plot.cranDownloads().
+- limit available unit of observations:
+  - with when = "last-week" only unit.observation = "day" available.
+  - with when = "last-month" AND graphics = "ggplot2",
+    unit.observation = "month" not available
+- recompute cumulative count with plot.cranDownloads(unit.observation = "week")
+  to include backdate data.
+- return cores = 1L on Windows with multiCore(); parallelization on Windows not
+  currently available.
+- use 'ISOcodes' in cranMirrors().
 
-- add logInfo().
-- amend logInfo().
-- deprecate logPostInfo().
+# Graphical Changes #
 
+- amend plot.cranDownloads(graphics = "ggplot2") legends.
+- plot.cranDownloads(unit.observation = "month") date plotted on first rather than last day of month.
+- use observed date for first week observed data in plot.cranDownloads()
+- set 0s to 1s to avoid NAs when plot.cranDownloads(log.y = TRUE).
 
-packageRank 0.6.0.9003
-==================
+# Graphical Fixes #
 
-- pair logDate() and rev_fixDate_2012().
-- use toupper(country) in countryPackage().
+- amend xy labels for "count" or "cumulative" in plot.cranDownloads().
+
+# New Auxiliary/Helper Functions #
+
+- add fetchRLog().
+- add getCorrectLogs() and rstudio.logs list object.
 - add rev_fixDate_2012().
-- restore stop() in fixDate_2012().
-
-
-packageRank 0.6.0.9002
-==================
-
-- add floor date for RStudio CRAN mirror logs in cranDownloads().
-- rename cranlogs.error to rstudio.logs.
 - add/set cranDownloads(fix.cranlogs = TRUE).
-- fix 'cranlogs' counts for 8 days in 2012/2013.
 - add/use fixCranlogs().
-
-
-packageRank 0.6.0.9001
-==================
-
-- fix rmarkdown typo in logDate().
-
-
-packageRank 0.6.0.9000
-==================
-
-- add getCorrectLogs() and cranlogs.errors list object.
 - add/set logDate(fix.date = TRUE).
 - add/set resolveDate(fix.date = FALSE).
-- move use of fixDate_2012() in logDate().
-- use logDate(fix.date = FALSE) in cranDownloads().
 
 
 packageRank 0.6.0
