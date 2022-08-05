@@ -5,6 +5,4 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^docs$
-^NEWS\.md$
 ^NEWS\.Rmd$
-
