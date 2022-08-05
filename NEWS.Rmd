@@ -1,18 +1,26 @@
+---
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 packageRank 0.7.0
 ==================
 
-# New Features #
+### New Features
 
 - add plot.cranDownloads(unit.observation = "week").
 - discuss 'from =' and 'to =' cranDownloads() shortcuts in README.
 
-# Fixes #
+### Fixes
 
 - enable ipPackage().
 - fix cranDownloads("R", to = ).
 - fix output for packageHistory("R").
 
-# Function Changes #
+### Function Changes
 
 - add logInfo() and deprecate logPostInfo().
 - change 'log.count' to 'log.y' in plot.bioconductorDownloads() and
@@ -27,18 +35,18 @@ packageRank 0.7.0
   currently available.
 - use 'ISOcodes' in cranMirrors().
 
-# Graphical Changes #
+### Graphical Changes
 
 - amend plot.cranDownloads(graphics = "ggplot2") legends.
 - plot.cranDownloads(unit.observation = "month") date plotted on first rather than last day of month.
 - use observed date for first week observed data in plot.cranDownloads()
 - set 0s to 1s to avoid NAs when plot.cranDownloads(log.y = TRUE).
 
-# Graphical Fixes #
+### Graphical Fixes
 
 - amend xy labels for "count" or "cumulative" in plot.cranDownloads().
 
-# New Auxiliary/Helper Functions #
+### New Auxiliary/Helper Functions
 
 - add fetchRLog().
 - add getCorrectLogs() and rstudio.logs list object.
@@ -52,7 +60,7 @@ packageRank 0.7.0
 packageRank 0.6.0
 ==================
 
-# Fixes #
+### Fixes
 
 - amend fetchCranLog() message.
 - fix tripletFilter().
@@ -63,13 +71,13 @@ packageRank 0.6.0
 - set data.frame(row.names = NULL) in packageHistory().
 - amend/update country code top level domains in cranMirrors().
 
-# Function Changes #
+### Function Changes
 
 - add packageHistory("R").
 - allow multiple packages (vector) in packageHistory() and packageMRAN().
 - restrict parLapply() to dev.mode = TRUE.
 
-# Graphical Changes #
+### Graphical Changes
 
 - amend graphical elements for estimate and in-progress download counts in
   plot.cranDownloads().
@@ -78,11 +86,11 @@ packageRank 0.6.0
 packageRank 0.5.0
 ==================
 
-# Fixes #
+### Fixes
 
 - increase fetchCranLog() timeout to 600.
 
-# Function Changes #
+### Function Changes
 
 - visualize different units of observation: "day" (default), "month", and
   "year" with plot.cranDownloads(unit.observation = "day").
@@ -93,13 +101,13 @@ packageRank 0.5.0
 packageRank 0.4.2
 ==================
 
-# Fixes #
+### Fixes
 
 - fix plot.cranDownloads(package.version = TRUE) for multiple packages.
 - fix multiple version in sizeFilter() with packageHistory().
 - fix and enable sizeFilter().
 
-# Function Changes #
+### Function Changes
 
 - add/set filteredDownloads(multi.core = TRUE).
 - amend warning message with timeMsg() in logDate().
@@ -108,7 +116,7 @@ packageRank 0.4.2
 packageRank 0.4.1
 ==================
 
-# Function Changes #
+### Function Changes
 
 - logDate(): check download log URL before computing available_log() for
   logs available before 17:00 UTC.
@@ -118,12 +126,12 @@ packageRank 0.4.1
 - enable multi.plot argument for rPlot(graphics = "ggplot2").
 - add geom_smooth(span = 3/4).
 
-# Fixes #
+### Fixes
 
 - sizeFilter() and cranPackageSize(): fix multiple versions with package
   updates.
 
-# New Research Functions #
+### New Research Functions
 
 - annualDownloads() and weeklyDownloads().
 
@@ -131,13 +139,13 @@ packageRank 0.4.1
 packageRank 0.4.0
 ==================
 
-# New Features and Functionality #
+### New Features and Functionality
 
 - filters shortcut via all.filters = TRUE argument.
 - temporarily set options(timeout = 300L) for fetchCranLog() for R 4.0.3.
 - time zone support via logDate().
 
-# Data Changes #
+### Data Changes
 
 - add pkg.history.
 - add arch.pkgs.jul, arch.pkgs.oct, cran.pkgs.jul and cran.pkgs.oct samples.
@@ -146,7 +154,7 @@ packageRank 0.4.0
 - rename blog.data$top.n to blog.data$top.n.oct2019.
 - use serialization format = 3 for blog.data object.
 
-# Fixes #
+### Fixes
 
  - amend majority rule syntax in timeFix().
  - fix Mac directory changes in packageMRAN().
@@ -155,7 +163,7 @@ packageRank 0.4.0
  - fix scrapeData() using strsplit(fixed = TRUE).
  - pass 'f' argument, lowess() smoother span value, to rPlot().
 
-# Function Changes #
+### Function Changes
 
 - add add.legend argument to plot.cranFilterCounts().
 - add cumsum to cranDownloads() for cumulative counts and growth curves.
@@ -174,7 +182,7 @@ packageRank 0.4.0
 - use sugrrants::facet_calendar() with packageVersionPercent(),
   plotTopCountryCodes(), and plotDownloadsCountry
 
-# New Functions #
+### New Functions
 
 - countryDistribution()
 - cranMirrors()
@@ -188,7 +196,7 @@ packageRank 0.4.0
 - packageMRAN()
 - topCountryCodes()
 
-# New Filter Functions #
+### New Filter Functions
 
 - ipFilter()
 - sequenceFilter()
@@ -196,7 +204,7 @@ packageRank 0.4.0
 - smallFilter()
 - tripletFilter()
 
-# New Helper Functions #
+### New Helper Functions
 
 - checkPackage()
 - cleanLog()
@@ -204,7 +212,7 @@ packageRank 0.4.0
 - packageSample()
 - validatePackage()
 
-# New Time/Time Zone Functions #
+### New Time/Time Zone Functions
 
 - currentTime()
 - utc()
@@ -213,7 +221,7 @@ packageRank 0.4.0
 - logDate()
 - logPostInfo()
 
-# New/Amended Blog specific Functions
+### New/Amended Blog specific Functions
 - countsRanks()
 - cranPlot()
 - inflationPlot2()
@@ -224,18 +232,18 @@ packageRank 0.4.0
 packageRank 0.3.5
 ==================
 
-# Blog specific functions #
+### Blog specific functions
 
 - countsRanks()
 - inflationPlot()
 
 
-# Data Changes #
+### Data Changes
 
 - add blog.data
 
 
-# Fixes #
+### Fixes
 
 - fixDate_2012() for packageLog()
   Correct mislabeled filenames for 2012 logs RStudio's CRAN download logs at
@@ -244,7 +252,7 @@ packageRank 0.3.5
 - fix "`geom_smooth()` using formula 'y ~ x'" warning for 'ggplot2' v3.3.0.
 
 
-# Function Changes #
+### Function Changes
 
 - enable arbitrary "to" argument without "from" in cranDownloads()
   e.g., cranDownloads(from = NULL, to = "2020-01-01").
@@ -257,7 +265,7 @@ packageRank 0.3.5
 - enable negative filter values in packageLog() and packageRank().
 
 
-# New Functions #
+### New Functions
 
 - archivePackages()
 - countryPackage()
