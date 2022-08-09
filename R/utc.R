@@ -94,7 +94,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     }
   }
 
-  list("Available log" = logDate(),
+  list("Available log" = max(cranlogs::cran_downloads(when = "last-week")$date),
        "Today's log" = utc.date - 1,
        "Today's log posted?" = ifelse(rstudio.test, "Yes", "No"),
        "Today's results on 'cranlogs'?" = ifelse(cranlogs.test, "Yes", "No"),

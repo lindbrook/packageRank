@@ -1,4 +1,8 @@
 
+# packageRank 0.7.0.9000
+
+-   compute date of last available log in logInfo().
+
 # packageRank 0.7.0
 
 ### New Features
