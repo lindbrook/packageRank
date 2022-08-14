@@ -1,3 +1,8 @@
+# packageRank 0.7.0.9002
+
+- fix plot(cranDownloads("R"), r.total = TRUE).
+
+
 # packageRank 0.7.0.9001
 
 - compute date of last available log in logInfo() via URLs.

@@ -2496,6 +2496,7 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
   } else if (obs.ct > 1) {
     if (graphics == "base") {
       type <- ifelse(points, "o", "l")
+      vars <- c("date", statistic)
 
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
@@ -2605,8 +2606,6 @@ rTotPlot <- function(x, statistic, graphics,  obs.ct, legend.location, points,
         xlim <- range(dat$date)
         ylim.data <- rbind(dat, dat.recompute)
         ylim <- range(ylim.data[, statistic])
-
-        vars <- c("date", statistic)
 
         if (log.y) {
           plot(complete[, vars], type = type, xlab = "Date",
