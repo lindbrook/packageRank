@@ -66,7 +66,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
 
   today.upload <- as.POSIXlt(today.utc, tz = tz)
 
-  year <- as.POSIXlt(today.log)$year + 1900
+  year <- format(today.log, "%Y")
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', today.log, ".csv.gz")
   rstudio.test <- RCurl::url.exists(log.url)
@@ -85,15 +85,9 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
       format(today.utc, "%d %b %H:%M %Z"), ").")
   } else if (!rstudio.test) {
-    file.url.date <- utc.date - 1
-    year <- format(file.url.date, "%Y-%m-%d")
-    rstudio.url <- "http://cran-logs.rstudio.com/"
-    log.url <- paste0(rstudio.url, year, '/', file.url.date, ".csv.gz")
-    if (!RCurl::url.exists(log.url)) {
-      note <- paste0("Log for ", file.url.date, " not (yet) on server.")
-    }
+    note <- paste0("Log for ", today.log, " not (yet) on server.")
   }
-
+  
   last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
   
   log.chk <- vapply(last.wk, function(x) {
