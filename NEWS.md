@@ -1,3 +1,8 @@
+# packageRank 0.7.0.9003
+
+- consolidate logInfo().
+
+
 # packageRank 0.7.0.9002
 
 - fix plot(cranDownloads("R"), r.total = TRUE).
