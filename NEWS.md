@@ -1,6 +1,6 @@
 # packageRank 0.7.0.9004
 
-fix/clean rPlot(r.version = TRUE).
+- fix/clean rPlot(r.version = TRUE).
 
 
 # packageRank 0.7.0.9003
