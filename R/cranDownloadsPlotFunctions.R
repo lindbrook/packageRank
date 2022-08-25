@@ -1855,12 +1855,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                lty = c("longdash", "dotted"),
                bty = "n")
 
-        if (r.version) {
-          r_v <- rversions::r_versions()
-          axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-            cex.axis = 2/3, padj = 0.9)
-        }
-
       } else if (any(dat$partial)) {
         pltfrm <- unique(dat$platform)
         platform.data <- split(dat, dat$platform)
@@ -2090,12 +2084,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             lines(smooth.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
           }))
         }
+      }
 
-        if (r.version) {
-          r_v <- rversions::r_versions()
-          axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-            cex.axis = 2/3, padj = 0.9)
-        }
+      if (r.version) {
+        r_v <- rversions::r_versions()
+        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+          cex.axis = 2/3, padj = 0.9)
       }
 
       title(main = "R Downloads")
