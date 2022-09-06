@@ -164,8 +164,7 @@
     samples.
 - add october.downloads and july.downloads.
 - add top.n.jul2020.
-- rename
-    blog.data![top.n to blog.data](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;top.n%20to%20blog.data "top.n to blog.data")top.n.oct2019.
+- rename `blog.data$top.n` to `blog.data$top.n.oct2019`.
 - use serialization format = 3 for blog.data object.
 
 #### Fixes
