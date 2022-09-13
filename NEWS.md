@@ -1,26 +1,12 @@
-### packageRank 0.7.0.9004
+### packageRank 0.7.1
 
+#### Fixes
 - fix/clean rPlot(r.version = TRUE).
-
-
-### packageRank 0.7.0.9003
-
-- consolidate logInfo().
-
-
-### packageRank 0.7.0.9002
-
 - fix plot(cranDownloads("R"), r.total = TRUE).
 
+#### Function Change
 
-### packageRank 0.7.0.9001
-
-- compute date of last available log in logInfo() via URLs.
-
-
-### packageRank 0.7.0.9000
-
-- compute date of last available log in logInfo().
+- logInfo() checks for last available log.
 
 ### packageRank 0.7.0
 
@@ -275,7 +261,7 @@
     FALSE).
 - set plot.cranDownloads(points = “auto”) for \<= 45 days.
 - “spell check” package names via “check.package” argument
-    cranDownload(), packageDistribution(), packageRank()
+    cranDownloads(), packageDistribution(), packageRank()
 - deprecate packageRankTime() -\> plot.cranDownloads(population.plot =
     TRUE)
 - use packageLog(packages = NULL) to view a day’s log.
