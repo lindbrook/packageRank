@@ -26,4 +26,4 @@ R-release: R 4.2.1 (2022-06-23 ucrt):
 ### Reverse dependencies
 
 There are no reverse dependencies:
-  devtools::revdep("packageRank") returns character(0)
+tools::package_dependencies("packageRank", reverse = TRUE) returns character(0)
