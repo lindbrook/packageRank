@@ -1,3 +1,8 @@
+### packageRank 0.7.1.9000
+
+- add exception when 'cranlogs' is down to logInfo().
+
+
 ### packageRank 0.7.1
 
 #### Fixes
