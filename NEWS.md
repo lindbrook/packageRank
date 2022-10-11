@@ -1,6 +1,8 @@
-### packageRank 0.7.1.9000
+### packageRank 0.7.2
 
-- add exception when 'cranlogs' is down to logInfo().
+#### Function Change
+
+- add exception to logInfo() when 'cranlogs' is down.
 
 
 ### packageRank 0.7.1
