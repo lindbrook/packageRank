@@ -57,42 +57,45 @@ identifySequences <- function(dat, arch.pkg.history, download.time = 30) {
     pkg.data <- dat[[i]]
     pkg.history <- arch.pkg.history[[i]]
 
-    pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time), "%Y-%m-%d %T",
-      tz = "GMT")
-    pkg.data <- pkg.data[order(pkg.data$t0), ]
+    if (nrow(pkg.history) != 0) {
+      pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time),
+        "%Y-%m-%d %T", tz = "GMT")
+      pkg.data <- pkg.data[order(pkg.data$t0), ]
 
-    rle.data <- rle(pkg.data$ver)
-    rle.out <- data.frame(lengths = rle.data$lengths, values = rle.data$values)
+      rle.data <- rle(pkg.data$ver)
+      rle.out <- data.frame(lengths = rle.data$lengths,
+        values = rle.data$values)
 
-    archive.obs <- pkg.history$Version %in%
-      rle.out[rle.data$lengths == 1, "values"]
+      archive.obs <- pkg.history$Version %in%
+        rle.out[rle.data$lengths == 1, "values"]
 
-    if (all(archive.obs)) {
-      rle.out$idx <- seq_len(nrow(rle.out))
-      breaks <- rle.out[rle.out$lengths != 1, "idx"]
+      if (all(archive.obs)) {
+        rle.out$idx <- seq_len(nrow(rle.out))
+        breaks <- rle.out[rle.out$lengths != 1, "idx"]
 
-      candidate.seqs <- lapply(seq_along(breaks), function(i) {
-        if (i < length(breaks)) {
-          (breaks[i] + 1):(breaks[i + 1] - 1)
-        } else if (breaks[i] < max(rle.out$idx)) {
-          (breaks[i] + 1):max(rle.out$idx)
-        } else NA
-      })
+        candidate.seqs <- lapply(seq_along(breaks), function(i) {
+          if (i < length(breaks)) {
+            (breaks[i] + 1):(breaks[i + 1] - 1)
+          } else if (breaks[i] < max(rle.out$idx)) {
+            (breaks[i] + 1):max(rle.out$idx)
+          } else NA
+        })
 
-      candidate.seqs <- candidate.seqs[!is.na(candidate.seqs)]
+        candidate.seqs <- candidate.seqs[!is.na(candidate.seqs)]
 
-      candidate.check <- unlist(lapply(candidate.seqs, function(sel) {
-        dat <- rle.out[sel, ]
-        elements.check <- identical(sort(dat$values), pkg.history$Version)
-        if (elements.check) {
-          t.range <- range(pkg.data[cumsum(rle.out$lengths)[sel], "t0"])
-          time.window <- download.time * nrow(dat)
-          difftime(t.range[2], t.range[1], units = "sec") < time.window
-        } else FALSE
-      }))
+        candidate.check <- unlist(lapply(candidate.seqs, function(sel) {
+          dat <- rle.out[sel, ]
+          elements.check <- identical(sort(dat$values), pkg.history$Version)
+          if (elements.check) {
+            t.range <- range(pkg.data[cumsum(rle.out$lengths)[sel], "t0"])
+            time.window <- download.time * nrow(dat)
+            difftime(t.range[2], t.range[1], units = "sec") < time.window
+          } else FALSE
+        }))
 
-      obs.sel <- unlist(candidate.seqs[candidate.check])
-      pkg.data[cumsum(rle.out$lengths)[obs.sel], names(pkg.data) != "t0"]
-    }
+        obs.sel <- unlist(candidate.seqs[candidate.check])
+        pkg.data[cumsum(rle.out$lengths)[obs.sel], names(pkg.data) != "t0"]
+      }
+    } else NULL
   })
 }
