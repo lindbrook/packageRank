@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9000
+
+- fix sequenceFilter() for packages not in CRAN Archive.
+
+
 ### packageRank 0.7.2
 
 #### Function Change
