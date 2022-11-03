@@ -32,7 +32,7 @@ fixDate_2012 <- function(date = "2012-12-31") {
   ymd
 }
 
-#' Reverse map filename/URL (date for 2012 download logs.
+#' Reverse map filename/URL (date) for 2012 download logs.
 #'
 #' To print the desired/expected date.
 #' @param file.url.date Date. "yyyy-mm-dd".
