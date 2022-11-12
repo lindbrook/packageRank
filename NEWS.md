@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9001
+
+- add packageHistoryB() prototype.
+
+
 ### packageRank 0.7.2.9000
 
 - fix sequenceFilter() for packages not in CRAN Archive.
