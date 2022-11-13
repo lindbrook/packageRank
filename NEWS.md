@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9002
+
+- (temporarily) set sequenceFilter() to single core.
+
+
 ### packageRank 0.7.2.9001
 
 - add packageHistoryB() prototype.
