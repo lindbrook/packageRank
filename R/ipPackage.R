@@ -59,7 +59,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
 
     if (sequence.filter) {
       arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
-        tmp <- packageHistory(x)
+        tmp <- packageHistoryB(x)
         tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
       }, mc.cores = cores)
 

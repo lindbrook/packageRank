@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9003
+
+- use packageHistoryB() in ipPackage(), sequenceFilter() and sizeFilter().
+
+
 ### packageRank 0.7.2.9002
 
 - (temporarily) set sequenceFilter() to single core.
