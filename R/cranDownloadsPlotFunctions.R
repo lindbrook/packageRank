@@ -1680,24 +1680,23 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
 
       if (smooth) {
-        if (smooth) {
-          if (any(dat$in.progress)) {
-            smooth.data <- complete
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
-              formula = "y ~ x", se = se, span = span)
-          } else if (any(dat$partial)) {
-            smooth.data <- rbind(complete, wk1.backdate)
-            if (weekdays(last.obs.date) == "Saturday") {
-              smooth.data <- rbind(smooth.data, current.wk)
-            }
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
-              formula = "y ~ x", se = se, span = span)
-          } else {
-            p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-              span = span)
+        if (any(dat$in.progress)) {
+          smooth.data <- complete
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else if (any(dat$partial)) {
+          smooth.data <- rbind(complete, wk1.backdate)
+          if (weekdays(last.obs.date) == "Saturday") {
+            smooth.data <- rbind(smooth.data, current.wk)
           }
+          p <- p + geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        } else {
+          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
+            span = span)
         }
       }
+      
       p <- p + theme_bw() +
         theme(legend.position = "bottom",
               panel.grid.major = element_blank(),
