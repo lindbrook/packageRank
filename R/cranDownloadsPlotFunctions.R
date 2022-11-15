@@ -210,19 +210,40 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
 
       if (smooth) {
-        if (any(dat$in.progress)) {
-          smooth.data <- complete
-          lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
-            col = "blue")
-        } else if (any(dat$partial)) {
-          smooth.data <- rbind(wk1.backdate, complete)
-          if (weekdays(last.obs.date) == "Saturday") {
-            smooth.data <- rbind(smooth.data, current.wk)
+        if (nrow(dat) > 7) {
+          if (any(dat$in.progress)) {
+            smooth.data <- stats::loess(complete[, y.nm] ~
+              as.numeric(complete$date), span = span)
+          } else if (any(dat$partial)) {
+            tmp <- rbind(wk1.backdate, complete)
+            if (weekdays(last.obs.date) == "Saturday") {
+              tmp <- rbind(smooth.data, current.wk)
+            }
+            smooth.data <- stats::loess(tmp[, y.nm] ~ as.numeric(tmp$date),
+              span = span)
+          } else {
+            smooth.data <- stats::loess(dat[, y.nm] ~ as.numeric(dat$date),
+              span = span)
           }
-          lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
-            col = "blue")
         } else {
-          lines(stats::lowess(dat$date, dat[, y.nm], f = f), col = "blue")
+          if (any(dat$in.progress)) {
+            smooth.data <- stats::lowess(complete$date, complete[, y.nm], f = f)
+          } else if (any(dat$partial)) {
+            tmp <- rbind(wk1.backdate, complete)
+            if (weekdays(last.obs.date) == "Saturday") {
+              tmp <- rbind(smooth.data, current.wk)
+            }
+            smooth.data <- stats::lowess(tmp$date, tmp[, y.nm], f = f)
+          } else {
+            smooth.data <- stats::lowess(dat$date, dat[, y.nm], f = f)
+          }
+        }
+
+        if (nrow(dat) > 7) {
+          x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+          lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+        } else {
+          lines(smooth.data, col = "blue", lwd = 1.25)
         }
       }
 
