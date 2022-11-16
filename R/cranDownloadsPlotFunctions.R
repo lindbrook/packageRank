@@ -1262,8 +1262,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               smooth.data <- complete
-              lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
-                f = f), col = cbPalette[i])
+              if (nrow(smooth.data) > 7) {
+                smooth.data <- stats::loess(smooth.data[, statistic] ~
+                  as.numeric(smooth.data$date), span = span)
+                x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else {
+                lines(stats::lowess(smooth.data$date, smooth.data[, statistic],
+                  f = f), col = cbPalette[i])
+              }
             }
           }))
 
@@ -1430,12 +1437,24 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
              }
 
             if (smooth) {
-              smooth.data <- rbind(wk1.backdate, complete)
+              tmp <- rbind(wk1.backdate, complete)
               if (weekdays(last.obs.date) == "Saturday") {
-                smooth.data <- rbind(smooth.data, current.wk)
+                tmp <- rbind(tmp, current.wk)
               }
-              lines(stats::lowess(smooth.data[, vars], f = f),
-                col = cbPalette[i])
+
+              if (nrow(dat) > 7) {
+                smooth.data <- stats::loess(tmp[, statistic] ~
+                  as.numeric(tmp$date), span = span)
+              } else {
+                smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+              }
+
+              if (nrow(dat) > 7) {
+                x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else {
+                lines(smooth.data[, vars], col = cbPalette[i])
+              }
             }
           }))
 
@@ -1473,8 +1492,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             }
 
             if (smooth) {
-              lines(stats::lowess(dat[dat$package == x$packages[i], vars],
-                f = f), col = cbPalette[i])
+              if (nrow(dat) > 7) {
+                smooth.data <- stats::loess(tmp[, statistic] ~
+                  as.numeric(tmp$date), span = span)
+                x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else {
+                lines(stats::lowess(tmp[dat$package == x$packages[i], vars],
+                  f = f), col = cbPalette[i])
+              }
             }
           }))
         }
