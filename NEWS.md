@@ -1,3 +1,12 @@
+### packageRank 0.7.2.9004
+
+- set loess as default smoother in cranPlot(graphics = "base", smooth = TRUE).
+- set loess as default smoother in singlePlot(graphics = "base", smooth = TRUE).
+- set loess as default smoother in multiPlot(graphics = "base", smooth = TRUE).
+- set loess as default smoother in rTotPlot(graphics = "base", smooth = TRUE).
+- set loess as default smoother in rPlot(graphics = "base", smooth = TRUE).
+
+
 ### packageRank 0.7.2.9003
 
 - use packageHistoryB() in ipPackage(), sequenceFilter() and sizeFilter().
