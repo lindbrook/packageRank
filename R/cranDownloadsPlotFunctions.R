@@ -1441,18 +1441,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               if (weekdays(last.obs.date) == "Saturday") {
                 tmp <- rbind(tmp, current.wk)
               }
-
               if (nrow(dat) > 7) {
                 smooth.data <- stats::loess(tmp[, statistic] ~
                   as.numeric(tmp$date), span = span)
-              } else {
-                smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
-              }
-
-              if (nrow(dat) > 7) {
                 x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
                 lines(x.date, smooth.data$fitted, col = cbPalette[i])
               } else {
+                smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
                 lines(smooth.data[, vars], col = cbPalette[i])
               }
             }
