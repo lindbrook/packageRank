@@ -2146,21 +2146,42 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (any(dat$in.progress)) {
           invisible(lapply(seq_along(complete), function(i) {
             tmp <- complete[[i]]
-            smooth.data <- stats::lowess(tmp$date, tmp[, statistic])
-            lines(smooth.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
+            if (nrow(dat) > 7) {
+              smooth.data <- stats::loess(tmp[, statistic] ~
+                as.numeric(tmp$date), span = span)
+              x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+              lines(x.date, smooth.data$fitted, lwd = 1.5, col = pltfrm.col[i])
+            } else {
+              smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+              lines(smooth.data, lwd = 1.5, col = pltfrm.col[i])
+            }
           }))
         } else if (any(dat$partial)) {
           invisible(lapply(seq_along(complete), function(i) {
-            tmp <- rbind(complete[[i]], wk1.backdate[i, ])
-            smooth.data <- stats::lowess(tmp$date, tmp[, statistic])
-            lines(smooth.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
+            tmp <- rbind(wk1.backdate[i, ], complete[[i]])
+            if (nrow(tmp) > 7) {
+              smooth.data <- stats::loess(tmp[, statistic] ~
+                as.numeric(tmp$date), span = span)
+              x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+              lines(x.date, smooth.data$fitted, lwd = 1.5, col =  pltfrm.col[i])
+            } else {
+              smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+              lines(smooth.data$x, smooth.data$fitted, lwd = 1.5,
+                col = pltfrm.col[i])
+            }
           }))
         } else {
           invisible(lapply(seq_along(pltfrm), function(i) {
-            sel <- dat$platform == pltfrm[i]
-            smooth.data <- stats::lowess(dat[sel, "date"], dat[sel, statistic],
-              f = f)
-            lines(smooth.data, lty = "solid", lwd = 1.5, col = pltfrm.col[i])
+            tmp <- dat[dat$platform == pltfrm[i], ]
+            if (nrow(tmp) > 7) {
+              smooth.data <- stats::loess(tmp[, statistic] ~
+                as.numeric(tmp$date), span = span)
+              x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+              lines(x.date, smooth.data$fitted, lwd = 1.5, col = pltfrm.col[i])
+            } else {
+              smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+              lines(smooth.data, lwd = 1.5, col = pltfrm.col[i])
+            }
           }))
         }
       }
