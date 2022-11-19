@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9005
+
+- amend/fix logInfo() note when 'cranlogs' is down.
+
+
 ### packageRank 0.7.2.9004
 
 - set loess as default smoother in cranPlot(graphics = "base", smooth = TRUE).
