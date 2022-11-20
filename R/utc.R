@@ -83,22 +83,18 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     note <- paste0("Today's log is typically posted by ",
       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
       format(today.utc, "%d %b %H:%M %Z"), ").")
-  }
-
-  if (is.logical(cranlogs.test)) {
+  } else if (is.character(cranlogs.test)) {
+    note <- cranlogs.test
+  } else if (is.logical(cranlogs.test)) {
     if (all(rstudio.test, cranlogs.test)) {
       note <- "Everything OK."
     } else if (rstudio.test & !cranlogs.test) {
       note <- paste0("'cranlogs' usually posts a bit after ",
                      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
                      format(today.utc, "%d %b %H:%M %Z"), ").")
+    } else if (!rstudio.test) {
+      note <- paste0("Log for ", today.log, " not (yet) on server.")
     }
-  } else {
-    note <- cranlogs.test
-  }
-
-  if (!rstudio.test) {
-    cranlogs.note <- paste0("Log for ", today.log, " not (yet) on server.")
   }
 
   last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
@@ -111,12 +107,12 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
   if (is.logical(cranlogs.test))   {
     cranlogs.result <- ifelse(cranlogs.test, "Yes.", "No.")
   } else if (is.character(cranlogs.test)) {
-    cranlogs.result <- cranlogs.test
+    cranlogs.result <- "No."
   }
-
+  
   list("Available log" = last.wk[log.chk][1],
        "Today's log" = utc.date - 1,
        "Today's log posted?" = ifelse(rstudio.test, "Yes.", "No."),
-       "Today's results on 'cranlogs'?" = cranlogs.note,
+       "Today's results on 'cranlogs'?" = cranlogs.result,
        note = note)
 }
