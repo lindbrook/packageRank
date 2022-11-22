@@ -27,7 +27,7 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   # } else {
     # if (.Platform$OS.type == "windows") cores <- 1L
   arch.pkg.history <- lapply(packages, function(x) {
-    tmp <- packageHistoryB(x)
+    tmp <- packageHistory(x)
     tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
   })
   # }

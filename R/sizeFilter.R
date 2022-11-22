@@ -9,7 +9,7 @@
 
 sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
   size.data <- lapply(packages, cranPackageSize)
-  version.data <- lapply(packages, packageHistoryB)
+  version.data <- lapply(packages, packageHistory)
   cores <- ifelse(length(packages) > 4, cores, 1L)
   # win.exception <- .Platform$OS.type == "windows" & cores > 1
 

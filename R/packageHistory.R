@@ -33,32 +33,22 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (any(class(history) == "try-error")) {
     out <- lapply(package, packageHistory0)
   } else {
-    # vars <- c("Package", "Version", "Date/Publication", "crandb_file_date",
-    #   "date")
-    #    Error: Can't subset columns that don't exist.
-    # x Column `Date/Publication` doesn't exist.
-    vars <- c("Package", "Version", "crandb_file_date", "date")
-
-    history <- lapply(history, function(x) data.frame(x[, vars]))
-
-    all.archive <- vapply(package, function(x) {
-      pkgsearch::cran_package(x, version = "all")$archived
-    }, logical(1L))
-
-    out <- lapply(seq_along(history), function(i) {
-      h <- history[[i]]
-
-      if (all.archive[i]) {
-        repository <- rep("Archive", nrow(h))
+    out <- lapply(history, function(x) {
+      if ("Repository" %in% colnames(x)) {
+         tmp <- data.frame(x[, c("Package", "Version", "date", "Repository")])
+         row.names(tmp) <- NULL
+         tmp$Date <- format(as.Date(tmp$date), "%Y-%m-%d")
+         tmp$date <- NULL
+         if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+         tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
       } else {
-        repository <- c(rep("Archive", nrow(h) - 1), "CRAN")
+        tmp <- data.frame(x[, c("Package", "Version", "date")])
+        row.names(tmp) <- NULL
+        tmp$Date <- format(as.Date(tmp$date), "%Y-%m-%d")
+        tmp$date <- NULL
+        tmp$Repository <- "Archive"
       }
-
-      date <- strsplit(h$crandb_file_date, "[ ]")
-      date <- strsplit(h$date, "[ ]")
-      date <- as.Date(vapply(date, function(x) x[1], character(1L)))
-      data.frame(h[, c("Package", "Version")], Date = date,
-        Repository = repository, row.names = NULL, stringsAsFactors = FALSE)
+     tmp
     })
   }
 
