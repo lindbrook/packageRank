@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9006
+
+- promote packageHistoryB() to packageHistory().
+
+
 ### packageRank 0.7.2.9005
 
 - amend/fix logInfo() note when 'cranlogs' is down.
