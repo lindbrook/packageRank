@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9007
+
+- set class of packageHistory()$Date to "Date".
+
+
 ### packageRank 0.7.2.9006
 
 - promote packageHistoryB() to packageHistory().

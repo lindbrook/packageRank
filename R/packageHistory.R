@@ -37,14 +37,14 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
       if ("Repository" %in% colnames(x)) {
          tmp <- data.frame(x[, c("Package", "Version", "date", "Repository")])
          row.names(tmp) <- NULL
-         tmp$Date <- format(as.Date(tmp$date), "%Y-%m-%d")
+         tmp$Date <- as.Date(tmp$date)
          tmp$date <- NULL
          if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
          tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
       } else {
         tmp <- data.frame(x[, c("Package", "Version", "date")])
         row.names(tmp) <- NULL
-        tmp$Date <- format(as.Date(tmp$date), "%Y-%m-%d")
+        tmp$Date <- as.Date(tmp$date)
         tmp$date <- NULL
         tmp$Repository <- "Archive"
       }
