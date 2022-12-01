@@ -3011,7 +3011,8 @@ addSmoother <- function(x, complete, current.wk, f, span, wk1, y.nm) {
       smooth.data <- stats::loess(complete[, y.nm] ~
         as.numeric(complete$date), span = span)
     } else if (any(dat$partial)) {
-      smooth.data <- smoothMonthData(x, current.wk, f, span, wk1)
+      smooth.data <- smoothMonthData(x, complete, current.wk, f, span, wk1,
+        y.nm)
     } else {
       smooth.data <- stats::loess(dat[, y.nm] ~ as.numeric(dat$date),
         span = span)
