@@ -3055,3 +3055,40 @@ smoothMonthData <- function(x, complete, current.wk, f, span, wk1, y.nm) {
     stats::lowess(tmp$date, tmp[, y.nm], f = f)
   }
 }
+
+addSinglePlotSmoother <- function(x, complete, current.wk, f, span,
+  wk1.backdate, y.nm) {
+  dat <- x$cranlogs.data
+  last.obs.date <- x$last.obs.date
+  if (any(dat$in.progress)) {
+    smooth.data <- complete
+    if (nrow(smooth.data) > 7) {
+      smooth.data <- stats::loess(smooth.data[, y.nm] ~
+        as.numeric(smooth.data$date), span = span)
+    }
+  } else if (any(dat$partial)) {
+    if (any(dat$partial)) {
+      tmp <- rbind(wk1.backdate, complete)
+      if (weekdays(last.obs.date) == "Saturday") {
+        tmp <- rbind(tmp, current.wk)
+      }
+      if (nrow(dat) > 7) {
+        smooth.data <- stats::loess(tmp[, y.nm] ~ as.numeric(tmp$date),
+          span = span)
+      } else {
+        smooth.data <- stats::lowess(tmp$date, tmp[, y.nm], f = f)
+      }
+    }
+  } else {
+    if (nrow(dat) > 7) {
+      smooth.data <- stats::loess(dat[, y.nm] ~ as.numeric(dat$date),
+        span = span)
+    }
+  }
+  if (nrow(dat) > 7) {
+    x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+    lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+  } else {
+    lines(smooth.data$date, smooth.data[, y.nm], col = "blue")
+  }
+}
