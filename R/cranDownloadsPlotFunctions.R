@@ -3092,3 +3092,47 @@ addSinglePlotSmoother <- function(x, complete, current.wk, f, span,
     lines(smooth.data$date, smooth.data[, y.nm], col = "blue")
   }
 }
+
+addMultiPlotSmoother <- function(i, x, complete, cbPalette, f, span,
+  statistic, vars, wk1.backdate) {
+
+  dat <- x$cranlogs.data
+  current.wk <- dat[nrow(dat), ]
+  last.obs.date <- x$last.obs.date
+
+  if (any(dat$in.progress)) {
+    smooth.data <- complete
+    if (nrow(smooth.data) > 7) {
+      smooth.data <- stats::loess(smooth.data[, statistic] ~
+        as.numeric(smooth.data$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = cbPalette[i])
+    } else {
+      lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f), 
+        col = cbPalette[i])
+    }
+  } else if (any(dat$partial)) {
+    tmp <- rbind(wk1.backdate, complete)
+    if (weekdays(last.obs.date) == "Saturday") {
+      tmp <- rbind(tmp, current.wk)
+    }
+    if (nrow(dat) > 7) {
+      smooth.data <- stats::loess(tmp[, statistic] ~
+        as.numeric(tmp$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = cbPalette[i])
+    } else {
+      smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+      lines(smooth.data[, vars], col = cbPalette[i])
+    }
+  } else {
+    if (nrow(dat) > 7) {
+      smooth.data <- stats::loess(tmp[, statistic] ~
+        as.numeric(tmp$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = cbPalette[i])
+    } else {
+      lines(stats::lowess(tmp[dat$package == x$packages[i], vars], f = f),
+        col = cbPalette[i])
+    }
+  }
