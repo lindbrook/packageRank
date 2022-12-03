@@ -1,3 +1,13 @@
+### packageRank 0.7.2.9008
+
+- add addSmoother().
+- use smoothMonthData() in addSmoother().
+- add addSinglePlotSmoother().
+- add addMultiPlotSmoother().
+- add addRPlotSmoother().
+- add addRTotPlotSmoother().
+
+
 ### packageRank 0.7.2.9007
 
 - set class of packageHistory()$Date to "Date".
