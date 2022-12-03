@@ -3110,7 +3110,7 @@ addMultiPlotSmoother <- function(i, x, complete, cbPalette, f, span,
       x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
       lines(x.date, smooth.data$fitted, col = cbPalette[i])
     } else {
-      lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f), 
+      lines(stats::lowess(smooth.data$date, smooth.data[, statistic], f = f),
         col = cbPalette[i])
     }
   } else if (any(dat$partial)) {
