@@ -688,6 +688,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
 
           list(pkg.dat = pkg.dat,
+               wk1 = wk1,
                wk1.partial = wk1.partial,
                wk1.backdate = wk1.backdate,
                current.wk = current.wk,
@@ -708,6 +709,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         invisible(lapply(seq_along(plot.data), function(i) {
           pkg.dat <- plot.data[[i]]$pkg.dat
+          wk1 <- plot.data[[i]]$wk1
           wk1.partial <- plot.data[[i]]$wk1.partial
           wk1.backdate <- plot.data[[i]]$wk1.backdate
           current.wk <- plot.data[[i]]$current.wk
