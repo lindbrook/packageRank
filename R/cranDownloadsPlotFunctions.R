@@ -3184,3 +3184,41 @@ addRPlotSmoother <- function(x, complete, f, span, pltfrm, pltfrm.col,
       }
     }))
   }
+}
+
+addRTotPlotSmoother <- function(dat, complete, f, span, statistic,
+  wk1.backdate) {
+
+  if (any(dat$in.progress)) {
+    tmp <- complete
+    if (nrow(tmp) > 7) {
+      smooth.data <- stats::loess(tmp[, statistic] ~
+        as.numeric(tmp$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+    } else {
+      lines(stats::lowess(tmp$date, tmp[, statistic], f = f),
+        col = "blue", lwd = 1.25)
+    }
+  } else if (any(dat$partial)) {
+    tmp <- rbind(wk1.backdate, complete)
+    if (nrow(tmp) > 7) {
+      smooth.data <- stats::loess(tmp[, statistic] ~
+        as.numeric(tmp$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+    } else {
+      lines(stats::lowess(tmp$date, tmp[, statistic], f = f),
+        col = "blue", lwd = 1.25)
+    }
+  } else {
+    if (nrow(dat) > 7) {
+      smooth.data <- stats::loess(dat[, statistic] ~
+        as.numeric(dat$date), span = span)
+      x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+      lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+    } else {
+      lines(stats::lowess(dat$date, dat[, statistic], f = f),
+        col = "blue", lwd = 1.25)
+    }
+  }
