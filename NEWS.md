@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9009
+
+- use 'parallelly'-style computation of available cores.
+
+
 ### packageRank 0.7.2.9008
 
 - add addSmoother().
