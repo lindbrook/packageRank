@@ -1,3 +1,9 @@
+### packageRank 0.7.2.9010
+
+- move smoother functions to cranDownloadsPlotSmoother.R.
+- fix plot.cranDownloads(graphics = "base", multi.plot = TRUE).
+
+
 ### packageRank 0.7.2.9009
 
 - use 'parallelly'-style computation of available cores.

@@ -1183,7 +1183,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
-                statistic, vars, NULL)
+                statistic, vars, NULL, NULL)
             }
           }))
 
@@ -1351,7 +1351,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
-                statistic, vars, wk1.backdate)
+                statistic, vars, wk1.backdate, NULL)
             }
           }))
 
@@ -1390,7 +1390,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
-                statistic, vars, NULL)
+                statistic, vars, NULL, tmp)
             }
           }))
         }
