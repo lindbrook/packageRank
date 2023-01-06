@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9011
+
+- add exception in logInfo() when RStudio log server unavailable.
+
+
 ### packageRank 0.7.2.9010
 
 - move smoother functions to cranDownloadsPlotSmoother.R.

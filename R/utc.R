@@ -70,49 +70,57 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', today.log, ".csv.gz")
   rstudio.test <- RCurl::url.exists(log.url)
-
-  clogs <- try(cranlogs::cran_downloads(from = today.log, to = today.log),
+  
+  if (rstudio.test) {
+    clogs <- try(cranlogs::cran_downloads(from = today.log, to = today.log),
     silent = TRUE)
-  if (any(class(clogs) == "try-error")) {
-    cranlogs.test <- "'cranlogs' service down."
-  } else {
-    cranlogs.test <- ifelse(clogs$count != 0, TRUE, FALSE)
-  }
-
-  if (today.delta.time > 0) {
-    note <- paste0("Today's log is typically posted by ",
-      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
-      format(today.utc, "%d %b %H:%M %Z"), ").")
-  } else if (is.character(cranlogs.test)) {
-    note <- cranlogs.test
-  } else if (is.logical(cranlogs.test)) {
-    if (all(rstudio.test, cranlogs.test)) {
-      note <- "Everything OK."
-    } else if (rstudio.test & !cranlogs.test) {
-      note <- paste0("'cranlogs' usually posts a bit after ",
+    if (any(class(clogs) == "try-error")) {
+      cranlogs.test <- "'cranlogs' service down."
+    } else {
+      cranlogs.test <- ifelse(clogs$count != 0, TRUE, FALSE)
+    }
+    
+    if (today.delta.time > 0) {
+      note <- paste0("Today's log is typically posted by ",
                      format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
                      format(today.utc, "%d %b %H:%M %Z"), ").")
-    } else if (!rstudio.test) {
-      note <- paste0("Log for ", today.log, " not (yet) on server.")
+    } else if (is.character(cranlogs.test)) {
+      note <- cranlogs.test
+    } else if (is.logical(cranlogs.test)) {
+      if (all(rstudio.test, cranlogs.test)) {
+        note <- "Everything OK."
+      } else if (rstudio.test & !cranlogs.test) {
+        note <- paste0("'cranlogs' usually posts a bit after ",
+                       format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
+                       format(today.utc, "%d %b %H:%M %Z"), ").")
+      } else if (!rstudio.test) {
+        note <- paste0("Log for ", today.log, " not (yet) on server.")
+      }
     }
-  }
-
-  last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
-  
-  log.chk <- vapply(last.wk, function(x) {
-    tmp.url <- paste0(rstudio.url, year, '/', x, ".csv.gz")
-    RCurl::url.exists(tmp.url)
-  }, logical(1L))
-
-  if (is.logical(cranlogs.test))   {
-    cranlogs.result <- ifelse(cranlogs.test, "Yes.", "No.")
-  } else if (is.character(cranlogs.test)) {
-    cranlogs.result <- "No."
-  }
-  
-  list("Available log" = last.wk[log.chk][1],
+    
+    last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
+    
+    log.chk <- vapply(last.wk, function(x) {
+      tmp.url <- paste0(rstudio.url, year, '/', x, ".csv.gz")
+      RCurl::url.exists(tmp.url)
+    }, logical(1L))
+    
+    if (is.logical(cranlogs.test))   {
+      cranlogs.result <- ifelse(cranlogs.test, "Yes.", "No.")
+    } else if (is.character(cranlogs.test)) {
+      cranlogs.result <- "No."
+    }
+    
+    list("Available log" = last.wk[log.chk][1],
+         "Today's log" = utc.date - 1,
+         "Today's log posted?" = ifelse(rstudio.test, "Yes.", "No."),
+         "Today's results on 'cranlogs'?" = cranlogs.result,
+         note = note)
+  } else {
+    list("Available log" = NA,
        "Today's log" = utc.date - 1,
        "Today's log posted?" = ifelse(rstudio.test, "Yes.", "No."),
-       "Today's results on 'cranlogs'?" = cranlogs.result,
-       note = note)
+       "Today's results on 'cranlogs'?" = NA,
+       note = "RStudio logs unavailable.")
+  }
 }
