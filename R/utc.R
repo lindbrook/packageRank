@@ -67,11 +67,13 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
   today.upload <- as.POSIXlt(today.utc, tz = tz)
 
   year <- format(today.log, "%Y")
+  
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', today.log, ".csv.gz")
-  rstudio.test <- RCurl::url.exists(log.url)
+  rstudio.server.available <- RCurl::url.exists(rstudio.url)
+  rstudio.log.available <- RCurl::url.exists(log.url)
   
-  if (rstudio.test) {
+  if (rstudio.server.available) {
     clogs <- try(cranlogs::cran_downloads(from = today.log, to = today.log),
     silent = TRUE)
     if (any(class(clogs) == "try-error")) {
@@ -87,13 +89,13 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     } else if (is.character(cranlogs.test)) {
       note <- cranlogs.test
     } else if (is.logical(cranlogs.test)) {
-      if (all(rstudio.test, cranlogs.test)) {
+      if (all(rstudio.log.available, cranlogs.test)) {
         note <- "Everything OK."
-      } else if (rstudio.test & !cranlogs.test) {
+      } else if (rstudio.log.available & !cranlogs.test) {
         note <- paste0("'cranlogs' usually posts a bit after ",
                        format(as.POSIXlt(today.utc, tz = tz), "%H:%M %Z"), " (",
                        format(today.utc, "%d %b %H:%M %Z"), ").")
-      } else if (!rstudio.test) {
+      } else if (!rstudio.log.available) {
         note <- paste0("Log for ", today.log, " not (yet) on server.")
       }
     }
@@ -113,13 +115,13 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00") {
     
     list("Available log" = last.wk[log.chk][1],
          "Today's log" = utc.date - 1,
-         "Today's log posted?" = ifelse(rstudio.test, "Yes.", "No."),
+         "Today's log posted?" = ifelse(rstudio.log.available, "Yes.", "No."),
          "Today's results on 'cranlogs'?" = cranlogs.result,
          note = note)
   } else {
     list("Available log" = NA,
        "Today's log" = utc.date - 1,
-       "Today's log posted?" = ifelse(rstudio.test, "Yes.", "No."),
+       "Today's log posted?" = ifelse(rstudio.log.available, "Yes.", "No."),
        "Today's results on 'cranlogs'?" = NA,
        note = "RStudio logs unavailable.")
   }
