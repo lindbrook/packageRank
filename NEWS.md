@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9012
+
+- separate server and log checks in logInfo().
+
+
 ### packageRank 0.7.2.9011
 
 - add exception in logInfo() when RStudio log server unavailable.
