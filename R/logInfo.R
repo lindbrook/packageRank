@@ -3,11 +3,11 @@
 #' Also checks availability of RStudio logs and 'cranlogs' data.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
-#' @param check.available Logical. Check available logs and results.
+#' @param list.available Logical. Check available logs and results.
 #' @export
 
 logInfo <- function(tz = Sys.timezone(), upload.time = "17:00", 
-  check.available = FALSE) {
+  list.available = FALSE) {
   
   utc.date.time <- utc()
   utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
@@ -69,7 +69,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
               "Today's results on 'cranlogs'?" = cranlogs.status,
               status = status)
 
-  if (check.available) {
+  if (list.available) {
     rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
 
     last.available <- vapply(rev.last.wk, function(x) {
@@ -91,8 +91,8 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
     out <- list("Today's log/result" = today.log,
                 "Today's log on RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
-                status = status,
-                "Available log/result" = note)
+                "Available log/result" = note,
+                status = status)
   }
 
   out
