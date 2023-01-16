@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.2.9012-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.2.9013-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -13,28 +13,28 @@ assorted functions that help you assess interest in your package.
 I discuss these topics in four sections; a fifth discusses package
 related issues.
 
--   [I Package Download Counts](#i---computing-package-download-counts)
-    describes how `cranDownloads()` extends the functionality of
-    [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
-    adding a more user-friendly interface and by providing a generic R
-    `plot()` method that makes visualization easy.
--   [II Package Download Rank
-    Percentiles](#ii---computing-package-download-rank-percentiles)
-    describes how `packageRank()` uses rank percentiles, a nonparametric
-    statistic that tells you the percentage of packages with fewer
-    downloads, to help you see how your package is doing relative to
-    *all* other [CRAN](https://CRAN.R-project.org/) packages.
--   [III Package Download
-    Filters](#iii---filtering-package-download-counts) describes the
-    functions that filter out software and behavioral artifacts from the
-    download logs which contribute to inflated download counts.
--   [IV Other Functions](#iv---other-functions) describes six other
-    [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-    functions that help you better understand interest in your package.
--   [V Notes](#v---notes) discusses issues associated with country code
-    top-level domains; the direct use of and problems with RStudio log
-    files; memoization; time zones and `logInfo()`; and the internet
-    connection time out problem.
+- [I Package Download Counts](#i---computing-package-download-counts)
+  describes how `cranDownloads()` extends the functionality of
+  [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
+  adding a more user-friendly interface and by providing a generic R
+  `plot()` method that makes visualization easy.
+- [II Package Download Rank
+  Percentiles](#ii---computing-package-download-rank-percentiles)
+  describes how `packageRank()` uses rank percentiles, a nonparametric
+  statistic that tells you the percentage of packages with fewer
+  downloads, to help you see how your package is doing relative to *all*
+  other [CRAN](https://CRAN.R-project.org/) packages.
+- [III Package Download
+  Filters](#iii---filtering-package-download-counts) describes the
+  functions that filter out software and behavioral artifacts from the
+  download logs which contribute to inflated download counts.
+- [IV Other Functions](#iv---other-functions) describes six other
+  [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+  functions that help you better understand interest in your package.
+- [V Notes](#v---notes) discusses issues associated with country code
+  top-level domains; the direct use of and problems with RStudio log
+  files; memoization; time zones and `logInfo()`; and the internet
+  connection time out problem.
 
 ### getting started
 
@@ -806,12 +806,12 @@ processor.
 There are 5 filters. You can control them using the following arguments
 (listed in order of application):
 
--   `ip.filter`: removes campaigns of “greedy” IP addresses.
--   `triplet.filter`: reduces triplets to a single observation.
--   `small.filter`: removes entries smaller than 1,000 bytes.
--   `sequence.filter`: removes blocs of past versions.
--   `size.filter`: removes entries smaller than a package’s binary or
-    source file.
+- `ip.filter`: removes campaigns of “greedy” IP addresses.
+- `triplet.filter`: reduces triplets to a single observation.
+- `small.filter`: removes entries smaller than 1,000 bytes.
+- `sequence.filter`: removes blocs of past versions.
+- `size.filter`: removes entries smaller than a package’s binary or
+  source file.
 
 These filters are off by default (e.g., ip.filter = FALSE). To apply
 them, set the argument for the filter you want to TRUE:
@@ -1011,29 +1011,28 @@ packageRank(packages = "ergm", date = "2021-01-01")
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 
 Second, to help you check/remember when logs are posted in your
-location, there’s `logInfo()`. The function returns the date of the last
-available log and the date of “today’s” log. It then checks to see if
-“today’s” log is posted on RStudio’s server and if today’s results have
-been computed in ‘cranlogs’. If either or both fail, you’ll see a range
-of contextual notes.
+location, there’s `logInfo()`. The function checks to see if “today’s”
+log is posted on RStudio’s server and if “today’s” results have been
+computed in ‘cranlogs’. Using the optional
+`logInfo(list.available = TRUE)`, the function will compute the dates of
+the last available download log and ‘cranlogs’ result by looking at the
+previous week.
 
 Keep in mind that 17:00 UTC is not a hard deadline. Barring server
 issues, the logs are usually posted *before* that time. I don’t know
-when the script starts but it seems to post closer to 17:00 UTC when a
-log has more entries than when it has fewer (i.e., weekdays v.
-weekends). Again barring software issues, the ‘cranlogs’ results are
+when the script starts but the posting time seems to be a function of
+the number of entries: closer to 17:00 UTC when there are more entries
+(e.g., weekdays); before 17:00 UTC when there are fewer entries (e.g.,
+weekends). Again, barring server issues, the ‘cranlogs’ results are
 usually available shortly *after* 17:00 UTC.
 
 Here’s what you’d see using the Honolulu example:
 
 ``` r
-logInfo()
+logInfo(list.available = TRUE)
 ```
 
-    $`Available log`
-    [1] "2021-01-01"
-
-    $`Today's log`
+    $`Today's log/result`
     [1] "2020-12-31"
 
     $`Today's log posted?`
@@ -1042,7 +1041,10 @@ logInfo()
     $`Today's results on 'cranlogs'?`
     [1] "Yes"
 
-    $note
+    $`Available log/result`
+    [1] "RStudio (2020-12-31); 'cranlogs' (2020-12-31)."
+
+    $status
     [1] "Everything OK."
 
 The functions uses your local time zone, which depends on R’s ability to
