@@ -13,28 +13,28 @@ assorted functions that help you assess interest in your package.
 I discuss these topics in four sections; a fifth discusses package
 related issues.
 
--   [I Package Download Counts](#i---computing-package-download-counts)
-    describes how `cranDownloads()` extends the functionality of
-    [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
-    adding a more user-friendly interface and by providing a generic R
-    `plot()` method that makes visualization easy.
--   [II Package Download Rank
-    Percentiles](#ii---computing-package-download-rank-percentiles)
-    describes how `packageRank()` uses rank percentiles, a nonparametric
-    statistic that tells you the percentage of packages with fewer
-    downloads, to help you see how your package is doing relative to
-    *all* other [CRAN](https://CRAN.R-project.org/) packages.
--   [III Package Download
-    Filters](#iii---filtering-package-download-counts) describes the
-    functions that filter out software and behavioral artifacts from the
-    download logs which contribute to inflated download counts.
--   [IV Other Functions](#iv---other-functions) describes six other
-    [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-    functions that help you better understand interest in your package.
--   [V Notes](#v---notes) discusses issues associated with country code
-    top-level domains; the direct use of and problems with RStudio log
-    files; memoization; time zones and `logInfo()`; and the internet
-    connection time out problem.
+- [I Package Download Counts](#i---computing-package-download-counts)
+  describes how `cranDownloads()` extends the functionality of
+  [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by
+  adding a more user-friendly interface and by providing a generic R
+  `plot()` method that makes visualization easy.
+- [II Package Download Rank
+  Percentiles](#ii---computing-package-download-rank-percentiles)
+  describes how `packageRank()` uses rank percentiles, a nonparametric
+  statistic that tells you the percentage of packages with fewer
+  downloads, to help you see how your package is doing relative to *all*
+  other [CRAN](https://CRAN.R-project.org/) packages.
+- [III Package Download
+  Filters](#iii---filtering-package-download-counts) describes the
+  functions that filter out software and behavioral artifacts from the
+  download logs which contribute to inflated download counts.
+- [IV Other Functions](#iv---other-functions) describes six other
+  [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
+  functions that help you better understand interest in your package.
+- [V Notes](#v---notes) discusses issues associated with country code
+  top-level domains; the direct use of and problems with RStudio log
+  files; memoization; time zones and `logInfo()`; and the internet
+  connection time out problem.
 
 ### getting started
 
@@ -806,12 +806,12 @@ processor.
 There are 5 filters. You can control them using the following arguments
 (listed in order of application):
 
--   `ip.filter`: removes campaigns of “greedy” IP addresses.
--   `triplet.filter`: reduces triplets to a single observation.
--   `small.filter`: removes entries smaller than 1,000 bytes.
--   `sequence.filter`: removes blocs of past versions.
--   `size.filter`: removes entries smaller than a package’s binary or
-    source file.
+- `ip.filter`: removes campaigns of “greedy” IP addresses.
+- `triplet.filter`: reduces triplets to a single observation.
+- `small.filter`: removes entries smaller than 1,000 bytes.
+- `sequence.filter`: removes blocs of past versions.
+- `size.filter`: removes entries smaller than a package’s binary or
+  source file.
 
 These filters are off by default (e.g., ip.filter = FALSE). To apply
 them, set the argument for the filter you want to TRUE:
