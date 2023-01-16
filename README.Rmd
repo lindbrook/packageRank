@@ -778,20 +778,17 @@ Warning message:
 2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 ```
 
-Second, to help you check/remember when logs are posted in your location, there's `logInfo()`. The function returns the date of the last available log and the date of "today's" log. It then checks to see if "today's" log is posted on RStudio's server and if today's results have been computed in 'cranlogs'. If either or both fail, you'll see a range of contextual notes.
+Second, to help you check/remember when logs are posted in your location, there's `logInfo()`. The function checks to see if "today's" log is posted on RStudio's server and if "today's" results have been computed in 'cranlogs'. Using the optional `logInfo(list.available = TRUE)`, the function will compute the dates of the last available download log and 'cranlogs' result by looking at the previous week.
 
-Keep in mind that 17:00 UTC is not a hard deadline. Barring server issues, the logs are usually posted _before_ that time. I don't know when the script starts but it seems to post closer to 17:00 UTC when a log has more entries than when it has fewer (i.e., weekdays v. weekends). Again barring software issues, the 'cranlogs' results are usually available shortly _after_ 17:00 UTC.
+Keep in mind that 17:00 UTC is not a hard deadline. Barring server issues, the logs are usually posted _before_ that time. I don't know when the script starts but the posting time seems to be a function of the number of entries: closer to 17:00 UTC when there are more entries (e.g., weekdays); before 17:00 UTC when there are fewer entries (e.g., weekends). Again, barring server issues, the 'cranlogs' results are usually available shortly _after_ 17:00 UTC.
 
 Here's what you'd see using the Honolulu example:
 
 ```{r logInfo, eval = FALSE}
-logInfo()
+logInfo(list.available = TRUE)
 ```
 ```
-$`Available log`
-[1] "2021-01-01"
-
-$`Today's log`
+$`Today's log/result`
 [1] "2020-12-31"
 
 $`Today's log posted?`
@@ -800,7 +797,10 @@ $`Today's log posted?`
 $`Today's results on 'cranlogs'?`
 [1] "Yes"
 
-$note
+$`Available log/result`
+[1] "RStudio (2020-12-31); 'cranlogs' (2020-12-31)."
+
+$status
 [1] "Everything OK."
 ```
 
