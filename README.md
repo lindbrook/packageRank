@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.2.9013-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.2.9014-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -1066,3 +1066,32 @@ This change can affect functions that download logs. This is especially
 true over slower internet connections or when you’re dealing with large
 log files. To fix this, `fetchCranLog()` will, if needed, temporarily
 set the timeout to 600 seconds.
+
+#### R Windows Sunday downloads
+
+The graph above for [R downloads](#packages--r) plots the daily
+downloads of the R application broken down by platform (Mac, Source,
+Windows). In it, you can seek a weekly pattern with mid-week peaks and
+weekend dips. However, on Sunday, 06 November 2022 this pattern was
+broken.
+
+On that day, and each subsequent Sunday, there is a noticeable spike in
+downloads of the Windows version of the R application.
+
+``` r
+plot(cranDownloads("R", from = "2022-10-15", to = "2023-01-17"))
+axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
+  padj = 0.9)
+abline(v = as.Date("2022-11-06"), col = "gray", lty = "dotted")
+```
+
+![](man/figures/README-sundays-1.png)<!-- -->
+
+This pattern does not extend to the Mac or Source versions of R (Sundays
+are plotted with filled circles):
+
+![](man/figures/README-sundays_mac-1.png)<!-- -->
+
+![](man/figures/README-sundays_src-1.png)<!-- -->
+
+![](man/figures/README-sundays_win-1.png)<!-- -->

@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9014
+
+- add note about R Windows Sunday downloads to README.
+
+
 ### packageRank 0.7.2.9013
 
 - change argument and output of logInfo(list.available = FALSE).
