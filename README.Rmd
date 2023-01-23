@@ -778,14 +778,14 @@ Warning message:
 2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
 ```
 
-Second, to help you check/remember when logs are posted in your location, there's `logInfo()`. The function checks to see if "today's" log is posted on RStudio's server and if "today's" results have been computed in 'cranlogs'. Using the optional `logInfo(list.available = TRUE)`, the function will compute the dates of the last available download log and 'cranlogs' result by looking at the previous week.
+Second, to help you check/remember when logs are posted in your location, there's `logInfo()`. The function checks to see if "today's" log is posted on RStudio's server and if "today's" results have been computed in 'cranlogs'. If you use the optional `logInfo(show.available = TRUE)`, the function will check the previous week to look up the latest available download log and 'cranlogs' result.
 
 Keep in mind that 17:00 UTC is not a hard deadline. Barring server issues, the logs are usually posted _before_ that time. I don't know when the script starts but the posting time seems to be a function of the number of entries: closer to 17:00 UTC when there are more entries (e.g., weekdays); before 17:00 UTC when there are fewer entries (e.g., weekends). Again, barring server issues, the 'cranlogs' results are usually available shortly _after_ 17:00 UTC.
 
 Here's what you'd see using the Honolulu example:
 
 ```{r logInfo, eval = FALSE}
-logInfo(list.available = TRUE)
+logInfo(show.available = TRUE)
 ```
 ```
 $`Today's log/result`

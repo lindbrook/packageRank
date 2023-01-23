@@ -1013,10 +1013,9 @@ packageRank(packages = "ergm", date = "2021-01-01")
 Second, to help you check/remember when logs are posted in your
 location, there’s `logInfo()`. The function checks to see if “today’s”
 log is posted on RStudio’s server and if “today’s” results have been
-computed in ‘cranlogs’. Using the optional
-`logInfo(list.available = TRUE)`, the function will compute the dates of
-the last available download log and ‘cranlogs’ result by looking at the
-previous week.
+computed in ‘cranlogs’. If you use the optional
+`logInfo(show.available = TRUE)`, the function will check the previous
+week to look up the latest available download log and ‘cranlogs’ result.
 
 Keep in mind that 17:00 UTC is not a hard deadline. Barring server
 issues, the logs are usually posted *before* that time. I don’t know
@@ -1029,7 +1028,7 @@ usually available shortly *after* 17:00 UTC.
 Here’s what you’d see using the Honolulu example:
 
 ``` r
-logInfo(list.available = TRUE)
+logInfo(show.available = TRUE)
 ```
 
     $`Today's log/result`
