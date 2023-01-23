@@ -5,14 +5,14 @@
 \title{Compute Availability, Date, Time of "Today's" Log.}
 \usage{
 logInfo(tz = Sys.timezone(), upload.time = "17:00",
-  list.available = FALSE)
+  show.available = FALSE)
 }
 \arguments{
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 
 \item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".}
 
-\item{list.available}{Logical. Check available logs and results.}
+\item{show.available}{Logical. Check available logs and results.}
 }
 \description{
 Also checks availability of RStudio logs and 'cranlogs' data.

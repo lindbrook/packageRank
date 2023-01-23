@@ -1,3 +1,9 @@
+### packageRank 0.7.2.9015
+
+- logInfo(): change list.available argument to show.available and check internet 
+  connection.
+
+
 ### packageRank 0.7.2.9014
 
 - add note about R Windows Sunday downloads to README.
