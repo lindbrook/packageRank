@@ -360,6 +360,10 @@ If you want the total count of R downloads, set `r.total = TRUE`:
 plot(cranDownloads(packages = "R", from = 2019, to = 2019), r.total = TRUE)
 ```
 
+Note that since Sunday, 06 November 2022, and each subsequent Sunday,
+there’ve been spikes of downloads of the Windows version of R. Details
+below in [R Windows Sunday downloads](#r-windows-sunday-downloads).
+
 #### smoothers and confidence intervals
 
 To add a lowess smoother to your plot, use `smooth = TRUE`:
