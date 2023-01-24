@@ -1,8 +1,8 @@
 Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
-Version: 0.7.2.9015
-Date: 2023-01-23
+Version: 0.7.2.9016
+Date: 2023-01-24
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
@@ -19,6 +19,7 @@ RoxygenNote: 7.2.3
 Roxygen: list(old_usage = TRUE)
 Imports:
     cranlogs,
+    curl,
     data.table (>= 1.12.2),
     ggplot2,
     grDevices,
