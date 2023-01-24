@@ -9,7 +9,7 @@
 logInfo <- function(tz = Sys.timezone(), upload.time = "17:00", 
   show.available = FALSE) {
 
-  if (RCurl::url.exists("https://www.r-project.org/")) {
+  if (curl::has_internet()) {
     utc.date.time <- utc()
     utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
 

@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9016
+
+- use curl::has_internet() in logInfo().
+
+
 ### packageRank 0.7.2.9015
 
 - logInfo(): change list.available argument to show.available and check internet 
