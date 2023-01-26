@@ -16,7 +16,7 @@ cranMirrors <- function(mirror.description = FALSE) {
   }, character(1L)))
 
   tld_etc <- data.frame(name = hosts[!hosts %in% ISOcodes::ISO_3166_1$Name],
-    tld = c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "GB", "US"))
+    tld = c(NA, "CZ", "ASIA", "KR", "RU", "TW", "GB", "US"))
 
   vars <- c("Name", "Alpha_2")
   tld <- ISOcodes::ISO_3166_1[ISOcodes::ISO_3166_1$Name %in% hosts, vars]
