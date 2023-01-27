@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9018
+
+- cranMirrors(): add lookup for exceptions; change argument to 'description'.
+
+
 ### packageRank 0.7.2.9017
 
 - update cranMirrors() exceptions.
