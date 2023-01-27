@@ -4,10 +4,10 @@
 \alias{cranMirrors}
 \title{Scrape CRAN Mirrors data.}
 \usage{
-cranMirrors(mirror.description = FALSE)
+cranMirrors(description = FALSE)
 }
 \arguments{
-\item{mirror.description}{Logical. Mirror details.}
+\item{description}{Logical. Mirror details.}
 }
 \description{
 https://cran.r-project.org/mirrors.html

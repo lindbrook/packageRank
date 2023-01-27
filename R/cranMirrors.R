@@ -1,10 +1,10 @@
 #' Scrape CRAN Mirrors data.
 #'
 #' https://cran.r-project.org/mirrors.html
-#' @param mirror.description Logical. Mirror details.
+#' @param description Logical. Mirror details.
 #' @export
 
-cranMirrors <- function(mirror.description = FALSE) {
+cranMirrors <- function(description = FALSE) {
   mirrors.url <- "https://cran.r-project.org/mirrors.html"
   web_page <- readLines(mirrors.url)
   start.line <- grep("<dt>", web_page)
@@ -15,9 +15,15 @@ cranMirrors <- function(mirror.description = FALSE) {
     gsub("<.*?>", "", x)
   }, character(1L)))
 
-  tld_etc <- data.frame(name = hosts[!hosts %in% ISOcodes::ISO_3166_1$Name],
-    tld = c(NA, "CZ", "ASIA", "KR", "RU", "TW", "GB", "US"))
-
+  # lookup alternative names
+  other.name <- c("0-Cloud", "Czech Republic", "0-Cloud-East-Asia", "Iran", 
+    "Korea", "Russia", "Taiwan", "UK", "USA")
+  host.tld <- c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "GB", "US")
+  other.hosts <- data.frame(name = other.name, tld = host.tld)
+  no.match <- hosts[!hosts %in% ISOcodes::ISO_3166_1$Name]
+  
+  tld_etc <- other.hosts[other.hosts$name %in% no.match, ]
+  
   vars <- c("Name", "Alpha_2")
   tld <- ISOcodes::ISO_3166_1[ISOcodes::ISO_3166_1$Name %in% hosts, vars]
 
@@ -47,6 +53,20 @@ cranMirrors <- function(mirror.description = FALSE) {
   })
 
   out <- do.call(rbind,out)
-  if (mirror.description) out
+  
+  # match CRAN order #
+  asia.sel <- which(out$country.code == "asia")
+  E.asia <- out[asia.sel, ]
+  
+  E.sel <- grepl("^e", out$country.code) & grepl("^E", out$country)
+  E <- out[E.sel, ]
+  
+  E.sel <- c(asia.sel, which(E.sel))
+  
+  out <- rbind(out[as.numeric(row.names(out)) < E.sel, ],
+               out[as.numeric(row.names(out)) == E.sel, ],
+               out[as.numeric(row.names(out)) > E.sel, ])
+  
+  if (description) out
   else out[, names(out) != "description"]
 }
