@@ -30,8 +30,8 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2022) {
 #' @param pool.obs Logical.
 #' @param log.y Logical. Base 10 logarithm of y-axis.
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
-#' @param smooth Logical. Add smoother. 2/3 is built-in default.
-#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
+#' @param smooth Logical. Add smoother (loess). 
+#' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span). 3/4 is built-in default.
 #' @param ... Additional plotting parameters.
 #' @export
 

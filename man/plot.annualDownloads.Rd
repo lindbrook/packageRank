@@ -18,9 +18,9 @@
 
 \item{nrow}{Numeric. Number of rows for ggplot2 facets.}
 
-\item{smooth}{Logical. Add smoother. 2/3 is built-in default.}
+\item{smooth}{Logical. Add smoother (loess).}
 
-\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).}
+\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span). 3/4 is built-in default.}
 
 \item{...}{Additional plotting parameters.}
 }
