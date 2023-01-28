@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9019
+
+- clean and use non-parallel version of annualDownloads().
+
+
 ### packageRank 0.7.2.9018
 
 - cranMirrors(): add lookup for exceptions; change argument to 'description'.
