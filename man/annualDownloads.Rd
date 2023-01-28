@@ -4,14 +4,12 @@
 \alias{annualDownloads}
 \title{Count Total CRAN Download.}
 \usage{
-annualDownloads(start.yr = 2013, end.yr = 2020, multi.core = TRUE)
+annualDownloads(start.yr = 2013, end.yr = 2022)
 }
 \arguments{
 \item{start.yr}{Numeric or Integer.}
 
 \item{end.yr}{Numeric or Integer.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

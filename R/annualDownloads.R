@@ -3,20 +3,17 @@
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param start.yr Numeric or Integer.
 #' @param end.yr Numeric or Integer.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-annualDownloads <- function(start.yr = 2013, end.yr = 2020, multi.core = TRUE) {
-  cores <- multiCore(multi.core)
-
-  dwnlds <- parallel::mclapply(start.yr:end.yr, function(x) {
-    x <- cranDownloads(from = x, to = x)$cranlogs.data
+annualDownloads <- function(start.yr = 2013, end.yr = 2022) {
+  dwnlds <- lapply(start.yr:end.yr, function(y) {
+    x <- cranDownloads(from = y, to = y)$cranlogs.data
     x$year <- as.numeric(format(x$date, "%Y"))
     x$day.mo <- format(x$date, "%d %b")
     x$percent <- 100 * x$count / sum(x$count)
     x
-  }, mc.cores = cores)
-
+  })
+  
   out <- do.call(rbind, dwnlds)
   day.month <- dayMonth()
   out <- merge(out, day.month, by.x = "day.mo", by.y = "date.nm")
