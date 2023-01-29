@@ -5,7 +5,7 @@
 \title{Plot method for annualDownloads().}
 \usage{
 \method{plot}{annualDownloads}(x, statistic = "count", pool.obs = FALSE,
-  log.y = TRUE, nrow = 3, smooth = TRUE, span = 3/4, ...)
+  log.y = FALSE, nrow = 3, smooth = TRUE, span = 3/4, ...)
 }
 \arguments{
 \item{x}{object.}

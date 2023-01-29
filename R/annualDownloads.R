@@ -36,7 +36,7 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2022) {
 #' @export
 
 plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
-  log.y = TRUE, nrow = 3, smooth = TRUE, span = 3/4, ...) {
+  log.y = FALSE, nrow = 3, smooth = TRUE, span = 3/4, ...) {
 
   day.month <- dayMonth()
   outliers <- outlierDays(x, c("2014-11-17", "2018-10-21", "2020-02-29"))
