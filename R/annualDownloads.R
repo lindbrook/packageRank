@@ -29,6 +29,7 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2022) {
 #' @param statistic Character. "count" or "percent".
 #' @param pool.obs Logical.
 #' @param log.y Logical. Base 10 logarithm of y-axis.
+#' @param sep.y Logical. Separate, independent y-scales for each panel.
 #' @param nrow Numeric. Number of rows for ggplot2 facets.
 #' @param smooth Logical. Add smoother (loess). 
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span). 3/4 is built-in default.
@@ -36,7 +37,7 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2022) {
 #' @export
 
 plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
-  log.y = TRUE, nrow = 3, smooth = TRUE, span = 3/4, ...) {
+  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, span = 3/4, ...) {
 
   day.month <- dayMonth()
   outliers <- outlierDays(x, c("2014-11-17", "2018-10-21", "2020-02-29"))
@@ -60,9 +61,14 @@ plot.annualDownloads <- function(x, statistic = "count", pool.obs = FALSE,
       y.var <- "Percent"
     } else stop('statistic must be "count" or "percent".')
 
-    p <- p + facet_wrap(~ year, nrow = nrow, scales = "free_y") +
-      scale_x_continuous(breaks = c(1, 122, 245),
-                         labels = day.month$date.nm[c(1, 122, 245)]) +
+    if (sep.y) {
+      p <- p + facet_wrap(~ year, nrow = nrow, scales = "free_y")
+    } else {
+      p <- p + facet_wrap(~ year, nrow = nrow)
+    }
+
+    p <- p + scale_x_continuous(breaks = c(1, 122, 245),
+                                labels = day.month$date.nm[c(1, 122, 245)]) +
       geom_vline(xintercept = c(122, 245),
                  colour = grDevices::adjustcolor("red", alpha.f = 0.5),
                  linetype = "dashed")

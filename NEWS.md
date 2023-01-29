@@ -1,3 +1,9 @@
+### packageRank 0.7.2.9020
+
+- set annualDownloads(log.y = FALSE).
+- add/set annualDownloads(sep.y = FALSE).
+
+
 ### packageRank 0.7.2.9019
 
 - clean and use non-parallel version of annualDownloads().
