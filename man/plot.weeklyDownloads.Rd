@@ -2,7 +2,7 @@
 % Please edit documentation in R/weeklyDownloads.R
 \name{plot.weeklyDownloads}
 \alias{plot.weeklyDownloads}
-\title{Plot method for annualDownloads().}
+\title{Plot method for weeklyDownloads().}
 \usage{
 \method{plot}{weeklyDownloads}(x, statistic = "percent",
   aggregation = "day", typical.value = "mean", nrow = 3L, ...)
@@ -21,7 +21,7 @@
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Plot method for annualDownloads().
+Plot method for weeklyDownloads().
 }
 \examples{
 \dontrun{

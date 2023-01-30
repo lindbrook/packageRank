@@ -32,7 +32,7 @@ weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = TRUE) {
   out
 }
 
-#' Plot method for annualDownloads().
+#' Plot method for weeklyDownloads().
 #'
 #' @param x object.
 #' @param statistic Character. "count" or "percent".
