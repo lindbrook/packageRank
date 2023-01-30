@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9021
+
+- archive packageMRAN() and related functionality.
+
+
 ### packageRank 0.7.2.9020
 
 - set annualDownloads(log.y = FALSE).
