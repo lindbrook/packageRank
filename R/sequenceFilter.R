@@ -25,13 +25,18 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   #   parallel::stopCluster(cl)
   #
   # } else {
-    # if (.Platform$OS.type == "windows") cores <- 1L
-  arch.pkg.history <- lapply(packages, function(x) {
-    tmp <- packageHistory(x)
-    tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-  })
+  #   if (.Platform$OS.type == "windows") cores <- 1L
+  # arch.pkg.history <- parallel::mclapply(packages, function(x) {
+  #   tmp <- packageHistory(x)
+  #   tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
+  # }, mc.cores = cores)
   # }
 
+  histories <- packageHistory(packages)
+  arch.pkg.history <- lapply(histories, function(x) {
+    x[x$Date <= ymd & x$Repository == "Archive", ]
+  })
+  
   sequences <- identifySequences(dat, arch.pkg.history,
     download.time = download.time)
 

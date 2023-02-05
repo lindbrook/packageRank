@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9022
+
+- amend sequenceFilter() syntax.
+
+
 ### packageRank 0.7.2.9021
 
 - archive packageMRAN() and related functionality.
