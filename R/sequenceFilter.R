@@ -57,7 +57,6 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
 #' Extract Archive sequences from logs.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-
 #' @param dat Object.
 #' @param arch.pkg.history Object.
 #' @param download.time Numeric. Package download time allowance (seconds).
