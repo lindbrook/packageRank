@@ -33,9 +33,15 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   # }
 
   histories <- packageHistory(packages)
-  arch.pkg.history <- lapply(histories, function(x) {
-    x[x$Date <= ymd & x$Repository == "Archive", ]
-  })
+  
+  if (is.data.frame(histories)) {
+    sel <- histories$Date <= ymd & histories$Repository == "Archive"
+    arch.pkg.history <- list(histories[sel, ])
+  } else if (is.list(histories)) {
+    arch.pkg.history <- lapply(histories, function(x) {
+      x[x$Date <= ymd & x$Repository == "Archive", ]
+    })
+  }
   
   sequences <- identifySequences(dat, arch.pkg.history,
     download.time = download.time)
