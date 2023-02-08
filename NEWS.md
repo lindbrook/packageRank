@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9023
+
+- fix packageHistory() output in sequenceFilter().
+
+
 ### packageRank 0.7.2.9022
 
 - amend sequenceFilter() syntax.
