@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9024
+
+- add exception for source, no binary in sizeFilter().
+
+
 ### packageRank 0.7.2.9023
 
 - fix packageHistory() output in sequenceFilter().

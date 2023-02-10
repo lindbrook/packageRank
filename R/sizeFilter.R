@@ -25,7 +25,13 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
       ver <- version.data[[i]]
       tmp <- dat[[i]]
       latest.ver <- ver[nrow(ver), "Version"]
-      latest.size <- sz[sz$version %in% latest.ver, ]
+      # Exception: source, no binary
+      if (latest.ver %in% sz$version) {
+        latest.size <- sz[sz$version %in% latest.ver, ]  
+      } else {
+        latest.ver <- ver[nrow(ver) - 1, "Version"]
+        latest.size <- sz[sz$version %in% latest.ver, ]
+      }
       leftover <- tmp[tmp$version != latest.ver, ]
       sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
       tmp <- tmp[sel, ]
@@ -41,7 +47,13 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
       ver <- version.data[[i]]
       tmp <- dat[[i]]
       latest.ver <- ver[nrow(ver), "Version"]
-      latest.size <- sz[sz$version %in% latest.ver, ]
+      # Exception: source, no binary
+      if (latest.ver %in% sz$version) {
+        latest.size <- sz[sz$version %in% latest.ver, ]  
+      } else {
+        latest.ver <- ver[nrow(ver) - 1, "Version"]
+        latest.size <- sz[sz$version %in% latest.ver, ]
+      }
       leftover <- tmp[tmp$version != latest.ver, ]
       sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
       tmp <- tmp[sel, ]
