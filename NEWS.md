@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9025
+
+- use "Posit/RStudio" in logInfo().
+
+
 ### packageRank 0.7.2.9024
 
 - add exception for source, no binary in sizeFilter().

@@ -1,6 +1,6 @@
 #' Compute Availability, Date, Time of "Today's" Log.
 #'
-#' Also checks availability of RStudio logs and 'cranlogs' data.
+#' Also checks availability of Posit/RStudio logs and 'cranlogs' data.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
 #' @param show.available Logical. Check available logs and results.
@@ -39,11 +39,11 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
     }
 
     if (!rstudio.server.available & !cranlogs.server.available) {
-      status <- "'cranlogs' and RStudio servers unavailable."
+      status <- "'cranlogs' and Posit/RStudio servers unavailable."
     } else if (rstudio.server.available & !cranlogs.server.available) {
       status <- "'cranlogs' server unavailable."
     } else if (!rstudio.server.available & cranlogs.server.available) {
-      status <- "RStudio server unavailable."
+      status <- "Posit/RStudio server unavailable."
     }
     
     if (rstudio.server.available & cranlogs.server.available) {
@@ -66,7 +66,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
     cranlogs.status <- ifelse(cranlogs.results.available, "Yes.", "No.")
     
     out <- list("Today's log/result" = today.log,
-                "Today's log on RStudio?" = rstudio.status,
+                "Today's log on Posit/RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 status = status)
 
@@ -86,11 +86,11 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
       sel <- cranlogs.available$count != 0
       cran.last.available <- max(cranlogs.available[sel, "date"])
       
-      note <- paste0("RStudio ", "(", rstudio.last.available, ")",
+      note <- paste0("Posit/RStudio ", "(", rstudio.last.available, ")",
                      "; 'cranlogs' ", "(", cran.last.available, ").")
       
       out <- list("Today's log/result" = today.log,
-                  "Today's log on RStudio?" = rstudio.status,
+                  "Today's log on Posit/RStudio?" = rstudio.status,
                   "Today's results on 'cranlogs'?" = cranlogs.status,
                   "Available log/result" = note,
                   status = status)
