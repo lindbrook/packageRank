@@ -15,5 +15,5 @@ logInfo(tz = Sys.timezone(), upload.time = "17:00",
 \item{show.available}{Logical. Check available logs and results.}
 }
 \description{
-Also checks availability of RStudio logs and 'cranlogs' data.
+Also checks availability of Posit/RStudio logs and 'cranlogs' data.
 }
