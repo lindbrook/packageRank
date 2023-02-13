@@ -20,12 +20,14 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two core functions, `cranDownloads()` and `packageRank()`, a set of filters that reduces package download count inflation, and other assorted functions.
 
-* [I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and by providing a generic R `plot()` method that makes visualization easy.
-* [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that tells you the percentage of packages with fewer downloads, to help you see how your package is doing relative to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
-* [III Package Download Filters](#iii---filtering-package-download-counts) describes the functions that filter out software and behavioral artifacts from the download logs which contribute to inflated download counts.
-* [IV Availability of Logs and Results](#iv---availability-of-logs-and-results) answers the when and how question regarding the availability and unavailability of results, and discusses the utility of `logInfo()`.
-* [V Data Fixes](#v---data-fixes-for-2012-and-2013) discusses two functions,`fixDate_2012()` and `fixCranlogs()`, that address data problems with logs from 2012 and 2013.
-* [VI Et Cetera](#vi---et-cetera) discusses issues associated with country code top-level domains, memoization, time zones, the internet connection time out problem, and recent ongoing spikes in the Sunday downloads of Windows version of the R application.
+Details about the packge's functionality, how the package actually works, and and some potential issues of note are broken down in the sections below.
+
+* [I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and a generic R `plot()` method that makes visualization easy.
+* [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that computes the percentage of packages with fewer downloads, to give you your package's download count _relative_ to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
+* [III Package Download Filters](#iii---filtering-package-download-counts) describes the functions that filter out software and behavioral artifacts in the download logs that contribute to inflated download counts.
+* [IV Availability of Logs and Results](#iv---availability-of-logs-and-results) answers the when and how questions about the availability of results. It also describes `logInfo()`, which is the easiest way to check the status of today's results.
+* [V Data Fixes](#v---data-fixes-for-2012-and-2013) discusses two functions,`fixDate_2012()` and `fixCranlogs()`, which address and document data problems with logs from 2012 and 2013.
+* [VI Et Cetera](#vi---et-cetera) discusses country code top-level domains, memoization, time zone effects, the internet connection time out problem, and recent (and ongoing) spikes in the downloads of Windows version of the R application on Sundays.
 
 ### getting started
 
@@ -278,7 +280,7 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
 
-Lowess is the default smoother. You can control the degree of smooth with the span argument (the default is span = 0.75):
+You can control the degree of smooth using the span argument (the default is span = 0.75):
 
 ```{r span, eval = FALSE}
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
@@ -792,7 +794,7 @@ Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank pe
 packageRank(packages = "ergm")
 ```
 
-However, depending on _where_ you make this request, you may not get the data you expect. In Honolulu, USA, you will. In Sydney, Australia you won't. The reason is that you've somehow forgotten a key piece of trivia: Posti/RStudio typically posts _yesterday's_ log around 17:00 UTC the following day.
+However, depending on _where_ you make this request, you may not get the data you expect. In Honolulu, USA, you will. In Sydney, Australia you won't. The reason is that you've somehow forgotten a key piece of trivia: Posit/RStudio typically posts _yesterday's_ log around 17:00 UTC the following day.
 
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021. So the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC. The log you want won't actually be available for another 19 hours.
 
