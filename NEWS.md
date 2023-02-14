@@ -205,7 +205,7 @@
 - add subtitle argument to inflationPlot2().
 - add wed (Wednesday) argument to inflationPlot2().
 - change default orientation of ggplot2 facets in
-    plot.cranDownalods().
+    plot.cranDownloads().
 - note packageArchive() fix for ‘testthat’ filename typo/duplicate.
 - set geom_point(size = 1.5) for single day, multiple package plot in
     singlePlot()
