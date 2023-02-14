@@ -8,9 +8,9 @@
 #' @param bytes Logical. Compute approximate file size (bytes).
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame or NULL.
-#' @export
+#' @noRd
 
-cranPackageSize <- function(package = "cholera", check.package = TRUE,
+cranPackageSize <- function(package = "cholera", check.package = FALSE,
   size = TRUE, r.ver = "4.0", bytes = TRUE, multi.core = TRUE) {
 
   # R default is 60
