@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9027
+
+- copyedit README.
+
+
 ### packageRank 0.7.2.9026
 
 - separate internet check from checkPackage().
