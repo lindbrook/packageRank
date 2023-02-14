@@ -1,154 +1,24 @@
-### packageRank 0.7.2.9027
+### packageRank 0.8.0
 
-- copyedit README.
+#### Fixes
 
+- add lookup for exceptions in cranMirrors().
+- fix plot.cranDownloads(graphics = "base", multi.plot = TRUE, smooth = TRUE).
+- fix sequenceFilter() for packages not in CRAN Archive.
 
-### packageRank 0.7.2.9026
-
-- separate internet check from checkPackage().
-
-
-### packageRank 0.7.2.9025
-
-- use "Posit/RStudio" in logInfo().
-
-
-### packageRank 0.7.2.9024
-
-- add exception for source, no binary in sizeFilter().
-
-
-### packageRank 0.7.2.9023
-
-- fix packageHistory() output in sequenceFilter().
-
-
-### packageRank 0.7.2.9022
-
-- amend sequenceFilter() syntax.
-
-
-### packageRank 0.7.2.9021
-
-- archive packageMRAN() and related functionality.
-
-
-### packageRank 0.7.2.9020
+#### Function Change
 
 - set annualDownloads(log.y = FALSE).
 - add/set annualDownloads(sep.y = FALSE).
-
-
-### packageRank 0.7.2.9019
-
-- clean and use non-parallel version of annualDownloads().
-
-
-### packageRank 0.7.2.9018
-
-- cranMirrors(): add lookup for exceptions; change argument to 'description'.
-
-
-### packageRank 0.7.2.9017
-
-- update cranMirrors() exceptions.
-
-
-### packageRank 0.7.2.9016
-
-- use curl::has_internet() in logInfo().
-
-
-### packageRank 0.7.2.9015
-
-- logInfo(): change list.available argument to show.available and check internet 
-  connection.
-
-
-### packageRank 0.7.2.9014
-
-- add note about R Windows Sunday downloads to README.
-
-
-### packageRank 0.7.2.9013
-
-- change argument and output of logInfo(list.available = FALSE).
-
-
-### packageRank 0.7.2.9012
-
-- separate server and log checks in logInfo().
-
-
-### packageRank 0.7.2.9011
-
-- add exception in logInfo() when RStudio log server unavailable.
-- add/use RStudio log and server tests in logInfo().
-
-
-### packageRank 0.7.2.9010
-
-- move smoother functions to cranDownloadsPlotSmoother.R.
-- fix plot.cranDownloads(graphics = "base", multi.plot = TRUE, smooth = TRUE).
-
-
-### packageRank 0.7.2.9009
-
-- use 'parallelly'-style computation of available cores.
-
-
-### packageRank 0.7.2.9008
-
-- add addSmoother().
-- use smoothMonthData() in addSmoother().
-- add addSinglePlotSmoother().
-- add addMultiPlotSmoother().
-- add addRPlotSmoother().
-- add addRTotPlotSmoother().
-
-
-### packageRank 0.7.2.9007
-
+- add/set cranMirrors(description = FALSE).
+- change logInfo(list.available = FALSE) to logInfo(show.available = FALSE).
 - set class of packageHistory()$Date to "Date".
+- archive/deprecate packageMRAN() and related functionality.
+- set loess as default smoother in plot.cranDownloads()
 
+#### Documentation
 
-### packageRank 0.7.2.9006
-
-- promote packageHistoryB() to packageHistory().
-
-
-### packageRank 0.7.2.9005
-
-- amend/fix logInfo() note when 'cranlogs' is down.
-
-
-### packageRank 0.7.2.9004
-
-- set loess as default smoother in cranPlot(graphics = "base", smooth = TRUE).
-- set loess as default smoother in singlePlot(graphics = "base", smooth = TRUE).
-- set loess as default smoother in multiPlot(graphics = "base", smooth = TRUE).
-- set loess as default smoother in rTotPlot(graphics = "base", smooth = TRUE).
-- set loess as default smoother in rPlot(graphics = "base", smooth = TRUE).
-
-
-### packageRank 0.7.2.9003
-
-- use packageHistoryB() in ipPackage(), sequenceFilter() and sizeFilter().
-
-
-### packageRank 0.7.2.9002
-
-- (temporarily) set sequenceFilter() to single core.
-
-
-### packageRank 0.7.2.9001
-
-- add packageHistoryB() prototype.
-
-
-### packageRank 0.7.2.9000
-
-- fix sequenceFilter() for packages not in CRAN Archive.
+- add discussion about R Windows Sunday downloads to README.
 
 
 ### packageRank 0.7.2
