@@ -32,6 +32,7 @@
 cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   to = NULL, check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (length(packages) > 1) {
     if ("R" %in% packages) {
       stop("R downloads cannot be mixed with package downloads.", call. = FALSE)
