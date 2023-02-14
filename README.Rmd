@@ -18,16 +18,16 @@ library(packageRank)
 
 ## packageRank: compute and visualize package download counts and rank percentiles
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two core functions, `cranDownloads()` and `packageRank()`, a set of filters that reduces package download count inflation, and other assorted functions.
+['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two core functions, `cranDownloads()` and `packageRank()`, a set of filters that reduce download count inflation, and a host of other assorted functions.
 
-Details about the packge's functionality, how the package actually works, and and some potential issues of note are broken down in the sections below.
+Information about the packge are discussed in the sections below:
 
-* [I Package Download Counts](#i---computing-package-download-counts) describes how `cranDownloads()` extends the functionality of [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/) by adding a more user-friendly interface and a generic R `plot()` method that makes visualization easy.
-* [II Package Download Rank Percentiles](#ii---computing-package-download-rank-percentiles) describes how `packageRank()` uses rank percentiles, a nonparametric statistic that computes the percentage of packages with fewer downloads, to give you your package's download count _relative_ to _all_ other [CRAN](https://CRAN.R-project.org/) packages.
-* [III Package Download Filters](#iii---filtering-package-download-counts) describes the functions that filter out software and behavioral artifacts in the download logs that contribute to inflated download counts.
-* [IV Availability of Logs and Results](#iv---availability-of-logs-and-results) answers the when and how questions about the availability of results. It also describes `logInfo()`, which is the easiest way to check the status of today's results.
-* [V Data Fixes](#v---data-fixes-for-2012-and-2013) discusses two functions,`fixDate_2012()` and `fixCranlogs()`, which address and document data problems with logs from 2012 and 2013.
-* [VI Et Cetera](#vi---et-cetera) discusses country code top-level domains, memoization, time zone effects, the internet connection time out problem, and recent (and ongoing) spikes in the downloads of Windows version of the R application on Sundays.
+* [I Download Counts](#i---download-counts) describes how `cranDownloads()` gives [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html) a more user-friendly interface, and how it makes visualizing those data easy (via a generic R `plot()` method).
+* [II Download Rank Percentiles](#ii---download-rank-percentiles) describes how `packageRank()` makes use of rank percentiles. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours (e.g., your package is in the 74th percentile). This facilitates comparison and helps you to locate you packaged in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
+* [III Inflation Filters](#iii---inflation-filters) describes the five different filter functions used to remove software and behavioral artifacts that inflate _nominal_ download counts. This functionality is offered in `packageRank()` and `packageLog()` but _not_, for computational reasons, in `cranDownloads()`.
+* [IV Availability of Results](#iv---availability-of-results) discusses when results become available and how to use `logInfo()` to check the availability of today's results.
+* [V Data Fixes](#v---data-fixes) discusses two functions,`fixDate_2012()` and `fixCranlogs()`, which address data problems with logs from 2012 and 2013.
+* [VI Et Cetera](#vi---et-cetera) discusses country code top-level domains (e.g., countryPackage() and packageCountry()), the use of memoization, the effect of time zones, the internet connection time out problem, and the recent (and ongoing) spikes in the download of the Windows version of the R application on Sundays.
 
 ### getting started
 
@@ -44,7 +44,7 @@ To install the development version from GitHub:
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-### I - computing package download counts
+### I - download counts
 
 `cranDownloads()` uses all the same arguments as `cranlogs::cran_downloads()`:
 
@@ -356,12 +356,12 @@ The graph below plots the data aggregated by week (weeks begin on Sunday).
 
 ```{r week}
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"),
-	unit.observation = "week", smooth = TRUE)
+  unit.observation = "week", smooth = TRUE)
 ```
 
 Four things to note. First, if the first week (far left) is incomplete (the 'from' date is not a Sunday), that observation will be split in two: one point for the observed total on the nominal start date (gray empty square) and another point for the *backdated* total. Backdating involves completing the week by pushing the nominal start date back to include the previous Sunday (blue asterisk). In the example above, the nominal start date (01 January 2022) is moved back to include data through the previous Sunday (26 December 2021). This is useful because with a weekly unit of observation the first observation is likely to be truncated and would not give the most representative picture of the data. Second, if the last week (far right) is in-progress (the 'to' date is not a Saturday), that observation will be split in two: the observed total (gray empty square) and the estimated total based on the proportion of week completed (red empty circle). Third, just like the monthly plot, smoothers only use complete data, including backdated data but excluding in-progress and estimated data. Fourth, with the exception of first week's observed count, which is plotted at its nominal date, points are plotted along the x-axis on Sundays, the first day of the week.
 
-### II - computing package download rank percentiles
+### II - download rank percentiles
 
 After spending some time with nominal download counts, the "compared to what?" question will come to mind. For instance, consider the data for the 'cholera' package from the first week of March 2020:
 
@@ -595,7 +595,7 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 
 These graphs above, which are customized here to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights (in red) a package's position in the distribution along with its rank percentile and download count. In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
-### III - filtering package download counts
+### III - inflation filters
 
 We compute the number of package downloads by simply counting log entries. While straightforward, this approach can run into problems. Putting aside the question of whether package dependencies should be counted, what I have in mind here is what I believe to be two types of "invalid" log entries. The first, a software artifact, stems from entries that are smaller, often orders of magnitude smaller, than a package's actual binary or source file. The second, a behavioral artifact, emerges from efforts to download all of [CRAN](https://cran.r-project.org/). In both cases, a reliance on nominal counts will give you an inflated sense of the degree of interest in your package. For those interested, an early but detailed analysis and discussion of both types of inflation is included as part of this [R-hub blog post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts).
 
@@ -688,7 +688,7 @@ Note that the `all.filters = TRUE` is contextual. Depending on the function used
 
 Ideally, we'd like to use both sets. However, the package-specific set is computationally expensive because they need to be applied individually to all packages in the log, which can involve tens of thousands of packages. While not unfeasible, currently this takes a long time. For this reason, when `all.filters = TRUE`, `packageRank()`, `ipPackage()`, `countryPackage()`, `countryDistribution()` and `packageDistribution()` use only CRAN specific filters while `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both [CRAN](https://cran.r-project.org/) and package specific filters.
 
-### IV - availability of logs and results
+### IV - availability of results
 
 To answer this question, you need to understand that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream, online dependencies. The first is Posit/RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which record traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly Posit/RStudio's CRAN mirror). The second is Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which using those logs to compute the download counts of both the R application and of R packages.
 
@@ -731,7 +731,7 @@ $status
 [1] "Today's log is typically posted by 09:00 PST (01 Feb 17:00 GMT)."
 ```
 
-### V - data fixes for 2012 and 2013
+### V - data fixes
 
 For the historically minded, there are two data fixes to note. The first stems from problems with the logs when Posit/RStudio first began posting them. The second stems from how ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) works. The fixes work and are documented in two functions:
 
@@ -916,4 +916,3 @@ points(win[win$date %in% sundays[post], c("date", "count")], pch = 16,
   col = "red")
 title(main = "R Windows")
 ```
-
