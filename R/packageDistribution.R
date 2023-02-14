@@ -17,6 +17,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
   memoization = TRUE, check.package = TRUE, multi.core = TRUE,
   dev.mode = FALSE, threshold = 1000L) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(package)
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)

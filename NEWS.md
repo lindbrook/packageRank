@@ -1,3 +1,8 @@
+### packageRank 0.7.2.9026
+
+- separate internet check from checkPackage().
+
+
 ### packageRank 0.7.2.9025
 
 - use "Posit/RStudio" in logInfo().

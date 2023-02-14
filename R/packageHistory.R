@@ -6,6 +6,8 @@
 #' @export
 
 packageHistory <- function(package = "cholera", check.package = TRUE) {
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+
   package0 <- package
 
   if ("R" %in% package) {
@@ -95,6 +97,7 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
 packageCRAN <- function(package = "cholera", check.package = TRUE,
   size = FALSE) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
   web_page <- mreadLines(url)
@@ -138,6 +141,7 @@ packageCRAN <- function(package = "cholera", check.package = TRUE,
 packageArchive <- function(package = "cholera", check.package = TRUE,
   size = FALSE) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) package <- checkPackage(package)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   url <- paste0(root.url, package)

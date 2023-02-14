@@ -21,6 +21,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
   check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
