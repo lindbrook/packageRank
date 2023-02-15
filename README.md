@@ -1,7 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.2.9027-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -10,7 +9,7 @@ via two core functions, `cranDownloads()` and `packageRank()`, a set of
 filters that reduce download count inflation, and a host of other
 assorted functions.
 
-Information about the packge are discussed in the sections below:
+You can read more about the package the sections below:
 
 - [I Download Counts](#i---download-counts) describes how
   `cranDownloads()` gives
@@ -1118,11 +1117,11 @@ set the timeout to 600 seconds.
 The graph above for [R downloads](#packages--r) plots the daily
 downloads of the R application broken down by platform (Mac, Source,
 Windows). In it, you can seek a weekly pattern with mid-week peaks and
-weekend dips. However, on Sunday, 06 November 2022 this pattern was
+weekend troughs. However, on Sunday, 06 November 2022 this pattern was
 broken.
 
-On that day, and each subsequent Sunday, there is a noticeable spike in
-downloads of the Windows version of the R application.
+On that day, and each subsequent Sunday, there have been noticeable
+spikes in downloads of the Windows version of the R application.
 
 ``` r
 plot(cranDownloads("R", from = "2022-10-15", to = "2023-01-17"))

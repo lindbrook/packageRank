@@ -20,7 +20,7 @@ library(packageRank)
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two core functions, `cranDownloads()` and `packageRank()`, a set of filters that reduce download count inflation, and a host of other assorted functions.
 
-Information about the packge are discussed in the sections below:
+You can read more about the package the sections below:
 
 * [I Download Counts](#i---download-counts) describes how `cranDownloads()` gives [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html) a more user-friendly interface, and how it makes visualizing those data easy (via a generic R `plot()` method).
 * [II Download Rank Percentiles](#ii---download-rank-percentiles) describes how `packageRank()` makes use of rank percentiles. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours (e.g., your package is in the 74th percentile). This facilitates comparison and helps you to locate you packaged in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
@@ -862,9 +862,9 @@ This change can affect functions that download logs. This is especially true ove
 
 #### R Windows Sunday downloads
 
-The graph above for [R downloads](#packages--r) plots the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can seek a weekly pattern with mid-week peaks and weekend dips. However, on Sunday, 06 November 2022 this pattern was broken. 
+The graph above for [R downloads](#packages--r) plots the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can seek a weekly pattern with mid-week peaks and weekend troughs. However, on Sunday, 06 November 2022 this pattern was broken. 
 
-On that day, and each subsequent Sunday, there is a noticeable spike in downloads of the Windows version of the R application. 
+On that day, and each subsequent Sunday, there have been noticeable spikes in downloads of the Windows version of the R application. 
 
 ```{r sundays}
 plot(cranDownloads("R", from = "2022-10-15", to = "2023-01-17"))
