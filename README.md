@@ -509,10 +509,10 @@ plot(cranDownloads(from = "2020-03-01", to = "2020-03-07"))
 
 Here we see that there’s a big difference between the work week and the
 weekend. This seems to indicate that the download activity for
-‘cholera’\](<https://CRAN.R-project.org/package=cholera>) on the weekend
+[‘cholera’](https://CRAN.R-project.org/package=cholera) on the weekend
 seems high. Moreover, the Wednesday peak for
-‘cholera’\](<https://CRAN.R-project.org/package=cholera>) downloads
-seems higher than the mid-week peak of total downloads.
+[‘cholera’](https://CRAN.R-project.org/package=cholera) downloads seems
+higher than the mid-week peak of total downloads.
 
 One way to better address these observations is to locate your package’s
 download counts in the overall frequency distribution of download
