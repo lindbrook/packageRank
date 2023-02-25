@@ -318,11 +318,10 @@ If you want the total count of R downloads, set `r.total = TRUE`:
 plot(cranDownloads(packages = "R", from = 2019, to = 2019), r.total = TRUE)
 ```
 
-Note that starting Sunday 06 November 2022 (and subsequent Sundays) and
-Wedenesday, 18 January 2023 (and subseqent Wednesdays), there’ve been
-spikes of downloads of the Windows version of R. Details can be found
-below in [R Windows Sunday and Wednesday
-downloads](#r-windows-sunday-and-wednesday-downloads).
+Note that since Sunday 06 November 2022 and Wedenesday, 18 January 2023,
+there’ve been spikes of downloads of the Windows version of R on Sundays
+and Wednesdays (details below in [R Windows Sunday and Wednesday
+downloads](#r-windows-sunday-and-wednesday-downloads)).
 
 #### smoothers and confidence intervals
 
@@ -1119,12 +1118,11 @@ set the timeout to 600 seconds.
 
 The graph above for [R downloads](#packages--r) shows the daily
 downloads of the R application broken down by platform (Mac, Source,
-Windows). In it, you can seek a weekly pattern with mid-week peaks and
-weekend troughs. However, starting Sunday, 06 November 2022 and
-Wedenesday, 18 January 2023, this pattern was broken. On those day, and
-each subsequent Sunday and Wednesday, there have been noticeable spikes
-(almost an order of magnitude difference) in downloads of the Windows
-version of the R application.
+Windows). In it, you can see the typical weekly pattern of mid-week
+peaks and weekend troughs. However, starting Sunday, 06 November 2022
+and Wednesday, 18 January 2023, this pattern was broken. On subsequent
+Sundays and Wednesdays, there are noticeable spikes (almost an order of
+magnitude difference) in the downloads of the Windows version of R.
 
 ``` r
 plot(cranDownloads("R", from = "2022-10-15", to = "2023-02-22"))
@@ -1138,13 +1136,13 @@ abline(v = as.Date("2023-01-18 Wed"), col = "gray", lty = "dotted")
 
 ![](man/figures/README-sundays-1.png)<!-- -->
 
-This pattern does not extend to the Mac or Source versions.
-
-In the graphs below, the watershed date is plotted on the x-axis (red
-for Sunday; blue for Wednesday). Dates before the watershed are plotted
-with empty circles. Dates after the watershed are plotted with filled
-circles *only if* they seem to be outliers. Otherwise, they are plotted
-with empty circles.
+This pattern does not extend to the Mac or Source versions. You can see
+this in the graphs below. In each plot, the the watershed date is
+plotted as a vertical line (red for Sunday; blue for Wednesday). Sunday
+and Wednesdays before the watershed are plotted with empty circles. If
+Sunday and Wednesdays after their respective watershed appear to be
+outliers, they are plotted with filled circles; otherwise, they are
+plotted with empty circles.
 
 ![](man/figures/README-sundays_mac-1.png)<!-- -->![](man/figures/README-sundays_mac-2.png)<!-- -->
 
