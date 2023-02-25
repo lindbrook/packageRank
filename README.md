@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -39,7 +39,7 @@ You can read more about the package the sections below:
   domains (e.g., countryPackage() and packageCountry()), the use of
   memoization, the effect of time zones, the internet connection time
   out problem, and the recent (and ongoing) spikes in the download of
-  the Windows version of the R application on Sundays.
+  the Windows version of the R application on Sundays and Wednesdays.
 
 ### getting started
 
@@ -318,9 +318,10 @@ If you want the total count of R downloads, set `r.total = TRUE`:
 plot(cranDownloads(packages = "R", from = 2019, to = 2019), r.total = TRUE)
 ```
 
-Note that since Sunday, 06 November 2022, and each subsequent Sunday,
-there’ve been spikes of downloads of the Windows version of R. Details
-below in [R Windows Sunday downloads](#r-windows-sunday-downloads).
+Note that since Sunday 06 November 2022 and Wedenesday, 18 January 2023,
+there’ve been spikes of downloads of the Windows version of R on Sundays
+and Wednesdays (details below in [R Windows Sunday and Wednesday
+downloads](#r-windows-sunday-and-wednesday-downloads)).
 
 #### smoothers and confidence intervals
 
@@ -1113,31 +1114,38 @@ true over slower internet connections or when you’re dealing with large
 log files. To fix this, `fetchCranLog()` will, if needed, temporarily
 set the timeout to 600 seconds.
 
-#### R Windows Sunday downloads
+#### R Windows Sunday and Wednesday downloads
 
-The graph above for [R downloads](#packages--r) plots the daily
+The graph above for [R downloads](#packages--r) shows the daily
 downloads of the R application broken down by platform (Mac, Source,
-Windows). In it, you can seek a weekly pattern with mid-week peaks and
-weekend troughs. However, on Sunday, 06 November 2022 this pattern was
-broken.
-
-On that day, and each subsequent Sunday, there have been noticeable
-spikes in downloads of the Windows version of the R application.
+Windows). In it, you can see the typical weekly pattern of mid-week
+peaks and weekend troughs. However, starting Sunday, 06 November 2022
+and Wednesday, 18 January 2023, this pattern was broken. On subsequent
+Sundays and Wednesdays, there are noticeable spikes (almost an order of
+magnitude difference) in the downloads of the Windows version of R.
 
 ``` r
-plot(cranDownloads("R", from = "2022-10-15", to = "2023-01-17"))
+plot(cranDownloads("R", from = "2022-10-15", to = "2023-02-22"))
 axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
   padj = 0.9)
-abline(v = as.Date("2022-11-06"), col = "gray", lty = "dotted")
+axis(3, at = as.Date("2023-01-18"), labels = "2023-01-18", cex.axis = 2/3, 
+  padj = 0.9)
+abline(v = as.Date("2022-11-06 Sun"), col = "gray", lty = "dotted")
+abline(v = as.Date("2023-01-18 Wed"), col = "gray", lty = "dotted")
 ```
 
 ![](man/figures/README-sundays-1.png)<!-- -->
 
-This pattern does not extend to the Mac or Source versions of R (Sundays
-are plotted with filled circles):
+This pattern does not extend to the Mac or Source versions. You can see
+this in the graphs below. In each plot, the the watershed date is
+plotted as a vertical line (red for Sunday; blue for Wednesday). Sunday
+and Wednesdays before the watershed are plotted with empty circles. If
+Sunday and Wednesdays after their respective watershed appear to be
+outliers, they are plotted with filled circles; otherwise, they are
+plotted with empty circles.
 
-![](man/figures/README-sundays_mac-1.png)<!-- -->
+![](man/figures/README-sundays_mac-1.png)<!-- -->![](man/figures/README-sundays_mac-2.png)<!-- -->
 
-![](man/figures/README-sundays_src-1.png)<!-- -->
+![](man/figures/README-sundays_src-1.png)<!-- -->![](man/figures/README-sundays_src-2.png)<!-- -->
 
-![](man/figures/README-sundays_win-1.png)<!-- -->
+![](man/figures/README-sundays_win-1.png)<!-- -->![](man/figures/README-sundays_win-2.png)<!-- -->

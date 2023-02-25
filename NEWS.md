@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9000
+
+- note Wednesday R Windows application spikes.
+
+
 ### packageRank 0.8.0
 
 #### Fixes
