@@ -33,6 +33,7 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
 
   if (any(class(clogs) == "try-error")) {
     cranlogs.server.available <- FALSE
+    cranlogs.results.available <- FALSE
   } else {
     cranlogs.server.available <- TRUE
     cranlogs.results.available <- ifelse(clogs$count != 0, TRUE, FALSE)
@@ -72,19 +73,22 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
 
   if (show.available) {
     rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
-
+    
     last.available <- vapply(rev.last.wk, function(x) {
       tmp.url <- paste0(rstudio.url, year, '/', x, ".csv.gz")
       RCurl::url.exists(tmp.url)
     }, logical(1L))
-
+    
     rstudio.last.available <- rev.last.wk[last.available][1]
-
+    
     cranlogs.available <- try(cranlogs::cran_downloads(from = rev.last.wk[8],
       to = rev.last.wk[1]), silent = TRUE)
-    
-    sel <- cranlogs.available$count != 0
-    cran.last.available <- max(cranlogs.available[sel, "date"])
+    if (any(class(cranlogs.available) == "try-error")) {
+      cran.last.available <- NA
+    } else {
+      sel <- cranlogs.available$count != 0
+      cran.last.available <- max(cranlogs.available[sel, "date"])
+    }
     
     note <- paste0("Posit/RStudio ", "(", rstudio.last.available, ")",
                    "; 'cranlogs' ", "(", cran.last.available, ").")
