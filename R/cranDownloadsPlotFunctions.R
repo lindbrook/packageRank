@@ -143,7 +143,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
 
         xlim <- range(dat$date)
-        ylim.data <- rbind(dat, dat.recompute)
+        ylim.data <- rbind(dat, dat.recompute, current.wk.est)
         ylim <- range(ylim.data[, y.nm])
 
         if (log.y) {
@@ -642,7 +642,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         })
 
         ylim.lst <- lapply(plot.data, function(x) {
-          x[c("pkg.dat", "pkg.dat.recompute")]
+          x[c("pkg.dat", "pkg.dat.recompute", "current.wk.est")]
         })
 
         ylim.data <- do.call(rbind, lapply(ylim.lst, function(x) {
@@ -1275,7 +1275,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           })
 
           ylim.lst <- lapply(plot.data, function(x) {
-            x[c("pkg.dat", "pkg.dat.recompute")]
+            x[c("pkg.dat", "pkg.dat.recompute", "current.wk.est")]
           })
 
           ylim.data <- do.call(rbind, lapply(ylim.lst, function(x) {
@@ -2554,7 +2554,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
 
         xlim <- range(dat$date)
-        ylim.data <- rbind(dat, dat.recompute)
+        ylim.data <- rbind(dat, dat.recompute, current.wk.est)
         ylim <- range(ylim.data[, statistic])
 
         if (log.y) {
