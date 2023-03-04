@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9002
+
+- fix ylim in plot.cranDownloads(graphics = "base", unit.observation = "week").
+
+
 ### packageRank 0.8.0.9001
 
 - fix logInfo() when 'cranlogs' not available.
