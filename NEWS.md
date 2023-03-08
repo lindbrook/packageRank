@@ -1,3 +1,9 @@
+### packageRank 0.8.0.9003
+
+- add packages_on_CRAN(), packages_in_Archive(), packages_observed_in_logs()
+  and packages_partitioned().
+  
+
 ### packageRank 0.8.0.9002
 
 - fix ylim in plot.cranDownloads(graphics = "base", unit.observation = "week").
