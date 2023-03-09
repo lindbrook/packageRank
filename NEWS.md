@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9006
+
+- allow mix of CRAN annd Archive-only packages (and R) in packageHistory().
+
+
 ### packageRank 0.8.0.9005
 
 - add/set packages_partitioned(observed.downloads = FALSE).

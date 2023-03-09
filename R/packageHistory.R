@@ -9,62 +9,83 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
   package0 <- package
-
+  
   if ("R" %in% package) {
     pkg.idx <- seq_along(package)
     r.position <- which(package == "R")
     pkg.idx <- pkg.idx[pkg.idx != r.position]
-
+    
     r_v <- rversions::r_versions()
     names(r_v) <- tools::toTitleCase(names(r_v))
     r_v$Date <- as.Date(r_v$Date)
     nms <- names(r_v)
     r_v$Package <- "R"
     r_v <- list(r_v[, c("Package", nms)])
-
+    
     package <- package[-r.position]
   }
 
-  if (check.package) package <- checkPackage(package)
-
-  # Use packageHistory0() for "missing" and latest packages.
-  # e.g.,"VR" in cran_package() but not cran_package_history()
-  history <- try(lapply(package, pkgsearch::cran_package_history),
-    silent = TRUE)
-
-  # problem with pkgsearch::cran_package_history()
-  cran <- mpackages_on_CRAN()
-  on.cran <- any(package %in% cran$Package)
-  
-  if (any(class(history) == "try-error") | !on.cran) {
-    out <- lapply(package, packageHistory0)
+  if (length(package) == 0) {
+    out <- r_v
   } else {
-    out <- lapply(history, function(x) {
-      if ("Repository" %in% colnames(x)) {
-         tmp <- data.frame(x[, c("Package", "Version", "date", "Repository")])
-         row.names(tmp) <- NULL
-         tmp$Date <- as.Date(tmp$date)
-         tmp$date <- NULL
-         if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-         tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
-      } else {
-        tmp <- data.frame(x[, c("Package", "Version", "date")])
-        row.names(tmp) <- NULL
-        tmp$Date <- as.Date(tmp$date)
-        tmp$date <- NULL
-        tmp$Repository <- "Archive"
-      }
-     tmp
-    })
-  }
+    if (check.package) package <- checkPackage(package)
 
-  if ("R" %in% package0) {
-    out <- c(out[seq_along(out) < r.position], r_v,
-      out[seq_along(out) >= r.position])
+    # Use packageHistory0() for "missing" and latest packages.
+    # e.g.,"VR" in cran_package() but not cran_package_history()
+    history <- try(lapply(package, pkgsearch::cran_package_history),
+                   silent = TRUE)
+    
+    # problem with pkgsearch::cran_package_history()
+    cran <- mpackages_on_CRAN()
+    on.cran <- package %in% cran$Package
+    
+    if (any(class(history) == "try-error") | any(!on.cran)) {
+      archive.out <- lapply(package[!on.cran], packageHistory0)
+    }
+    
+    if (any(on.cran)) {
+      cran.out <- lapply(history[on.cran], function(x) {
+        if ("Repository" %in% colnames(x)) {
+          tmp <- data.frame(x[, c("Package", "Version", "date", "Repository")])
+          row.names(tmp) <- NULL
+          tmp$Date <- as.Date(tmp$date)
+          tmp$date <- NULL
+          if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+          tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+        } else {
+          tmp <- data.frame(x[, c("Package", "Version", "date")])
+          row.names(tmp) <- NULL
+          tmp$Date <- as.Date(tmp$date)
+          tmp$date <- NULL
+          tmp$Repository <- "Archive"
+        }
+        tmp
+      })
+    }
+    
+    if (exists("cran.out") & exists("archive.out")) {
+      out <- c(cran.out, archive.out)
+    } else if (exists("cran.out") & !exists("archive.out")) {
+      out <- cran.out
+    } else if (!exists("cran.out") & exists("archive.out")) {
+      out <- archive.out
+    }
+    
+    if (length(out) > 1) {
+      pkg.nm <- vapply(out, function(x) x[1, "Package"], character(1L))
+      id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
+      out <- out[order(id)]
+    }
+    
+    if ("R" %in% package0) {
+      out <- c(out[seq_along(out) < r.position], r_v,
+               out[seq_along(out) >= r.position])
+    }
   }
-
-  if (length(out) == 1) out[[1]]
-  else out
+  
+  if (length(out) == 1) out <- out[[1]]
+  
+  out
 }
 
 #' Scrape package version history CRAN and Archive.
