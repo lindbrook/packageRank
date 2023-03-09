@@ -32,7 +32,11 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   history <- try(lapply(package, pkgsearch::cran_package_history),
     silent = TRUE)
 
-  if (any(class(history) == "try-error")) {
+  # problem with pkgsearch::cran_package_history()
+  cran <- mpackages_on_CRAN()
+  on.cran <- any(package %in% cran$Package)
+  
+  if (any(class(history) == "try-error") | !on.cran) {
     out <- lapply(package, packageHistory0)
   } else {
     out <- lapply(history, function(x) {
