@@ -10,6 +10,8 @@ packages_on_CRAN <- function() {
   pkg.data[!duplicated(pkg.data$Package), vars] # N.B. duplicated()!
 }
 
+mpackages_on_CRAN <- memoise::memoise(packages_on_CRAN)
+
 #' Packages currently in Archive
 #'
 #' Include inactive (retired) packages and previous versions of active packages.
