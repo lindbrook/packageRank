@@ -47,19 +47,30 @@ packages_observed_in_logs <- function(date = NULL) {
 #' Partitioned CRAN and Archive Packages.
 #'
 #' CRAN, Archive, Observed, CRAN & Archive, CRAN only and Archive only.
+#' @param observed.downloads Logical. Compute current observed package downloads.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R list.
 #' @export
 
-packages_partitioned <- function(multi.core = TRUE) {
+packages_partitioned <- function(observed.downloads = FALSE, 
+  multi.core = TRUE) {
+  
   cores <- multiCore(multi.core)
+  
   cran <- packages_on_CRAN()
   archive <- packages_in_Archive(multi.core = cores)
-  obs <- packages_observed_in_logs(date = NULL)
   cran.archive <- intersect(cran$Package, archive)
   cran.only <- setdiff(cran$Package, archive)
   archive.only <- setdiff(archive, cran$Package)
-  list(cran = cran, archive = archive, obs = obs, cran.archive = cran.archive,
-       cran.only = cran.only, archive.only = archive.only)
-
+  
+  if (observed.downloads) {
+    obs <- packages_observed_in_logs(date = NULL)
+    out <- list(cran = cran, archive = archive, obs = obs, 
+                cran.archive = cran.archive, cran.only = cran.only, 
+                archive.only = archive.only)  
+  } else {
+    out <- list(cran = cran, archive = archive, cran.archive = cran.archive,
+                cran.only = cran.only, archive.only = archive.only)
+  }
+  out
 }
