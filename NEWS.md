@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9005
+
+- add/set packages_partitioned(observed.downloads = FALSE).
+
+
 ### packageRank 0.8.0.9004
 
 - add memoized packages_on_CRAN().
