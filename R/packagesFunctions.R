@@ -74,3 +74,26 @@ packages_partitioned <- function(observed.downloads = FALSE,
   }
   out
 }
+
+#' Extract a package's archive date.
+#'
+#' Date a package is moved to Archive (if available).
+#' @param package Character. Package name.
+#' @return An R data frame.
+#' @export
+
+extractArchiveDate <- function(package) {
+  url <- "https://cran.r-project.org/web/packages/"
+  web_page <- readLines(paste0(url, package))
+  archive.date <- grepl("Archived on", web_page, fixed = TRUE)
+  
+  if (any(archive.date)) {
+    archive.info <- web_page[archive.date]
+    info <- unlist(strsplit(archive.info, " "))
+    id <- grepl("[0-9]{2}-[0-9]{2}-[0-9]{2}", info)
+    out <- data.frame(package = package, archive.date = as.Date(info[id]))
+  } else {
+    out <- data.frame(package = package, archive.date = NA)
+  }
+  out
+}

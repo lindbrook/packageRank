@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9007
+
+- add extractArchiveDate().
+
+
 ### packageRank 0.8.0.9006
 
 - allow mix of CRAN annd Archive-only packages (and R) in packageHistory().
