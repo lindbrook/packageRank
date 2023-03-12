@@ -40,7 +40,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     on.cran <- package %in% cran$Package
     
     if (any(class(history) == "try-error") | any(!on.cran)) {
-      archive.out <- lapply(package[!on.cran], packageHistory0)
+      archive.out <- lapply(package[!on.cran], mpackageHistory0)
     }
     
     if (any(on.cran)) {
@@ -104,6 +104,8 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
   row.names(out) <- NULL
   out
 }
+
+mpackageHistory0 <- memoise::memoise(packageHistory0)
 
 #' Scrape package data from CRAN.
 #'
