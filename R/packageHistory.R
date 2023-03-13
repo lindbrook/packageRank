@@ -39,8 +39,6 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     history <- try(lapply(package, pkgsearch::cran_package_history),
       silent = TRUE)
     
-    vars <- c("Package", "Version", "date", "Repository")
-
     if (any(class(history) == "try-error")) {
       if (any(!on.cran)) {
         archive.out <- lapply(package[!on.cran], mpackageHistory0)
@@ -51,64 +49,11 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
           pkgsearch::cran_package_history(x)
         }), silent = TRUE)
         
-        cran.out <- lapply(history, function(x) {
-          if ("Repository" %in% colnames(x)) {
-            tmp <- data.frame(x[, vars])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
-          } else {
-            tmp <- data.frame(x[, c("Package", "Version", "date")])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            tmp$Repository <- "Archive"
-          }
-          tmp
-        })
+        cran.out <- transform_pkgsearch(history)
       }
     } else {
-      if (any(!on.cran)) {
-        archive.out <- lapply(history[!on.cran], function(x) {
-          if ("Repository" %in% colnames(x)) {
-            tmp <- data.frame(x[, vars])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
-          } else {
-            tmp <- data.frame(x[, c("Package", "Version", "date")])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            tmp$Repository <- "Archive"
-          }
-          tmp
-        })
-      }
-      
-      if (any(on.cran)) {
-        cran.out <- lapply(history[on.cran], function(x) {
-          if ("Repository" %in% colnames(x)) {
-            tmp <- data.frame(x[, vars])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
-          } else {
-            tmp <- data.frame(x[, c("Package", "Version", "date")])
-            row.names(tmp) <- NULL
-            tmp$Date <- as.Date(tmp$date)
-            tmp$date <- NULL
-            tmp$Repository <- "Archive"
-          }
-          tmp
-        })
-      }
+      if (any(!on.cran)) archive.out <- transform_pkgsearch(history[!on.cran])
+      if (any(on.cran)) cran.out <- transform_pkgsearch(history[on.cran])
     }
     
     if (exists("cran.out") & exists("archive.out")) {
@@ -134,6 +79,27 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (length(out) == 1) out <- out[[1]]
   
   out
+}
+
+transform_pkgsearch <- function(history) {
+  vars <- c("Package", "Version", "date", "Repository")
+  lapply(history, function(x) {
+    if ("Repository" %in% colnames(x)) {
+      tmp <- data.frame(x[, vars])
+      row.names(tmp) <- NULL
+      tmp$Date <- as.Date(tmp$date)
+      tmp$date <- NULL
+      if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+      tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+    } else {
+      tmp <- data.frame(x[, c("Package", "Version", "date")])
+      row.names(tmp) <- NULL
+      tmp$Date <- as.Date(tmp$date)
+      tmp$date <- NULL
+      tmp$Repository <- "Archive"
+    }
+    tmp
+  }) 
 }
 
 #' Scrape package version history CRAN and Archive.
