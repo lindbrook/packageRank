@@ -33,6 +33,24 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   to = NULL, check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+  
+  utc.date.time <- utc()
+  utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
+  upload.utc <- dateTime(utc.date, time = "17:00", tz = "GMT")
+  today.log <- as.Date(format(upload.utc, "%Y-%m-%d")) - 1
+  clogs <- try(cranlogs::cran_downloads(from = today.log, to = today.log),
+    silent = TRUE)
+  
+  if (utc.date.time > upload.utc) {
+    if (any(class(clogs) == "try-error")) {
+      stop("'cranlogs' service not available.", call. = FALSE)
+    }
+    if (clogs$count == 0) {
+      warning(paste("Today's results not available:\n", logInfo()$status),
+        call. = FALSE)
+    }
+  }
+  
   if (length(packages) > 1) {
     if ("R" %in% packages) {
       stop("R downloads cannot be mixed with package downloads.", call. = FALSE)
