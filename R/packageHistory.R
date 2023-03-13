@@ -28,39 +28,87 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (length(package) == 0) {
     out <- r_v
   } else {
-    if (check.package) package <- checkPackage(package)
-
-    # Use packageHistory0() for "missing" and latest packages.
-    # e.g.,"VR" in cran_package() but not cran_package_history()
-    history <- try(lapply(package, pkgsearch::cran_package_history),
-                   silent = TRUE)
+    # if (check.package) package <- checkPackage(package)
     
     # problem with pkgsearch::cran_package_history()
     cran <- mpackages_on_CRAN()
     on.cran <- package %in% cran$Package
+
+    # Use packageHistory0() for "missing" and latest packages.
+    # e.g., "VR" in cran_package() but not cran_package_history()
+    history <- try(lapply(package, pkgsearch::cran_package_history),
+      silent = TRUE)
     
-    if (any(class(history) == "try-error") | any(!on.cran)) {
-      archive.out <- lapply(package[!on.cran], mpackageHistory0)
-    }
-    
-    if (any(on.cran)) {
-      cran.out <- lapply(history[on.cran], function(x) {
-        if ("Repository" %in% colnames(x)) {
-          tmp <- data.frame(x[, c("Package", "Version", "date", "Repository")])
-          row.names(tmp) <- NULL
-          tmp$Date <- as.Date(tmp$date)
-          tmp$date <- NULL
-          if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-          tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
-        } else {
-          tmp <- data.frame(x[, c("Package", "Version", "date")])
-          row.names(tmp) <- NULL
-          tmp$Date <- as.Date(tmp$date)
-          tmp$date <- NULL
-          tmp$Repository <- "Archive"
-        }
-        tmp
-      })
+    vars <- c("Package", "Version", "date", "Repository")
+
+    if (any(class(history) == "try-error")) {
+      if (any(!on.cran)) {
+        archive.out <- lapply(package[!on.cran], mpackageHistory0)
+      }
+      
+      if (any(on.cran)) {
+        history <- try(lapply(package[on.cran], function(x) {
+          pkgsearch::cran_package_history(x)
+        }), silent = TRUE)
+        
+        cran.out <- lapply(history, function(x) {
+          if ("Repository" %in% colnames(x)) {
+            tmp <- data.frame(x[, vars])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+          } else {
+            tmp <- data.frame(x[, c("Package", "Version", "date")])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            tmp$Repository <- "Archive"
+          }
+          tmp
+        })
+      }
+    } else {
+      if (any(!on.cran)) {
+        archive.out <- lapply(history[!on.cran], function(x) {
+          if ("Repository" %in% colnames(x)) {
+            tmp <- data.frame(x[, vars])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+          } else {
+            tmp <- data.frame(x[, c("Package", "Version", "date")])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            tmp$Repository <- "Archive"
+          }
+          tmp
+        })
+      }
+      
+      if (any(on.cran)) {
+        cran.out <- lapply(history[on.cran], function(x) {
+          if ("Repository" %in% colnames(x)) {
+            tmp <- data.frame(x[, vars])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
+            tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+          } else {
+            tmp <- data.frame(x[, c("Package", "Version", "date")])
+            row.names(tmp) <- NULL
+            tmp$Date <- as.Date(tmp$date)
+            tmp$date <- NULL
+            tmp$Repository <- "Archive"
+          }
+          tmp
+        })
+      }
     }
     
     if (exists("cran.out") & exists("archive.out")) {

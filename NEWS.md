@@ -1,3 +1,9 @@
+### packageRank 0.8.0.9010
+
+- fix pkgsearch::cran_package_history() "try-error" in packageHistory().
+- compute archive.out and cran.out separately.
+
+
 ### packageRank 0.8.0.9009
 
 - add 'cranlogs' check to cranDownloads().
