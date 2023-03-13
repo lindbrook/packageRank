@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9009
+
+- add 'cranlogs' check to cranDownloads().
+
+
 ### packageRank 0.8.0.9008
 
 - use memoized packageHistory0() in packageHistory().
