@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9011
+
+- use message() instead of warning() with 'cranlogs' check in cranDownloads().
+
+
 ### packageRank 0.8.0.9010
 
 - fix pkgsearch::cran_package_history() "try-error" in packageHistory().
