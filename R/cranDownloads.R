@@ -47,8 +47,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   
   if (utc.date.time > upload.utc) {
     if (clogs$count == 0) {
-      warning(paste("Today's results not available:\n", logInfo()$status),
-        call. = FALSE)
+      message(paste("Today's results not available:\n", logInfo()$status))
     }
   }
   
