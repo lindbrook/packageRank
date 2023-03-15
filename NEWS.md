@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9012
+
+- re-enable checkPackage() in packageHistory().
+
+
 ### packageRank 0.8.0.9011
 
 - use message() instead of warning() with 'cranlogs' check in cranDownloads().
