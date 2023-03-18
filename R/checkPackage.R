@@ -6,49 +6,57 @@
 #' @noRd
 
 checkPackage <- function(packages, dev.mode = FALSE) {
+  packages0 <- packages
+  
   if (dev.mode) {
     pkg.chk <- validatePackage0(packages)
   } else {
     pkg.chk <- validatePackage(packages)
   }
 
-  # 'pkgsearch' errors
-  archive.package.errors <- c("dseplus", "empiricalBayes", "forecasting", "VR")
-
-  if (any(packages %in% archive.package.errors)) {
-    pkgs <- packages[!packages %in% archive.package.errors]
-    pkgs0 <- packages[packages %in% archive.package.errors]
-    pkg.chk <- validatePackage(pkgs)
-    pkg.chk0 <- validatePackage0(pkgs0)
-    if (!is.list(pkg.chk)) {
-      delta <- setdiff(packages, c(pkg.chk, pkg.chk0))
-      if (length(delta) != 0) arch.pkg.err <- delta
-    }
+  if (any(pkg.chk$pkgsearch == FALSE)) {
+    # 'pkgsearch' errors (not in db); removed (old w/o details) 
+    # archive.package.errors <- c("dseplus", "empiricalBayes", "forecasting")
+    pkgsearch.err <- pkg.chk[pkg.chk$pkgsearch == FALSE, "package"]
+    
+    # directly check Archive
+    pkg.chk0 <- lapply(pkgsearch.err, validatePackage0)
+    no.cran.archive <- vapply(pkg.chk0, is.list, logical(1L))
+    true.err <- pkgsearch.err[no.cran.archive]
+    false.err <- pkgsearch.err[!no.cran.archive]
   }
-
-  if (is.list(pkg.chk) & "arch.pkg.err" %in% ls()) {
-    pkg.err <- c(pkg.chk$invalid, arch.pkg.err)
-  } else if (is.list(pkg.chk) & !"arch.pkg.err" %in% ls()) {
-    pkg.err <- pkg.chk$invalid
-  } else if (!is.list(pkg.chk) & "arch.pkg.err" %in% ls()) {
-    pkg.err <- arch.pkg.err
+  
+  if (any(pkg.chk$pkgsearch == TRUE)) {
+    no.err <- pkg.chk[pkg.chk$pkgsearch == TRUE, "package"]
   }
+  
+  test1 <- exists("no.err") & exists("false.err") & length("false.err") > 0
+  test2 <- exists("no.err") & exists("false.err") & length("false.err") == 0
+  test3 <- !exists("no.err") & exists("false.err") & length("false.err") > 0
 
-  if ("pkg.err" %in% ls()) {
-    pkg.err.msg <- paste(pkg.err, collapse = ", ")
-    msg <- ": misspelled or not on CRAN/Archive."
-    err.test <- length(setdiff(packages, pkg.err)) == 0
+  if (test1) {
+    packages <- c(no.err, false.err)
+  } else if (test2) {
+    packages <- no.err
+  } else if (test3) {
+    packages <- false.err 
+  } 
 
-    if (err.test) {
-      stop(pkg.err.msg, msg, call. = FALSE)
-    } else {
-      warning(pkg.err.msg, msg, call. = FALSE)
-      if ("pkg.chk0" %in% ls()) {
-        packages <- c(pkg.chk$valid, pkg.chk0)
+  if (exists("true.err")) {
+    if (length(true.err) > 0) {
+      pkg.err.msg <- paste(true.err, collapse = ", ")
+      msg <- ": misspelled or not on CRAN/Archive."
+      
+      err.test <- length(setdiff(packages, true.err)) == 0
+      
+      if (err.test) {
+        stop(pkg.err.msg, msg, call. = FALSE)
       } else {
-        packages <- pkg.chk$valid
+        warning(pkg.err.msg, msg, call. = FALSE)
       }
+      packages <- packages0[!packages0 %in% true.err]
     }
   }
-  unique(packages)
+  
+  packages
 }
