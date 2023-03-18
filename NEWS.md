@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9015
+
+- remove unneeded try() in packageHistory().
+
+
 ### packageRank 0.8.0.9014
 
 - memoize archivePackages().

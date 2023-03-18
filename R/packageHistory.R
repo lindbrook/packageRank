@@ -36,24 +36,19 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
 
     # Use packageHistory0() for "missing" and latest packages.
     # e.g., "VR" in cran_package() but not cran_package_history()
-    history <- try(lapply(package, pkgsearch::cran_package_history),
-      silent = TRUE)
+    # history <- try(lapply(package, pkgsearch::cran_package_history),
+    #   silent = TRUE)
     
-    if (any(class(history) == "try-error")) {
-      if (any(!on.cran)) {
-        archive.out <- lapply(package[!on.cran], mpackageHistory0)
-      }
+    if (any(!on.cran)) {
+      archive.out <- lapply(package[!on.cran], packageHistory0)
+    }
       
-      if (any(on.cran)) {
-        history <- try(lapply(package[on.cran], function(x) {
-          pkgsearch::cran_package_history(x)
-        }), silent = TRUE)
-        
-        cran.out <- transform_pkgsearch(history)
-      }
-    } else {
-      if (any(!on.cran)) archive.out <- transform_pkgsearch(history[!on.cran])
-      if (any(on.cran)) cran.out <- transform_pkgsearch(history[on.cran])
+    if (any(on.cran)) {
+       history <- lapply(package[on.cran], function(x) {
+         pkgsearch::cran_package_history(x)
+       })
+      
+      cran.out <- transform_pkgsearch(history)
     }
     
     if (exists("cran.out") & exists("archive.out")) {
@@ -76,9 +71,8 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     }
   }
   
-  if (length(out) == 1) out <- out[[1]]
-  
-  out
+  if (length(out) == 1) out[[1]]
+  else out
 }
 
 transform_pkgsearch <- function(history) {
@@ -118,8 +112,6 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
   row.names(out) <- NULL
   out
 }
-
-mpackageHistory0 <- memoise::memoise(packageHistory0)
 
 #' Scrape package data from CRAN.
 #'
