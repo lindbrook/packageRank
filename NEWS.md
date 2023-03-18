@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9014
+
+- memoize archivePackages().
+
+
 ### packageRank 0.8.0.9013
 
 - refactor checkPackage().

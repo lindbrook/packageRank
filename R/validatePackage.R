@@ -45,7 +45,7 @@ validatePackage0 <- function(packages, check.archive = TRUE) {
   }
 
   if (check.archive) {
-    archive <- setdiff(archivePackages(), pkgs)
+    archive <- setdiff(marchivePackages(), pkgs)
     pkgs <- c(pkgs, archive)
   }
 
