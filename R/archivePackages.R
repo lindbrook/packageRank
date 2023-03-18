@@ -147,3 +147,5 @@ archivePackages <- function(include.date = FALSE, multi.core = TRUE,
     pkgs
   }
 }
+
+marchivePackages <- memoise::memoise(archivePackages)
