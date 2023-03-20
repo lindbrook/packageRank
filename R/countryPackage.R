@@ -12,13 +12,14 @@
 #' @param sort Logical. Sort by download count.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @note "US" outlier 10 min with all filters!
 #' @export
 
 countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  memoization = TRUE, multi.core = TRUE) {
+  memoization = TRUE, multi.core = TRUE, dev.mode = FALSE) {
 
   country <- toupper(country)
   file.url.date <- logDate(date)
@@ -40,7 +41,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores)
+    row.delete <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
     cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
   }
 
@@ -56,7 +57,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
     }
 
     if (small.filter) {
-      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (sequence.filter) {
@@ -76,7 +77,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
     cran_log <- do.call(rbind, out)
 
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
+    if (small.filter) cran_log <- cran_log[cran_log$size >= 1000L, ]
   }
 
   freqtab <- table(cran_log$package)

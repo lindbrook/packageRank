@@ -7,7 +7,7 @@
 countryPackage(country = "HK", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  memoization = TRUE, multi.core = TRUE)
+  memoization = TRUE, multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -31,6 +31,8 @@ countryPackage(country = "HK", date = NULL, all.filters = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/

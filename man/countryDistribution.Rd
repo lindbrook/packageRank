@@ -6,7 +6,8 @@
 \usage{
 countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
   triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
-  size.filter = FALSE, memoization = TRUE, multi.core = TRUE)
+  size.filter = FALSE, memoization = TRUE, multi.core = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
@@ -26,6 +27,8 @@ countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 An R data frame.
