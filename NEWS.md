@@ -1,3 +1,10 @@
+### packageRank 0.8.0.9016
+
+- use smallFilter() for data by package; R code small filter for entire log.
+- add/set dev.mode = FALSE for ipFilter() in countryDistribution(), 
+  countryPackage() and ipPackage().
+
+
 ### packageRank 0.8.0.9015
 
 - remove unneeded try() in packageHistory().

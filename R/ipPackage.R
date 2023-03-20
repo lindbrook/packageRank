@@ -55,7 +55,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     }
 
     if (small.filter) {
-      out <- parallel::mclapply(out, smallFilter, mc.cores = cores)
+      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
     }
 
     if (sequence.filter) {
@@ -73,7 +73,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     cran_log <- do.call(rbind, out)
 
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
+    if (small.filter) cran_log <- cran_log[cran_log$size >= 1000L, ]
   }
 
   cran_log <- cran_log[cran_log$ip_id == ip, ]
