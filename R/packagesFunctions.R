@@ -75,6 +75,8 @@ packages_partitioned <- function(observed.downloads = FALSE,
   out
 }
 
+mpackages_partitioned <- memoise::memoise(packages_partitioned)
+
 #' Extract a package's archive date.
 #'
 #' Date a package is moved to Archive (if available).
