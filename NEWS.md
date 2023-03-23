@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9021
+
+- set packageLog(check.package = FALSE) in filteredDownloads().
+
+
 ### packageRank 0.8.0.9020
 
 - add temporary timeout = 600L to packages_partitioned().
