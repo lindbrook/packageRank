@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9022
+
+- set filteredDownloads(all.filters = FALSE) if any individual filter is TRUE.
+
+
 ### packageRank 0.8.0.9021
 
 - set packageLog(check.package = FALSE) in filteredDownloads().
