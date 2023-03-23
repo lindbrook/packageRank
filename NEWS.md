@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9018
+
+- name elements when result is a list in packageHistory().
+
+
 ### packageRank 0.8.0.9017
 
 - set options(timeout = 600L) in cranPackageSize().
