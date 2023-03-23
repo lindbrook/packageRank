@@ -21,6 +21,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     nms <- names(r_v)
     r_v$Package <- "R"
     r_v <- list(r_v[, c("Package", nms)])
+    names(r_v) <- "R"
     
     package <- package[-r.position]
   }
@@ -63,6 +64,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
       pkg.nm <- vapply(out, function(x) x[1, "Package"], character(1L))
       id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
       out <- out[order(id)]
+      names(out) <- vapply(out, function(x) x[1, "Package"], character(1L))
     }
     
     if ("R" %in% package0) {
@@ -71,12 +73,8 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     }
   }
   
-  if (length(out) == 1) {
-    out[[1]]
-  } else {
-    names(out) <- vapply(out, function(x) x[1, "Package"], character(1L))
-    out
-  }
+  if (length(out) == 1) out[[1]]
+  else out
 }
 
 transform_pkgsearch <- function(history) {
