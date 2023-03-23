@@ -56,6 +56,10 @@ packages_partitioned <- function(observed.downloads = FALSE,
   multi.core = TRUE) {
   
   cores <- multiCore(multi.core)
+
+  # R default is 60
+  orig.timeout <- getOption("timeout")
+  if (orig.timeout < 600L) options(timeout = 600L)
   
   cran <- packages_on_CRAN()
   archive <- packages_in_Archive(multi.core = cores)
@@ -72,6 +76,8 @@ packages_partitioned <- function(observed.downloads = FALSE,
     out <- list(cran = cran, archive = archive, cran.archive = cran.archive,
                 cran.only = cran.only, archive.only = archive.only)
   }
+
+  options(timeout = orig.timeout)
   out
 }
 

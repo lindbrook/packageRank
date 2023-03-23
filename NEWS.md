@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9020
+
+- add temporary timeout = 600L to packages_partitioned().
+
+
 ### packageRank 0.8.0.9019
 
 - clean sort of list element names in packageHistory().
