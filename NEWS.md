@@ -1,3 +1,11 @@
+### packageRank 0.8.0.9017
+
+- set options(timeout = 600L) in cranPackageSize().
+- memoize packages_partitioned().
+- amend packageLog() for packages that get filtered to zero.
+- amend/fix sizeFilter() for archive-only packages.
+
+
 ### packageRank 0.8.0.9016
 
 - use smallFilter() for data by package; R code small filter for entire log.

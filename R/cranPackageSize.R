@@ -15,7 +15,7 @@ cranPackageSize <- function(package = "cholera", check.package = FALSE,
 
   # R default is 60
   orig.timeout <- getOption("timeout")
-  if (orig.timeout < 300L) options(timeout = 300L)
+  if (orig.timeout < 600L) options(timeout = 600L)
 
   if (check.package) package <- checkPackage(package)
   cores <- multiCore(multi.core)
