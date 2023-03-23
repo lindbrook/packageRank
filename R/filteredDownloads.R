@@ -32,6 +32,11 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   } else {
     ct <- vapply(cran_log, nrow, integer(1L))
   }
+  
+  individual.filter <- (ip.filter | triplet.filter | small.filter | 
+                        sequence.filter | size.filter) & all.filters
+  
+  if (individual.filter) all.filters <- FALSE
 
   f.cran_log <- packageLog(packages = packages, date = ymd,
     all.filters = all.filters, ip.filter = ip.filter,
