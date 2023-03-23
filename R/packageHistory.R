@@ -71,8 +71,12 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     }
   }
   
-  if (length(out) == 1) out[[1]]
-  else out
+  if (length(out) == 1) {
+    out[[1]]
+  } else {
+    names(out) <- vapply(out, function(x) x[1, "Package"], character(1L))
+    out
+  }
 }
 
 transform_pkgsearch <- function(history) {
