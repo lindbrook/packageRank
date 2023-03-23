@@ -1,3 +1,8 @@
+### packageRank 0.8.0.9019
+
+- clean sort of list element names in packageHistory().
+
+
 ### packageRank 0.8.0.9018
 
 - name elements when result is a list in packageHistory().
