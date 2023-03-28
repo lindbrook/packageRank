@@ -318,7 +318,7 @@ If you want the total count of R downloads, set `r.total = TRUE`:
 plot(cranDownloads(packages = "R", from = 2019, to = 2019), r.total = TRUE)
 ```
 
-Note that since Sunday 06 November 2022 and Wedenesday, 18 January 2023,
+Note that since Sunday 06 November 2022 and Wednesday, 18 January 2023,
 there’ve been spikes of downloads of the Windows version of R on Sundays
 and Wednesdays (details below in [R Windows Sunday and Wednesday
 downloads](#r-windows-sunday-and-wednesday-downloads)).
