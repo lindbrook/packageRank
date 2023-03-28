@@ -1,126 +1,41 @@
-### packageRank 0.8.0.9022
+### packageRank 0.8.1
 
-- set filteredDownloads(all.filters = FALSE) if any individual filter is TRUE.
-
-
-### packageRank 0.8.0.9021
-
-- set packageLog(check.package = FALSE) in filteredDownloads().
-
-
-### packageRank 0.8.0.9020
-
-- add temporary timeout = 600L to packages_partitioned().
-
-
-### packageRank 0.8.0.9019
-
-- clean sort of list element names in packageHistory().
-
-
-### packageRank 0.8.0.9018
-
-- name elements when result is a list in packageHistory().
-
-
-### packageRank 0.8.0.9017
-
-- set options(timeout = 600L) in cranPackageSize().
-- memoize packages_partitioned().
-- amend packageLog() for packages that get filtered to zero.
-- amend/fix sizeFilter() for archive-only packages.
-
-
-### packageRank 0.8.0.9016
-
-- use smallFilter() for data by package; R code small filter for entire log.
-- add/set dev.mode = FALSE for ipFilter() in countryDistribution(), 
-  countryPackage() and ipPackage().
-
-
-### packageRank 0.8.0.9015
-
-- remove unneeded try() in packageHistory().
-
-
-### packageRank 0.8.0.9014
-
-- memoize archivePackages().
-
-
-### packageRank 0.8.0.9013
-
-- refactor checkPackage().
-- change result data type and content of validatePackage().
-
-
-### packageRank 0.8.0.9012
-
-- re-enable checkPackage() in packageHistory().
-
-
-### packageRank 0.8.0.9011
-
-- use message() instead of warning() with 'cranlogs' check in cranDownloads().
-
-
-### packageRank 0.8.0.9010
-
-- fix pkgsearch::cran_package_history() "try-error" in packageHistory().
-- compute archive.out and cran.out separately.
-- add/use transform_pkgsearch() in packageHistory().
-
-
-### packageRank 0.8.0.9009
-
-- add 'cranlogs' check to cranDownloads().
-
-
-### packageRank 0.8.0.9008
-
-- use memoized packageHistory0() in packageHistory().
-
-
-### packageRank 0.8.0.9007
-
-- add extractArchiveDate().
-
-
-### packageRank 0.8.0.9006
-
-- allow mix of CRAN annd Archive-only packages (and R) in packageHistory().
-
-
-### packageRank 0.8.0.9005
-
-- add/set packages_partitioned(observed.downloads = FALSE).
-
-
-### packageRank 0.8.0.9004
-
-- add memoized packages_on_CRAN().
-- add CRAN check to packageHistory().
-
-
-### packageRank 0.8.0.9003
+#### New Functionality
 
 - add packages_on_CRAN(), packages_in_Archive(), packages_observed_in_logs()
   and packages_partitioned().
-  
+- add extractArchiveDate().
+- add/set packages_partitioned(observed.downloads = FALSE).
 
-### packageRank 0.8.0.9002
+#### Fixes
 
+- amend packageLog() for packages that get filtered to zero.
+- amend/fix sizeFilter() for archive-only packages.
+- fix pkgsearch::cran_package_history() "try-error" in packageHistory().
 - fix ylim in plot.cranDownloads(graphics = "base", unit.observation = "week").
-
-
-### packageRank 0.8.0.9001
-
 - fix logInfo() when 'cranlogs' not available.
+- set filteredDownloads(all.filters = FALSE) if any individual filter is TRUE.
+- add temporary timeout = 600L to packages_partitioned().
+- set options(timeout = 600L) in cranPackageSize().
+- sort list element names in packageHistory().
 
+#### Function Changes
 
-### packageRank 0.8.0.9000
+- set packageLog(check.package = FALSE) in filteredDownloads().
+- memoize packages_partitioned().
+- add/set dev.mode = FALSE for ipFilter() in countryDistribution(), countryPackage() and ipPackage().
+- add memoized archivePackages().
+- refactor checkPackage().
+- change result data type and content of validatePackage().
+- add 'cranlogs' check to cranDownloads().
+- add/use memoized packageHistory0() in packageHistory().
+- allow mix of CRAN and Archive-only packages (and R) in packageHistory().
+- add memoized packages_on_CRAN().
+- add CRAN check to packageHistory().
 
-- note Wednesday R Windows application spikes.
+#### Documentation
+
+- note Wednesday R Windows application download spikes in README.
 
 
 ### packageRank 0.8.0
