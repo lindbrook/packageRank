@@ -133,7 +133,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
-  if ("args" %in% ls()) {
+  if (exists("args")) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, args)
     if (is.null(args$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
