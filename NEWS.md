@@ -23,7 +23,8 @@
 
 - set packageLog(check.package = FALSE) in filteredDownloads().
 - memoize packages_partitioned().
-- add/set dev.mode = FALSE for ipFilter() in countryDistribution(), countryPackage() and ipPackage().
+- add/set dev.mode = FALSE for ipFilter() in countryDistribution(), 
+  countryPackage() and ipPackage().
 - add memoized archivePackages().
 - refactor checkPackage().
 - change result data type and content of validatePackage().
