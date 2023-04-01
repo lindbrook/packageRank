@@ -57,9 +57,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
-      if (check.package) {
-        packages <- checkPackage(packages, dev.mode)
-      }
+      if (check.package) packages <- checkPackage(packages, dev.mode)
       first.published <- do.call(c, lapply(packages, function(pkg) {
         packageHistory(pkg)[1, "Date"]
       }))
@@ -71,14 +69,14 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (first.r_log >= first.published) first.published <- first.r_log
     }
   } else first.published <- first.log
-
-  cal.date <- logDate(warning.msg = FALSE, fix.date = FALSE)
+  
+  available.log <- logDate(warning.msg = FALSE, fix.date = FALSE)
 
   if (is.null(when) & is.null(from) & is.null(to)) {
-    args <- list(packages = packages, from = cal.date, to = cal.date)
+    argmnts <- list(packages = packages, when = "last-day")
   } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
-      args <- list(packages = packages, when = when)
+      argmnts <- list(packages = packages, when = when)
     } else {
       stop('"when" must be "last-day", "last-week" or "last-month".',
         call. = FALSE)
@@ -99,9 +97,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         packages <- packages[!end.date.test]
         first.published <- first.published[!end.date.test]
       }
-    } else end.date <- cal.date
+    } else end.date <- available.log
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
-    args <- list(packages = packages, from = start.date, to = end.date)
+    argmnts <- list(packages = packages, from = start.date, to = end.date)
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
     if (is.null(packages)) {
@@ -127,11 +125,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
-  if ("args" %in% ls()) {
-    cranlogs.data <- do.call(cranlogs::cran_downloads, args)
-    if (is.null(args$packages)) {
+  if (exists("argmnts")) {
+    cranlogs.data <- do.call(cranlogs::cran_downloads, argmnts)
+    if (is.null(argmnts$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
-    } else if ("R" %in% args$packages) {
+    } else if ("R" %in% argmnts$packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
         cranlogs.data$os), sum)
@@ -150,13 +148,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       names(cranlogs.data)[sel] <- c("cumulative", "package")
     }
     out <- list(packages = packages, cranlogs.data = cranlogs.data,
-      when = args$when, from = args$from, to = args$to)
+      when = argmnts$when, from = argmnts$from, to = argmnts$to)
   } else {
-    if (inherits(to.data, "list")) {
-      cranlogs.data <- do.call(rbind, to.data)
-    } else if (inherits(to.data, "data.frame")) {
-      cranlogs.data <- to.data
-    }
+    if (inherits(to.data, "list")) cranlogs.data <- do.call(rbind, to.data)
+    else if (inherits(to.data, "data.frame")) cranlogs.data <- to.data
 
     if ("R" %in% packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
