@@ -44,13 +44,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   if (any(class(clogs) == "try-error")) {
     stop("'cranlogs' service not available.", call. = FALSE)
   }
-  
-  if (utc.date.time > upload.utc) {
-    if (clogs$count == 0) {
-      message(paste("Today's results not available:\n", logInfo()$status))
-    }
-  }
-  
+
   if (length(packages) > 1) {
     if ("R" %in% packages) {
       stop("R downloads cannot be mixed with package downloads.", call. = FALSE)
