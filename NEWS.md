@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9000
+
+- remove "Today's results not available" message from cranDownloads().
+
+
 ### packageRank 0.8.1
 
 #### New Functionality
