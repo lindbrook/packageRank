@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.1.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.1.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -1114,35 +1114,41 @@ true over slower internet connections or when you’re dealing with large
 log files. To fix this, `fetchCranLog()` will, if needed, temporarily
 set the timeout to 600 seconds.
 
-#### R Windows Sunday and Wednesday downloads
+#### R Windows Sunday and Wednesday download spikes
 
 The graph above for [R downloads](#packages--r) shows the daily
 downloads of the R application broken down by platform (Mac, Source,
 Windows). In it, you can see the typical weekly pattern of mid-week
-peaks and weekend troughs. However, starting Sunday, 06 November 2022
-and Wednesday, 18 January 2023, this pattern was broken. On subsequent
-Sundays and Wednesdays, there are noticeable spikes (almost an order of
-magnitude difference) in the downloads of the Windows version of R.
+peaks and weekend troughs.
+
+However between 06 November 2022 and 19 March 2023, this was broken. On
+Sundays (06 November 2022 - 19 March 2023) and Wednesdays (18 January
+2023 - 15 March 2023), there were noticeable, repeated
+orders-of-magnitude spikes in the daily downloads of the Windows version
+of R.
 
 ``` r
-plot(cranDownloads("R", from = "2022-10-15", to = "2023-02-22"))
+plot(cranDownloads("R", from = "2022-10-06", to = "2023-04-14"))
 axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
   padj = 0.9)
-axis(3, at = as.Date("2023-01-18"), labels = "2023-01-18", cex.axis = 2/3, 
+axis(3, at = as.Date("2023-03-19"), labels = "2023-03-19", cex.axis = 2/3, 
   padj = 0.9)
-abline(v = as.Date("2022-11-06 Sun"), col = "gray", lty = "dotted")
-abline(v = as.Date("2023-01-18 Wed"), col = "gray", lty = "dotted")
+abline(v = as.Date("2022-11-06"), col = "gray", lty = "dotted")
+abline(v = as.Date("2023-03-19"), col = "gray", lty = "dotted")
 ```
 
 ![](man/figures/README-sundays-1.png)<!-- -->
 
-This pattern does not extend to the Mac or Source versions. You can see
-this in the graphs below. In each plot, the the watershed date is
-plotted as a vertical line (red for Sunday; blue for Wednesday). Sunday
-and Wednesdays before the watershed are plotted with empty circles. If
-Sunday and Wednesdays after their respective watershed appear to be
-outliers, they are plotted with filled circles; otherwise, they are
-plotted with empty circles.
+These download spikes did not seem to affect either the Mac or Source
+versions. I show this in the graphs below. Each plot, which is
+individually scaled, breaks down the data in the graph above by day
+(Sunday or Wednesday) and platform.
+
+The key thing is to compare the data in the period bounded by vertical
+dotted lines with the data before and after. If a Sunday or Wednesday is
+orders-of-magnitude unusual, I plot that day with a filled rather than
+an empty circle. Only Windows, the final two graphs below, earn this
+distinction.
 
 ![](man/figures/README-sundays_mac-1.png)<!-- -->![](man/figures/README-sundays_mac-2.png)<!-- -->
 
