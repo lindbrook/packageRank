@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9001
+
+- amend Sunday/Wednesday R Windows application download spikes README note.
+
+
 ### packageRank 0.8.1.9000
 
 - remove "Today's results not available" message from cranDownloads().

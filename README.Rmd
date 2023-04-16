@@ -860,112 +860,129 @@ or invalid.
 
 This change can affect functions that download logs. This is especially true over slower internet connections or when you're dealing with large log files. To fix this, `fetchCranLog()` will, if needed, temporarily set the timeout to 600 seconds.
 
-#### R Windows Sunday and Wednesday downloads
+#### R Windows Sunday and Wednesday download spikes
 
-The graph above for [R downloads](#packages--r) shows the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can see the typical weekly pattern of mid-week peaks and weekend troughs. However, starting Sunday, 06 November 2022 and Wednesday, 18 January 2023, this pattern was broken. On subsequent Sundays and Wednesdays, there are noticeable spikes (almost an order of magnitude difference) in the downloads of the Windows version of R. 
+The graph above for [R downloads](#packages--r) shows the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can see the typical weekly pattern of mid-week peaks and weekend troughs. 
+
+However between 06 November 2022 and 19 March 2023, this was broken. On Sundays (06 November 2022 - 19 March 2023) and Wednesdays (18 January 2023 - 15 March 2023), there were noticeable, repeated orders-of-magnitude spikes in the daily downloads of the Windows version of R. 
 
 ```{r sundays}
-plot(cranDownloads("R", from = "2022-10-15", to = "2023-02-22"))
+plot(cranDownloads("R", from = "2022-10-06", to = "2023-04-14"))
 axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
   padj = 0.9)
-axis(3, at = as.Date("2023-01-18"), labels = "2023-01-18", cex.axis = 2/3, 
+axis(3, at = as.Date("2023-03-19"), labels = "2023-03-19", cex.axis = 2/3, 
   padj = 0.9)
-abline(v = as.Date("2022-11-06 Sun"), col = "gray", lty = "dotted")
-abline(v = as.Date("2023-01-18 Wed"), col = "gray", lty = "dotted")
+abline(v = as.Date("2022-11-06"), col = "gray", lty = "dotted")
+abline(v = as.Date("2023-03-19"), col = "gray", lty = "dotted")
 ```
 
-This pattern does not extend to the Mac or Source versions. You can see this in the graphs below. In each plot, the the watershed date is plotted as a vertical line (red for Sunday; blue for Wednesday). Sunday and Wednesdays before the watershed are plotted with empty circles. If Sunday and Wednesdays after their respective watershed appear to be outliers, they are plotted with filled circles; otherwise, they are plotted with empty circles.
+These download spikes did not seem to affect either the Mac or Source versions. I show this in the graphs below. Each plot, which is individually scaled, breaks down the data in the graph above by day (Sunday or Wednesday) and platform.
+
+The key thing is to compare the data in the period bounded by vertical dotted lines with the data before and after. If a Sunday or Wednesday is orders-of-magnitude unusual, I plot that day with a filled rather than an empty circle. Only Windows, the final two graphs below, earn this distinction.
 
 ```{r sunday_platform, echo = FALSE}
-dat <- cranDownloads("R", from = "2022-10-15", to = "2023-02-22")$cranlogs.data
-sundays <- seq.Date(from = as.Date("2022-10-16"), to = as.Date("2023-02-22"), 
-  by = 7)
-wednesdays <- seq.Date(from = as.Date("2022-10-19"), 
-  to = as.Date("2023-02-22"), by = 7)
+alpha <- "2022-10-06"
+omega <- "2023-04-14"
+dat <- cranDownloads("R", from = alpha, to = omega)$cranlogs.data
+dat.dates <- seq.Date(from = as.Date(alpha), to = as.Date(omega), by = "days")
 
 win <- dat[dat$platform == "win", ]
 osx <- dat[dat$platform == "osx", ]
 src <- dat[dat$platform == "src", ]
 
-sun <- as.Date("2022-11-06")
-ante.sun <- sundays < sun
-post.sun <- sundays >= sun
+sun.start <- as.Date("2022-11-06")
+sun.stop <- as.Date("2023-03-19")
 
-wed <- as.Date("2023-01-18")
-ante.wed <- wednesdays < wed
-post.wed <- wednesdays >= wed
+wed.start <- as.Date("2023-01-18")
+wed.stop <- as.Date("2023-03-15")
+
+sundays <- dat.dates[weekdays(dat.dates) == "Sunday"]
+wednesdays <- dat.dates[weekdays(dat.dates) == "Wednesday"]
+
+inter.sun <- sundays >= sun.start & sundays <= sun.stop
+inter.wed <- wednesdays >= wed.start & wednesdays <= wed.stop
 ```
 
 ```{r sundays_mac, echo = FALSE}
 plot(osx$date, osx$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = sun, labels = "2022-11-06", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
   col.axis = "red", col.ticks = "red")
-abline(v = sun, lty = "dotted", col = "red")
-points(osx[osx$date %in% sundays[ante.sun], c("date", "count")], pch = 1, 
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(osx[osx$date %in% sundays[inter.sun], c("date", "count")], pch = 1, 
   col = "red")
-points(osx[osx$date %in% sundays[post.sun], c("date", "count")], pch = 1, 
+points(osx[osx$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
   col = "red")
-points(osx[osx$date == as.Date("2022-11-20"), c("date", "count")], pch = 16, 
-  col = "red")
-text(osx[osx$date == as.Date("2022-11-20"), c("date", "count")], pos = 4, 
-  labels = "Nov 20", cex = 0.75, col = "red")
 title(main = "R Mac Sundays")
 
 plot(osx$date, osx$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = wed, labels = "2023-01-18", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
   col.axis = "blue", col.ticks = "blue")
-abline(v = wed, lty = "dotted", col = "blue")
-points(osx[osx$date %in% wednesdays[ante.wed], c("date", "count")], pch = 1, 
+axis(3, at = wed.stop, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(osx[osx$date %in% wednesdays[inter.wed], c("date", "count")], pch = 1, 
   col = "blue")
-points(osx[osx$date %in% wednesdays[post.wed], c("date", "count")], pch = 1, 
+points(osx[osx$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1, 
   col = "blue")
 title(main = "R Mac Wednesdays")
 ```
 
 ```{r sundays_src, echo = FALSE}
 plot(src$date, src$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = sun, labels = "2022-11-06", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
   col.axis = "red", col.ticks = "red")
-abline(v = sun, lty = "dotted", col = "red")
-points(src[src$date %in% sundays[ante.sun], c("date", "count")], pch = 1, 
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(src[src$date %in% sundays[inter.sun], c("date", "count")], pch = 1, 
   col = "red")
-points(src[src$date %in% sundays[post.sun], c("date", "count")], pch = 1, 
+points(src[src$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
   col = "red")
-points(src[src$date == as.Date("2022-11-20"), c("date", "count")], pch = 16, 
-  col = "red")
-text(src[src$date == as.Date("2022-11-20"), c("date", "count")], pos = 4, 
-  labels = "Nov 20", cex = 0.75, col = "red")
 title(main = "R Source Sundays")
 
 plot(src$date, src$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = wed, labels = "2023-01-18", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9,
   col.axis = "blue", col.ticks = "blue")
-abline(v = wed, lty = "dotted", col = "blue")
-points(src[src$date %in% wednesdays[ante.wed], c("date", "count")], pch = 1, 
+axis(3, at = wed.stop, labels = wed.start, cex.axis = 2/3, padj = 0.9,
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(src[src$date %in% wednesdays[inter.wed], c("date", "count")], pch = 1,
   col = "blue")
-points(src[src$date %in% wednesdays[post.wed], c("date", "count")], pch = 1, 
+points(src[src$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1,
   col = "blue")
 title(main = "R Source Wednesdays")
 ```
 
 ```{r sundays_win, echo = FALSE}
 plot(win$date, win$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = sun, labels = "2022-11-06", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
   col.axis = "red", col.ticks = "red")
-abline(v = sun, lty = "dotted", col = "red")
-points(win[win$date %in% sundays[ante.sun], c("date", "count")], pch = 1, 
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(win[win$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
   col = "red")
-points(win[win$date %in% sundays[post.sun], c("date", "count")], pch = 16, 
+points(win[win$date %in% sundays[inter.sun], c("date", "count")], pch = 16, 
   col = "red")
 title(main = "R Windows Sundays")
 
 plot(win$date, win$count, type = "l", xlab = "Date", ylab = "Count")
-axis(3, at = wed, labels = "2023-01-18", cex.axis = 2/3, padj = 0.9, 
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
   col.axis = "blue", col.ticks = "blue")
-abline(v = wed, lty = "dotted", col = "blue")
-points(win[win$date %in% wednesdays[ante.wed], c("date", "count")], pch = 1, 
+axis(3, at = wed.stop, labels = wed.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(win[win$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1, 
   col = "blue")
-points(win[win$date %in% wednesdays[post.wed], c("date", "count")], pch = 16, 
+points(win[win$date %in% wednesdays[inter.wed], c("date", "count")], pch = 16, 
   col = "blue")
 title(main = "R Windows Wednesdays")
 ```
