@@ -40,7 +40,15 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 #' @note mfetchLog() is memoized version.
 #' @noRd
 
-fetchLog <- function(x) data.table::fread(x, data.table = FALSE)
+fetchLog <- function(x) {
+  # fread(colClasses != NULL) slower up to 80 MB.
+  # cls <- c("Date", "character", "integer", rep("character", 6), "integer")
+  # cls <- list(Date = "date", integer = c("size", "ip_id"), character = c("time", 
+  #   "r_version", "r_arch", "r_os", "package", "version", "country"))
+  # data.table::fread(x, data.table = FALSE, colClasses = cls)
+  data.table::fread(x, data.table = FALSE)
+}
+
 mfetchLog <- memoise::memoise(fetchLog)
 
 #' Get gzipped data at URL.
