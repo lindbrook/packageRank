@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9002
+
+- add timeout fix to checkPackage().
+
+
 ### packageRank 0.8.1.9001
 
 - amend Sunday/Wednesday R Windows application download spikes README note.
