@@ -6,6 +6,9 @@
 #' @noRd
 
 checkPackage <- function(packages, dev.mode = FALSE) {
+  orig.timeout <- getOption("timeout") # R default is 60
+  if (orig.timeout < 600L) options(timeout = 600L)
+
   packages0 <- packages
   
   if (dev.mode) {
@@ -58,5 +61,6 @@ checkPackage <- function(packages, dev.mode = FALSE) {
     }
   }
   
+  options(timeout = orig.timeout)
   packages
 }
