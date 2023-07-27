@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9003
+
+- set packageHistory(check.package = FALSE)
+
+
 ### packageRank 0.8.1.9002
 
 - add timeout fix to checkPackage().
