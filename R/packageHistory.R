@@ -45,11 +45,13 @@ packageHistory <- function(package = "cholera", check.package = FALSE) {
     }
       
     if (any(on.cran)) {
-       history <- lapply(package[on.cran], function(x) {
-         pkgsearch::cran_package_history(x)
-       })
+      # history <- lapply(package[on.cran], function(x) {
+      #   pkgsearch::cran_package_history(x)
+      # })
       
-      cran.out <- transform_pkgsearch(history)
+      # cran.out <- transform_pkgsearch(history)
+
+      cran.out <- lapply(package[on.cran], packageHistory0)
     }
     
     if (exists("cran.out") & exists("archive.out")) {
