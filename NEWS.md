@@ -1,3 +1,9 @@
+### packageRank 0.8.1.9004
+
+- use packageHistory0() instead of pkgsearch::cran_package_history() in 
+  packageHistory().
+  
+
 ### packageRank 0.8.1.9003
 
 - set packageHistory(check.package = FALSE)
