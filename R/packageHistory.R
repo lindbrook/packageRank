@@ -5,7 +5,7 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
-packageHistory <- function(package = "cholera", check.package = TRUE) {
+packageHistory <- function(package = "cholera", check.package = FALSE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
   package0 <- package
