@@ -1,7 +1,6 @@
 #' Get correct download logs to replace duplicates in 'cranlogs'.
 #'
 #' Correct for eight duplicates.
-#' @param date Character. Date. "yyyy-mm-dd".
 #' @note This documents code for the rstudio.logs R list object.
 #' @return A list with eight elements.
 #' @noRd
@@ -17,3 +16,17 @@ getCorrectLogs <- function() {
 
 # rstudio.logs <- getCorrectLogs()
 # usethis::use_data(rstudio.logs)
+
+#' Get correct download logs to replace doubled results in 'cranlogs'.
+#'
+#' Correct for 13 days with 2x results 2023-09-19 through 2023-10-01.
+#' @note This documents code for replication.
+#' @return A list with thirteen elements.
+#' @noRd
+
+getCorrectLogs2023 <- function() {
+  dates <- seq.Date(as.Date("2023-09-19"), as.Date("2023-10-01"), by = "days")
+  logs <- lapply(dates, fetchCranLog)
+  names(logs) <- dates
+  logs
+}

@@ -1,3 +1,9 @@
+### packageRank 0.8.1.9006
+
+- fix doubled 'cranlogs' counts from 2023-09-19 to 2023-10-01.
+- add getCorrectLogs2023().
+
+
 ### packageRank 0.8.1.9005
 
 - restore use of pkgsearch::cran_package_history() in packageHistory().
