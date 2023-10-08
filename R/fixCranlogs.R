@@ -1,6 +1,6 @@
-#' Use actual RStudio logs for "duplicated" 'cranlogs' results.
+#' Amend "duplicated" CRAN and package download counts in  in cranlogs::cranDownloads().
 #'
-#' Affects eight days in 2012/2013 and thirteen days in 2023
+#' Eight days in 2012/2013 and thirteen days in 2023
 #' @param out Object. An R list.
 #' @note See getCorrectLogs().
 #' @return An R list.
@@ -45,12 +45,12 @@ fixCranlogs <- function(out) {
         }
       }
     } else if (any(unlist(error.testB))) {
-      count.fix <- out$cranlogs.data[error.testB, ]$count / 2
+      count.fix <- out$cranlogs.data[error.testB, ]$count / 2L
       out$cranlogs.data[error.testB, "count"] <- count.fix
       
       recalc.cumsum <- tapply(out$cranlogs.data$count, 
         out$cranlogs.data$package, cumsum)
-      recalc.cumsum <- unlist(recalc.cumsum [unique(out$cranlogs.data$package)])
+      recalc.cumsum <- unlist(recalc.cumsum[unique(out$cranlogs.data$package)])
       out$cranlogs.data$cumulative <- recalc.cumsum
     }
 
