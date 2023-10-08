@@ -186,7 +186,11 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
     }
   }
 
-  if (fix.cranlogs) out <- fixCranlogs(out)
+  if ("R" %in% packages) {
+    if (fix.cranlogs) out <- fixRCranlogs(out)
+  } else {
+    if (fix.cranlogs) out <- fixCranlogs(out)
+  }
   class(out) <- "cranDownloads"
   out
 }
