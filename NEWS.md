@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9007
+
+- amend factor adjustement, documentation and format in fixCranlogs().
+
+
 ### packageRank 0.8.1.9006
 
 - fix doubled 'cranlogs' counts from 2023-09-19 to 2023-10-01.
