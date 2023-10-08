@@ -1,3 +1,8 @@
+### packageRank 0.8.1.9008
+
+- fix "doubled" 'cranlogs' R application counts from 2023-09-12 to 2023-10-02.
+
+
 ### packageRank 0.8.1.9007
 
 - amend factor adjustement, documentation and format in fixCranlogs().
