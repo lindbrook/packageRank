@@ -1,48 +1,22 @@
-### packageRank 0.8.1.9008
+### packageRank 0.8.2
 
-- fix "doubled" 'cranlogs' R application counts from 2023-09-12 to 2023-10-02.
+#### Fixes
 
-
-### packageRank 0.8.1.9007
-
-- amend factor adjustement, documentation and format in fixCranlogs().
-
-
-### packageRank 0.8.1.9006
-
-- fix doubled 'cranlogs' counts from 2023-09-19 to 2023-10-01.
-- add getCorrectLogs2023().
-
-
-### packageRank 0.8.1.9005
-
-- restore use of pkgsearch::cran_package_history() in packageHistory().
-
-
-### packageRank 0.8.1.9004
-
-- use packageHistory0() instead of pkgsearch::cran_package_history() in 
-  packageHistory().
-  
-
-### packageRank 0.8.1.9003
-
-- set packageHistory(check.package = FALSE)
-
-
-### packageRank 0.8.1.9002
-
+- fix "doubled" cranlogs::cran_downloads(packages = "R") R application 
+  download counts in cranDownloads() from  2023-09-12 to 2023-10-02.
+- fix doubled cranlogs::cran_downloads(packages %in% c(NULL, pkg)) download
+  counts in cranDownloads() from 2023-09-19 to 2023-10-01.
 - add timeout fix to checkPackage().
 
+#### Function Changes
 
-### packageRank 0.8.1.9001
+- set packageHistory(check.package = FALSE)
+- remove "Today's results not available" message from cranDownloads().
+
+#### Documentation
 
 - amend Sunday/Wednesday R Windows application download spikes README note.
-
-
-### packageRank 0.8.1.9000
-
-- remove "Today's results not available" message from cranDownloads().
+- add discussion of "doubled" counts in cranlogs::cran_downloads() to README.
 
 
 ### packageRank 0.8.1
