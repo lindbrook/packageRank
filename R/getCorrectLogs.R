@@ -17,16 +17,23 @@ getCorrectLogs <- function() {
 # rstudio.logs <- getCorrectLogs()
 # usethis::use_data(rstudio.logs)
 
-#' Get correct download logs to replace doubled results in 'cranlogs'.
+#' Get multiple download logs for R application or packages.
 #'
-#' Correct for 13 days with 2x results 2023-09-19 through 2023-10-01.
-#' @note This documents code for replication.
-#' @return A list with thirteen elements.
+#' @param first Character or Date. Start date.
+#' @param last Character or Date. End date.
+#' @param log Character. Type of log: "packages" or "R".
+#' @note Code for replication.
+#' @return A list of log data frames.
 #' @noRd
 
-getCorrectLogs2023 <- function() {
-  dates <- seq.Date(as.Date("2023-09-19"), as.Date("2023-10-01"), by = "days")
-  logs <- lapply(dates, fetchCranLog)
+getLogs <- function(first = "2023-09-19", last = "2023-10-01", 
+  log = "packages") {
+
+  dates <- seq.Date(logDate(first), logDate(last), by = "days")
+  if (log == "packages") fn <- fetchCranLog
+  else if (log == "R") fn <- fetchRLog
+  else stop('log must be "packages" or "R".', call. = FALSE)
+  logs <- lapply(dates, fn)
   names(logs) <- dates
   logs
 }
