@@ -12,14 +12,14 @@ fixRCranlogs <- function(out) {
   sep30 <- rlog.err %in% "2023-09-30"
   
   rlog.2x.err <- out$cranlogs.data$date %in% rlog.err[!sep30] # 2:1
-  rlog.3x.err <- out$cranlogs.data$date %in% rlog.err[sep30] # 3:1
+  rlog.3x.err <- out$cranlogs.data$date %in% rlog.err[sep30]  # 3:1
   
   if (any(rlog.3x.err)) {
     count.fix <- out$cranlogs.data[rlog.3x.err, ]$count / 3L
     out$cranlogs.data[rlog.3x.err, "count"] <- count.fix
   }
     
-  if(any(rlog.2x.err)) {
+  if (any(rlog.2x.err)) {
     count.fix <- out$cranlogs.data[rlog.2x.err, ]$count / 2L
     out$cranlogs.data[rlog.2x.err, "count"] <- count.fix
   }

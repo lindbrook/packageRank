@@ -70,7 +70,7 @@ fixCranlogs <- function(out) {
       out$cranlogs.data[sel, ] <- data.fix
       out$cranlogs.data$cumulative <- cumsum(out$cranlogs.data$count)
     } else if (any(error.testB)) {
-      count.fix <- dat[error.testB, ]$count / 2
+      count.fix <- dat[error.testB, ]$count / 2L
       dat[error.testB, "count"] <- count.fix
       dat$cumulative <- cumsum(dat$count)
       out$cranlogs.data <- dat
