@@ -323,7 +323,7 @@
 - inflationPlot2()
 - monthlyLog()
 - packageVersionPercent()
-- versionsPlot()
+- versionPlot()
 
 ### packageRank 0.3.5
 
