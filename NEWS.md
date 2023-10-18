@@ -1,3 +1,9 @@
+### packageRank 0.8.2.9000
+
+- remove fix for doubled cranlogs::cran_downloads(packages %in% c(NULL, pkg))
+  counts; underlying 'cranlogs' issue fixed.
+
+
 ### packageRank 0.8.2
 
 #### Fixes

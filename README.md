@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.2-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.2.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -35,10 +35,10 @@ You can read more about the package the sections below:
 - [V Data Fixes A](#v---data-fixes-a) discusses two
   functions,`fixDate_2012()` and `fixCranlogs()`, which address data
   problems with logs from 2012 and 2013.
-- [VI Data Fixes B](#vi---data-fixes-b) discusses a “doubling” of
-  package and R application download counts that appeared in the second
-  half of September through the beginning of October 2023. By default, a
-  fix is incorporated in `packageRank::cranDownloads()`.
+- [VI Data Fixes B](#vi---data-fixes-b) discusses a “doubling” of R
+  application download counts that appeared in the second half of
+  September through the beginning of October 2023. By default, a fix is
+  incorporated in `packageRank::cranDownloads()`.
 - [VII et cetera](#vii---et-cetera) discusses country code top-level
   domains (e.g., `countryPackage()` and `packageCountry()`), the use of
   memoization, the effect of time zones, the internet connection time
@@ -971,63 +971,15 @@ eight problematic dates are requested. The details about the 8 days and
 
 ### VI - data fixes B
 
-Recently, two additional data problems have emerged. First, from
-2023-09-19 through 2023-10-01, the download counts for R packages (and
-the total number of CRAN downloads, computed via `packages = NULL`)
-returned by `cranlogs::cran_downloads()` is twice what one would expect
-when looking at the actual log(s):
+Recently, an additional data problem has emerged. From 2023-09-13
+through 2023-10-02, the download counts for the R application returned
+by `cranlogs::cran_downloads(packages = "R")`, is, with two exceptions,
+twice what one would expect when looking at the actual log(s). The two
+exceptions are: 1) on 2023-09-28 the counts are identical but for a
+“rounding error” possibly due to an NA value and 2) on 2023-09-30 there
+is actually a three-fold difference.
 
-For example:
-
-``` r
-cranlogs::cran_downloads(packages = "sna", from = "2023-09-19", to = "2023-09-19")
->         date count package
-> 1 2023-09-19  1524     sna
-```
-
-The corresponding Posit/RStudio log shows half the number of downloads:
-
-``` r
-nrow(packageRank::packageLog(packages = "sna", date = "2023-09-19"))
-> [1] 762
-```
-
-This is an across-the-board effect for all packages. Here’s the overview
-for the total CRAN download counts:
-
-             date   Posit    cranlogs ratio
-    1  2023-09-15 6479353     6479353     1
-    2  2023-09-16 3516904     3516904     1
-    3  2023-09-17 3534662     3534662     1
-    4  2023-09-18 7309822     7309822     1
-    5  2023-09-19 7608886    15217772     2
-    6  2023-09-20 7488178    14976356     2
-    7  2023-09-21 6862071    13724142     2
-    8  2023-09-22 6410593    12821186     2
-    9  2023-09-23 4011634     8023268     2
-    10 2023-09-24 3548594     7097188     2
-    11 2023-09-25 6845864    13691728     2
-    12 2023-09-26 7204419    14408838     2
-    13 2023-09-27 7188019    14376038     2
-    14 2023-09-28 6526022    13052044     2
-    15 2023-09-29 5653322    11306644     2
-    16 2023-09-30 3165387     6330774     2
-    17 2023-10-01 3277506     6555012     2
-    18 2023-10-02 6268556     6268556     1
-    19 2023-10-03 6732379     6732379     1
-
-Details and code for replication can be found in issue
-[\#68](https://github.com/r-hub/cranlogs/issues/68) in the `cranlogs`
-GitHub repository.
-
-Second, from 2023-09-13 through 2023-10-02, the download counts for the
-R application returned by `cranlogs::cran_downloads(packages = "R")`, is
-also twice what one would expect when looking at the actual log(s).
-There are, however, two exceptions: 1) on 2023-09-28 the counts are
-identical but for a “rounding error” possibly due to an NA value and 2)
-on 2023-09-30 there is actually a three-fold difference.
-
-Here are the respective count ratios:
+Here are the ratios of the counts:
 
         2023-09-12 2023-09-13 2023-09-14 2023-09-15 2023-09-16 2023-09-17 2023-09-18 2023-09-19
     osx          1          2          2          2          2          2          2          2
@@ -1045,9 +997,9 @@ Here are the respective count ratios:
 Details and code for replication can be found in issue
 [\#69](https://github.com/r-hub/cranlogs/issues/69).
 
-Assuming the logs are “correct”, why these two problems emerged is
-unclear. For now, `packageRank::cranDownloads()` fixes both by default
-via the `fix.cranlogs = TRUE` argument.
+Assuming the logs are “correct”, why this problem emerged is unclear.
+For now, `packageRank::cranDownloads()` fixes this by default via the
+`fix.cranlogs = TRUE` argument.
 
 ### VII - et cetera
 
