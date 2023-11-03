@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.2.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.2.9002-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -32,13 +32,13 @@ You can read more about the package the sections below:
 - [IV Availability of Results](#iv---availability-of-results) discusses
   when results become available and how to use `logInfo()` to check the
   availability of today’s results.
-- [V Data Fixes A](#v---data-fixes-a) discusses two
-  functions,`fixDate_2012()` and `fixCranlogs()`, which address data
-  problems with logs from 2012 and 2013.
-- [VI Data Fixes B](#vi---data-fixes-b) discusses a “doubling” of R
-  application download counts that appeared in the second half of
-  September through the beginning of October 2023. By default, a fix is
-  incorporated in `packageRank::cranDownloads()`.
+- [V Data Fix A](#v---data-fix-a) discusses issues stemming from
+  problems with the actual logs from the end of 2012 through the
+  beginning of 2013. These are fixed in `fixDate_2012()` and
+  `fixCranlogs()`.
+- [VI Data Fix B](#vi---data-fix-b) discusses a “doubling” R application
+  download counts stemming from problems with ‘cranlogs’ between
+  2023-09-13 through 2023-10-02. This is fixed in `fixRCranlogs()`.
 - [VII et cetera](#vii---et-cetera) discusses country code top-level
   domains (e.g., `countryPackage()` and `packageCountry()`), the use of
   memoization, the effect of time zones, the internet connection time
@@ -906,72 +906,68 @@ logInfo()
     $status
     [1] "Today's log is typically posted by 09:00 PST (01 Feb 17:00 GMT)."
 
-### V - data fixes A
+### V - data fix A
 
-For the historically minded, there are two data fixes to note. The first
-stems from problems with the logs when Posit/RStudio first began posting
-them. The second stems from how
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) works.
-
-The fixes are coded in two functions:
+The first data fix to note is more historical. It affects logs from
+2012. It has two sources: one stems from problems with the logs when
+Posit/RStudio first began posting them; the other stems from how
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) counts
+downloads. `fixDate_2012()` addresses the former. `fixCranlogs()`
+addresses the latter.
 
 #### `fixDate_2012()`
 
-The Posit/RStudio download logs began on 01 October 2012. Each day’s log
-is stored as a separate file with a name/URL that embeds the log’s date:
+The Posit/RStudio download logs begin on 01 October 2012. Each day’s log
+is a separate file with a name/URL that embeds that log’s date:
 
     http://cran-logs.rstudio.com/2022/2022-01-01.csv.gz
 
-For the 2012 logs, this convention was broken: 1) some logs are
-duplicated (same log, multiple names), 2) at least one is mislabeled,
-and 3) the logs from 13 October through 28 December are offset by +3
-days (e.g., the file with the name/URL “2012-12-01” contains the log for
-“2012-11-28”). You can read the details
+For the 2012 logs, this convention was broken in three ways: 1) some
+logs are duplicated (same log, multiple names), 2) at least one is
+mislabeled and 3) the logs from 13 October through 28 December are
+offset by +3 days (e.g., the file with the name/URL “2012-12-01”
+contains the log for “2012-11-28”). You can read the details
 [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 Despite all this, only the last 3 logs of 2012 were lost.
 
 Because [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions like
-packageRank()`and`packageLog()`directly access logs via their filename/URL, e.g.,`,
-I’ve written
+functions like `packageRank()` and `packageLog()` work by directly
+accessing logs via their filename/URL, they, unlike
+‘cranlogs’\](<https://CRAN.R-project.org/package=cranlogs>) functions,
+are affected by these problems.
 [fixDate_2012()](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R)
-to re-map and resolve the issues above so that you’ll get the log you
-expect.
+re-maps the problematic logs so that you’ll get the logs you expect.
 
 #### `fixCranlogs()`
 
-The situation for `packageRank::cranDownloads()` is different because
-that function is a wrapper of `cranlogs::cran_download()`. On the plus
-side, this means that it’s not affected by the second and third
-problems. It’s my understanding that this is because
+The situation for `packageRank::cranDownloads()` is different. This is
+because that function is a wrapper for `cranlogs::cran_download()`. On
+the plus side, it’s not affected by the second and third log problems.
+My understanding is that this is because
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) uses the date
-in the log rather than log’s filename/URL. On the minus side, this means
-that functions and packages that depend on
+in the log rather than a log’s filename/URL. On the minus side, this
+means that functions and packages that depend on
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) (e.g.,
 [‘adjustedcranlogs’](https://CRAN.R-project.org/package=adjustedcranlogs),
 [‘dlstats’](https://CRAN.R-project.org/package=dlstats),
 [`packageRank::cranDownloads()`](https://github.com/lindbrook/packageRank/blob/master/R/cranDownloads.R))
-are susceptible to the duplicate log problem.
+are susceptible to the first log problem (duplicate names). Because
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) relies on the
+date in the log rather than the date in the log’s name/URL, it appears
+that [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) can’t
+detect multiple instances of logs with the same date. I found 3 logs
+with duplicate filename/URLs, and 5 additional instances of overcounting
+(including one of tripling).
 
-Because [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) relies
-on the date in the log rather than the date in the log’s name/URL, it
-appears that [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs)
-can’t detect multiple instances of logs with the same date. I found 3
-logs with duplicate filename/URLs, and 5 additional instances of
-overcounting (including one of tripling).
-
-I’ve patched this overcounting problem in
-[`packageRank::cranDownloads()`](https://github.com/lindbrook/packageRank/blob/master/R/cranDownloads.R)
-via
-[fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R).
-This function recomputes the data using the actual logs when any of the
-eight problematic dates are requested. The details about the 8 days and
-`fixCranlogs()` can be found
+[fixCranlogs()](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R)
+addresses this overcounting problem by recomputing the data using the
+actual logs when any of the eight problematic dates are requested.
+Details about the 8 days and `fixCranlogs()` can be found
 [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
-### VI - data fixes B
+### VI - data fix B
 
-Recently, an additional data problem has emerged. From 2023-09-13
+The second data fix to note is of more recent vintage. From 2023-09-13
 through 2023-10-02, the download counts for the R application returned
 by `cranlogs::cran_downloads(packages = "R")`, is, with two exceptions,
 twice what one would expect when looking at the actual log(s). The two
@@ -979,7 +975,7 @@ exceptions are: 1) on 2023-09-28 the counts are identical but for a
 “rounding error” possibly due to an NA value and 2) on 2023-09-30 there
 is actually a three-fold difference.
 
-Here are the ratios of the counts:
+Here are the relevant ratios of counts:
 
         2023-09-12 2023-09-13 2023-09-14 2023-09-15 2023-09-16 2023-09-17 2023-09-18 2023-09-19
     osx          1          2          2          2          2          2          2          2
@@ -995,11 +991,13 @@ Here are the ratios of the counts:
     win   1.000000          2          3          2          2          1
 
 Details and code for replication can be found in issue
-[\#69](https://github.com/r-hub/cranlogs/issues/69).
+[\#69](https://github.com/r-hub/cranlogs/issues/69). Assuming the logs
+are right, `fixRCranlogs()` corrects the discrepancies.
 
-Assuming the logs are “correct”, why this problem emerged is unclear.
-For now, `packageRank::cranDownloads()` fixes this by default via the
-`fix.cranlogs = TRUE` argument.
+Note that there was a similar issue for package download counts around
+the same period but it is now fixed in
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs). For details,
+see issue [\#68](https://github.com/r-hub/cranlogs/issues/68)
 
 ### VII - et cetera
 

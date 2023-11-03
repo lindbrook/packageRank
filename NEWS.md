@@ -1,3 +1,8 @@
+### packageRank 0.8.2.9002
+
+- amend/copyedit README.
+
+
 ### packageRank 0.8.2.9001
 
 - clean DESCRIPTION Imports.
