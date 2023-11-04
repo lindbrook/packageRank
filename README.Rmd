@@ -25,10 +25,10 @@ You can read more about the package the sections below:
 * [I Download Counts](#i---download-counts) describes how `cranDownloads()` gives [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html) a more user-friendly interface, and how it makes visualizing those data easy (via a generic R `plot()` method).
 * [II Download Rank Percentiles](#ii---download-rank-percentiles) describes how `packageRank()` makes use of rank percentiles. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours (e.g., your package is in the 74th percentile). This facilitates comparison and helps you to locate you packaged in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
 * [III Inflation Filters](#iii---inflation-filters) describes the five different filter functions used to remove software and behavioral artifacts that inflate _nominal_ download counts. This functionality is offered in `packageRank()` and `packageLog()` but _not_, for computational reasons, in `cranDownloads()`.
-* [IV Availability of Results](#iv---availability-of-results) discusses when results become available and how to use `logInfo()` to check the availability of today's results.
+* [IV Availability of Results](#iv---availability-of-results) discusses when results become available, how to use `logInfo()` to check the availability of today's results, and the effect of time zones.
 * [V Data Fix A](#v---data-fix-a) discusses issues stemming from problems with the actual logs from the end of 2012 through the beginning of 2013. These are fixed in `fixDate_2012()` and `fixCranlogs()`. 
 * [VI Data Fix B](#vi---data-fix-b) discusses a "doubling" of R application download counts stemming from problems with ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) between 2023-09-13 through 2023-10-02. This is fixed in `fixRCranlogs()`.
-* [VII et cetera](#vii---et-cetera) discusses country code top-level domains (e.g., `countryPackage()` and `packageCountry()`), the use of memoization, the effect of time zones, the internet connection time out problem, and the spikes in the download of the Windows version of the R application on Sundays and Wednesdays between 06 November 2022 and 19 March 2023.
+* [VII et cetera](#vii---et-cetera) discusses country code top-level domains (e.g., `countryPackage()` and `packageCountry()`), the use of memoization, the internet connection time out problem, and the spikes in the download of the Windows version of the R application on Sundays and Wednesdays between 06 November 2022 and 19 March 2023.
 
 ### getting started
 
@@ -691,25 +691,25 @@ Ideally, we'd like to use both sets. However, the package-specific set is comput
 
 ### IV - availability of results
 
-To answer this question, you need to understand that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream, online dependencies. The first is Posit/RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which record traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly Posit/RStudio's CRAN mirror). The second is Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which using those logs to compute the download counts of both the R application and of R packages.
+To understand when results become availabble, you need to be aware that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream, online dependencies. The first is Posit/RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which record traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly Posit/RStudio's CRAN mirror). The second is Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which uses those logs to compute the download counts of both the R application and R packages.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day are usually be posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) are usually available soon after.
 
 #### why aren't today's logs and results available?
 
-Occasionally problems with "today's" data can emerge due to the upstream nature of the dependencies (illustrated below).
+Occasionally problems with "today's" data can emerge due to the upstream dependencies illustrated below.
 
 ```
 CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 ```
 
-If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. If this happens, you'll see things like an unexpected zero count(s) for your package(s) (actually, it's a zero download count for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
+If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. If this happens, you'll see things like an unexpected zero count(s) for your package(s) (actually, you'll see a zero download count for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
 
 ```
 'cranlogs' --> packageRank::cranDownloads()
 ```
 
-If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All the other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they either directly access the logs or some other source. Usually, these errors resolve themselves the next time the underlying scripts are run ("tomorrow", if not sooner). 
+If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they either directly access the logs or use some other source. Usually, these errors resolve themselves the next time the underlying scripts are run ("tomorrow", if not sooner). 
 
 #### `logInfo()`
 

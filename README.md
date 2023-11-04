@@ -30,8 +30,8 @@ You can read more about the package the sections below:
   is offered in `packageRank()` and `packageLog()` but *not*, for
   computational reasons, in `cranDownloads()`.
 - [IV Availability of Results](#iv---availability-of-results) discusses
-  when results become available and how to use `logInfo()` to check the
-  availability of today’s results.
+  when results become available, how to use `logInfo()` to check the
+  availability of today’s results, and the effect of time zones.
 - [V Data Fix A](#v---data-fix-a) discusses issues stemming from
   problems with the actual logs from the end of 2012 through the
   beginning of 2013. These are fixed in `fixDate_2012()` and
@@ -42,10 +42,9 @@ You can read more about the package the sections below:
   2023-09-13 through 2023-10-02. This is fixed in `fixRCranlogs()`.
 - [VII et cetera](#vii---et-cetera) discusses country code top-level
   domains (e.g., `countryPackage()` and `packageCountry()`), the use of
-  memoization, the effect of time zones, the internet connection time
-  out problem, and the spikes in the download of the Windows version of
-  the R application on Sundays and Wednesdays between 06 November 2022
-  and 19 March 2023.
+  memoization, the internet connection time out problem, and the spikes
+  in the download of the Windows version of the R application on Sundays
+  and Wednesdays between 06 November 2022 and 19 March 2023.
 
 ### getting started
 
@@ -841,15 +840,15 @@ time. For this reason, when `all.filters = TRUE`, `packageRank()`,
 
 ### IV - availability of results
 
-To answer this question, you need to understand that
+To understand when results become availabble, you need to be aware that
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) has two
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
 package download logs](http://cran-logs.rstudio.com/), which record
 traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly
 Posit/RStudio’s CRAN mirror). The second is Gábor Csárdi’s
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R package,
-which using those logs to compute the download counts of both the R
-application and of R packages.
+which uses those logs to compute the download counts of both the R
+application and R packages.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the
 *previous* day are usually be posted by 17:00 UTC and the results for
@@ -859,7 +858,7 @@ available soon after.
 #### why aren’t today’s logs and results available?
 
 Occasionally problems with “today’s” data can emerge due to the upstream
-nature of the dependencies (illustrated below).
+dependencies illustrated below.
 
     CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 
@@ -868,9 +867,9 @@ If there’s a problem with the [logs](http://cran-logs.rstudio.com/)
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) and
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) will be
 affected. If this happens, you’ll see things like an unexpected zero
-count(s) for your package(s) (actually, it’s a zero download count for
-all of [CRAN](https://cran.r-project.org/)), data from “yesterday”, or a
-“Log is not (yet) on the server” error message.
+count(s) for your package(s) (actually, you’ll see a zero download count
+for all of [CRAN](https://cran.r-project.org/)), data from “yesterday”,
+or a “Log is not (yet) on the server” error message.
 
     'cranlogs' --> packageRank::cranDownloads()
 
@@ -878,11 +877,11 @@ If there’s a problem with
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) but not with
 the [logs](http://cran-logs.rstudio.com/), only
 `packageRank::cranDownalods()` will be affected (the zero downloads
-problem). All the other
+problem). All other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
-functions should work since they either directly access the logs or some
-other source. Usually, these errors resolve themselves the next time the
-underlying scripts are run (“tomorrow”, if not sooner).
+functions should work since they either directly access the logs or use
+some other source. Usually, these errors resolve themselves the next
+time the underlying scripts are run (“tomorrow”, if not sooner).
 
 #### `logInfo()`
 
