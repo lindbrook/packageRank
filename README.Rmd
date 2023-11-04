@@ -732,6 +732,68 @@ $status
 [1] "Today's log is typically posted by 09:00 PST (01 Feb 17:00 GMT)."
 ```
 
+#### time zones
+
+Because you're typically interested in _today's_ log file, another thing that affects availability are time zone differences. For example, let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for ['ergm'](https://CRAN.R-project.org/package=ergm) for the last day of 2020. You might be tempted to use the following:
+
+```{r timezone, eval = FALSE}
+packageRank(packages = "ergm")
+```
+
+However, depending on _where_ you make this request, you may not get the data you expect. In Honolulu, USA, you will. In Sydney, Australia you won't. The reason is that you've somehow forgotten a key piece of trivia: Posit/RStudio typically posts _yesterday's_ log around 17:00 UTC the following day.
+
+The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021. So the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC. The log you want won't actually be available for another 19 hours.
+
+To make life a little easier, ['packageRank'](https://CRAN.R-project.org/package=packageRank) does two things. First, when the log for the date you want is not available (due to time zone rather than server issues), you'll just get the last available log. If you specified a date in the future, you'll either get an error message or a warning with an estimate of when the log you want should be available.
+
+Using the Sydney example and the expression above, you'd get the results for 30 December 2020:
+
+```{r sydney, eval = FALSE}
+packageRank(packages = "ergm")
+```
+```{r sydney_code, echo = FALSE}
+packageRank(packages = "ergm", date = "2020-12-30")
+```
+
+If you had specified the date, you'd get an additional warning:
+
+```{r sydneyB, eval = FALSE}
+packageRank(packages = "ergm", date = "2021-01-01")
+```
+```{r sydney_codeB, echo = FALSE}
+packageRank(packages = "ergm", date = "2020-12-30")
+```
+```
+Warning message:
+2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
+```
+
+Keep in mind that 17:00 UTC is not a hard deadline. Barring server issues, the logs are usually posted _before_ that time. I don't know when the script starts but the posting time seems to be a function of the number of entries: closer to 17:00 UTC when there are more entries (e.g., weekdays); before 17:00 UTC when there are fewer entries (e.g., weekends). Again, barring server issues, the 'cranlogs' results are usually available shortly _after_ 17:00 UTC.
+
+Here's what you'd see using the Honolulu example:
+
+```{r logInfo, eval = FALSE}
+logInfo(show.available = TRUE)
+```
+```
+$`Today's log/result`
+[1] "2020-12-31"
+
+$`Today's log posted?`
+[1] "Yes"
+
+$`Today's results on 'cranlogs'?`
+[1] "Yes"
+
+$`Available log/result`
+[1] "Posit/RStudio (2020-12-31); 'cranlogs' (2020-12-31)."
+
+$status
+[1] "Everything OK."
+```
+
+The functions uses your local time zone, which depends on R's ability to compute your local time and time zone (e.g., `Sys.time()` and `Sys.timezone()`). My understanding is that there may be operating system or platform specific issues that could undermine this ability.
+
 ### V - data fix A
 
 The first data fix addresses a problem that affects logs from late 2012 through the beginning of 2013. To understand the problem, we need to be know that the Posit/RStudio download logs, which begin on 01 October 2012, are stored as separate files with a name/URL that embeds the date:
@@ -808,70 +870,6 @@ if (RCurl::url.exists(url)) {
 ```
 
 This means that logs are intelligently cached; those that have already been downloaded in your current R session will not be downloaded again.
-
-#### time zones
-
-The calendar date (e.g. "2021-01-01") is the unit of observation for ['packageRank'](https://CRAN.R-project.org/package=packageRank) functions. However, because you're typically interested in _today's_ log file, time zone differences may come into play.
-
-Let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for ['ergm'](https://CRAN.R-project.org/package=ergm) for the last day of 2020. You might be tempted to use the following:
-
-```{r timezone, eval = FALSE}
-packageRank(packages = "ergm")
-```
-
-However, depending on _where_ you make this request, you may not get the data you expect. In Honolulu, USA, you will. In Sydney, Australia you won't. The reason is that you've somehow forgotten a key piece of trivia: Posit/RStudio typically posts _yesterday's_ log around 17:00 UTC the following day.
-
-The expression works in Honolulu because 09:01 HST on 01 January 2021 is 19:01 UTC 01 January 2021. So the log you want has been available for 2 hours. The expression fails in Sydney because 09:01 AEDT on 01 January 2021 is 31 December 2020 22:00 UTC. The log you want won't actually be available for another 19 hours.
-
-To make life a little easier, ['packageRank'](https://CRAN.R-project.org/package=packageRank) does two things. First, when the log for the date you want is not available (due to time zone rather than server issues), you'll just get the last available log. If you specified a date in the future, you'll either get an error message or a warning with an estimate of when the log you want should be available.
-
-Using the Sydney example and the expression above, you'd get the results for 30 December 2020:
-
-```{r sydney, eval = FALSE}
-packageRank(packages = "ergm")
-```
-```{r sydney_code, echo = FALSE}
-packageRank(packages = "ergm", date = "2020-12-30")
-```
-
-If you had specified the date, you'd get an additional warning:
-
-```{r sydneyB, eval = FALSE}
-packageRank(packages = "ergm", date = "2021-01-01")
-```
-```{r sydney_codeB, echo = FALSE}
-packageRank(packages = "ergm", date = "2020-12-30")
-```
-```
-Warning message:
-2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
-```
-
-Keep in mind that 17:00 UTC is not a hard deadline. Barring server issues, the logs are usually posted _before_ that time. I don't know when the script starts but the posting time seems to be a function of the number of entries: closer to 17:00 UTC when there are more entries (e.g., weekdays); before 17:00 UTC when there are fewer entries (e.g., weekends). Again, barring server issues, the 'cranlogs' results are usually available shortly _after_ 17:00 UTC.
-
-Here's what you'd see using the Honolulu example:
-
-```{r logInfo, eval = FALSE}
-logInfo(show.available = TRUE)
-```
-```
-$`Today's log/result`
-[1] "2020-12-31"
-
-$`Today's log posted?`
-[1] "Yes"
-
-$`Today's results on 'cranlogs'?`
-[1] "Yes"
-
-$`Available log/result`
-[1] "Posit/RStudio (2020-12-31); 'cranlogs' (2020-12-31)."
-
-$status
-[1] "Everything OK."
-```
-
-The functions uses your local time zone, which depends on R's ability to compute your local time and time zone (e.g., `Sys.time()` and `Sys.timezone()`). My understanding is that there may be operating system or platform specific issues that could undermine this ability.
 
 #### timeout
 
