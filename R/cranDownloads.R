@@ -182,7 +182,9 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if (!is.null(packages)) {
     if (all(packages != "R")) {
-      out$cranlogs.data <- packageLifeFilter(out, packages, first.published)
+      if (check.package) {
+        out$cranlogs.data <- packageLifeFilter(out, packages, first.published) 
+      }
     }
   }
 
