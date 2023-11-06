@@ -1,3 +1,8 @@
+### packageRank 0.8.2.9003
+
+- use packageLifeFilter() only when cranDownloads(check.package = TRUE).
+
+
 ### packageRank 0.8.2.9002
 
 - amend/copyedit README.
