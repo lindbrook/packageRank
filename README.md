@@ -1021,7 +1021,7 @@ package downloads.
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
 functions like `packageRank()` and `packageLog()` are affected by the
-second and third defects (mislabelled and offset logs) because they
+second and third defects (mislabeled and offset logs) because they
 access logs via their filename/URL.
 [`fixDate_2012()`](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R)
 addresses the problem by re-mapping problematic logs so that you get the
