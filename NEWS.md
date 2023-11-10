@@ -4,7 +4,7 @@
 
 - use packageLifeFilter() only when cranDownloads(check.package = TRUE).
 - remove fix for doubled cranlogs::cran_downloads(packages %in% c(NULL, pkg))
-  counts; underlying 'cranlogs' issue #68 fixed.
+  counts; underlying 'cranlogs' issue [#68](https://github.com/r-hub/cranlogs/issues/68) fixed.
 
 #### Documentation
 
