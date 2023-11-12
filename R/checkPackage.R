@@ -62,5 +62,5 @@ checkPackage <- function(packages, dev.mode = FALSE) {
   }
   
   options(timeout = orig.timeout)
-  packages
+  unique(packages)
 }
