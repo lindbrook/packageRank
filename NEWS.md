@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9000
+
+- filter out duplicate valid packages in checkPackage().
+
+
 ### packageRank 0.8.3
 
 #### Fixes
@@ -20,7 +25,7 @@
 #### Fixes
 
 - fix "doubled" cranlogs::cran_downloads(packages = "R") R application 
-  download counts in cranDownloads() from  2023-09-12 to 2023-10-02.
+  download counts in cranDownloads() from 2023-09-12 to 2023-10-02.
 - fix doubled cranlogs::cran_downloads(packages %in% c(NULL, pkg)) download
   counts in cranDownloads() from 2023-09-19 to 2023-10-01.
 - add timeout fix to checkPackage().
