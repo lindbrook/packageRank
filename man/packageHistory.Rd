@@ -4,7 +4,7 @@
 \alias{packageHistory}
 \title{Extract package or R version history.}
 \usage{
-packageHistory(package = "cholera", check.package = FALSE)
+packageHistory(package = "cholera", check.package = TRUE)
 }
 \arguments{
 \item{package}{Character. Vector of package names (including "R").}
