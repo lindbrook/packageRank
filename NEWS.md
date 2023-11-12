@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9001
+
+- set packageHistory(check.package = TRUE).
+
+
 ### packageRank 0.8.3.9000
 
 - filter out duplicate valid packages in checkPackage().

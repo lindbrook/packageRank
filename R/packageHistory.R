@@ -5,10 +5,11 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @export
 
-packageHistory <- function(package = "cholera", check.package = FALSE) {
+packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
-  package0 <- package
+  if (check.package) package0 <- checkPackage(package)
+  else package0 <- package
   
   if ("R" %in% package) {
     pkg.idx <- seq_along(package)
