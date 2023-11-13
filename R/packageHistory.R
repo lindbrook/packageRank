@@ -63,9 +63,11 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     
     if (length(out) > 1) {
       pkg.nm <- vapply(out, function(x) x[1, "Package"], character(1L))
-      id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
-      out <- out[order(id)]
-      names(out) <- vapply(out, function(x) x[1, "Package"], character(1L))
+      if (!any(duplicated(pkg.nm))) {
+        id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
+        out <- out[order(id)]
+      }
+      names(out) <- pkg.nm
     }
     
     if ("R" %in% package0) {
