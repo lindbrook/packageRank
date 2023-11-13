@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9002
+
+- match cranlogs::cran_downloads() behavior with duplicate packages.
+
+
 ### packageRank 0.8.3.9001
 
 - set packageHistory(check.package = TRUE).
