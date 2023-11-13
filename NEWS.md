@@ -1,6 +1,13 @@
+### packageRank 0.8.3.9003
+
+- match cranlogs::cran_downloads() behavior with duplicate packages in 
+  packageHistory().
+
+
 ### packageRank 0.8.3.9002
 
-- match cranlogs::cran_downloads() behavior with duplicate packages.
+- match cranlogs::cran_downloads() behavior with duplicate packages in 
+  cranDownloads().
 
 
 ### packageRank 0.8.3.9001
