@@ -24,7 +24,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
         size = TRUE)
       
       for (i in seq_along(size.data)) {
-        size.data[[i]]$bytes <- computeFileSize(size.data[[i]]$Size)
+        size.data[[i]]$bytes <- computeFileSizeA(size.data[[i]]$Size)
       }
       
       version.data <- lapply(archive.pkgs, packageHistory, 
