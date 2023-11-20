@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9004
+
+- rename/use computeFileSizeA() and computeFileSizeB().
+
+
 ### packageRank 0.8.3.9003
 
 - match cranlogs::cran_downloads() behavior with duplicate packages in 

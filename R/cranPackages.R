@@ -13,18 +13,18 @@ cranPackages <- function(binary = FALSE, bytes = FALSE, multi.core = TRUE) {
   if (binary) dat <- getBinaryData(dat, cores)
   if (bytes) {
     if("size" %in% names(dat)) {
-      dat$bytes <- computeFileSize(dat$size)
+      dat$bytes <- computeFileSizeA(dat$size)
     } else if (all(c("source", "mac", "win") %in% names(dat))) {
       for (nm in c("source", "mac", "win")) {
         dat[, paste0(nm, ".B")] <- NA
-        dat[, paste0(nm, ".B")] <- computeFileSize(dat[, nm])
+        dat[, paste0(nm, ".B")] <- computeFileSizeA(dat[, nm])
       }
     }
   }
   dat
 }
 
-computeFileSize <- function(x) {
+computeFileSizeA <- function(x) {
   kB.id <- grepl("K", x)
   MB.id <- grepl("M", x)
   kB <- as.numeric(unlist(strsplit(x[kB.id], "K"))) * 10^3

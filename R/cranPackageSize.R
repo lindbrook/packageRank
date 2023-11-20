@@ -66,7 +66,7 @@ cranPackageSize <- function(package = "cholera", check.package = FALSE,
   out <- do.call(rbind, out)
   out$type <- row.names(out)
   row.names(out) <- NULL
-  if (bytes) out$bytes <- computeFileSize(out$size)
+  if (bytes) out$bytes <- computeFileSizeB(out$size)
   out
 }
 
@@ -82,7 +82,7 @@ cran_package_info <- function(pkg.data, ext, repository = "CRAN") {
              stringsAsFactors = FALSE)
 }
 
-computeFileSize <- function(x) {
+computeFileSizeB <- function(x) {
   kB.test <- grepl("K", x)
   MB.test <- grepl("M", x)
   out <- rep(NA, length(x))
