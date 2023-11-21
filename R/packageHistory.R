@@ -136,6 +136,8 @@ packageCRAN <- function(package = "cholera", check.package = TRUE,
   size = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+  orig.timeout <- getOption("timeout")
+  if (orig.timeout < 600L) options(timeout = 600L)
   if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
   web_page <- mreadLines(url)
@@ -156,11 +158,12 @@ packageCRAN <- function(package = "cholera", check.package = TRUE,
 
     if (!is.null(out)) {
       if (identical(out$Package, package)) {
-        if (size) out
-        else out[, names(out) != "Size"]
+        if (isFALSE(size)) out <- out[, names(out) != "Size"]
       }
     }
   }
+  options(timeout = orig.timeout)
+  out
 }
 
 #' Scrape package data from Archive.
@@ -180,6 +183,8 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
   size = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+  orig.timeout <- getOption("timeout")
+  if (orig.timeout < 600L) options(timeout = 600L)
   if (check.package) package <- checkPackage(package)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   url <- paste0(root.url, package)
@@ -247,9 +252,10 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
     out <- out[order(out$Date), ]
-    if (size) out
-    else out[, names(out) != "Size"]
+    if (isFALSE(size)) out <- out[, names(out) != "Size"]
   }
+  options(timeout = orig.timeout)
+  out
 }
 
 grepString <- function(string, dat, reg.exp = FALSE) {

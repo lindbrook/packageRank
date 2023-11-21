@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9005
+
+- add timeout fix to packages_on_CRAN(), packageArchive() and packageCRAN().
+
+
 ### packageRank 0.8.3.9004
 
 - rename/use computeFileSizeA() and computeFileSizeB().
