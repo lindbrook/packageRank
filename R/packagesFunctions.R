@@ -5,8 +5,11 @@
 #' @export
 
 packages_on_CRAN <- function() {
+  orig.timeout <- getOption("timeout")
+  if (orig.timeout < 600L) options(timeout = 600L)
   pkg.data <- tools::CRAN_package_db()
   vars <- c("Package", "Version", "Published")
+  options(timeout = orig.timeout)
   pkg.data[!duplicated(pkg.data$Package), vars] # N.B. duplicated()!
 }
 
