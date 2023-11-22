@@ -81,20 +81,23 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
 }
 
 transform_pkgsearch <- function(history) {
-  vars <- c("Package", "Version", "date", "Repository")
+  vars <- c("Package", "Version", "crandb_file_date", "Repository")
   lapply(history, function(x) {
     if ("Repository" %in% colnames(x)) {
       tmp <- data.frame(x[, vars])
       row.names(tmp) <- NULL
-      tmp$Date <- as.Date(tmp$date)
-      tmp$date <- NULL
+      splt <- strsplit(tmp$crandb_file_date, " ")
+      dts <- vapply(splt, function(x) x[1], character(1L))
+      tmp$Date <- as.Date(dts)
+      tmp$crandb_file_date <- NULL
       if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
       tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
     } else {
-      tmp <- data.frame(x[, c("Package", "Version", "date")])
+      tmp <- data.frame(x[, c("Package", "Version", "crandb_file_date")])
       row.names(tmp) <- NULL
-      tmp$Date <- as.Date(tmp$date)
-      tmp$date <- NULL
+      splt <- strsplit(tmp$crandb_file_date, " ")
+      dts <- vapply(splt, function(x) x[1], character(1L))
+      tmp$Date <- as.Date(dts)
       tmp$Repository <- "Archive"
     }
     tmp

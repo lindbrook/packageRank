@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9006
+
+- use "crandb_file_date" for dates in packageHistory().
+
+
 ### packageRank 0.8.3.9005
 
 - add timeout fix to packages_on_CRAN(), packageArchive() and packageCRAN().
