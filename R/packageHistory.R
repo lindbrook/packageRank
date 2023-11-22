@@ -93,7 +93,7 @@ transform_pkgsearch <- function(history) {
       if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
       tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
     } else {
-      tmp <- data.frame(x[, c("Package", "Version", "crandb_file_date")])
+      tmp <- data.frame(x[, vars[-length(vars)]])
       row.names(tmp) <- NULL
       splt <- strsplit(tmp$crandb_file_date, " ")
       dts <- vapply(splt, function(x) x[1], character(1L))
