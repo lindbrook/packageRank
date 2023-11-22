@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9007
+
+- clean transform_pkgsearch().
+
+
 ### packageRank 0.8.3.9006
 
 - use "crandb_file_date" for dates in packageHistory().
