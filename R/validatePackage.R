@@ -9,10 +9,14 @@ validatePackage <- function(packages) {
   }))
   
   if (any(check == "try-error")) {
-    data.frame(package = packages, pkgsearch = check != "try-error")
+    out <- data.frame(package = packages, pkgsearch = check != "try-error")
+    if ("R" %in% out$package) {
+      out[out$package == "R", "pkgsearch"] <- TRUE
+    }
   } else {
-    data.frame(package = packages, pkgsearch = TRUE)
+    out <- data.frame(package = packages, pkgsearch = TRUE)
   }
+  out
 }
 
 #' Check for valid package names (scrape CRAN).
@@ -46,11 +50,11 @@ validatePackage0 <- function(packages, check.archive = TRUE) {
 
   if (check.archive) {
     archive <- setdiff(marchivePackages(), pkgs)
-    pkgs <- c(pkgs, archive)
-  }
+    pkgs <- c(pkgs, archive, "R")
+  } else pkgs <- c(pkgs, "R")
 
   if (any(packages %in% pkgs == FALSE)) {
     list(invalid = packages[packages %in% pkgs == FALSE],
          valid = packages[packages %in% pkgs])
-  } else packages
+  }
 }
