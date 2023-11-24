@@ -1,3 +1,10 @@
+### packageRank 0.8.3.9008
+
+- fix packageHistory("R").
+- add/set checkPackage(warn.msg = TRUE).
+- add exception for "R" in validatePackage() and validatePackage0().
+
+
 ### packageRank 0.8.3.9007
 
 - clean transform_pkgsearch().
