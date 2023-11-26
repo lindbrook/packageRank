@@ -3,10 +3,10 @@
 #' "spell check" package names.
 #' @param packages Character. Vector of package name(s).
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
-#' @param warn.msg Logical. Print warning messages.
+#' @param print.message Logical. Print availablity/spell check messages.
 #' @noRd
 
-checkPackage <- function(packages, dev.mode = FALSE, warn.msg = TRUE) {
+checkPackage <- function(packages, dev.mode = FALSE, print.message = TRUE) {
   orig.timeout <- getOption("timeout") # R default is 60
   if (orig.timeout < 600L) options(timeout = 600L)
 
@@ -49,14 +49,14 @@ checkPackage <- function(packages, dev.mode = FALSE, warn.msg = TRUE) {
   if (exists("true.err")) {
     if (length(true.err) > 0) {
       pkg.err.msg <- paste(true.err, collapse = ", ")
-      msg <- ": misspelled or not on CRAN/Archive."
+      msg <- "Misspelled or not on CRAN/Archive: "
       
       err.test <- length(setdiff(packages, true.err)) == 0
       
       if (err.test) {
-        stop(pkg.err.msg, msg, call. = FALSE)
+        stop(msg, pkg.err.msg, call. = FALSE)
       } else {
-        if (warn.msg) warning(pkg.err.msg, msg, call. = FALSE)
+        if (print.message) message(msg, pkg.err.msg)
       }
       packages <- packages0[!packages0 %in% true.err]
     }

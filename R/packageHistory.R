@@ -30,7 +30,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (length(package) == 0) {
     out <- r_v
   } else {
-    if (check.package) package <- checkPackage(package, warn.msg = FALSE)
+    if (check.package) package <- checkPackage(package, print.message = FALSE)
     
     # problem with pkgsearch::cran_package_history()
     cran <- mpackages_on_CRAN()

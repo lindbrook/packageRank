@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9009
+
+- use message() rather than warning() in checkPackage().
+- change "warn.msg" to "print.message" in checkPackage().
+
+
 ### packageRank 0.8.3.9008
 
 - fix packageHistory("R").
