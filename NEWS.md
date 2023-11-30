@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9011
+
+- use packageHistory(check.package = check.package) in cranDownloads().
+
+
 ### packageRank 0.8.3.9010
 
 - skip tools::CRAN_package_db() when packageHistory(check.package = FALSE).
