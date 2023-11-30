@@ -32,9 +32,11 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   } else {
     if (check.package) package <- checkPackage(package, print.message = FALSE)
     
-    # problem with pkgsearch::cran_package_history()
-    cran <- mpackages_on_CRAN()
-    on.cran <- package %in% cran$Package
+    if (check.package) {
+      # problem with pkgsearch::cran_package_history()
+      cran <- mpackages_on_CRAN()
+      on.cran <- package %in% cran$Package
+    } else on.cran <- rep(TRUE, length(package))
 
     # Use packageHistory0() for "missing" and latest packages.
     # e.g., "VR" in cran_package() but not cran_package_history()
