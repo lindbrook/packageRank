@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9012
+
+- amend 'cranlogs' status message in logInfo().
+
+
 ### packageRank 0.8.3.9011
 
 - use packageHistory(check.package = check.package) in cranDownloads().

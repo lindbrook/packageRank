@@ -51,8 +51,8 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
     if (rstudio.results.available & cranlogs.results.available) {
       status <- "Everything OK." 
     } else if (rstudio.results.available & !cranlogs.results.available) {
-      status <- paste0("'cranlogs' usually posts a bit after ",
-                       format(as.POSIXlt(upload.utc, tz = tz), "%H:%M %Z"), 
+      status <- paste0("'cranlogs' usually posts after ",
+                       format(as.POSIXlt(upload.utc, tz = tz), "%H:%M %Z"),
                        " (",
                        format(upload.utc, "%d %b %H:%M %Z"), ").")
     } else if (!rstudio.results.available) {
