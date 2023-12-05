@@ -100,6 +100,7 @@ transform_pkgsearch <- function(history) {
       splt <- strsplit(tmp$crandb_file_date, " ")
       dts <- vapply(splt, function(x) x[1], character(1L))
       tmp$Date <- as.Date(dts)
+      tmp$crandb_file_date <- NULL
       tmp$Repository <- "Archive"
     }
     tmp
