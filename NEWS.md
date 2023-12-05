@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9013
+
+- clean packageHistory() output for archive-only packages.
+
+
 ### packageRank 0.8.3.9012
 
 - amend 'cranlogs' status message in logInfo().
