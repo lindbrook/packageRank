@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9014
+
+- add guesstimate for 'cranlogs' daylight saving post time in logInfo().
+
+
 ### packageRank 0.8.3.9013
 
 - clean packageHistory() output for archive-only packages.
