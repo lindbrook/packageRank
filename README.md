@@ -851,9 +851,9 @@ which uses those logs to compute the download counts of both the R
 application and R packages.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the
-*previous* day are usually be posted by 17:00 UTC and the results for
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) are usually
-available soon after.
+*previous* day are typically posted by 17:00 UTC and the results for
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) usually become
+available about an hour later.
 
 #### why aren’t today’s logs and results available?
 
