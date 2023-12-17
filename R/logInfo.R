@@ -72,7 +72,8 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
   out <- list("Today's log/result" = today.log,
               "Today's log on Posit/RStudio?" = rstudio.status,
               "Today's results on 'cranlogs'?" = cranlogs.status,
-              status = status)
+              status = status,
+              local.time = format(Sys.time(), "%H:%M %Z"))
 
   if (show.available) {
     rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
@@ -100,7 +101,8 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
                 "Today's log on Posit/RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 "Available log/result" = note,
-                status = status)
+                status = status,
+                local.time = format(Sys.time(), "%H:%M %Z"))
   }
   out
 }
