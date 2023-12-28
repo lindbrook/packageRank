@@ -21,8 +21,8 @@ You can read more about the package the sections below:
   describes how `packageRank()` makes use of rank percentiles. This
   nonparametric statistic computes the percentage of packages that with
   fewer downloads than yours (e.g., your package is in the 74th
-  percentile). This facilitates comparison and helps you to locate you
-  packaged in the overall distribution of
+  percentile). This facilitates comparison and helps you to locate your
+  package in the overall distribution of
   [CRAN](https://CRAN.R-project.org/) package downloads.
 - [III Inflation Filters](#iii---inflation-filters) describes the five
   different filter functions used to remove software and behavioral
