@@ -55,14 +55,12 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
         upload.utc <- upload.utc + 3600L
       }
       status <- paste0("'cranlogs' usually posts by ",
-                       format(as.POSIXlt(upload.utc, tz = tz), "%H:%M %Z"),
-                       " (",
-                       format(upload.utc, "%d %b %H:%M %Z"), ").")
+        format(as.POSIXlt(upload.utc, tz = tz), "%d %b %H:%M %Z"), " -- ",
+        format(upload.utc, "%d %b %H:%M %Z"), ".")
     } else if (!rstudio.results.available) {
-      status <- paste0("Today's log is typically posted by ",
-                       format(as.POSIXlt(upload.utc, tz = tz), "%H:%M %Z"), 
-                       " (",
-                       format(upload.utc, "%d %b %H:%M %Z"), ").")
+      status <- paste0("Today's log usually posts by ",
+        format(as.POSIXlt(upload.utc, tz = tz), "%d %b %H:%M %Z"), " -- ",
+        format(upload.utc, "%d %b %H:%M %Z"), ".")
     }
   }
   
@@ -71,10 +69,10 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
   
   out <- list("Today's log/result" = today.log,
               "Today's log on Posit/RStudio?" = rstudio.status,
-              "Today's results on 'cranlogs'?" = cranlogs.status,
-              status = status,
-              local.time = format(Sys.time(), "%H:%M %Z"))
-
+              "Today's result on 'cranlogs'?" = cranlogs.status,
+              local.date_time = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
+              status = status)
+  
   if (show.available) {
     rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
     
@@ -101,8 +99,8 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
                 "Today's log on Posit/RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 "Available log/result" = note,
-                status = status,
-                local.time = format(Sys.time(), "%H:%M %Z"))
+                local.date_time = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
+                status = status)
   }
   out
 }

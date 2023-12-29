@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9016
+
+- amend logInfo() output.
+
+
 ### packageRank 0.8.3.9015
 
 = include local time with logInfo().
