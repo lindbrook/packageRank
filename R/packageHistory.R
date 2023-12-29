@@ -113,13 +113,18 @@ transform_pkgsearch <- function(history) {
 #' @param package Character. Package name.
 #' @param size Logical. Include size of source file.
 #' @noRd
+#' @note "Latest" packages
 
 packageHistory0 <- function(package = "cholera", size = FALSE) {
-  # set check.package = FALSE to pass "latest" packages.
-  cran <- packageCRAN(package, check.package = FALSE, size = size)
-  arch <- packageArchive(package, check.package = FALSE, size = size)
-  if (any(is.na(cran))) cran <- NULL
-  out <- rbind(arch, cran)
+  cran <- packageCRAN(package, size = size)
+  arch <- packageArchive(package, size = size)
+  if (!is.null(cran) & !is.null(arch)) {
+    out <- rbind(arch, cran)
+  } else if (is.null(cran) & !is.null(arch)) {
+    out <- arch
+  } else if (!is.null(cran) & is.null(arch)) {
+    out <- cran
+  }
   row.names(out) <- NULL
   out
 }
@@ -128,7 +133,6 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
 #'
 #' Version, date and size (source file) of most recent publication.
 #' @param package Character. Package name.
-#' @param check.package Logical. Validate and "spell check" package.
 #' @param size Logical. Include size of source file.
 #' @return An R data frame or NULL.
 #' @examples
@@ -136,15 +140,12 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
 #' packageCRAN(package = "HistData")
 #' packageCRAN(package = "VR") # No version on CRAN (archived)
 #' }
-#' @export
+#' @noRd
 
-packageCRAN <- function(package = "cholera", check.package = TRUE,
-  size = FALSE) {
-
+packageCRAN <- function(package = "cholera", size = FALSE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   orig.timeout <- getOption("timeout")
   if (orig.timeout < 600L) options(timeout = 600L)
-  if (check.package) package <- checkPackage(package)
   url <- "https://cran.r-project.org/src/contrib/"
   web_page <- mreadLines(url)
   pkg.match <- grepl(package, web_page, fixed = TRUE)
@@ -164,34 +165,34 @@ packageCRAN <- function(package = "cholera", check.package = TRUE,
 
     if (!is.null(out)) {
       if (identical(out$Package, package)) {
-        if (isFALSE(size)) out <- out[, names(out) != "Size"]
+        if (size) out <- out[, names(out) != "Size"]
       }
     }
+    options(timeout = orig.timeout)
+    if (!is.null(out)) out
+    else NULL
+  } else {
+    options(timeout = orig.timeout)
+    NULL
   }
-  options(timeout = orig.timeout)
-  out
 }
 
 #' Scrape package data from Archive.
 #'
 #' @param package Character. Package name.
-#' @param check.package Logical. Validate and "spell check" package.
 #' @param size Logical. Include size of source file.
 #' @return An R data frame or NULL.
-#' @export
+#' @noRd
 #' @examples
 #' \dontrun{
 #' packageArchive(package = "HistData")
 #' packageArchive(package = "adjustedcranlogs")  # No archived versions.
 #' }
 
-packageArchive <- function(package = "cholera", check.package = TRUE,
-  size = FALSE) {
-
+packageArchive <- function(package = "cholera", size = FALSE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   orig.timeout <- getOption("timeout")
   if (orig.timeout < 600L) options(timeout = 600L)
-  if (check.package) package <- checkPackage(package)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   url <- paste0(root.url, package)
 
@@ -258,10 +259,13 @@ packageArchive <- function(package = "cholera", check.package = TRUE,
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
     out <- out[order(out$Date), ]
-    if (isFALSE(size)) out <- out[, names(out) != "Size"]
+    if (size) out <- out[, names(out) != "Size"]
+    options(timeout = orig.timeout)
+    out
+  } else {
+    options(timeout = orig.timeout)
+    NULL
   }
-  options(timeout = orig.timeout)
-  out
 }
 
 grepString <- function(string, dat, reg.exp = FALSE) {
