@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9018
+
+- change/amend logInfo(show.available = TRUE) to logInfo(details = FALSE).
+
+
 ### packageRank 0.8.3.9017
 
 - make packageHistory0(), packageCRAN() and packageArchive() standalone and 

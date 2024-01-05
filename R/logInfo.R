@@ -1,13 +1,13 @@
 #' Compute Availability, Date, Time of "Today's" Log.
 #'
 #' Also checks availability of Posit/RStudio logs and 'cranlogs' data.
+#' @param details Logical. Check available logs and results.
 #' @param tz Character. Local time zone. See OlsonNames() or use Sys.timezone().
 #' @param upload.time Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".
-#' @param show.available Logical. Check available logs and results.
 #' @export
 
-logInfo <- function(tz = Sys.timezone(), upload.time = "17:00", 
-  show.available = FALSE) {
+logInfo <- function(details = FALSE, tz = Sys.timezone(), 
+  upload.time = "17:00") {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   utc.date.time <- utc()
@@ -70,10 +70,9 @@ logInfo <- function(tz = Sys.timezone(), upload.time = "17:00",
   out <- list("Today's log/result" = today.log,
               "Today's log on Posit/RStudio?" = rstudio.status,
               "Today's result on 'cranlogs'?" = cranlogs.status,
-              local.date_time = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
               status = status)
   
-  if (show.available) {
+  if (details) {
     rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
     
     last.available <- vapply(rev.last.wk, function(x) {
