@@ -98,7 +98,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
                 "Today's log on Posit/RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 "Available log/result" = note,
-                local.date_time = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
+                "Current date-time" = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
                 status = status)
   }
   out
