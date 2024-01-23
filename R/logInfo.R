@@ -73,7 +73,8 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
               status = status)
   
   if (details) {
-    rev.last.wk <- seq(utc.date - 1, utc.date - 8, by = -1)
+    omega <- 4
+    rev.last.wk <- seq(utc.date - 1, utc.date - omega, by = -1)
     
     last.available <- vapply(rev.last.wk, function(x) {
       tmp.url <- paste0(rstudio.url, year, '/', x, ".csv.gz")
@@ -82,8 +83,8 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
     
     rstudio.last.available <- rev.last.wk[last.available][1]
     
-    cranlogs.available <- try(cranlogs::cran_downloads(from = rev.last.wk[8],
-      to = rev.last.wk[1]), silent = TRUE)
+    cranlogs.available <- try(cranlogs::cran_downloads(from = 
+      rev.last.wk[omega], to = rev.last.wk[1]), silent = TRUE)
     if (any(class(cranlogs.available) == "try-error")) {
       cran.last.available <- NA
     } else {
