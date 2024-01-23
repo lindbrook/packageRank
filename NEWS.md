@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9019
+
+- check last 3 rather than last 7 logs for logInfo(show.available = TRUE).
+
+
 ### packageRank 0.8.3.9018
 
 - change/amend logInfo(show.available = FALSE) to logInfo(details = FALSE).
