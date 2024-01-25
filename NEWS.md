@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9020
+
+- fix duplicate date-times in timeFix() in tripletFilter().
+
+
 ### packageRank 0.8.3.9019
 
 - check last 3 rather than last 7 logs for logInfo(show.available = TRUE).
