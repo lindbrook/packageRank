@@ -200,14 +200,15 @@ identify_triplets <- function(v.data, time.window, time.sort) {
 timeFix <- function(potential.triplets, v.data, time.window) {
   out <- lapply(potential.triplets, function(x) {
     obs.data <- v.data[v.data$id %in% x, ]
-    obs.time <- dateTime(obs.data$date, obs.data$time)
+    obs.time <- unique(dateTime(obs.data$date, obs.data$time))
     tm.window <- c(obs.time + 1:time.window, obs.time - 1:time.window)
-    candidate.hms <- strftime(tm.window, format = "%H:%M:%S",
-      tz = "GMT")
+    candidate.hms <- strftime(tm.window, format = "%H:%M:%S", tz = "GMT")
     candidate.id <- paste0(candidate.hms, "-", obs.data$machine)
     candidate <- v.data$id %in% candidate.id
-
-    if (any(candidate) & sum(nrow(obs.data), sum(candidate)) == 3) {
+    
+    if (all(!candidate)) {
+      NULL
+    } else if (any(candidate) & sum(nrow(obs.data), sum(candidate)) == 3) {
       candidate.data <- v.data[v.data$id %in% candidate.id, ]
       minority <- which.min(c(nrow(obs.data), nrow(candidate.data)))
       if (minority == 1) {
@@ -216,7 +217,7 @@ timeFix <- function(potential.triplets, v.data, time.window) {
       } else if (minority == 2) {
         data.frame(minority = unique(candidate.data$id),
                    majority = unique(obs.data$id))
-      }
+      } 
     }
   })
   unique(do.call(rbind, out))
