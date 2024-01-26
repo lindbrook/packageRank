@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9021
+
+- add packageRank-package document stub.
+
+
 ### packageRank 0.8.3.9020
 
 - fix duplicate date-times in timeFix() in tripletFilter().
