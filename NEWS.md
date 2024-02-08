@@ -1,6 +1,7 @@
 ### packageRank 0.8.3.9021
 
 - add packageRank-package document stub.
+- sketch out packageRank-package document.
 
 
 ### packageRank 0.8.3.9020
