@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9023
+
+- fix packageCRAN(size) and packageArchive(size).
+
+
 ### packageRank 0.8.3.9022
 
 - use date.fmt in logInfo().
