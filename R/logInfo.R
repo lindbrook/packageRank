@@ -46,6 +46,8 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   } else if (!rstudio.server.available & cranlogs.server.available) {
     status <- "Posit/RStudio server unavailable."
   }
+
+  date.fmt <- "%d %b %H:%M %Z"
   
   if (rstudio.server.available & cranlogs.server.available) {
     if (rstudio.results.available & cranlogs.results.available) {
@@ -55,12 +57,12 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
         upload.utc <- upload.utc + 3600L
       }
       status <- paste0("'cranlogs' usually posts by ",
-        format(as.POSIXlt(upload.utc, tz = tz), "%d %b %H:%M %Z"), " -- ",
-        format(upload.utc, "%d %b %H:%M %Z"), ".")
+        format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
+        format(upload.utc, date.fmt), ".")
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
-        format(as.POSIXlt(upload.utc, tz = tz), "%d %b %H:%M %Z"), " -- ",
-        format(upload.utc, "%d %b %H:%M %Z"), ".")
+        format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
+        format(upload.utc, date.fmt), ".")
     }
   }
   
@@ -99,7 +101,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
                 "Today's log on Posit/RStudio?" = rstudio.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 "Available log/result" = note,
-                "Current date-time" = paste0(format(Sys.time(), "%d %b %H:%M %Z")),
+                "Current date-time" = paste0(format(Sys.time(), date.fmt)),
                 status = status)
   }
   out
