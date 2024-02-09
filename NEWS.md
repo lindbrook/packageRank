@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9022
+
+- use date.fmt in logInfo().
+
+
 ### packageRank 0.8.3.9021
 
 - add packageRank-package document stub.
