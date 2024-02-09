@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9024
+
+- update/set cranPackageSize(r.ver = "4.2").
+
+
 ### packageRank 0.8.3.9023
 
 - fix packageCRAN(size) and packageArchive(size).
