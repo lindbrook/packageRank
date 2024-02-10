@@ -61,7 +61,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("dat", "size.data", "version.data"))
-      out <- parallel::parLapply(cl, seq_along(dat), function(i) {
+      filtered <- parallel::parLapply(cl, seq_along(dat), function(i) {
         sz <- size.data[[i]]
         ver <- version.data[[i]]
         tmp <- dat[[i]]
@@ -73,16 +73,41 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
           latest.ver <- ver[nrow(ver) - 1, "Version"]
           latest.size <- sz[sz$version %in% latest.ver, ]
         }
-        leftover <- tmp[tmp$version != latest.ver, ]
+
         sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
-        tmp <- tmp[sel, ]
-        rbind(tmp, leftover)
+        current.ver <- tmp[sel, ]
+        
+        leftover.sel <- tmp$version != latest.ver
+        
+        if (any(leftover.sel)) {
+          leftover <- tmp[leftover.sel, ]
+          leftover.pkg <- unique(leftover$package)
+          leftover.history <- packageHistory0(leftover.pkg, size = TRUE)
+          left.ver <- unique(leftover[, "version"])
+          
+          src.size <- vapply(left.ver, function(v) {
+            leftover.history[leftover.history$Version == v, "Size"]
+          }, character(1L))
+          
+          src.size <- vapply(src.size, computeFileSizeB, numeric(1L))
+          left.data <- data.frame(version = left.ver, size = src.size)
+          
+          filtered <- lapply(seq_len(nrow(left.data)), function(i) {
+            tmp <- left.data[i, ]
+            sel <- leftover$version %in% tmp$version
+            filter.test <- leftover$size >= tmp$size
+            leftover[sel & filter.test, ]
+          })
+          
+          past.ver <- do.call(rbind, filtered)
+          rbind(current.ver, past.ver)
+        } else current.ver
       })
       parallel::stopCluster(cl)
     } else {
       if (.Platform$OS.type == "windows") cores <- 1L
       
-      out <- parallel::mclapply(seq_along(cran.dat), function(i) {
+      filtered <- parallel::mclapply(seq_along(cran.dat), function(i) {
         sz <- size.data[[i]]
         ver <- version.data[[i]]
         tmp <- cran.dat[[i]]
@@ -94,12 +119,37 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
           latest.ver <- ver[nrow(ver) - 1, "Version"]
           latest.size <- sz[sz$version %in% latest.ver, ]
         }
-        leftover <- tmp[tmp$version != latest.ver, ]
+        
         sel <- tmp$version == latest.ver & tmp$size >= min(latest.size$bytes)
-        tmp <- tmp[sel, ]
-        rbind(tmp, leftover)
+        current.ver <- tmp[sel, ]
+        
+        leftover.sel <- tmp$version != latest.ver
+        
+        if (any(leftover.sel)) {
+          leftover <- tmp[leftover.sel, ]
+          leftover.pkg <- unique(leftover$package)
+          leftover.history <- packageHistory0(leftover.pkg, size = TRUE)
+          left.ver <- unique(leftover[, "version"])
+          
+          src.size <- vapply(left.ver, function(v) {
+            leftover.history[leftover.history$Version == v, "Size"]
+          }, character(1L))
+          
+          src.size <- vapply(src.size, computeFileSizeB, numeric(1L))
+          left.data <- data.frame(version = left.ver, size = src.size)
+          
+          filtered <- lapply(seq_len(nrow(left.data)), function(i) {
+            tmp <- left.data[i, ]
+            sel <- leftover$version %in% tmp$version
+            filter.test <- leftover$size >= tmp$size
+            leftover[sel & filter.test, ]
+          })
+          
+          past.ver <- do.call(rbind, filtered)
+          rbind(current.ver, past.ver)
+        } else current.ver
       }, mc.cores = cores)
     }
   }
-  out
+  filtered
 }

@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9026
+
+- filter out undersized downloads of past versions in sizeFilter().
+
+
 ### packageRank 0.8.3.9025
 
 - use isFALSE() in packageCRAN() and packageArchive().
