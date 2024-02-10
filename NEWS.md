@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9025
+
+- use isFALSE() in packageCRAN() and packageArchive().
+
+
 ### packageRank 0.8.3.9024
 
 - update/set cranPackageSize(r.ver = "4.2").

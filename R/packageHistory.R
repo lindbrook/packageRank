@@ -165,7 +165,7 @@ packageCRAN <- function(package = "cholera", size = FALSE) {
 
     if (!is.null(out)) {
       if (identical(out$Package, package)) {
-        if (!size) out <- out[, names(out) != "Size"]
+        if (isFALSE(size)) out <- out[, names(out) != "Size"]
       }
     }
     options(timeout = orig.timeout)
@@ -259,7 +259,7 @@ packageArchive <- function(package = "cholera", size = FALSE) {
 
     if (any(ancestry.check)) out <- rbind(ancestry.data, out)
     out <- out[order(out$Date), ]
-    if (!size) out <- out[, names(out) != "Size"]
+    if (isFALSE(size)) out <- out[, names(out) != "Size"]
     options(timeout = orig.timeout)
     out
   } else {
