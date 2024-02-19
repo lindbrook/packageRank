@@ -6,7 +6,7 @@
 #' @param cores Numeric. Number of cores to use.
 #' @param download.time Numeric. Package download time allowance (seconds).
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   dev.mode = dev.mode) {

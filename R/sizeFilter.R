@@ -5,7 +5,7 @@
 #' @param packages Character. Vector of package name(s).
 #' @param cores Integer. Number of cores for parallelization.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
   pkgs <- mpackages_partitioned()
