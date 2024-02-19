@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9027
+
+- remove non-user facing functions from NAMESPACE.
+
+
 ### packageRank 0.8.3.9026
 
 - filter out undersized downloads of past versions in sizeFilter().

@@ -1,7 +1,7 @@
 #' Fetch R download Logs.
 #'
 #' @param date Character. Date. yyyy-mm-dd.
-#' @export
+#' @noRd
 
 fetchRLog <- function(date) {
   year <- as.POSIXlt(date)$year + 1900

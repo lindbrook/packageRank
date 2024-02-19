@@ -4,7 +4,7 @@
 #' @param include.date Logical. Return data frame with package name and last publication date.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 archivePackages <- function(include.date = FALSE, multi.core = TRUE,
   dev.mode = FALSE) {

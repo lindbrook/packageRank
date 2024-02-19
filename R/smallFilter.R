@@ -4,7 +4,7 @@
 #' @param threshold Numeric. Bytes.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 smallFilter <- function(dat, threshold = 1000L, multi.core = TRUE,
   dev.mode = dev.mode) {

@@ -5,7 +5,7 @@
 #' @param time.window Numeric. Seconds.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
   dev.mode = dev.mode) {
