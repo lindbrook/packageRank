@@ -15,7 +15,7 @@
 
 populationPlot <- function(x, graphics = NULL, log.y = TRUE, smooth = TRUE,
   sample.smooth = TRUE, f = 1/3, span = 3/4, sample.pct = 2.5,
-  population.seed = as.numeric(Sys.Date()), multi.core = TRUE) {
+  population.seed = as.numeric(Sys.Date()), multi.core = FALSE) {
 
   pkg.data <- x$cranlogs.data
   start.date <- pkg.data$date[1]

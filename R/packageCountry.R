@@ -21,7 +21,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, triplet.filter = FALSE,
   small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
   sort = TRUE, na.rm = FALSE, memoization = TRUE, check.package = TRUE,
-  multi.core = TRUE, dev.mode = FALSE) {
+  multi.core = FALSE, dev.mode = FALSE) {
 
   if (all.filters) {
     ip.filter <- TRUE
@@ -35,7 +35,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
     ip.filter = ip.filter, triplet.filter = triplet.filter,
     small.filter = small.filter, sequence.filter = sequence.filter,
     size.filter = size.filter, memoization = memoization,
-    check.package = check.package, multi.core = TRUE, dev.mode = FALSE)
+    check.package = check.package, multi.core = FALSE, dev.mode = FALSE)
 
   if (na.rm) {
     if (is.data.frame(p.log)) {

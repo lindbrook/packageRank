@@ -19,7 +19,7 @@
 ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE, memoization = TRUE,
-  multi.core = TRUE, dev.mode = FALSE) {
+  multi.core = FALSE, dev.mode = FALSE) {
 
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)

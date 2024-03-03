@@ -5,7 +5,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @export
 
-topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = TRUE) {
+topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   top_n <- parallel::mclapply(month_cran_log, function(x) {
@@ -78,7 +78,7 @@ plotTopCountryCodes <- function(dataset = "october", second.place = FALSE) {
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
 #' @export
 
-downloadsCountry <- function(month_cran_log, multi.core = TRUE) {
+downloadsCountry <- function(month_cran_log, multi.core = FALSE) {
   dl.data <- parallel::mclapply(month_cran_log, function(x) {
     tmp <- x[!is.na(x$package) & !is.na(x$country), ]
     freqtab <- sort(c(table(tmp$country)), decreasing = TRUE)

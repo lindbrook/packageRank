@@ -7,7 +7,7 @@
 #' @return An R data frame.
 #' @noRd
 
-cranPackages <- function(binary = FALSE, bytes = FALSE, multi.core = TRUE) {
+cranPackages <- function(binary = FALSE, bytes = FALSE, multi.core = FALSE) {
   cores <- multiCore(multi.core)
   dat <- getData(code = "source", cores)
   if (binary) dat <- getBinaryData(dat, cores)

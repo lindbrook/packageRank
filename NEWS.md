@@ -48,6 +48,10 @@
 
 - change/amend logInfo(show.available = FALSE) to logInfo(details = FALSE).
 
+### packageRank 0.8.3.9018
+
+- set multi.core = FALSE.
+
 
 ### packageRank 0.8.3.9017
 

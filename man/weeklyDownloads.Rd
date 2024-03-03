@@ -4,7 +4,7 @@
 \alias{weeklyDownloads}
 \title{Sample Weekly CRAN Downloads Data.}
 \usage{
-weeklyDownloads(start.yr = 2013, n = 50, multi.core = TRUE)
+weeklyDownloads(start.yr = 2013, n = 50, multi.core = FALSE)
 }
 \arguments{
 \item{start.yr}{Numeric or Integer.}

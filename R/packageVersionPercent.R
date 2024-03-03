@@ -13,7 +13,7 @@
 #' }
 #' @export
 
-packageVersionPercent <- function(lst, yr.mo = "2020-07", multi.core = TRUE) {
+packageVersionPercent <- function(lst, yr.mo = "2020-07", multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   if (is.null(lst)) {

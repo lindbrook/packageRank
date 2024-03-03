@@ -6,7 +6,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @noRd
 
-packageSample <- function(cran_log, sample.pct = 1, multi.core = TRUE) {
+packageSample <- function(cran_log, sample.pct = 1, multi.core = FALSE) {
   init.pkgs <- unique(cran_log$package) # remove duplicated pkgs (diff versions)
   init.pkgs <- stats::na.omit(init.pkgs)
 
@@ -57,7 +57,7 @@ packageSample <- function(cran_log, sample.pct = 1, multi.core = TRUE) {
 #' @noRd
 
 packageSample2 <- function(lst, repository = "cran", strata.samples = 20,
-  package.samples = 100, use.seed = TRUE, multi.core = TRUE) {
+  package.samples = 100, use.seed = TRUE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
   dts <- as.Date(names(lst))

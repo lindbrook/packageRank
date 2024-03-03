@@ -11,7 +11,7 @@
 #' @noRd
 
 cranPackageSize <- function(package = "cholera", check.package = FALSE,
-  size = TRUE, r.ver = "4.2", bytes = TRUE, multi.core = TRUE) {
+  size = TRUE, r.ver = "4.2", bytes = TRUE, multi.core = FALSE) {
 
   # R default is 60
   orig.timeout <- getOption("timeout")

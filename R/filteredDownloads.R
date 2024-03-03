@@ -17,7 +17,7 @@
 filteredDownloads <- function(packages = "HistData", date = NULL,
   all.filters = TRUE, ip.filter = FALSE, triplet.filter = FALSE,
   small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  check.package = TRUE, memoization = TRUE, multi.core = TRUE) {
+  check.package = TRUE, memoization = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)
