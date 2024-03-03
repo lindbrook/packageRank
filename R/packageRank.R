@@ -21,7 +21,7 @@
 
 packageRank <- function(packages = "HistData", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = TRUE,
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE,
   dev.mode = FALSE, threshold = 1000L) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)

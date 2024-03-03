@@ -7,7 +7,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
+tripletFilter <- function(dat, time.window = 2, multi.core = FALSE,
   dev.mode = dev.mode) {
 
   triplets.audit <- lapply(dat, function(x) {
@@ -46,7 +46,7 @@ tripletFilter <- function(dat, time.window = 2, multi.core = TRUE,
 #' @noRd
 
 identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
-  time.sort = TRUE, multi.core = TRUE, dev.mode = dev.mode) {
+  time.sort = TRUE, multi.core = FALSE, dev.mode = dev.mode) {
 
   if (all(dat$size > 1000L)) {
     out <- NULL

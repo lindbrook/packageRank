@@ -4,7 +4,7 @@
 \alias{topCountryCodes}
 \title{Compute Top N Downloads by Country Code.}
 \usage{
-topCountryCodes(month_cran_log, top.n = 5L, multi.core = TRUE)
+topCountryCodes(month_cran_log, top.n = 5L, multi.core = FALSE)
 }
 \arguments{
 \item{month_cran_log}{Object.}

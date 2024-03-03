@@ -246,7 +246,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
   ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
-  unit.observation = "day", multi.core = TRUE, ...) {
+  unit.observation = "day", multi.core = FALSE, ...) {
 
   cores <- multiCore(multi.core)
 

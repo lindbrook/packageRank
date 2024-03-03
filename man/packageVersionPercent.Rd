@@ -4,7 +4,7 @@
 \alias{packageVersionPercent}
 \title{Compute data for versionPlot().}
 \usage{
-packageVersionPercent(lst, yr.mo = "2020-07", multi.core = TRUE)
+packageVersionPercent(lst, yr.mo = "2020-07", multi.core = FALSE)
 }
 \arguments{
 \item{lst}{Object. List of CRAN download logs data frames. Use monthlyLog().}

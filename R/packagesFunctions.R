@@ -22,7 +22,7 @@ mpackages_on_CRAN <- memoise::memoise(packages_on_CRAN)
 #' @return An R vector.
 #' @noRd
 
-packages_in_Archive <- function(multi.core = TRUE) {
+packages_in_Archive <- function(multi.core = FALSE) {
   cores <- multiCore(multi.core)
   root.url <- "https://cran.r-project.org/src/contrib/Archive/"
   web_page <- mreadLines(root.url)
@@ -56,7 +56,7 @@ packages_observed_in_logs <- function(date = NULL) {
 #' @noRd
 
 packages_partitioned <- function(observed.downloads = FALSE, 
-  multi.core = TRUE) {
+  multi.core = FALSE) {
   
   cores <- multiCore(multi.core)
 

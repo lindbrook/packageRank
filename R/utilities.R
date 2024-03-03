@@ -31,7 +31,7 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 
 pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  pkg = "cholera", multi.core = TRUE, clean.output = TRUE) {
+  pkg = "cholera", multi.core = FALSE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
   cran_log <- cleanLog(lst[[i]])
@@ -73,7 +73,7 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
 #' @noRd
 
 packageFilterCounts <- function(lst, pkg = "cholera", ip.campaigns = TRUE,
-  multi.core = TRUE) {
+  multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
   dates <- names(lst)
@@ -212,7 +212,7 @@ plot.packageFilterCounts <- function(x, filter = "all", smooth = FALSE,
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @noRd
 
-cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = TRUE) {
+cranFilterCounts <- function(lst, ip.campaigns = TRUE, multi.core = FALSE) {
   cores <- multiCore(multi.core)
   out <- parallel::mclapply(lst, function(x) {
     cran_log <- cleanLog(x)

@@ -8,7 +8,7 @@ packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
   na.rm = FALSE, memoization = TRUE, check.package = TRUE,
-  multi.core = TRUE, dev.mode = FALSE)
+  multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}

@@ -6,7 +6,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = TRUE) {
+weeklyDownloads <- function(start.yr = 2013, n = 50, multi.core = FALSE) {
   cores <- multiCore(multi.core)
   first.day <- as.Date(paste0(start.yr, "-01-01"))
   last.wk <- seq.Date(logDate() - 7, logDate(), by = "days")

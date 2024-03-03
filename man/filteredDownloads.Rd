@@ -7,7 +7,7 @@
 filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, check.package = TRUE,
-  memoization = TRUE, multi.core = TRUE)
+  memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}

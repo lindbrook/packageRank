@@ -6,7 +6,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-smallFilter <- function(dat, threshold = 1000L, multi.core = TRUE,
+smallFilter <- function(dat, threshold = 1000L, multi.core = FALSE,
   dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)

@@ -4,7 +4,7 @@
 \alias{downloadsCountry}
 \title{Compute Downloads by Country Code.}
 \usage{
-downloadsCountry(month_cran_log, multi.core = TRUE)
+downloadsCountry(month_cran_log, multi.core = FALSE)
 }
 \arguments{
 \item{month_cran_log}{Object.}
