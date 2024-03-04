@@ -6,7 +6,7 @@
 \usage{
 countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
   triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
-  size.filter = FALSE, memoization = TRUE, multi.core = TRUE,
+  size.filter = FALSE, memoization = TRUE, multi.core = FALSE,
   dev.mode = FALSE)
 }
 \arguments{

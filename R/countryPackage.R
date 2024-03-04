@@ -19,7 +19,7 @@
 countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  memoization = TRUE, multi.core = TRUE, dev.mode = FALSE) {
+  memoization = TRUE, multi.core = FALSE, dev.mode = FALSE) {
 
   country <- toupper(country)
   file.url.date <- logDate(date)
