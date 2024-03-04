@@ -6,7 +6,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-archivePackages <- function(include.date = FALSE, multi.core = TRUE,
+archivePackages <- function(include.date = FALSE, multi.core = FALSE,
   dev.mode = FALSE) {
 
   archive.url <- "https://cran.r-project.org/src/contrib/Archive/"

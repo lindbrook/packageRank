@@ -17,7 +17,7 @@
 countryDistribution <- function(date = NULL, all.filters = FALSE,
   ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
   sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  multi.core = TRUE, dev.mode = FALSE) {
+  multi.core = FALSE, dev.mode = FALSE) {
 
   cores <- multiCore(multi.core)
   ymd <- logDate(date)

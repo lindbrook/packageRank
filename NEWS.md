@@ -1,3 +1,13 @@
+### packageRank 0.8.3.9029
+
+- set more multi.core = FALSE.
+
+
+### packageRank 0.8.3.9028
+
+- set multi.core = FALSE.
+
+
 ### packageRank 0.8.3.9027
 
 - remove non-user facing functions from NAMESPACE.
@@ -47,10 +57,6 @@
 ### packageRank 0.8.3.9018
 
 - change/amend logInfo(show.available = FALSE) to logInfo(details = FALSE).
-
-### packageRank 0.8.3.9018
-
-- set multi.core = FALSE.
 
 
 ### packageRank 0.8.3.9017
