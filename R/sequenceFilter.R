@@ -32,7 +32,7 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   # }, mc.cores = cores)
   # }
 
-  histories <- packageHistory(packages)
+  histories <- packageHistory(packages, check.package = FALSE)
   
   if (is.data.frame(histories)) {
     sel <- histories$Date <= ymd & histories$Repository == "Archive"
