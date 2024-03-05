@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9030
+
+- set packageHistory(check.package = FALSE) in sequenceFilter().
+- fix sequenceFilter().
+
+
 ### packageRank 0.8.3.9029
 
 - set more multi.core = FALSE.
