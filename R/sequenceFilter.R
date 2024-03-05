@@ -46,11 +46,21 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   sequences <- identifySequences(dat, arch.pkg.history,
     download.time = download.time)
 
-  if (!is.null(sequences)) {
-    delete <- row.names(sequences)
-    if (!is.null(delete)) {
-      dat[!row.names(dat) %in% delete, ]
-    } else dat
+  sequence.test <- vapply(sequences, function(x) {
+    isFALSE(is.null(x))
+  }, logical(1L))
+  
+  if (any(sequence.test)) {
+    dat <- lapply(seq_along(sequence.test), function(i) {
+      if (isTRUE(sequence.test[i])) {
+        pkg.tmp <- dat[[i]]
+        delete <- row.names(sequences[[i]])
+        out <- pkg.tmp[!row.names(pkg.tmp) %in% delete, ]
+      } else {
+        out <- dat[[i]]
+      }
+      out
+    })
   } else dat
 }
 
