@@ -10,28 +10,7 @@
 
 sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
   dev.mode = dev.mode) {
-
-  # win.exception <- .Platform$OS.type == "windows" & cores > 1
-
-  # if (dev.mode | win.exception) {
-  # if (dev.mode) {
-  #   cl <- parallel::makeCluster(cores)
-  #   parallel::clusterExport(cl = cl, envir = environment(),
-  #     varlist = c("packages", "ymd"))
-  #   arch.pkg.history <- parallel::parLapply(cl, packages, function(x) {
-  #     tmp <- packageHistory(x)
-  #     tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-  #   })
-  #   parallel::stopCluster(cl)
-  #
-  # } else {
-  #   if (.Platform$OS.type == "windows") cores <- 1L
-  # arch.pkg.history <- parallel::mclapply(packages, function(x) {
-  #   tmp <- packageHistory(x)
-  #   tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-  # }, mc.cores = cores)
-  # }
-
+  
   histories <- packageHistory(packages, check.package = FALSE)
   
   if (is.data.frame(histories)) {
