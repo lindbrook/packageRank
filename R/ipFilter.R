@@ -135,15 +135,18 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   names(dwnlds) <- c("ip", "downloads")
   dwnlds$ip <- as.integer(dwnlds$ip)
 
-  idp <- merge(dwnlds, pkgs, by = "ip")
-  idp$ratio <- idp$downloads / idp$packages
+  ip.dwnld.ratio <- merge(dwnlds, pkgs, by = "ip")
+  ip.dwnld.ratio$ratio <- ip.dwnld.ratio$downloads / ip.dwnld.ratio$packages
 
-  p.classified <- kmeanClassifier("packages", idp, centers, nstart)
-  r.classified <- kmeanClassifier("ratio", idp, centers, nstart)
+  p.classified <- kmeanClassifier("packages", ip.dwnld.ratio, centers, nstart)
+  r.classified <- kmeanClassifier("ratio", ip.dwnld.ratio, centers, nstart)
 
-  pkg.tests <- idp[idp$packages == 1 & idp$downloads != 1, ]
+  sel <- ip.dwnld.ratio$packages == 1 & ip.dwnld.ratio$downloads != 1
+  pkg.tests <- ip.dwnld.ratio[sel, ]
+  
   km <- stats::kmeans(stats::dist(pkg.tests$downloads), centers = centers,
     nstart = nstart)
+  
   t.classified <- data.frame(ip = pkg.tests$ip, downloads = pkg.tests$downloads,
     group = km$cluster)
 
@@ -155,8 +158,8 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
   t.data <- t.classified[t.classified$group == which.max(t.class.id), ]
 
-  p.ip <- idp[idp$packages %in% p.data$packages, "ip"]
-  r.ip <- idp[idp$ratio %in% r.data$ratio, "ip"]
+  p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$packages %in% p.data$packages, "ip"]
+  r.ip <- ip.dwnld.ratio[ip.dwnld.ratio$ratio %in% r.data$ratio, "ip"]
 
   list(package.ip = p.ip, ratio.ip = union(r.ip, t.data$ip))
 }
@@ -174,11 +177,11 @@ firstLetter <- function(x, case.sensitive = FALSE) {
   else tolower(substring(x, 1, 1))
 }
 
-kmeanClassifier <- function(var = "packages", idp, centers = centers,
+kmeanClassifier <- function(var = "packages", ip.dwnld.ratio, centers = centers,
   nstart = nstart, tol = 0.001) {
 
   # methodological convenience for stats::kmeans()
-  dat <- idp[!duplicated(idp[, var]), ]
+  dat <- ip.dwnld.ratio[!duplicated(ip.dwnld.ratio[, var]), ]
 
   # outlier test
   orders.magnitude <- trunc(log10(dat[, var]))
@@ -196,7 +199,7 @@ kmeanClassifier <- function(var = "packages", idp, centers = centers,
 
   tmp <- data.frame(dat[, var], group = km$cluster)
   names(tmp)[1] <- var
-  out <- merge(idp, tmp, by = var)
+  out <- merge(ip.dwnld.ratio, tmp, by = var)
 
   if (extreme.outlier) {
     max.grp.id <- which.max(tapply(out[, var], out$group, mean))
