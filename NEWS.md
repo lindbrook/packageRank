@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9032
+
+- replace identifySequences() with removeSequences() in sequenceFilter().
+
+
 ### packageRank 0.8.3.9031
 
 - amend variable name in ip_filter() and kmeanClassifier().
