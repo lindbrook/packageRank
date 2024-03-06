@@ -16,6 +16,8 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
   greedy.ips <- ip_filter(cran_log)
+  #    user  system elapsed 
+  # 128.768   6.011 135.426 
 
   if (campaigns) {
     # if (dev.mode | win.exception) {
