@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9031
+
+- amend variable name in ip_filter() and kmeanClassifier().
+- disable parallel code for ipFilter(campaigns = TRUE).
+
+
 ### packageRank 0.8.3.9030
 
 - set packageHistory(check.package = FALSE) in sequenceFilter().
