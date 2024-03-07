@@ -102,10 +102,10 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   dwnlds$ip <- as.integer(dwnlds$ip)
 
   ip.dwnld.ratio <- merge(dwnlds, pkgs, by = "ip")
-  ip.dwnld.ratio$ratio <- ip.dwnld.ratio$downloads / ip.dwnld.ratio$packages
+  # ip.dwnld.ratio$ratio <- ip.dwnld.ratio$downloads / ip.dwnld.ratio$packages
 
   p.classified <- kmeanClassifier("packages", ip.dwnld.ratio, centers, nstart)
-  r.classified <- kmeanClassifier("ratio", ip.dwnld.ratio, centers, nstart)
+  # r.classified <- kmeanClassifier("ratio", ip.dwnld.ratio, centers, nstart)
 
   sel <- ip.dwnld.ratio$packages == 1 & ip.dwnld.ratio$downloads != 1
   pkg.tests <- ip.dwnld.ratio[sel, ]
@@ -113,21 +113,22 @@ ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
   km <- stats::kmeans(stats::dist(pkg.tests$downloads), centers = centers,
     nstart = nstart)
   
-  t.classified <- data.frame(ip = pkg.tests$ip, downloads = pkg.tests$downloads,
-    group = km$cluster)
+  # t.classified <- data.frame(ip = pkg.tests$ip, downloads = pkg.tests$downloads,
+  #   group = km$cluster)
 
   p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
-  r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
-  t.class.id <- tapply(t.classified$downloads, t.classified$group, mean)
+  # r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
+  # t.class.id <- tapply(t.classified$downloads, t.classified$group, mean)
 
   p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
-  r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
-  t.data <- t.classified[t.classified$group == which.max(t.class.id), ]
+  # r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
+  # t.data <- t.classified[t.classified$group == which.max(t.class.id), ]
 
   p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$packages %in% p.data$packages, "ip"]
-  r.ip <- ip.dwnld.ratio[ip.dwnld.ratio$ratio %in% r.data$ratio, "ip"]
+  # r.ip <- ip.dwnld.ratio[ip.dwnld.ratio$ratio %in% r.data$ratio, "ip"]
 
-  list(package.ip = p.ip, ratio.ip = union(r.ip, t.data$ip))
+  # list(package.ip = p.ip, ratio.ip = union(r.ip, t.data$ip))
+  list(package.ip = p.ip)
 }
 
 runLengthEncoding <- function(x, case.sensitive = FALSE) {

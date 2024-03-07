@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9035
+
+- use only counts in ip_filter().
+
+
 ### packageRank 0.8.3.9034
 
 - use dateTime() in ipFilter().
