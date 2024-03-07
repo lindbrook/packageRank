@@ -51,8 +51,13 @@ removeSequences <- function(dat, arch.pkg.history, download.time = 30) {
         time.window <- download.time * nrow(candidate)
         time.range.delta <- difftime(time.range[2], time.range[1],
           units = "sec")
-        if (time.range.delta < time.window) pkg.data[!archive.seq, ]
-      } else pkg.data
-    } else pkg.data
+        if (time.range.delta < time.window) {
+          out <- pkg.data[!archive.seq, ]
+        } else out <- pkg.data
+      } else out <- pkg.data
+    } else out <- pkg.data
+  
+    out$t0 <- NULL
+    out
   })
 }
