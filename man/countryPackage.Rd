@@ -5,9 +5,9 @@
 \title{Tabulate a country's package downloads.}
 \usage{
 countryPackage(country = "HK", date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  memoization = TRUE, multi.core = FALSE, dev.mode = FALSE)
+  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
+  size.filter = FALSE, sort = TRUE, memoization = TRUE,
+  multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -17,8 +17,6 @@ countryPackage(country = "HK", date = NULL, all.filters = FALSE,
 \item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical.}
 

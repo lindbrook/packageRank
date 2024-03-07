@@ -5,7 +5,6 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param triplet.filter Logical.
 #' @param small.filter Logical.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
@@ -18,24 +17,23 @@
 #' @export
 
 packageCountry <- function(packages = "cholera", date = NULL,
-  all.filters = FALSE, ip.filter = FALSE, triplet.filter = FALSE,
-  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  sort = TRUE, na.rm = FALSE, memoization = TRUE, check.package = TRUE,
-  multi.core = FALSE, dev.mode = FALSE) {
+  all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
+  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE, na.rm = FALSE,
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE, 
+  dev.mode = FALSE) {
 
   if (all.filters) {
     ip.filter <- TRUE
-    triplet.filter <- TRUE
     small.filter <- TRUE
     sequence.filter <- TRUE
     size.filter <- TRUE
   }
 
   p.log <- packageLog(packages = packages, date = date,
-    ip.filter = ip.filter, triplet.filter = triplet.filter,
-    small.filter = small.filter, sequence.filter = sequence.filter,
-    size.filter = size.filter, memoization = memoization,
-    check.package = check.package, multi.core = FALSE, dev.mode = FALSE)
+    ip.filter = ip.filter, small.filter = small.filter, 
+    sequence.filter = sequence.filter, size.filter = size.filter, 
+    memoization = memoization, check.package = check.package, 
+    multi.core = FALSE, dev.mode = FALSE)
 
   if (na.rm) {
     if (is.data.frame(p.log)) {

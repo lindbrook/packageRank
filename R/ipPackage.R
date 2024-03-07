@@ -5,7 +5,6 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param triplet.filter Logical.
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
@@ -17,9 +16,9 @@
 #' @export
 
 ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE, memoization = TRUE,
-  multi.core = FALSE, dev.mode = FALSE) {
+  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
+  size.filter = FALSE, sort = TRUE, memoization = TRUE, multi.core = FALSE, 
+  dev.mode = FALSE) {
 
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)
@@ -30,13 +29,12 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   # N.B. using pkg_specific_filters not recommended!
   if (all.filters) {
     ip.filter <- TRUE
-    # triplet.filter <- TRUE
     small.filter <- TRUE
     # sequence.filter <- TRUE
     # size.filter <- TRUE
   }
 
-  pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
+  pkg_specific_filters <- c(sequence.filter, size.filter)
 
   if (ip.filter) {
     row.delete <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
@@ -49,10 +47,6 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     out <- parallel::mclapply(pkgs, function(p) {
       cran_log[cran_log$package == p, ]
     }, mc.cores = cores)
-
-    if (triplet.filter) {
-      out <- parallel::mclapply(out, tripletFilter, mc.cores = cores)
-    }
 
     if (small.filter) {
       out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)

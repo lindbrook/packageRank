@@ -5,10 +5,9 @@
 \title{Package download counts by country.}
 \usage{
 packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, sort = TRUE,
-  na.rm = FALSE, memoization = TRUE, check.package = TRUE,
-  multi.core = FALSE, dev.mode = FALSE)
+  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
+  size.filter = FALSE, sort = TRUE, na.rm = FALSE, memoization = TRUE,
+  check.package = TRUE, multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -18,8 +17,6 @@ packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
 \item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical.}
 
