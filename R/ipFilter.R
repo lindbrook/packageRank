@@ -16,8 +16,6 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
   greedy.ips <- ip_filter(cran_log)
-  #    user  system elapsed 
-  # 128.768   6.011 135.426 
 
   if (campaigns) {
     # if (dev.mode | win.exception) {
@@ -28,7 +26,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       candidate.data <- parallel::parLapply(cl, greedy.ips$package.ip,
         function(ip) {
           tmp <- cran_log[cran_log$ip_id == ip, ]
-          tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
+          tmp$t2 <- dateTime(tmp$date, tmp$time)
           tmp[order(tmp$t2, tmp$package), ]
       })
       parallel::stopCluster(cl)
@@ -37,7 +35,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       if (.Platform$OS.type == "windows") cores <- 1L
       candidate.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
         tmp <- cran_log[cran_log$ip_id == ip, ]
-        tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
+        tmp$t2 <- dateTime(tmp$date, tmp$time)
         tmp[order(tmp$t2, tmp$package), ]
       }, mc.cores = cores)
     }
@@ -51,80 +49,19 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
 
     # check for campaigns #
 
-    # if (dev.mode | win.exception) {
-    # if (dev.mode) {
-    #   cl <- parallel::makeCluster(cores)
-    
-    #   parallel::clusterExport(cl = cl, envir = environment(),
-    #     varlist = c("candidate.ids", "rle.data", "candidate.data"))
-    
-    #   campaign.row.delete <- parallel::parLapply(cl, candidate.ids,
-    #     function(x) {
-    #     tmp <- rle.data[[x]]
-    #     A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
-    #     start <- as.numeric(row.names(A))
-    #     end <- as.numeric(row.names(A)) + length(letters) - 1
-    #     data.select <- lapply(seq_along(start), function(i) {
-    #       audit.data <- tmp[start[i]:end[i], ]
-    #       if (all(!is.na(audit.data))) {
-    #         data.frame(ip = greedy.ips$package.ip[x],
-    #                    start = audit.data[1, "start"],
-    #                    end = audit.data[nrow(audit.data), "end"])
-    #       }
-    #     })
-    #     data.select <- do.call(rbind, data.select)
-    #     c.data <- candidate.data[[x]]
-    #     if (!is.null(data.select)) {
-    #       unlist(lapply(seq_len(nrow(data.select)), function(i) {
-    #         row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
-    #       }))
-    #     } else NULL
-    #   })
-    
-    #   parallel::stopCluster(cl)
-    
-    # } else {
-    #   if (.Platform$OS.type == "windows") cores <- 1L
-    #   campaign.row.delete <- parallel::mclapply(candidate.ids, function(x) {
-    #     tmp <- rle.data[[x]]
-    #     A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
-    #     start <- as.numeric(row.names(A))
-    #     end <- as.numeric(row.names(A)) + length(letters) - 1
-    #     data.select <- lapply(seq_along(start), function(i) {
-    #       audit.data <- tmp[start[i]:end[i], ]
-    #       if (all(!is.na(audit.data))) {
-    #         data.frame(ip = greedy.ips$package.ip[x],
-    #                    start = audit.data[1, "start"],
-    #                    end = audit.data[nrow(audit.data), "end"])
-    #       }
-    #     })
-    #     data.select <- do.call(rbind, data.select)
-    #     c.data <- candidate.data[[x]]
-    #     if (!is.null(data.select)) {
-    #       unlist(lapply(seq_len(nrow(data.select)), function(i) {
-    #         row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
-    #       }))
-    #     } else NULL
-    #   }, mc.cores = cores)
-    # }
-    # sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
-    # ratio.row.delete <- row.names(cran_log[sel, ])
-    # rows.delete <- c(unlist(campaign.row.delete), ratio.row.delete)
-  
     campaign.row.delete <- lapply(candidate.ids, function(x) {
       tmp <- rle.data[[x]]
       A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
       start <- as.numeric(row.names(A))
       end <- as.numeric(row.names(A)) + length(letters) - 1
-      data.select <- lapply(seq_along(start), function(i) {
+      data.select <- do.call(rbind, lapply(seq_along(start), function(i) {
         audit.data <- tmp[start[i]:end[i], ]
         if (all(!is.na(audit.data))) {
           data.frame(ip = greedy.ips$package.ip[x],
                      start = audit.data[1, "start"],
                      end = audit.data[nrow(audit.data), "end"])
         }
-      })
-      data.select <- do.call(rbind, data.select)
+      }))
       c.data <- candidate.data[[x]]
       if (!is.null(data.select)) {
         unlist(lapply(seq_len(nrow(data.select)), function(i) {

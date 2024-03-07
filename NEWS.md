@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9034
+
+- use dateTime() in ipFilter().
+- remove parallel computation of campaign.row.delete in ipFilter().
+
+
 ### packageRank 0.8.3.9033
 
 - delete "t0" variable from removeSequences() output.
