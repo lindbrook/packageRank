@@ -16,8 +16,6 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   # win.exception <- .Platform$OS.type == "windows" & cores > 1
 
   greedy.ips <- ip_filter(cran_log)
-  #    user  system elapsed 
-  # 128.768   6.011 135.426 
 
   if (campaigns) {
     # if (dev.mode | win.exception) {
@@ -28,7 +26,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       candidate.data <- parallel::parLapply(cl, greedy.ips$package.ip,
         function(ip) {
           tmp <- cran_log[cran_log$ip_id == ip, ]
-          tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
+          tmp$t2 <- dateTime(tmp$date, tmp$time)
           tmp[order(tmp$t2, tmp$package), ]
       })
       parallel::stopCluster(cl)
@@ -37,7 +35,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       if (.Platform$OS.type == "windows") cores <- 1L
       candidate.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
         tmp <- cran_log[cran_log$ip_id == ip, ]
-        tmp$t2 <- as.POSIXlt(paste(tmp$date, tmp$time), tz = "GMT")
+        tmp$t2 <- dateTime(tmp$date, tmp$time)
         tmp[order(tmp$t2, tmp$package), ]
       }, mc.cores = cores)
     }
