@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9033
+
+- delete "t0" variable from removeSequences() output.
+
+
 ### packageRank 0.8.3.9032
 
 - replace identifySequences() with removeSequences() in sequenceFilter().
