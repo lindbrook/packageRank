@@ -37,8 +37,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   pkg_specific_filters <- c(sequence.filter, size.filter)
 
   if (ip.filter) {
-    row.delete <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
-    cran_log <- cran_log[!row.names(cran_log) %in% row.delete, ]
+    cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
   }
 
   if (any(pkg_specific_filters)) {
