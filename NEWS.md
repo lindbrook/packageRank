@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9038
+
+- use smallFilter().
+
+
 ### packageRank 0.8.3.9037
 
 - update usage of ipFilter().
