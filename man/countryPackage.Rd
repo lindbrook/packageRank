@@ -18,7 +18,7 @@ countryPackage(country = "HK", date = NULL, all.filters = FALSE,
 
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical.}
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
 \item{sequence.filter}{Logical. Set to FALSE.}
 

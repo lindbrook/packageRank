@@ -6,8 +6,7 @@
 \usage{
 packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, multi.core = FALSE, dev.mode = FALSE,
-  threshold = 1000L)
+  check.package = TRUE, multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -27,8 +26,6 @@ packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
-
-\item{threshold}{Numeric. Threshold for small.filter in Bytes.}
 }
 \value{
 An R data frame.

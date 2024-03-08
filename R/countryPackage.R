@@ -5,7 +5,7 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param small.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical. Set to FALSE.
 #' @param size.filter Logical. Set to FALSE.
 #' @param sort Logical. Sort by download count.
