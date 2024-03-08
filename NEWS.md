@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9036
+
+- remove tripletFilter() - redundant with amended sizeFilter().
+
+
 ### packageRank 0.8.3.9035
 
 - use only counts in ip_filter().

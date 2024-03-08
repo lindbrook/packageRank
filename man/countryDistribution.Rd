@@ -5,9 +5,8 @@
 \title{Tabulate package downloads by country.}
 \usage{
 countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
-  triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
-  size.filter = FALSE, memoization = TRUE, multi.core = FALSE,
-  dev.mode = FALSE)
+  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
+  memoization = TRUE, multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
@@ -15,8 +14,6 @@ countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
 \item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 

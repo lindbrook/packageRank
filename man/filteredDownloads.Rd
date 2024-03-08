@@ -5,9 +5,9 @@
 \title{Filtered package downloads from the RStudio CRAN mirror (prototype).}
 \usage{
 filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, check.package = TRUE,
-  memoization = TRUE, multi.core = FALSE)
+  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
+  size.filter = FALSE, check.package = TRUE, memoization = TRUE,
+  multi.core = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -17,8 +17,6 @@ filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
 \item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
@@ -33,5 +31,5 @@ filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
 \description{
-ip, triplet, small, sequence and size filters.
+ip, small, sequence and size filters.
 }

@@ -5,9 +5,9 @@
 \title{Tabulate an IP's package downloads.}
 \usage{
 ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
-  triplet.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
-  size.filter = FALSE, sort = TRUE, memoization = TRUE,
-  multi.core = FALSE, dev.mode = FALSE)
+  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
+  sort = TRUE, memoization = TRUE, multi.core = FALSE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id.}
@@ -17,8 +17,6 @@ ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
 \item{all.filters}{Logical. Master switch for filters.}
 
 \item{ip.filter}{Logical.}
-
-\item{triplet.filter}{Logical.}
 
 \item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
