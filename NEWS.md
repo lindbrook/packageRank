@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9037
+
+- update usage of ipFilter().
+
+
 ### packageRank 0.8.3.9036
 
 - remove tripletFilter() - redundant with amended sizeFilter().
