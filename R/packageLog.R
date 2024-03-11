@@ -5,10 +5,9 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param triplet.filter Logical.
-#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
@@ -17,9 +16,9 @@
 #' @export
 
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, multi.core = TRUE, dev.mode = FALSE) {
+  ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE, 
+  small.filter = FALSE, memoization = TRUE, check.package = TRUE, 
+  multi.core = FALSE, dev.mode = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)
@@ -32,13 +31,10 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 
   if (all.filters) {
     ip.filter <- TRUE
-    triplet.filter <- TRUE
     small.filter <- TRUE
     sequence.filter <- TRUE
     size.filter <- TRUE
   }
-
-  pkg_specific_filters <- c(triplet.filter, sequence.filter, size.filter)
 
   if (ip.filter) {
     cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
@@ -54,54 +50,27 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     packages <- packages[!unobs.pkgs]
   }
 
-  if (.Platform$OS.type == "windows") {
-    out <- lapply(packages, function(p) {
-      cran_log[cran_log$package == p, ]
-    })
-  } else {
-    out <- parallel::mclapply(packages, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
+  out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+  
+  if (small.filter) {
+    out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
+  }
+  
+  if (sequence.filter) {
+    out <- sequenceFilter(out, packages, ymd, cores, dev.mode = dev.mode)
+  }
+  
+  if (size.filter) {
+    out <- sizeFilter(out, packages, cores, dev.mode = dev.mode)
   }
 
-  if (any(pkg_specific_filters)) {
-    if (triplet.filter) {
-      out <- tripletFilter(out, multi.core = cores, dev.mode = dev.mode)
-    }
-
-    if (small.filter) {
-      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
-    }
-
-    if (sequence.filter) {
-      out <- sequenceFilter(out, packages, ymd, cores, dev.mode = dev.mode)
-    }
-
-    if (size.filter) {
-      out <- sizeFilter(out, packages, cores, dev.mode = dev.mode)
-    }
-  } else {
-    if (small.filter) {
-      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
-    }
-  }
-
-  if (.Platform$OS.type == "windows") {
-    out <- lapply(out, function(x) {
-      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
-      tmp <- x[order(x$date.time), ]
-      tmp$date.time <- NULL
-      tmp
-    })
-  } else {
-    out <- parallel::mclapply(out, function(x) {
-      if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
-      tmp <- x[order(x$date.time), ]
-      tmp$date.time <- NULL
-      tmp
-    }, mc.cores = cores)
-  }
-
+  out <- lapply(out, function(x) {
+    if (!"t2" %in% names(x)) x$date.time <- dateTime(x$date, x$time)
+    tmp <- x[order(x$date.time), ]
+    tmp$date.time <- NULL
+    tmp
+  })
+  
   pkgs.survived <- vapply(out, function(x) x[1, "package"], character(1L))
   pkg.not_survived <- setdiff(packages, pkgs.survived)
 

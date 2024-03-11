@@ -5,9 +5,9 @@
 \title{Get Package Download Logs.}
 \usage{
 packageLog(packages = "cholera", date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, triplet.filter = FALSE, small.filter = FALSE,
-  sequence.filter = FALSE, size.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, multi.core = TRUE, dev.mode = FALSE)
+  ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
+  small.filter = FALSE, memoization = TRUE, check.package = TRUE,
+  multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -18,13 +18,11 @@ packageLog(packages = "cholera", date = NULL, all.filters = FALSE,
 
 \item{ip.filter}{Logical.}
 
-\item{triplet.filter}{Logical.}
-
-\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
-
 \item{sequence.filter}{Logical.}
 
 \item{size.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
