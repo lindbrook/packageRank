@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9039
+
+- amend removeSequences(); use rle().
+
+
 ### packageRank 0.8.3.9038
 
 - use smallFilter().
