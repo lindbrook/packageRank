@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9040
+
+- remove tripletFilter() from packageLog() and clean code.
+
+
 ### packageRank 0.8.3.9039
 
 - amend removeSequences(); use rle().
