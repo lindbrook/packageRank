@@ -8,7 +8,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
+sequenceFilter <- function(dat, packages, ymd, cores, download.time = 5,
   dev.mode = dev.mode) {
   
   histories <- packageHistory(packages, check.package = FALSE)
@@ -33,31 +33,59 @@ sequenceFilter <- function(dat, packages, ymd, cores, download.time = 30,
 #' @param download.time Numeric. Package download time allowance (seconds).
 #' @noRd
 
-removeSequences <- function(dat, arch.pkg.history, download.time = 30) {
+removeSequences <- function(dat, arch.pkg.history, download.time = 5) {
   lapply(seq_along(dat), function(i) {
     pkg.data <- dat[[i]]
     pkg.history <- arch.pkg.history[[i]]
-
+    
     if (nrow(pkg.history) != 0) {
-      pkg.data$t0 <- strptime(paste(pkg.data$date, pkg.data$time),
-        "%Y-%m-%d %T", tz = "GMT")
-      
+      version.id <- seq_along(pkg.history$Version)
+      pkg.data$t0 <- dateTime(pkg.data$date, pkg.data$time)
       pkg.data <- pkg.data[order(pkg.data$t0), ]
-      archive.seq <- pkg.data$version %in% pkg.history$Version
       
-      if (any(archive.seq)) {
-        candidate <- pkg.data[archive.seq, ]
-        time.range <- range(candidate$t0)
-        time.window <- download.time * nrow(candidate)
-        time.range.delta <- difftime(time.range[2], time.range[1],
-          units = "sec")
-        if (time.range.delta < time.window) {
-          out <- pkg.data[!archive.seq, ]
+      runs <- rle(pkg.data$version)
+      rle.data <- data.frame(ver = runs$values, length = runs$lengths)
+      
+      obs.stop <- cumsum(rle.data$length)
+      obs.start <- c(0, obs.stop[-length(obs.stop)]) + 1
+      
+      rle.data$start <- obs.start
+      rle.data$stop <- obs.stop
+      
+      # single instance sequences
+      candidates <- rle.data[rle.data$length == 1, ]
+  
+      seq.start <- which(candidates$ver == pkg.history$Version[1])
+      seq.stop <- which(candidates$ver == pkg.history$Version[nrow(pkg.history)])
+      
+      if (length(seq.start) != 0 & length(seq.stop) != 0) {
+        seq.check <- vapply(seq_along(seq.start), function(i) {
+          tmp <- candidates[seq.start[i]:seq.stop[i], ]
+          # download sequence may not be in version order (esp. full downloads)
+          all(sort(match(tmp$ver, pkg.history$Version)) == version.id)
+        }, logical(1L))
+        
+        if (all(seq.check)) {
+          obs.exclude <- unlist(lapply(seq_along(seq.start), function(i) {
+            seq.tmp.obs <- row.names(candidates[seq.start[i]:seq.stop[i], ])
+            start.stop <- rle.data[seq.tmp.obs, ]
+            obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
+            
+            tmp <- pkg.data[obs.chk, ]
+            tmp$t0 <- dateTime(tmp$date, tmp$time)
+            
+            time.range <- range(tmp$t0)
+            time.window <- download.time * nrow(tmp)
+            time.range.delta <- difftime(time.range[2], time.range[1],
+                                         units = "sec")
+            dwnld.time.window <- time.range.delta < time.window
+            
+            if (dwnld.time.window) obs.chk
+          }))
+          out <- pkg.data[-obs.exclude, ]
         } else out <- pkg.data
       } else out <- pkg.data
     } else out <- pkg.data
-  
-    out$t0 <- NULL
     out
   })
 }
