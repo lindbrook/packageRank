@@ -86,6 +86,7 @@ removeSequences <- function(dat, arch.pkg.history, download.time = 5) {
         } else out <- pkg.data
       } else out <- pkg.data
     } else out <- pkg.data
+    out$t0 <- NULL
     out
   })
 }
