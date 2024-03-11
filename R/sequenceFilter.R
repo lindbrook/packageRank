@@ -54,7 +54,6 @@ removeSequences <- function(dat, arch.pkg.history, download.time = 5) {
       
       # single instance sequences
       candidates <- rle.data[rle.data$length == 1, ]
-  
       seq.start <- which(candidates$ver == pkg.history$Version[1])
       seq.stop <- which(candidates$ver == pkg.history$Version[nrow(pkg.history)])
       
@@ -70,17 +69,13 @@ removeSequences <- function(dat, arch.pkg.history, download.time = 5) {
             seq.tmp.obs <- row.names(candidates[seq.start[i]:seq.stop[i], ])
             start.stop <- rle.data[seq.tmp.obs, ]
             obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
-            
             tmp <- pkg.data[obs.chk, ]
             tmp$t0 <- dateTime(tmp$date, tmp$time)
-            
             time.range <- range(tmp$t0)
             time.window <- download.time * nrow(tmp)
             time.range.delta <- difftime(time.range[2], time.range[1],
-                                         units = "sec")
-            dwnld.time.window <- time.range.delta < time.window
-            
-            if (dwnld.time.window) obs.chk
+              units = "sec")
+            if (time.range.delta < time.window) obs.chk
           }))
           out <- pkg.data[-obs.exclude, ]
         } else out <- pkg.data
