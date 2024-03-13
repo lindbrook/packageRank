@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9042
+
+- return latest release in package_info() for packageCRAN() (n.b. pkg updates).
+
+
 ### packageRank 0.8.3.9041
 
 - rename/set sequenceFilter(delta.time = 10).
