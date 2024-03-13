@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9041
+
+- rename/set sequenceFilter(delta.time = 10).
+- modify removeSequences() for high volume packages.
+
+
 ### packageRank 0.8.3.9040
 
 - remove tripletFilter() from packageLog() and clean code.

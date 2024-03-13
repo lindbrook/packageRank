@@ -22,7 +22,7 @@ sequenceFilter <- function(dat, packages, ymd, cores, delta.time = 10,
     })
   }
   
-  removeSequences(dat, arch.pkg.history, download.time = download.time)
+  removeSequences(dat, arch.pkg.history, delta.time = delta.time)
 }
 
 #' Extract Archive sequences from logs.
@@ -30,58 +30,97 @@ sequenceFilter <- function(dat, packages, ymd, cores, delta.time = 10,
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object.
 #' @param arch.pkg.history Object.
-#' @param download.time Numeric. Package download time allowance (seconds).
+#' @param delta.time Numeric. Time between package downloads (seconds).
 #' @noRd
 
-removeSequences <- function(dat, arch.pkg.history, download.time = 5) {
+removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
   lapply(seq_along(dat), function(i) {
     pkg.data <- dat[[i]]
     pkg.history <- arch.pkg.history[[i]]
     
     if (nrow(pkg.history) != 0) {
-      version.id <- seq_along(pkg.history$Version)
-      pkg.data$t0 <- dateTime(pkg.data$date, pkg.data$time)
-      pkg.data <- pkg.data[order(pkg.data$t0), ]
-      
-      runs <- rle(pkg.data$version)
-      rle.data <- data.frame(ver = runs$values, length = runs$lengths)
-      
-      obs.stop <- cumsum(rle.data$length)
-      obs.start <- c(0, obs.stop[-length(obs.stop)]) + 1
-      
-      rle.data$start <- obs.start
-      rle.data$stop <- obs.stop
-      
-      # single instance sequences
-      candidates <- rle.data[rle.data$length == 1, ]
-      seq.start <- which(candidates$ver == pkg.history$Version[1])
-      seq.stop <- which(candidates$ver == pkg.history$Version[nrow(pkg.history)])
-      
-      if (length(seq.start) != 0 & length(seq.stop) != 0) {
-        seq.check <- vapply(seq_along(seq.start), function(i) {
-          tmp <- candidates[seq.start[i]:seq.stop[i], ]
-          # download sequence may not be in version order (esp. full downloads)
-          all(sort(match(tmp$ver, pkg.history$Version)) == version.id)
-        }, logical(1L))
+      pttrn <- paste0(pkg.history$Version, collapse = " ")
+      obs.versions <- paste0(pkg.data$version, collapse = " ")
+      version.seq <- grepl(pttrn, obs.versions)
+
+      if (version.seq) {
+        version.id <- seq_along(pkg.history$Version)
+        pkg.data$t0 <- dateTime(pkg.data$date, pkg.data$time)
+        pkg.data <- pkg.data[order(pkg.data$t0), ]
         
-        if (all(seq.check)) {
-          obs.exclude <- unlist(lapply(seq_along(seq.start), function(i) {
-            seq.tmp.obs <- row.names(candidates[seq.start[i]:seq.stop[i], ])
-            start.stop <- rle.data[seq.tmp.obs, ]
-            obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
-            tmp <- pkg.data[obs.chk, ]
-            tmp$t0 <- dateTime(tmp$date, tmp$time)
-            time.range <- range(tmp$t0)
-            time.window <- download.time * nrow(tmp)
-            time.range.delta <- difftime(time.range[2], time.range[1],
-              units = "sec")
-            if (time.range.delta < time.window) obs.chk
+        runs <- rle(pkg.data$version)
+        rle.data <- data.frame(ver = runs$values, length = runs$lengths)
+        
+        obs.stop <- cumsum(rle.data$length)
+        obs.start <- c(0, obs.stop[-length(obs.stop)]) + 1
+        
+        rle.data$start <- obs.start
+        rle.data$stop <- obs.stop
+        
+        # single instance sequences
+        candidates <- rle.data[rle.data$length == 1, ]
+        seq.start <- which(candidates$ver == pkg.history$Version[1])
+        seq.stop <- which(candidates$ver == pkg.history$Version[nrow(pkg.history)])
+        
+        if (length(seq.start) != 0 & length(seq.stop) != 0) {
+          seq.check <- vapply(seq_along(seq.start), function(i) {
+            tmp <- candidates[seq.start[i]:seq.stop[i], ]
+            # sequence may not be in version order (esp. full downloads)
+            all(sort(match(tmp$ver, pkg.history$Version)) == version.id)
+          }, logical(1L))
+          
+          if (all(seq.check)) {
+            rle.exclude <- unlist(lapply(seq_along(seq.start), function(i) {
+              seq.tmp.obs <- row.names(candidates[seq.start[i]:seq.stop[i], ])
+              start.stop <- rle.data[seq.tmp.obs, ]
+              obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
+              tmp <- pkg.data[obs.chk, ]
+              tmp$t0 <- dateTime(tmp$date, tmp$time)
+              time.range <- range(tmp$t0)
+              time.window <- delta.time * nrow(tmp)
+              time.range.delta <- difftime(time.range[2], time.range[1],
+                units = "sec")
+              if (time.range.delta < time.window) obs.chk
+            }))
+          
+            obs.exclude <- row.names(pkg.data[rle.exclude, ])
+          }
+        } 
+      } else {
+        first.pkg.version <- pkg.history[1, ]$Version
+        
+        if (first.pkg.version %in% pkg.data$version) {
+          sel <- pkg.data$version == first.pkg.version
+          first.pkg.ip <- unique(pkg.data[sel, ]$ip_id)
+          
+          candidate <- pkg.data[pkg.data$ip_id %in% first.pkg.ip, ]
+          candidate <- candidate[candidate$version %in% pkg.history$Version, ]
+          all.archive.vers <- all(pkg.history$Version %in% candidate$version)
+          
+          candidate$t0 <- dateTime(candidate$date, candidate$time)
+          candidate <- candidate[order(candidate$t0), ]
+          
+          seq.start <- candidate[candidate$version == first.pkg.version, ]
+          
+          time.window <- delta.time * nrow(pkg.history)
+          
+          candidate.endpts <- lapply(seq_len(nrow(seq.start)), function(i) {
+            data.frame(alpha = seq.start[i, ]$t0 - time.window,
+                       omega = seq.start[i, ]$t0 + time.window)
+          })
+          
+          obs.exclude <- unlist(lapply(candidate.endpts, function(x) {
+            sel <- candidate$t0 >= x$alpha & candidate$t0 <= x$omega
+            tmp <- candidate[sel, ]
+            if (all(pkg.history$Version %in% tmp$version)) row.names(tmp)
           }))
-          out <- pkg.data[-obs.exclude, ]
-        } else out <- pkg.data
+        }
+      }
+
+      if (exists("obs.exclude")) {
+        out <- pkg.data[!row.names(pkg.data) %in% obs.exclude, ]
       } else out <- pkg.data
     } else out <- pkg.data
-    out$t0 <- NULL
     out
   })
 }
