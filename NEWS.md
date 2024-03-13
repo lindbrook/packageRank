@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9042
+
+- update and add/set cranPackageSize(r.ver = "4.3",  mac.ver = "arm").
+
+
 ### packageRank 0.8.3.9041
 
 - rename/set sequenceFilter(delta.time = 10).
