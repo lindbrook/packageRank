@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9043
+
+- return latest release in package_info() for packageCRAN() (n.b. pkg updates).
+
+
 ### packageRank 0.8.3.9042
 
 - update and add/set cranPackageSize(r.ver = "4.3",  mac.ver = "arm").

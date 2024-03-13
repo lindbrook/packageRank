@@ -277,12 +277,38 @@ grepString <- function(string, dat, reg.exp = FALSE) {
 
 package_info <- function(pkg.data, repository = "CRAN") {
   dat <- unlist(strsplit(pkg.data, '.tar.gz'))
-  ptA <- unlist(strsplit(dat[1], "_"))
-  ptB <- unlist(strsplit(dat[2], " "))
-  data.frame(Package = ptA[1],
-             Version = ptA[2],
-             Date = as.Date(ptB[1]),
-             Size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
-             Repository = "CRAN",
-             stringsAsFactors = FALSE)
+  
+  # multiple instances with new release
+  if (length(dat) > 2) {
+    even <- seq_along(dat) %% 2 == 0
+    odd <- !even
+    
+    ptA <- unlist(strsplit(dat[odd], "_"))
+    ptB <- unlist(strsplit(dat[even], "_"))
+    idxA <- seq_along(ptA)
+    
+    sz <- vapply(strsplit(ptB, " "), function(x) {
+      unlist(strsplit(x[4], "&nbsp;"))
+    }, character(1L))
+    
+    info <- data.frame(Package = ptA[idxA %% 2],
+                       Version = ptA[!idxA %% 2],
+                       Date = do.call(c, lapply(ptB, as.Date)),
+                       Size = sz,
+                       Repository = "CRAN")
+    
+    # select most recent
+    out <- info[which.max(info$Date), ]
+  
+  } else if (length(dat) == 2) {
+    ptA <- unlist(strsplit(dat[1], "_"))
+    ptB <- unlist(strsplit(dat[2], " "))
+    out <- data.frame(Package = ptA[1],
+               Version = ptA[2],
+               Date = as.Date(ptB[1]),
+               Size = unlist(strsplit(ptB[length(ptB)], "&nbsp;")),
+               Repository = "CRAN",
+               stringsAsFactors = FALSE)
+  }
+  out
 }
