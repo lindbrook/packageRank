@@ -4,11 +4,11 @@
 #' @param packages Object. An R vector of package names.
 #' @param ymd Date. Log date.
 #' @param cores Numeric. Number of cores to use.
-#' @param download.time Numeric. Package download time allowance (seconds).
+#' @param delta.time Numeric. Time between package downloads (seconds).
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-sequenceFilter <- function(dat, packages, ymd, cores, download.time = 5,
+sequenceFilter <- function(dat, packages, ymd, cores, delta.time = 10,
   dev.mode = dev.mode) {
   
   histories <- packageHistory(packages, check.package = FALSE)
