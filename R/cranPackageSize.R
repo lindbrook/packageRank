@@ -5,13 +5,15 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param size Logical. Include size of source file.
 #' @param r.ver Character. Current R version; used in directory path.
+#' @param mac.ver Character. Processor.
 #' @param bytes Logical. Compute approximate file size (bytes).
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame or NULL.
 #' @noRd
 
 cranPackageSize <- function(package = "cholera", check.package = FALSE,
-  size = TRUE, r.ver = "4.2", bytes = TRUE, multi.core = FALSE) {
+  size = TRUE, r.ver = "4.3",  mac.ver = "arm", bytes = TRUE, 
+  multi.core = FALSE) {
 
   # R default is 60
   orig.timeout <- getOption("timeout")
@@ -20,7 +22,13 @@ cranPackageSize <- function(package = "cholera", check.package = FALSE,
   if (check.package) package <- checkPackage(package)
   cores <- multiCore(multi.core)
   root.url <- "https://cran.r-project.org/"
-  mac.url.suffix <- paste0("bin/macosx/contrib/", r.ver, "/")
+  
+  if (mac.ver == "arm") {
+    mac.url.suffix <- paste0("bin/macosx/big-sur-arm64/contrib/", r.ver, "/")
+  } else if (mac.ver == "intel") {
+    mac.url.suffix <- paste0("bin/macosx/big-sur-x86_64/contrib/", r.ver, "/")
+  } else stop('mac.ver must be "arm" or "intel".')
+  
   win.url.suffix <- paste0("bin/windows/contrib/", r.ver, "/")
 
   src <- data.frame(ext = ".tar.gz", url = paste0(root.url, "/src/contrib"))
