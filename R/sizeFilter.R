@@ -20,8 +20,7 @@ sizeFilter <- function(dat, packages, cores, dev.mode = dev.mode) {
       archive.pkgs <- packages[archive]
       archive.dat <- dat[archive]
       
-      size.data <- lapply(archive.pkgs, packageArchive, check.package = FALSE, 
-        size = TRUE)
+      size.data <- lapply(archive.pkgs, packageArchive, size = TRUE)
       
       for (i in seq_along(size.data)) {
         size.data[[i]]$bytes <- computeFileSizeA(size.data[[i]]$Size)
