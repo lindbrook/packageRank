@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9046
+
+- fix argument error in packageArchive() for sizeFilter().
+
+
 ### packageRank 0.8.3.9045
 
 - amend and use non-parallel smallFilter().
