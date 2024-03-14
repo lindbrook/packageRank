@@ -3,7 +3,7 @@
 #' Uses run length encoding, rle(), and k-means clustering, stats::kmeans().
 #' @param cran_log Object. Package log entries.
 #' @param campaigns Logical. Filter A-Z campaigns when checking IPs with high unique package download counts.
-#' @param rle.depth s Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs.
+#' @param rle.depth Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs: more compact, high count run length encoding sign of campaign.
 #' @param case.sensitive Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -13,32 +13,16 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   case.sensitive = FALSE, multi.core = FALSE, dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
-  # win.exception <- .Platform$OS.type == "windows" & cores > 1
+  win.exception <- .Platform$OS.type == "windows" & cores > 1
 
-  greedy.ips <- ip_filter(cran_log)
+  greedy.ips <- greedyIP(cran_log)
 
   if (campaigns) {
-    # if (dev.mode | win.exception) {
-    if (dev.mode) {
-      cl <- parallel::makeCluster(cores)
-      parallel::clusterExport(cl = cl, envir = environment(),
-        varlist = c("greedy.ips", "cran_log"))
-      candidate.data <- parallel::parLapply(cl, greedy.ips$package.ip,
-        function(ip) {
-          tmp <- cran_log[cran_log$ip_id == ip, ]
-          tmp$t2 <- dateTime(tmp$date, tmp$time)
-          tmp[order(tmp$t2, tmp$package), ]
-      })
-      parallel::stopCluster(cl)
-
-    } else {
-      if (.Platform$OS.type == "windows") cores <- 1L
-      candidate.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
-        tmp <- cran_log[cran_log$ip_id == ip, ]
-        tmp$t2 <- dateTime(tmp$date, tmp$time)
-        tmp[order(tmp$t2, tmp$package), ]
-      }, mc.cores = cores)
-    }
+    candidate.data <- lapply(greedy.ips$package.ip, function(ip) {
+      tmp <- cran_log[cran_log$ip_id == ip, ]
+      tmp$t2 <- dateTime(tmp$date, tmp$time)
+      tmp[order(tmp$t2, tmp$package), ]
+    })
 
     rle.data <- lapply(candidate.data, function(x) {
       runLengthEncoding(x, case.sensitive = case.sensitive)
@@ -49,31 +33,27 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
 
     # check for campaigns #
 
-    campaign.row.delete <- lapply(candidate.ids, function(x) {
-      tmp <- rle.data[[x]]
-      A <- tmp[tmp$letter == "a" & tmp$lengths >= 10, ]
+    campaign.row.delete <- lapply(candidate.ids, function(i) {
+      tmp <- rle.data[[i]]
+      A <- tmp[tmp$letter == "a" & tmp$lengths >= 5, ]
       start <- as.numeric(row.names(A))
       end <- as.numeric(row.names(A)) + length(letters) - 1
       data.select <- do.call(rbind, lapply(seq_along(start), function(i) {
         audit.data <- tmp[start[i]:end[i], ]
         if (all(!is.na(audit.data))) {
-          data.frame(ip = greedy.ips$package.ip[x],
+          data.frame(ip = greedy.ips$package.ip[i],
                      start = audit.data[1, "start"],
                      end = audit.data[nrow(audit.data), "end"])
         }
       }))
-      c.data <- candidate.data[[x]]
+      c.data <- candidate.data[[i]]
       if (!is.null(data.select)) {
         unlist(lapply(seq_len(nrow(data.select)), function(i) {
           row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])
         }))
       } else NULL
     })
-
-    sel <- cran_log$ip_id %in% greedy.ips$ratio.ip
-    ratio.row.delete <- row.names(cran_log[sel, ])
-    rows.delete <- c(unlist(campaign.row.delete), ratio.row.delete)
-
+    rows.delete <- unlist(campaign.row.delete)
   } else {
     sel <- cran_log$ip_id %in% unlist(greedy.ips)
     rows.delete <- row.names(cran_log[sel, ])
@@ -81,7 +61,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   cran_log[!row.names(cran_log) %in% rows.delete, ]
 }
 
-#' Identify IP's that are mirroring CRAN (k-means clutering).
+#' Identify IP's that are mirroring CRAN (via k-means clutering).
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param cran_log Object. cran log.
@@ -89,46 +69,19 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
 #' @param nstart Numeric. Number of random sets.
 #' @noRd
 
-ip_filter <- function(cran_log, centers = 2L, nstart = 25L) {
+greedyIP <- function(cran_log, centers = 2L, nstart = 25L) {
   pkgs <- tapply(cran_log$package, cran_log$ip_id, function(x) {
     length(unique(x))
   })
-
+  
   pkgs <- data.frame(ip = as.integer(names(pkgs)), packages = pkgs,
     row.names = NULL)
 
-  dwnlds <- as.data.frame(table(cran_log$ip_id), stringsAsFactors = FALSE)
-  names(dwnlds) <- c("ip", "downloads")
-  dwnlds$ip <- as.integer(dwnlds$ip)
-
-  ip.dwnld.ratio <- merge(dwnlds, pkgs, by = "ip")
-  # ip.dwnld.ratio$ratio <- ip.dwnld.ratio$downloads / ip.dwnld.ratio$packages
-
-  p.classified <- kmeanClassifier("packages", ip.dwnld.ratio, centers, nstart)
-  # r.classified <- kmeanClassifier("ratio", ip.dwnld.ratio, centers, nstart)
-
-  sel <- ip.dwnld.ratio$packages == 1 & ip.dwnld.ratio$downloads != 1
-  pkg.tests <- ip.dwnld.ratio[sel, ]
-  
-  km <- stats::kmeans(stats::dist(pkg.tests$downloads), centers = centers,
-    nstart = nstart)
-  
-  # t.classified <- data.frame(ip = pkg.tests$ip, downloads = pkg.tests$downloads,
-  #   group = km$cluster)
-
+  p.classified <- kmeanClassifier("packages", pkgs, centers, nstart)
   p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
-  # r.class.id <- tapply(r.classified$ratio, r.classified$group, mean)
-  # t.class.id <- tapply(t.classified$downloads, t.classified$group, mean)
-
   p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
-  # r.data <- r.classified[r.classified$group == which.max(r.class.id), ]
-  # t.data <- t.classified[t.classified$group == which.max(t.class.id), ]
-
-  p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$packages %in% p.data$packages, "ip"]
-  # r.ip <- ip.dwnld.ratio[ip.dwnld.ratio$ratio %in% r.data$ratio, "ip"]
-
-  # list(package.ip = p.ip, ratio.ip = union(r.ip, t.data$ip))
-  list(package.ip = p.ip)
+  # p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$packages %in% p.data$packages, "ip"]
+  list(package.ip = p.data$ip)
 }
 
 runLengthEncoding <- function(x, case.sensitive = FALSE) {
