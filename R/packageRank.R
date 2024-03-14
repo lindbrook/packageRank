@@ -42,7 +42,7 @@ packageRank <- function(packages = "HistData", date = NULL,
   }
 
   if (small.filter) {
-    cran_log <- smallFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
+    cran_log <- smallFilter(cran_log)
   }
 
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)

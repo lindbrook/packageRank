@@ -47,7 +47,7 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
     }, mc.cores = cores)
 
     if (small.filter) {
-      out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
+      out <- smallFilter(out)
     }
 
     if (sequence.filter) {

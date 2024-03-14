@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9045
+
+- amend and use non-parallel smallFilter().
+
+
 ### packageRank 0.8.3.9044
 
 - replace ip_filter() with greedyIP() in ipFilter().
