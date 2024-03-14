@@ -53,7 +53,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   out <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
   
   if (small.filter) {
-    out <- smallFilter(out, multi.core = cores, dev.mode = dev.mode)
+    out <- smallFilter(out)
   }
   
   if (sequence.filter) {
