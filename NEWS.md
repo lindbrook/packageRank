@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9047
+
+- fix computeFileSizeB() for multiple size units. 
+
+
 ### packageRank 0.8.3.9046
 
 - fix argument error in packageArchive() for sizeFilter().
