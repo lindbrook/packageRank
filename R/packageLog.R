@@ -57,7 +57,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   }
   
   if (sequence.filter) {
-    out <- sequenceFilter(out, packages, ymd, cores, dev.mode = dev.mode)
+    out <- sequenceFilter(out, packages, ymd, dev.mode = dev.mode)
   }
   
   if (size.filter) {
