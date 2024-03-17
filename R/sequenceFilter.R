@@ -45,8 +45,8 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
 
       if (version.seq) {
         version.id <- seq_along(pkg.history$Version)
-        pkg.data$t0 <- dateTime(pkg.data$date, pkg.data$time)
-        pkg.data <- pkg.data[order(pkg.data$t0), ]
+        pkg.data$t2 <- dateTime(pkg.data$date, pkg.data$time)
+        pkg.data <- pkg.data[order(pkg.data$t2), ]
         
         runs <- rle(pkg.data$version)
         rle.data <- data.frame(ver = runs$values, length = runs$lengths)
@@ -75,8 +75,8 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
               start.stop <- rle.data[seq.tmp.obs, ]
               obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
               tmp <- pkg.data[obs.chk, ]
-              tmp$t0 <- dateTime(tmp$date, tmp$time)
-              time.range <- range(tmp$t0)
+              tmp$t2 <- dateTime(tmp$date, tmp$time)
+              time.range <- range(tmp$t2)
               time.window <- delta.time * nrow(tmp)
               time.range.delta <- difftime(time.range[2], time.range[1],
                 units = "sec")
@@ -97,20 +97,20 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
           candidate <- candidate[candidate$version %in% pkg.history$Version, ]
           all.archive.vers <- all(pkg.history$Version %in% candidate$version)
           
-          candidate$t0 <- dateTime(candidate$date, candidate$time)
-          candidate <- candidate[order(candidate$t0), ]
+          candidate$t2 <- dateTime(candidate$date, candidate$time)
+          candidate <- candidate[order(candidate$t2), ]
           
           seq.start <- candidate[candidate$version == first.pkg.version, ]
           
           time.window <- delta.time * nrow(pkg.history)
           
           candidate.endpts <- lapply(seq_len(nrow(seq.start)), function(i) {
-            data.frame(alpha = seq.start[i, ]$t0 - time.window,
-                       omega = seq.start[i, ]$t0 + time.window)
+            data.frame(alpha = seq.start[i, ]$t2 - time.window,
+                       omega = seq.start[i, ]$t2 + time.window)
           })
           
           obs.exclude <- unlist(lapply(candidate.endpts, function(x) {
-            sel <- candidate$t0 >= x$alpha & candidate$t0 <= x$omega
+            sel <- candidate$t2 >= x$alpha & candidate$t2 <= x$omega
             tmp <- candidate[sel, ]
             if (all(pkg.history$Version %in% tmp$version)) row.names(tmp)
           }))
