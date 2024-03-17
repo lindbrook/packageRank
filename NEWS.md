@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9049
+
+- remove cores argument from sequenceFilter().
+
+
 ### packageRank 0.8.3.9048
 
 - use "t2" as date-time variable in sequenceFilter().

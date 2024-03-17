@@ -8,7 +8,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
-sequenceFilter <- function(dat, packages, ymd, cores, delta.time = 10,
+sequenceFilter <- function(dat, packages, ymd, delta.time = 10,
   dev.mode = dev.mode) {
   
   histories <- packageHistory(packages, check.package = FALSE)
