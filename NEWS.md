@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9050
+
+- add packageLogB() prototype.
+
+
 ### packageRank 0.8.3.9049
 
 - remove cores argument from sequenceFilter().
