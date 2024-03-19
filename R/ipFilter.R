@@ -20,8 +20,8 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   if (campaigns) {
     candidate.data <- lapply(greedy.ips$package.ip, function(ip) {
       tmp <- cran_log[cran_log$ip_id == ip, ]
-      tmp$t2 <- dateTime(tmp$date, tmp$time)
-      tmp[order(tmp$t2, tmp$package), ]
+      tmp$date.time <- dateTime(tmp$date, tmp$time)
+      tmp[order(tmp$date.time, tmp$package), ]
     })
 
     rle.data <- lapply(candidate.data, function(x) {
@@ -147,8 +147,8 @@ campaignRLE <- function(ip, cran_log, case.sensitive = FALSE,
   concatenate = TRUE) {
   cran_log <- cleanLog(cran_log)
   cran_log <- cran_log[cran_log$ip_id == ip, ]
-  cran_log$t2 <- dateTime(cran_log$date, cran_log$time)
-  cran_log <- cran_log[order(cran_log$t2, cran_log$package), ]
+  cran_log$date.time <- dateTime(cran_log$date, cran_log$time)
+  cran_log <- cran_log[order(cran_log$date.time, cran_log$package), ]
   rle.data <- runLengthEncoding(cran_log, case.sensitive = case.sensitive)
   if (concatenate) paste(rle.data$letter, collapse = "")
   else rle.data$letter
