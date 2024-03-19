@@ -6,11 +6,10 @@
 #' @param rle.depth Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs: more compact, high count run length encoding sign of campaign.
 #' @param case.sensitive Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
 ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
-  case.sensitive = FALSE, multi.core = FALSE, dev.mode = dev.mode) {
+  case.sensitive = FALSE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
   if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
@@ -22,16 +21,17 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
       tmp <- cran_log[cran_log$ip_id == ip, ]
       tmp$date.time <- dateTime(tmp$date, tmp$time)
       tmp <- tmp[order(tmp$date.time, tmp$package), ]
-      runLengthEncoding(tmp, case.sensitive = case.sensitive)
+      list(rle = runLengthEncoding(tmp, case.sensitive = case.sensitive),
+           candidate.data = tmp)
     }, mc.cores = cores)
     
-    rle.ct <- vapply(rle.data, nrow, integer(1L))
+    rle.ct <- vapply(rle.data, function(x) nrow(x$rle), integer(1L))
     candidate.ids <- which(rle.ct <= rle.depth)
 
     # check for campaigns #
 
     campaign.row.delete <- lapply(candidate.ids, function(i) {
-      tmp <- rle.data[[i]]
+      tmp <- rle.data[[i]]$rle
       A <- tmp[tmp$letter == "a" & tmp$lengths >= 5, ]
       start <- as.numeric(row.names(A))
       end <- as.numeric(row.names(A)) + length(letters) - 1
@@ -43,7 +43,7 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
                      end = audit.data[nrow(audit.data), "end"])
         }
       }))
-      c.data <- candidate.data[[i]]
+      c.data <- rle.data[[i]]$candidate.data
       if (!is.null(data.select)) {
         unlist(lapply(seq_len(nrow(data.select)), function(i) {
           row.names(c.data[data.select[i, "start"]:data.select[i, "end"], ])

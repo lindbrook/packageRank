@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9052
+
+- remove dev.mode argument from ipFilter().
+- compute run length encoding and candidate.data in ipFilter(campaigns = TRUE).
+
+
 ### packageRank 0.8.3.9051
 
 - use ipFilter(cran_log, multi.core = cores) in packageLogB().
