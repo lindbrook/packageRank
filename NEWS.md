@@ -1,6 +1,12 @@
+### packageRank 0.8.3.9051
+
+- use ipFilter(cran_log, multi.core = cores) in packageLogB().
+
+
 ### packageRank 0.8.3.9050
 
 - add packageLogB() prototype.
+- change "t2" variable to "date.time".
 
 
 ### packageRank 0.8.3.9049
