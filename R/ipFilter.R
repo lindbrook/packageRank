@@ -13,21 +13,18 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   case.sensitive = FALSE, multi.core = FALSE, dev.mode = dev.mode) {
 
   cores <- multiCore(multi.core)
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   greedy.ips <- greedyIP(cran_log)
 
   if (campaigns) {
-    candidate.data <- lapply(greedy.ips$package.ip, function(ip) {
+    rle.data <- parallel::mclapply(greedy.ips$package.ip, function(ip) {
       tmp <- cran_log[cran_log$ip_id == ip, ]
       tmp$date.time <- dateTime(tmp$date, tmp$time)
-      tmp[order(tmp$date.time, tmp$package), ]
-    })
-
-    rle.data <- lapply(candidate.data, function(x) {
-      runLengthEncoding(x, case.sensitive = case.sensitive)
-    })
-
+      tmp <- tmp[order(tmp$date.time, tmp$package), ]
+      runLengthEncoding(tmp, case.sensitive = case.sensitive)
+    }, mc.cores = cores)
+    
     rle.ct <- vapply(rle.data, nrow, integer(1L))
     candidate.ids <- which(rle.ct <= rle.depth)
 
