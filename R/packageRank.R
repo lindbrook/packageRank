@@ -38,7 +38,7 @@ packageRank <- function(packages = "HistData", date = NULL,
   }
 
   if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
+    cran_log <- ipFilter(cran_log, multi.core = cores)
   }
 
   if (small.filter) {

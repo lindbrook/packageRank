@@ -6,11 +6,10 @@
 #' @param rle.depth Numeric. Ceiling for number of rows of run length encoding. Fewer rows means longer runs: more compact, high count run length encoding sign of campaign.
 #' @param case.sensitive Logical.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 
 ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
-  case.sensitive = FALSE, multi.core = FALSE, dev.mode = dev.mode) {
+  case.sensitive = FALSE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
   if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L

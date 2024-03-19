@@ -37,7 +37,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   }
 
   if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores, dev.mode = dev.mode)
+    cran_log <- ipFilter(cran_log, multi.core = cores)
   }
 
   unobs.pkgs <- !packages %in% cran_log$package
