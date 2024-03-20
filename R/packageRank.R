@@ -9,7 +9,6 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
 #' @export
 #' @examples
@@ -20,8 +19,7 @@
 
 packageRank <- function(packages = "HistData", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = FALSE,
-  dev.mode = FALSE) {
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)

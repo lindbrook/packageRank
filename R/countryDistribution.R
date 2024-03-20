@@ -9,14 +9,12 @@
 #' @param size.filter Logical.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
 #' @export
 
 countryDistribution <- function(date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
-  size.filter = FALSE, memoization = TRUE, multi.core = FALSE, 
-  dev.mode = FALSE) {
+  size.filter = FALSE, memoization = TRUE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
   ymd <- logDate(date)
