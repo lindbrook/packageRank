@@ -13,14 +13,12 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
 packageCountry <- function(packages = "cholera", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   sequence.filter = FALSE, size.filter = FALSE, sort = TRUE, na.rm = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = FALSE, 
-  dev.mode = FALSE) {
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
 
   if (all.filters) {
     ip.filter <- TRUE
@@ -33,7 +31,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
     ip.filter = ip.filter, small.filter = small.filter, 
     sequence.filter = sequence.filter, size.filter = size.filter, 
     memoization = memoization, check.package = check.package, 
-    multi.core = FALSE, dev.mode = FALSE)
+    multi.core = FALSE)
 
   if (na.rm) {
     if (is.data.frame(p.log)) {

@@ -11,14 +11,12 @@
 #' @param sort Logical. Sort by download count.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @note ip = 10 is a tw top-level domain on 2020-07-09.
 #' @export
 
 ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
-  size.filter = FALSE, sort = TRUE, memoization = TRUE, multi.core = FALSE, 
-  dev.mode = FALSE) {
+  size.filter = FALSE, sort = TRUE, memoization = TRUE, multi.core = FALSE) {
 
   ymd <- logDate(date)
   cran_log <- fetchCranLog(date = ymd, memoization = memoization)

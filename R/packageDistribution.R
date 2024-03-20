@@ -8,13 +8,11 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
 packageDistribution <- function(package = "HistData", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = FALSE,
-  dev.mode = FALSE) {
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(package)
@@ -29,14 +27,14 @@ packageDistribution <- function(package = "HistData", date = NULL,
     cores <- multiCore(multi.core)
     ymd <- rev_fixDate_2012(file.url.date)
     out <- package_distribution(package, ymd, all.filters, ip.filter,
-      small.filter, cran_log, cores, dev.mode)
+      small.filter, cran_log, cores)
     class(out) <- "packageDistribution"
     out
   }
 }
 
 package_distribution <- function(package, ymd, all.filters, ip.filter,
-  small.filter, cran_log, cores, dev.mode) {
+  small.filter, cran_log, cores) {
 
   if (all.filters) {
     ip.filter <- TRUE
