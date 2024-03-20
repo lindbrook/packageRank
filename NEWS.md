@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9057
+
+- set cores = 1 on Windows in packageRank().
+
+
 ### packageRank 0.8.3.9056
 
 - amend packageLog() and associated filter functions.
