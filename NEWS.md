@@ -1,6 +1,17 @@
+### packageRank 0.8.3.9056
+
+- amend packageLog() and associated filter functions.
+
+
+### packageRank 0.8.3.9055
+
+- amend "ymd" and set cores = 1 on Windows in filteredDownloads().
+
+
 ### packageRank 0.8.3.9054
 
-- set cores = 1 on Windows and remove unneeded dev.mode argument in packageLogB().
+- set cores = 1 on Windows and remove unneeded dev.mode argument in 
+  packageLogB().
 
 
 ### packageRank 0.8.3.9053
