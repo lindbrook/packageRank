@@ -22,27 +22,24 @@ packageRank <- function(packages = "HistData", date = NULL,
   memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+
+  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
-
   ymd <- rev_fixDate_2012(file.url.date)
-  cores <- multiCore(multi.core)
-
+  
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
   }
 
-  if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-
-  if (small.filter) {
-    cran_log <- smallFilter(cran_log)
-  }
-
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
 
   unobs.pkgs <- !packages %in% cran_log$package
