@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9054
+
+- set cores = 1 on Windows and remove unneeded dev.mode argument in packageLogB().
+
+
 ### packageRank 0.8.3.9053
 
 - remove unnused dev.mode arguments.

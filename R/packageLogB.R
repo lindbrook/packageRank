@@ -11,17 +11,18 @@
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R data frame.
 #' @export
 
 packageLogB <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE, 
   small.filter = FALSE, memoization = TRUE, check.package = TRUE, 
-  multi.core = FALSE, dev.mode = FALSE) {
+  multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+  
   cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
