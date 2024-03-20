@@ -1,16 +1,16 @@
 ### packageRank 0.8.3.9057
 
-- set cores = 1 on Windows in packageRank().
+- amend "ymd" and set cores = 1 on Windows in filteredDownloads().
 
 
 ### packageRank 0.8.3.9056
 
-- amend packageLog() and associated filter functions.
+- set cores = 1 on Windows in packageRank().
 
 
 ### packageRank 0.8.3.9055
 
-- amend "ymd" and set cores = 1 on Windows in filteredDownloads().
+- amend packageLog() and associated filter functions.
 
 
 ### packageRank 0.8.3.9054

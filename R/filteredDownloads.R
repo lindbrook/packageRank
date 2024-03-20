@@ -19,10 +19,14 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   memoization = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-  if (check.package) packages <- checkPackage(packages)
-  cores <- multiCore(multi.core)
 
-  ymd <- logDate(date)
+  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+
+  if (check.package) packages <- checkPackage(packages)
+  file.url.date <- logDate(date)
+  ymd <- rev_fixDate_2012(file.url.date)
+
   cran_log <- packageLog(packages = packages, date = ymd,
     memoization = memoization, check.package = FALSE, multi.core = cores)
 
