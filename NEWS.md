@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9058
+
+- amend "ymd", set cores = 1 on Windows, aemnd filtering in ipPackage().
+
+
 ### packageRank 0.8.3.9057
 
 - amend "ymd" and set cores = 1 on Windows in filteredDownloads().

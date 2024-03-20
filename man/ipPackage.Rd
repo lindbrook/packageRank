@@ -6,7 +6,7 @@
 \usage{
 ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
   small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  sort = TRUE, memoization = TRUE, multi.core = FALSE)
+  sort.count = TRUE, memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id.}
@@ -23,7 +23,7 @@ ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
 
 \item{size.filter}{Logical.}
 
-\item{sort}{Logical. Sort by download count.}
+\item{sort.count}{Logical. Sort by download count.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
