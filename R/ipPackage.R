@@ -20,14 +20,21 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-  if (ip < 1)  stop("Invalid IP. Use a positive integer.")
+  if (ip < 1) stop("Invalid IP. Use a positive integer.")
 
   cores <- multiCore(multi.core)
   if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
+  
+  if (!ip %in% cran_log$ip_id) {
+    stop("Valid IPs: ", min(cran_log$ip_id), " to ", max(cran_log$ip_id))
+  }
+
   cran_log <- cleanLog(cran_log)
+  if (!ip %in% cran_log$ip_id) stop("IP filtered out or not found.")
+
   ymd <- rev_fixDate_2012(file.url.date)
   
   if (all.filters) {
@@ -37,17 +44,17 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     size.filter = TRUE
   }
   
-  if (small.filter) cran_log <- smallFilter(cran_log)
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
   
   if (!ip %in% cran_log$ip_id) {
-    stop("IP not found in log.")
+    stop("IP filtered out or not found.")
   } else {
     cran_log <- cran_log[cran_log$ip_id == ip, ]
     pkgs <- unique(cran_log$package)
     
     out <- parallel::mclapply(pkgs, function(p) {
       pkg.data <- cran_log[cran_log$package == p, ]
+      if (small.filter) pkg.data <- smallFilter(pkg.data)
       if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)  
       if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
       pkg.data$date.time <- dateTime(pkg.data$date, pkg.data$time)  
@@ -63,5 +70,5 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     freqtab <- table(cran_log$package)
     if (sort.count) sort(freqtab, decreasing = TRUE)
     else freqtab
-  } else stop("IP not found in log.")
+  } else stop("IP filtered out or not found.")
 }

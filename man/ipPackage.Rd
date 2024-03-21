@@ -9,7 +9,7 @@ ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
   sort.count = TRUE, memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{ip}{Numeric. ip_id.}
+\item{ip}{Numeric. ip_id. Positive integer.}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
