@@ -1,6 +1,12 @@
+### packageRank 0.8.3.9061
+
+- apply smallFilter() before ipFilter() in countryPackage().
+
+
 ### packageRank 0.8.3.9060
 
-- remove multi.core argument and allow only ipFilter() and smallFilter() in countryPackage()
+- remove multi.core argument and allow only ipFilter() and smallFilter() in 
+  countryPackage().
 
 
 ### packageRank 0.8.3.9059
