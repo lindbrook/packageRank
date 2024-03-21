@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9060
+
+- remove multi.core argument and allow only ipFilter() and smallFilter() in countryPackage()
+
+
 ### packageRank 0.8.3.9059
 
 - add pre-flight checks to sequenceFilter() and smallFilter().
