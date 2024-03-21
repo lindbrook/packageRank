@@ -38,7 +38,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   
   if (!country %in% cran_log$country) stop("Country code filtered out.")
 
-  # N.B. using sizeFilter() and sequence.filter() not implemented/recommended!
+  # N.B. sizeFilter() and sequence.filter() not implemented!
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
@@ -46,9 +46,9 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
     # size.filter <- TRUE
   }
 
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
   if (small.filter) cran_log <- smallFilter(cran_log)
-
+  if (ip.filter) cran_log <- ipFilter(cran_log)
+  
   if (!country %in% cran_log$country) {
     stop("Country code filtered out.")
   } else {
