@@ -16,9 +16,12 @@ cranMirrors <- function(description = FALSE) {
   }, character(1L)))
 
   # lookup alternative names
-  other.name <- c("0-Cloud", "Czech Republic", "0-Cloud-East-Asia", "Iran", 
-    "Korea", "Russia", "Taiwan", "UK", "USA")
-  host.tld <- c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "GB", "US")
+  # other.name <- c("0-Cloud", "Czech Republic", "0-Cloud-East-Asia", "Iran", 
+  #   "Korea", "Russia", "Taiwan", "UK", "USA")
+  # host.tld <- c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "GB", "US")
+  other.name <- c("0-Cloud", "Czech Republic",  "Iran", "Korea", "Russia", 
+    "Taiwan", "Turkey", "UK", "USA", "Worldwide")
+  host.tld <- c(NA, "CZ", "IR", "KR", "RU", "TW", "TR","GB", "US", NA)
   other.hosts <- data.frame(name = other.name, tld = host.tld)
   no.match <- hosts[!hosts %in% ISOcodes::ISO_3166_1$Name]
   
@@ -55,17 +58,17 @@ cranMirrors <- function(description = FALSE) {
   out <- do.call(rbind,out)
   
   # match CRAN order #
-  asia.sel <- which(out$country.code == "asia")
-  E.asia <- out[asia.sel, ]
-  
-  E.sel <- grepl("^e", out$country.code) & grepl("^E", out$country)
-  E <- out[E.sel, ]
-  
-  E.sel <- c(asia.sel, which(E.sel))
-  
-  out <- rbind(out[as.numeric(row.names(out)) < E.sel, ],
-               out[as.numeric(row.names(out)) == E.sel, ],
-               out[as.numeric(row.names(out)) > E.sel, ])
+  # asia.sel <- which(out$country.code == "asia")
+  # E.asia <- out[asia.sel, ]
+  # 
+  # E.sel <- grepl("^e", out$country.code) & grepl("^E", out$country)
+  # E <- out[E.sel, ]
+  # 
+  # E.sel <- c(asia.sel, which(E.sel))
+  # 
+  # out <- rbind(out[as.numeric(row.names(out)) < E.sel, ],
+  #              out[as.numeric(row.names(out)) == E.sel, ],
+  #              out[as.numeric(row.names(out)) > E.sel, ])
   
   if (description) out
   else out[, names(out) != "description"]

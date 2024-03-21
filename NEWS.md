@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9063
+
+- update cranMirrors().
+
+
 ### packageRank 0.8.3.9062
 
 - amend "ymd", set cores = 1 on Windows, amend filtering in 
