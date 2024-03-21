@@ -47,7 +47,7 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
   
   if (!ip %in% cran_log$ip_id) {
-    stop("IP filtered out or not found.")
+    stop("IP filtered out.")
   } else {
     cran_log <- cran_log[cran_log$ip_id == ip, ]
     pkgs <- unique(cran_log$package)
@@ -70,5 +70,5 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     freqtab <- table(cran_log$package)
     if (sort.count) sort(freqtab, decreasing = TRUE)
     else freqtab
-  } else stop("IP filtered out or not found.")
+  } else stop("IP filtered out.")
 }
