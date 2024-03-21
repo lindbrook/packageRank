@@ -8,10 +8,13 @@
 #' @noRd
 
 sequenceFilter <- function(dat, packages, ymd, delta.time = 10) {
-  history <- packageHistory(packages, check.package = FALSE)
-  sel <- history$Date <= ymd & history$Repository == "Archive"
-  arch.pkg.history <- history[sel, ]
-  removeSequences(dat, arch.pkg.history, delta.time = delta.time)
+  obs.versions <- unique(dat$version)
+  if (length(obs.versions) >= 1) {
+    history <- packageHistory(packages, check.package = FALSE)
+    sel <- history$Date <= ymd & history$Repository == "Archive"
+    arch.pkg.history <- history[sel, ]
+    removeSequences(dat, arch.pkg.history, delta.time = delta.time)
+  } else if (length(obs.versions) == 1) dat
 }
 
 #' Extract Archive sequences from logs.

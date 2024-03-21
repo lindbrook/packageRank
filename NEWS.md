@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9059
+
+- add pre-flight checks to sequenceFilter() and smallFilter().
+
+
 ### packageRank 0.8.3.9058
 
 - amend "ymd", set cores = 1 on Windows, aemnd filtering in ipPackage().

@@ -4,4 +4,7 @@
 #' @param threshold Numeric. Bytes.
 #' @noRd
 
-smallFilter <- function(dat, threshold = 1000L) dat[dat$size >= threshold, ]
+smallFilter <- function(dat, threshold = 1000L) {
+  if (any(dat$size >= threshold)) dat[dat$size >= threshold, ]
+  else dat
+}
