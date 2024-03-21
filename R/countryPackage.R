@@ -8,25 +8,37 @@
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical. Set to FALSE.
 #' @param size.filter Logical. Set to FALSE.
-#' @param sort Logical. Sort by download count.
+#' @param sort.count Logical. Sort by download count.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @note "US" outlier 10 min with all filters!
 #' @export
 
 countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
-  size.filter = FALSE, sort = TRUE, memoization = TRUE, multi.core = FALSE) {
+  size.filter = FALSE, sort.count = TRUE, memoization = TRUE) {
 
-  country <- toupper(country)
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+  
+  # cores <- multiCore(multi.core)
+  # if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
+  
+  country <- toupper(country)
+
+  if (!country %in% cran_log$country) {
+    stop("Country code filtered out or not found. Check spelling.")
+  }
+
   cran_log <- cleanLog(cran_log)
-  cran_log <- cran_log[!is.na(cran_log$country) & cran_log$country == country, ]
 
-  cores <- multiCore(multi.core)
+  # additional filter to remove country NAs 
+  cran_log <- cran_log[cran_log$country == country &!is.na(cran_log$country), ]
+  
+  if (!country %in% cran_log$country) stop("Country code filtered out.")
 
-  # N.B. using pkg_specific_filters not recommended!
+  # N.B. using sizeFilter() and sequence.filter() not implemented/recommended!
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
@@ -34,45 +46,14 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
     # size.filter <- TRUE
   }
 
-  pkg_specific_filters <- c(sequence.filter, size.filter)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  if (small.filter) cran_log <- smallFilter(cran_log)
 
-  if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-
-  if (any(pkg_specific_filters)) {
-    pkgs <- unique(cran_log$package)
-
-    out <- parallel::mclapply(pkgs, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
-
-    if (small.filter) {
-      out <- smallFilter(out)
-    }
-
-    if (sequence.filter) {
-      ymd <- rev_fixDate_2012(file.url.date)
-      
-      arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
-        tmp <- packageHistory(x)
-        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-      }, mc.cores = cores)
-
-      out <- parallel::mclapply(seq_along(out), function(i) {
-        sequenceFilter(out[[i]], arch.pkg.history[[i]])
-      }, mc.cores = cores)
-    }
-
-    if (size.filter) out <- sizeFilter(out, pkgs, cores)
-    cran_log <- do.call(rbind, out)
-
+  if (!country %in% cran_log$country) {
+    stop("Country code filtered out.")
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
+    freqtab <- table(cran_log$package)
+    if (sort.count) sort(freqtab, decreasing = TRUE)
+    else freqtab
   }
-
-  freqtab <- table(cran_log$package)
-
-  if (sort) sort(freqtab, decreasing = TRUE)
-  else freqtab
 }
