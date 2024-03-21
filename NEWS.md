@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9062
+
+- amend "ymd", set cores = 1 on Windows, aemnd filtering in 
+  countryDistribution().
+
+
 ### packageRank 0.8.3.9061
 
 - apply smallFilter() before ipFilter() in countryPackage().

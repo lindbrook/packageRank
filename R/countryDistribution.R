@@ -16,14 +16,21 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
   size.filter = FALSE, memoization = TRUE, multi.core = FALSE) {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+
   cores <- multiCore(multi.core)
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
+
+  ymd <- rev_fixDate_2012(file.url.date)
+  
   na.country <- is.na(cran_log$country)
   cran_log <- cran_log[!na.country, ]
 
-  # N.B. using pkg_specific_filters not recommended!
+  # N.B. sizeFilter() and sequence.filter() not implemented!
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
@@ -31,40 +38,8 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
     # size.filter <- TRUE
   }
 
-  pkg_specific_filters <- c(sequence.filter, size.filter)
-
-  if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-
-  if (any(pkg_specific_filters)) {
-    pkgs <- unique(cran_log$package)
-
-    out <- parallel::mclapply(pkgs, function(p) {
-      cran_log[cran_log$package == p, ]
-    }, mc.cores = cores)
-
-    if (small.filter) {
-      out <- smallFilter(out)
-    }
-
-    if (sequence.filter) {
-      arch.pkg.history <- parallel::mclapply(pkgs, function(x) {
-        tmp <- packageHistory(x)
-        tmp[tmp$Date <= ymd & tmp$Repository == "Archive", ]
-      }, mc.cores = cores)
-
-      out <- parallel::mclapply(seq_along(out), function(i) {
-        sequenceFilter(out[[i]], arch.pkg.history[[i]])
-      }, mc.cores = cores)
-    }
-
-    if (size.filter) out <- sizeFilter(out, pkgs, cores)
-    cran_log <- do.call(rbind, out)
-
-  } else {
-    if (small.filter) cran_log <- cran_log[cran_log$size >= 1000L, ]
-  }
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
 
   freqtab <- sort(table(cran_log$country), decreasing = TRUE)
   out <- list(date = ymd, na.country = na.country, data = freqtab)
