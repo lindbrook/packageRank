@@ -1,6 +1,6 @@
 ### packageRank 0.8.3.9062
 
-- amend "ymd", set cores = 1 on Windows, aemnd filtering in 
+- amend "ymd", set cores = 1 on Windows, amend filtering in 
   countryDistribution().
 
 
@@ -22,7 +22,7 @@
 
 ### packageRank 0.8.3.9058
 
-- amend "ymd", set cores = 1 on Windows, aemnd filtering in ipPackage().
+- amend "ymd", set cores = 1 on Windows, amend filtering in ipPackage().
 
 
 ### packageRank 0.8.3.9057
