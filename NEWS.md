@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9064
+
+= add/set plot.countryDistribution(N = 10) for top N country domains.
+
+
 ### packageRank 0.8.3.9063
 
 - update cranMirrors().

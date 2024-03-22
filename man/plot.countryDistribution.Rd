@@ -4,10 +4,12 @@
 \alias{plot.countryDistribution}
 \title{Plot top 10 package downloads by country domain.}
 \usage{
-\method{plot}{countryDistribution}(x, ...)
+\method{plot}{countryDistribution}(x, N = 10, ...)
 }
 \arguments{
 \item{x}{An object of class "countryDistribution" created by \code{countryDistribution()}.}
+
+\item{N}{Integer. Top N countries.}
 
 \item{...}{Additional plotting parameters.}
 }
