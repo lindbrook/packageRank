@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9065
+
+- change/set ipCount(sort.count = TRUE); use "file.url.date" in ipCount() and 
+    ipDownloads().
+
+
 ### packageRank 0.8.3.9064
 
 = add/set plot.countryDistribution(N = 10) for top N country domains.

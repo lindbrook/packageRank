@@ -6,8 +6,8 @@
 #' @export
 
 ipDownloads <- function(date = NULL, memoization = TRUE) {
-  ymd <- logDate(date)
-  cran_log <- fetchCranLog(date = ymd, memoization = memoization)
+  file.url.date <- logDate(date)
+  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
 
   freqtab <- tapply(cran_log$package, cran_log$ip_id, function(x) {
