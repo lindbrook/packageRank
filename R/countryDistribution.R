@@ -51,12 +51,13 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
 #'
 #' Plot method for packageDistribution().
 #' @param x An object of class "countryDistribution" created by \code{countryDistribution()}.
+#' @param N Integer. Top N countries.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.countryDistribution <- function(x, ...) {
+plot.countryDistribution <- function(x, N = 10, ...) {
   ct <- x$data / 10^6
-  barplot(ct[1:10], ylab = "Downloads (Millions)")
-  title(main = paste("Top Ten Country Domains @", x$date),
+  barplot(ct[1:N], ylab = "Downloads (Millions)")
+  title(main = paste("Top", N, "Country Domains @", x$date),
         sub = paste0("NAs = ", round(100 * mean(x$na.country), 1), "%"))
 }
