@@ -49,7 +49,7 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
 
 #' Plot top 10 package downloads by country domain.
 #'
-#' Plot method for packageDistribution().
+#' Plot method for countryDistribution().
 #' @param x An object of class "countryDistribution" created by \code{countryDistribution()}.
 #' @param N Integer. Top N countries.
 #' @param ... Additional plotting parameters.

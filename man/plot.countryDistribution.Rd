@@ -14,5 +14,5 @@
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Plot method for packageDistribution().
+Plot method for countryDistribution().
 }
