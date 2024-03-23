@@ -50,8 +50,10 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
     f.ct <- vapply(f.cran_log, nrow, integer(1L))
   }
 
-  inflation <- round(100 * (ct - f.ct) / f.ct, 2)
+  delta <- ct - f.ct
+  inflation <- round(100 * delta / f.ct, 2)
 
   data.frame(date = ymd, package = packages, downloads = ct,
-    filtered.downloads = f.ct, inflation = inflation, row.names = NULL)
+    filtered.downloads = f.ct, delta = delta, inflation = paste(inflation, "%"),
+    row.names = NULL)
 }

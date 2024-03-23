@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9068
+
+- add delta count and inflation unit in filteredDownloads().
+
+
 ### packageRank 0.8.3.9067
 
 - add method and set N in print.countryDistribution(N = 10).
