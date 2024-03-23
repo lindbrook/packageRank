@@ -12,7 +12,7 @@
 #' @noRd
 
 cranPackageSize <- function(package = "cholera", check.package = FALSE,
-  size = TRUE, r.ver = "4.3",  mac.ver = "arm", bytes = TRUE, 
+  size = TRUE, r.ver = "4.4",  mac.ver = "arm", bytes = TRUE, 
   multi.core = FALSE) {
 
   # R default is 60

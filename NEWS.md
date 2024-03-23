@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9066
+
+- update cranPackageSize(r.ver = "4.4").
+
+
 ### packageRank 0.8.3.9065
 
 - change/set ipCount(sort.count = TRUE); use "file.url.date" in ipCount() and 
