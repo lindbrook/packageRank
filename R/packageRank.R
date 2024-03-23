@@ -53,9 +53,7 @@ packageRank <- function(packages = "HistData", date = NULL,
   }
 
   # packages in bin
-  pkg.bin <- lapply(packages, function(nm) {
-    freqtab[freqtab %in% freqtab[nm]]
-  })
+  pkg.bin <- lapply(packages, function(nm) freqtab[freqtab %in% freqtab[nm]])
 
   # offset: ties arbitrarily broken by alphabetical order
   pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
@@ -227,10 +225,9 @@ ggPlot <- function(x, log_count, freqtab, iqr, package.data, y.max, date) {
   for (i in seq_along(download.lst)) {
     download.lst[[i]]$id <- id[i]
   }
-
+  
   download.data <- do.call(rbind, download.lst)
-  first <- cumsum(vapply(download.lst, nrow, numeric(1L))) -
-    length(freqtab) + 1
+  first <- cumsum(vapply(download.lst, nrow, numeric(1L))) - length(freqtab) + 1
   last <- sum(vapply(download.lst, nrow, numeric(1L)))
   iqr.labels <- c("75th", "50th", "25th")
   iqr.data <- data.frame(x = rep(iqr, length(x$packages)),
