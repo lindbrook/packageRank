@@ -61,3 +61,14 @@ plot.countryDistribution <- function(x, N = 10, ...) {
   title(main = paste("Top", N, "Country Domains @", x$date),
         sub = paste0("NAs = ", round(100 * mean(x$na.country), 1), "%"))
 }
+
+#' Print method for countryDistribution().
+#' @param x object.
+#' @param N Integer. Top N countries.
+#' @param ... Additional parameters.
+#' @importFrom utils head
+#' @export
+
+print.countryDistribution <- function(x, N = 10, ...) {
+  print(utils::head(x$data, N))
+}
