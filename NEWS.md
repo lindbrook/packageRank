@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9067
+
+- add method and set N in print.countryDistribution(N = 10).
+
+
 ### packageRank 0.8.3.9066
 
 - update cranPackageSize(r.ver = "4.4").
