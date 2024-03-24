@@ -89,8 +89,8 @@ sizeFilter <- function(dat, packages) {
       })
       
       past.ver <- do.call(rbind, filtered)
-      filtered <- rbind(current.ver, past.ver)
-    } else filtered <- current.ver
+      out <- rbind(current.ver, past.ver)
+    } else out <- current.ver
   }
-  filtered
+  out
 }
