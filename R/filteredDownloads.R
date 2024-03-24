@@ -44,12 +44,9 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
     size.filter = size.filter, memoization = memoization, check.package = FALSE,
     multi.core = cores)
 
-  if (is.data.frame(f.cran_log)) {
-    f.ct <- nrow(f.cran_log)
-  } else {
-    f.ct <- vapply(f.cran_log, nrow, integer(1L))
-  }
-
+  if (is.data.frame(f.cran_log)) f.ct <- nrow(f.cran_log)
+  else f.ct <- vapply(f.cran_log, nrow, integer(1L))
+  
   delta <- ct - f.ct
   inflation <- round(100 * delta / f.ct, 2)
 
