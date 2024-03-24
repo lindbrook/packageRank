@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9069
+
+- use data.frame code for archive packages in sizeFilter().
+
+
 ### packageRank 0.8.3.9068
 
 - add delta count and inflation unit in filteredDownloads().

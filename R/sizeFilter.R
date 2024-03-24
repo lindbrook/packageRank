@@ -16,32 +16,21 @@ sizeFilter <- function(dat, packages) {
   if (exists("archive")) {
     if (any(archive)) {
       archive.pkgs <- packages[archive]
-      archive.dat <- dat[archive]
+      size.data <- packageArchive(archive.pkgs, size = TRUE)
+      size.data$bytes <- computeFileSizeA(size.data$Size)
+      version.data <- packageHistory(archive.pkgs, check.package = TRUE)
+      latest.ver <- size.data[which.max(size.data$Date), "Version"]
       
-      size.data <- lapply(archive.pkgs, packageArchive, size = TRUE)
-      
-      for (i in seq_along(size.data)) {
-        size.data[[i]]$bytes <- computeFileSizeA(size.data[[i]]$Size)
+      if (latest.ver %in% size.data$version) {
+        latest.size <- size.data[size.data$version %in% latest.ver, ]  
+      } else {
+        obs.sz <- size.data[size.data$Version %in% unique(dat$version), ]
+        latest.size <- obs.sz[which.max(obs.sz$Date), ]
       }
       
-      version.data <- lapply(archive.pkgs, packageHistory, 
-        check.package = FALSE)
-      
-      out <- lapply(seq_along(archive.dat), function(i) {
-        sz <- size.data[[i]]
-        tmp <- archive.dat[[i]]
-        latest.ver <- sz[which.max(sz$Date), "Version"]
-        if (latest.ver %in% sz$version) {
-          latest.size <- sz[sz$version %in% latest.ver, ]  
-        } else {
-          obs.sz <- sz[sz$Version %in% unique(tmp$version), ]
-          latest.size <- obs.sz[which.max(obs.sz$Date), ]
-        }
-        
-        sel <- tmp$size >= min(latest.size$bytes)
-        if (!all(sel)) tmp[sel, ]
-        else tmp
-      })
+      sel <- dat$size >= min(latest.size$bytes)
+      if (any(sel)) out <- dat[sel, ]
+      else out <- dat
     }
   }
 
