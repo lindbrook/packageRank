@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9071
+
+- check for unobserved packages earlier in packageLog().
+
+
 ### packageRank 0.8.3.9070
 
 - remove unneeded checkPackage(); fix archive package names in packageHistory().

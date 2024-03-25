@@ -1,7 +1,7 @@
 Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentiles
-Version: 0.8.3.9070
+Version: 0.8.3.9071
 Date: 2024-03-25
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))

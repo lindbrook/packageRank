@@ -30,15 +30,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   cran_log <- cleanLog(cran_log)
   ymd <- rev_fixDate_2012(file.url.date)
 
-  if (all.filters) {
-    ip.filter <- TRUE
-    small.filter <- TRUE
-    sequence.filter <- TRUE
-    size.filter <- TRUE
-  }
-
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-
   unobs.pkgs <- !packages %in% cran_log$package
   if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
 
@@ -49,6 +40,15 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     packages <- packages[!unobs.pkgs]
   }
 
+  if (all.filters) {
+    ip.filter <- TRUE
+    small.filter <- TRUE
+    sequence.filter <- TRUE
+    size.filter <- TRUE
+  }
+  
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  
   out <- parallel::mclapply(packages, function(p) {
     pkg.data <- cran_log[cran_log$package == p, ]
     if (small.filter) pkg.data <- smallFilter(pkg.data)
