@@ -2,54 +2,35 @@
 #'
 #' Logs from RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object. Package log entries.
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Package name.
 #' @noRd
 
-sizeFilter <- function(dat, packages) {
+sizeFilter <- function(dat, package) {
   pkgs <- mpackages_partitioned()
-  cran <- !packages %in% pkgs$archive.only
-  
-  if (packages %in% pkgs$archive.only) {
-    archive <- packages %in% pkgs$archive.only
-  }
+  cran <- !package %in% pkgs$archive.only
+  if (package %in% pkgs$archive.only) archive <- package %in% pkgs$archive.only
   
   if (exists("archive")) {
-    if (any(archive)) {
-      archive.pkgs <- packages[archive]
-      archive.dat <- dat[archive]
-      
-      size.data <- lapply(archive.pkgs, packageArchive, size = TRUE)
-      
-      for (i in seq_along(size.data)) {
-        size.data[[i]]$bytes <- computeFileSizeA(size.data[[i]]$Size)
-      }
-      
-      version.data <- lapply(archive.pkgs, packageHistory, 
-        check.package = FALSE)
-      
-      out <- lapply(seq_along(archive.dat), function(i) {
-        sz <- size.data[[i]]
-        tmp <- archive.dat[[i]]
-        latest.ver <- sz[which.max(sz$Date), "Version"]
-        if (latest.ver %in% sz$version) {
-          latest.size <- sz[sz$version %in% latest.ver, ]  
-        } else {
-          obs.sz <- sz[sz$Version %in% unique(tmp$version), ]
-          latest.size <- obs.sz[which.max(obs.sz$Date), ]
-        }
+    if (archive) {
+      archive.pkg <- package
+      size.data <- packageArchive(archive.pkg, size = TRUE)
+      size.data$bytes <- computeFileSizeA(size.data$Size)
         
-        sel <- tmp$size >= min(latest.size$bytes)
-        if (!all(sel)) tmp[sel, ]
-        else tmp
-      })
+      filter.out <- unlist(lapply(unique(dat$version), function(ver) {
+        ver.size <- size.data[size.data$Version == ver, ]$bytes
+        obs.size <- dat[dat$version == ver, ]$size
+        obs.size < ver.size
+      }))
+  
+      if (any(filter.out)) out <- dat[!filter.out, ]
+      else out <- dat
     }
   }
 
   if (cran) {
-    packages <- packages[cran]
-    
-    size.data <- cranPackageSize(packages)
-    version.data <- packageHistory(packages, check.package = FALSE)
+    cran.pkg <- package
+    size.data <- cranPackageSize(cran.pkg)
+    version.data <- packageHistory(cran.pkg, check.package = FALSE)
 
     sz <- size.data
     ver <- version.data
@@ -89,8 +70,8 @@ sizeFilter <- function(dat, packages) {
       })
       
       past.ver <- do.call(rbind, filtered)
-      filtered <- rbind(current.ver, past.ver)
-    } else filtered <- current.ver
+      out <- rbind(current.ver, past.ver)
+    } else out <- current.ver
   }
-  filtered
+  out
 }
