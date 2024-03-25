@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9070
+
+- remove unneeded checkPackage(); fix archive package names in packageHistory().
+
+
 ### packageRank 0.8.3.9069
 
 - use data.frame code for archive packages in sizeFilter().
