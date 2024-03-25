@@ -60,19 +60,16 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     pkg.data
   }, mc.cores = cores)
   
+  names(out) <- packages
+  
   pkgs.survived <- vapply(out, function(x) x[1, "package"], character(1L))
   pkg.not_survived <- setdiff(packages, pkgs.survived)
-
+  
   if (length(pkg.not_survived) > 0) {
     message("No filtered downloads for ", paste(pkg.not_survived, 
       collapse = ", "), ".")
   }
   
-  names(out) <- pkgs.survived
-  
-  if (length(packages) == 1) {
-    out[[1]]
-  } else {
-    out
-  }
+  if (length(packages) == 1) out[[1]]
+  else out
 }
