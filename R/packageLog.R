@@ -30,15 +30,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   cran_log <- cleanLog(cran_log)
   ymd <- rev_fixDate_2012(file.url.date)
 
-  if (all.filters) {
-    ip.filter <- TRUE
-    small.filter <- TRUE
-    sequence.filter <- TRUE
-    size.filter <- TRUE
-  }
-
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-
   unobs.pkgs <- !packages %in% cran_log$package
   if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
 
@@ -49,6 +40,15 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     packages <- packages[!unobs.pkgs]
   }
 
+  if (all.filters) {
+    ip.filter <- TRUE
+    small.filter <- TRUE
+    sequence.filter <- TRUE
+    size.filter <- TRUE
+  }
+  
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  
   out <- parallel::mclapply(packages, function(p) {
     pkg.data <- cran_log[cran_log$package == p, ]
     if (small.filter) pkg.data <- smallFilter(pkg.data)
@@ -60,19 +60,16 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     pkg.data
   }, mc.cores = cores)
   
+  names(out) <- packages
+  
   pkgs.survived <- vapply(out, function(x) x[1, "package"], character(1L))
   pkg.not_survived <- setdiff(packages, pkgs.survived)
-
+  
   if (length(pkg.not_survived) > 0) {
     message("No filtered downloads for ", paste(pkg.not_survived, 
       collapse = ", "), ".")
   }
   
-  names(out) <- pkgs.survived
-  
-  if (length(packages) == 1) {
-    out[[1]]
-  } else {
-    out
-  }
+  if (length(packages) == 1) out[[1]]
+  else out
 }
