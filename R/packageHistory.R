@@ -30,14 +30,10 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (length(package) == 0) {
     out <- r_v
   } else {
-    if (check.package) package <- checkPackage(package, print.message = FALSE)
-    
-    if (check.package) {
-      # problem with pkgsearch::cran_package_history()
-      cran <- mpackages_on_CRAN()
-      on.cran <- package %in% cran$Package
-    } else on.cran <- rep(TRUE, length(package))
-
+    # problem with pkgsearch::cran_package_history()
+    cran <- mpackages_on_CRAN()
+    on.cran <- package %in% cran$Package
+   
     # Use packageHistory0() for "missing" and latest packages.
     # e.g., "VR" in cran_package() but not cran_package_history()
     # history <- try(lapply(package, pkgsearch::cran_package_history),
@@ -63,13 +59,13 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     
     if (length(out) > 1) {
       pkg.nm <- vapply(out, function(x) x[1, "Package"], character(1L))
+      names(out) <- pkg.nm
       if (!any(duplicated(pkg.nm))) {
         id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
         out <- out[order(id)]
       }
-      names(out) <- pkg.nm
     }
-    
+
     if ("R" %in% package0) {
       out <- c(out[seq_along(out) < r.position], r_v,
                out[seq_along(out) >= r.position])
