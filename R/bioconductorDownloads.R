@@ -41,6 +41,8 @@
 bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   when = NULL, unit.observation = "month") {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+
   # January 2009
   if (unit.observation %in% c("month", "year") == FALSE) {
     stop('unit.observation must be "month" or "year".', call. = FALSE)

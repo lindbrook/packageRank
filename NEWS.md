@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9072
+
+- check internet connection in bioconductorDownloads() and bioconductorRank().
+
+
 ### packageRank 0.8.3.9071
 
 - check for unobserved packages earlier in packageLog().
