@@ -15,6 +15,8 @@
 bioconductorRank <- function(packages = "monocle", date = "2019-01",
   count = "download") {
 
+  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
+
   pkg.url <- "https://bioconductor.org/packages/stats/bioc/bioc_pkg_stats.tab"
   packages.stats <-  as.data.frame(mfetchLog(pkg.url))
 
