@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9073
+
+- fix typo/error in sequenceFilter().
+
+
 ### packageRank 0.8.3.9072
 
 - check internet connection in bioconductorDownloads() and bioconductorRank().

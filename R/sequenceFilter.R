@@ -9,7 +9,7 @@
 
 sequenceFilter <- function(dat, packages, ymd, delta.time = 10) {
   obs.versions <- unique(dat$version)
-  if (length(obs.versions) >= 1) {
+  if (length(obs.versions) > 1) {
     history <- packageHistory(packages, check.package = FALSE)
     sel <- history$Date <= ymd & history$Repository == "Archive"
     arch.pkg.history <- history[sel, ]
