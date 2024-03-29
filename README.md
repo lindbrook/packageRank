@@ -24,27 +24,28 @@ You can read more about the package the sections below:
   percentile). This facilitates comparison and helps you to locate your
   package in the overall distribution of
   [CRAN](https://CRAN.R-project.org/) package downloads.
-- [III Inflation Filters](#iii---inflation-filters) describes the five
-  different filter functions used to remove software and behavioral
-  artifacts that inflate *nominal* download counts. This functionality
-  is offered in `packageRank()` and `packageLog()` but *not*, for
-  computational reasons, in `cranDownloads()`.
+- [III Inflation Filters](#iii---inflation-filters) describes four
+  filter functions that remove software and behavioral artifacts that
+  inflate *nominal* download counts. This functionality is available in
+  `packageRank()` and `packageLog()` but *not*, for computational
+  reasons, in `cranDownloads()`.
 - [IV Availability of Results](#iv---availability-of-results) discusses
   when results become available, how to use `logInfo()` to check the
   availability of today’s results, and the effect of time zones.
-- [V Data Fix A](#v---data-fix-a) discusses issues stemming from
-  problems with the actual logs from the end of 2012 through the
-  beginning of 2013. These are fixed in `fixDate_2012()` and
-  `fixCranlogs()`.
-- [VI Data Fix B](#vi---data-fix-b) discusses a “doubling” of R
-  application download counts stemming from problems with
-  [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) between
-  2023-09-13 through 2023-10-02. This is fixed in `fixRCranlogs()`.
+- [V Data Fix A](#v---data-fixes) discusses two problems with download
+  counts. The first stems from problems with the logs from the end of
+  2012 and the beginning of 2013. These are fixed in `fixDate_2012()`
+  and `fixCranlogs()`.
+- [VI Data Fix B](#vi---data-fixes) discusses a problem with
+  [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
+  or triples the number of R application downloads between 2023-09-13
+  and 2023-10-02. This is fixed in `fixRCranlogs()`.
 - [VII et cetera](#vii---et-cetera) discusses country code top-level
   domains (e.g., `countryPackage()` and `packageCountry()`), the use of
   memoization, the internet connection time out problem, and the spikes
-  in the download of the Windows version of the R application on Sundays
-  and Wednesdays between 06 November 2022 and 19 March 2023.
+  in the download (not errors) of the Windows version of the R
+  application on Sundays and Wednesdays between 06 November 2022 and 19
+  March 2023.
 
 ### getting started
 
@@ -330,7 +331,8 @@ downloads](#r-windows-sunday-and-wednesday-downloads)).
 
 #### smoothers and confidence intervals
 
-To add a lowess smoother to your plot, use `smooth = TRUE`:
+To add a smoother (lowess with base graphics; loess with ‘ggplot2’) to
+your plot, use `smooth = TRUE`:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -666,19 +668,19 @@ right (in blue).
 
 ### III - inflation filters
 
-We compute the number of package downloads by simply counting log
-entries. While straightforward, this approach can run into problems.
-Putting aside the question of whether package dependencies should be
-counted, what I have in mind here is what I believe to be two types of
-“invalid” log entries. The first, a software artifact, stems from
-entries that are smaller, often orders of magnitude smaller, than a
-package’s actual binary or source file. The second, a behavioral
-artifact, emerges from efforts to download all of
-[CRAN](https://cran.r-project.org/). In both cases, a reliance on
-nominal counts will give you an inflated sense of the degree of interest
-in your package. For those interested, an early but detailed analysis
-and discussion of both types of inflation is included as part of this
-[R-hub blog
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) computes the
+number of package downloads by simply counting log entries. While
+straightforward, this approach can run into problems. Putting aside the
+question of whether package dependencies should be counted, what I have
+in mind here is what I believe to be two types of “invalid” log entries.
+The first, a software artifact, stems from entries that are smaller,
+often orders of magnitude smaller, than a package’s actual binary or
+source file. The second, a behavioral artifact, emerges from efforts to
+download all of [CRAN](https://cran.r-project.org/). In both cases, a
+reliance on nominal counts will give you an inflated sense of the degree
+of interest in your package. For those interested, an early but detailed
+analysis and discussion of both types of inflation is included as part
+of this [R-hub blog
 post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts).
 
 #### software artifacts
@@ -713,10 +715,10 @@ time stamps.
 To deal with the inflationary effect of “small” entries, I filter out
 observations smaller than 1,000 bytes (the smallest package on
 [CRAN](https://cran.r-project.org/) appears to be
-[‘source.gist’](https://cran.r-project.org/package=source.gist), which
-weighs in at 1,200 bytes). “Medium” entries are harder to handle. I
-remove them using either a triplet-specific filter or a filter that
-looks up a package’s actual size.
+[‘LifeInsuranceContracts’](https://cran.r-project.org/package=LifeInsuranceContracts),
+whose source file weighs in at 1,100 bytes). “Medium” entries are harder
+to handle. I remove them using a filter that looks up a package’s actual
+size.
 
 #### behavioral artifacts
 
@@ -784,24 +786,22 @@ September 2021.
 
 ``` r
 filteredDownloads(package = "ggplot2", date = "2021-09-15")
->         date package downloads filtered.downloads inflation
-> 1 2021-09-15 ggplot2    113842              58067     96.05
+>         date package downloads filtered.downloads delta inflation
+> 1 2021-09-15 ggplot2    113842             111662  2180    1.95 %
 ```
 
 While there were 113,842 nominal downloads, applying all the filters
-reduced that number to 57,951, an inflation of 96%.
+reduced that number to 111,662, an inflation of 1.95%.
 
-Note that the filters are computationally demanding. Excluding the time
-it takes to download the log file, the filters in the above example take
-approximate 75 seconds to run using parallelized code (currently only
-available on macOS and Unix) on a 3.1 GHz Dual-Core Intel Core i5
+Excluding the time it takes to download the log file (the bulk of the
+computation time), the above example take approximate 15 additional
+seconds to run on a single core on a 3.1 GHz Dual-Core Intel Core i5
 processor.
 
-There are 5 filters. You can control them using the following arguments
+There are 4 filters. You can control them using the following arguments
 (listed in order of application):
 
 - `ip.filter`: removes campaigns of “greedy” IP addresses.
-- `triplet.filter`: reduces triplets to a single observation.
 - `small.filter`: removes entries smaller than 1,000 bytes.
 - `sequence.filter`: removes blocs of past versions.
 - `size.filter`: removes entries smaller than a package’s binary or
@@ -824,9 +824,9 @@ Note that the `all.filters = TRUE` is contextual. Depending on the
 function used, you’ll either get the CRAN-specific or the
 package-specific set of filters. The former sets `ip.filter = TRUE` and
 `size.filter = TRUE`; it works independently of packages at the level of
-the entire log. The latter sets `triplet.filter = TRUE`,
-`sequence.filter = TRUE` and `size.filter TRUE`; it relies on package
-specific information (e.g., size of source or binary file).
+the entire log. The latter sets sequence.filter = TRUE`and`size.filter
+TRUE\`; it relies on package specific information (e.g., size of source
+or binary file).
 
 Ideally, we’d like to use both sets. However, the package-specific set
 is computationally expensive because they need to be applied
@@ -840,7 +840,7 @@ time. For this reason, when `all.filters = TRUE`, `packageRank()`,
 
 ### IV - availability of results
 
-To understand when results become availabble, you need to be aware that
+To understand when results become available, you need to be aware that
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) has two
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
 package download logs](http://cran-logs.rstudio.com/), which record
