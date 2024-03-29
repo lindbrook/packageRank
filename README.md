@@ -32,11 +32,11 @@ You can read more about the package the sections below:
 - [IV Availability of Results](#iv---availability-of-results) discusses
   when results become available, how to use `logInfo()` to check the
   availability of today’s results, and the effect of time zones.
-- [V Data Fix A](#v---data-fixes) discusses two problems with download
+- [V Data Fix A](#v---data-fix-a) discusses two problems with download
   counts. The first stems from problems with the logs from the end of
   2012 and the beginning of 2013. These are fixed in `fixDate_2012()`
   and `fixCranlogs()`.
-- [VI Data Fix B](#vi---data-fixes) discusses a problem with
+- [VI Data Fix B](#vi---data-fix-b) discusses a problem with
   [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
   or triples the number of R application downloads between 2023-09-13
   and 2023-10-02. This is fixed in `fixRCranlogs()`.
