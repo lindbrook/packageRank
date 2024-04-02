@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9074
+
+- return empty data frame for no CRAN, no Archive in packageHistory0().
+
+
 ### packageRank 0.8.3.9073
 
 - fix typo/error in sequenceFilter().
