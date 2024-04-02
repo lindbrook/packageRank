@@ -58,9 +58,28 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
       if (check.package) packages <- checkPackage(packages, dev.mode)
+      
       first.published <- do.call(c, lapply(packages, function(pkg) {
-        packageHistory(pkg, check.package = check.package)[1, "Date"]
+        packageHistory(pkg, check.package = FALSE)[1, "Date"]
       }))
+      
+      # w/o checkPackage(), NAs represent missing/misspelled packages 
+      pkg.not.found <- is.na(first.published)
+      
+      if (any(!pkg.not.found)) {
+        first.published <- first.published[!pkg.not.found]
+        if (!check.package) {
+          if (any(pkg.not.found)) {
+            not.found <- packages[pkg.not.found]
+            msg <- "Misspelled or not on CRAN/Archive: "
+            message(paste(msg, paste(not.found, collapse = ", ")))
+          }
+        }
+        packages <- packages[!pkg.not.found]
+      } else if (all(pkg.not.found)) {
+        stop("All packages misspelled or not on CRAN/Archive.", call. = FALSE)
+      }
+      
       if (any(first.published < first.log)) {
         first.published[first.published < first.log] <- first.log
       }
