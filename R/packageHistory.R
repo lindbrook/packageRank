@@ -118,8 +118,11 @@ packageHistory0 <- function(package = "cholera", size = FALSE) {
     out <- arch
   } else if (!is.null(cran) & is.null(arch)) {
     out <- cran
+  } else {
+    out <- data.frame(Package = character(), Version = character(), 
+      Date = as.Date(character()), Repository = character())
   }
-  row.names(out) <- NULL
+  if (nrow(out > 0)) row.names(out) <- NULL
   out
 }
 
