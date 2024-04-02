@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9075
+
+- improve error for misspelled/missing packages with 
+  cranDownloads(check.package = FALSE).
+
+
 ### packageRank 0.8.3.9074
 
 - return empty data frame for no CRAN, no Archive in packageHistory0().
