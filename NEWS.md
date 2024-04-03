@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9076
+
+- fix error/typo in cranDownloads().
+
+
 ### packageRank 0.8.3.9075
 
 - improve error for misspelled/missing packages with 

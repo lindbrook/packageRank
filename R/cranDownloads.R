@@ -66,7 +66,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       # w/o checkPackage(), NAs represent missing/misspelled packages 
       pkg.not.found <- is.na(first.published)
       
-      if (any(!pkg.not.found)) {
+      if (any(pkg.not.found)) {
         first.published <- first.published[!pkg.not.found]
         if (!check.package) {
           if (any(pkg.not.found)) {
