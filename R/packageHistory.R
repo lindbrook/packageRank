@@ -7,13 +7,12 @@
 
 packageHistory <- function(package = "cholera", check.package = TRUE) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-
-  if (check.package) package0 <- checkPackage(package)
-  else package0 <- package
+  if (check.package) package <- checkPackage(package)
+  package0 <- package
   
   if ("R" %in% package) {
-    pkg.idx <- seq_along(package)
-    r.position <- which(package == "R")
+    pkg.idx <- seq_along(package0)
+    r.position <- which(package0 == "R")
     pkg.idx <- pkg.idx[pkg.idx != r.position]
     
     r_v <- rversions::r_versions()
@@ -24,7 +23,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     r_v <- list(r_v[, c("Package", nms)])
     names(r_v) <- "R"
     
-    package <- package[-r.position]
+    package <- package0[-r.position]
   }
 
   if (length(package) == 0) {
@@ -39,14 +38,18 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     # history <- try(lapply(package, pkgsearch::cran_package_history),
     #   silent = TRUE)
     
-    if (any(!on.cran)) archive.out <- lapply(package[!on.cran], packageHistory0)
+    if (any(!on.cran)) {
+      archive.out <- lapply(package[!on.cran], packageHistory0)
+      # archive.chk <- vapply(archive.out, nrow, integer(1L))
+      names(archive.out) <- package[!on.cran]
+    }
     
     if (any(on.cran)) {
       history <- lapply(package[on.cran], function(x) {
         pkgsearch::cran_package_history(x)
       })
-
       cran.out <- transform_pkgsearch(history)
+      names(cran.out) <- package[on.cran]
     }
     
     if (exists("cran.out") & exists("archive.out")) {
@@ -57,14 +60,7 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
       out <- archive.out
     }
     
-    if (length(out) > 1) {
-      pkg.nm <- vapply(out, function(x) x[1, "Package"], character(1L))
-      names(out) <- pkg.nm
-      if (!any(duplicated(pkg.nm))) {
-        id <- vapply(pkg.nm, function(x) which(package0 == x), numeric(1L))
-        out <- out[order(id)]
-      }
-    }
+    if (length(out) > 1) out <- out[package]
 
     if ("R" %in% package0) {
       out <- c(out[seq_along(out) < r.position], r_v,
