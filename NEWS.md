@@ -1,6 +1,7 @@
 ### packageRank 0.8.3.9078
 
 - add rLog().
+- sort rLog() by date-time.
 
 
 ### packageRank 0.8.3.9077

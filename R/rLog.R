@@ -10,5 +10,7 @@ rLog <- function(date = NULL) {
   year <- as.numeric(format(log.date, "%Y"))
   url.root <- "http://cran-logs.rstudio.com/"
   url <- paste0(url.root, year, '/', log.date, "-r.csv.gz")
-  mfetchLog(url)
+  log <- mfetchLog(url)
+  log$date.time <- dateTime(log$date, log$time)
+  log[order(log$date.time), ]
 }
