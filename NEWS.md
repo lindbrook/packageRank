@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9078
+
+- add rLog().
+
+
 ### packageRank 0.8.3.9077
 
 - name list elements and clean code in packageHistory().
