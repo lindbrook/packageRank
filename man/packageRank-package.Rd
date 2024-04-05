@@ -5,16 +5,17 @@
 \alias{packageRank-package}
 \title{packageRank}
 \description{
-Computation and Visualization of Package Download Counts and Percentiles.
+Compute and Visualize Package Download Counts and Percentiles.
 }
 \details{
 \itemize{
-\item Download dounts via cranDownloads().
-\item Download rank percentiles via packageRank().
-\item Inflation filters via function arguments.
+\item Download counts via cranDownloads().
+\item Rank percentiles of download counts via packageRank() and packageLog().
+\item Download count inflation filters.
 \item Availability of results via logInfo().
-\item Data Fixes: early logs and later instance of doubling/tripling.
-\item et cetera: country code top-level domains, memoization and download spikes.
+\item Data fixes for early logs and a later instance of double/triple counting of R application downloads.
+\item Note Sunday and Wednesday spikes in Windows R Application Nov 2022 - Mar 2023.
+\item Country code top-level domains, memoization and internet connection timeout problem.
 }
 }
 \seealso{
