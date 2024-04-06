@@ -274,7 +274,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       graphics <- "base"
     } else if (length(x$packages) == 1) {
       graphics <- "base"
-    } else if (length(x$package) > 1) {
+    } else if (length(x$packages) > 1) {
       graphics <- "ggplot2"
     }
   }
