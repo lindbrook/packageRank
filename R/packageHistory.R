@@ -159,15 +159,11 @@ packageCRAN <- function(package = "cholera", size = FALSE) {
     if (!is.null(out)) {
       if (identical(out$Package, package)) {
         if (isFALSE(size)) out <- out[, names(out) != "Size"]
-      }
+      } else out <- NULL
     }
-    options(timeout = orig.timeout)
-    if (!is.null(out)) out
-    else NULL
-  } else {
-    options(timeout = orig.timeout)
-    NULL
-  }
+  } else out <- NULL
+  options(timeout = orig.timeout)
+  out
 }
 
 #' Scrape package data from Archive.
