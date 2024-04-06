@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9080
+
+- fix/ensure exact package name matching in packageCRAN().
+
+
 ### packageRank 0.8.3.9079
 
 - fix typo in plot.cranDownloads().
