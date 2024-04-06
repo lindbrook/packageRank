@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9079
+
+- fix typo in plot.cranDownloads().
+
+
 ### packageRank 0.8.3.9078
 
 - add rLog().
