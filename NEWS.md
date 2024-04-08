@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9082
+
+- match point types in 
+  plot.cranDownloads(graphics = "ggplot2", unit.observation = "week").
+
+
 ### packageRank 0.8.3.9081
 
 - amend/correct aggregateData(unit.observation = "week").

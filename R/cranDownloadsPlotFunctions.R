@@ -356,7 +356,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
             geom_line(data = current.wk.est.seg, size = 1/3) +
-            geom_point(data = current.wk.est, shape = 16)
+            geom_point(data = current.wk.est)
         } else {
           p <- p +
             geom_line(data = current.wk.est.seg, size = 1/3,
@@ -995,7 +995,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         if (weekdays(last.obs.date) == "Saturday") {
            p <- p +
             geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk, shape = 16)
+            geom_point(data = current.wk)
         } else {
           p <- p +
             geom_line(data = current.wk.est.seg, size = 1/3,
@@ -1613,7 +1613,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
             geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk, shape = 16)
+            geom_point(data = current.wk)
         } else {
           p <- p +
             geom_line(data = current.wk.seg, size = 1/3,
