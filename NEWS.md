@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9081
+
+- amend/correct aggregateData(unit.observation = "week").
+
+
 ### packageRank 0.8.3.9080
 
 - fix/ensure exact package name matching in packageCRAN().
