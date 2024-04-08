@@ -67,10 +67,8 @@ aggregateData <- function(x, unit.observation, cores) {
         unit.ct <- tapply(tmp$count, unit, sum)
         unit.date <- as.Date(names(unit.ct))
         partial <- rep(FALSE, length(unit.ct))
-        if (x$from != unit.date[1]) {
-          partial[1] <- TRUE
-        }
-        if (x$to == unit.date[length(unit.date)] - 1) {
+        if (x$from != unit.date[1]) partial[1] <- TRUE
+        if (x$to == unit.date[length(unit.date)] + 7 - 1) {
           partial[length(partial)] <- FALSE
         } else {
           partial[length(partial)] <- TRUE
@@ -113,10 +111,8 @@ aggregateData <- function(x, unit.observation, cores) {
       unit.ct <- tapply(dat$count, unit, sum)
       unit.date <- as.Date(names(unit.ct))
       partial <- rep(FALSE, length(unit.ct))
-      if (x$from != unit.date[1]) {
-        partial[1] <- TRUE
-      }
-      if (x$to == unit.date[length(unit.date)] - 1) {
+      if (x$from != unit.date[1]) partial[1] <- TRUE
+      if (x$to == unit.date[length(unit.date)] + 7 - 1) {
         partial[length(partial)] <- FALSE
       } else {
         partial[length(partial)] <- TRUE
