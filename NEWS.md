@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9083
+
+- amend titles in rPlot() and rTotPlot().
+
+
 ### packageRank 0.8.3.9082
 
 - match point types in 
