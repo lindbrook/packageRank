@@ -755,7 +755,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
               ylab = y.nm.case, xlim = xlim, ylim = ylim)
           }
-
+          
           if (package.version) {
             if (dev.mode) p_v <- packageHistory0(pkg)
             else p_v <- packageHistory(pkg)
@@ -1697,10 +1697,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       if (log.y) {
         dotchart(log10(dat$count), labels = dat$platform,
           xlab = paste("log10", statistic),
-          main = paste("R Downloads:", unique(dat$date)))
+          main = paste("R Application Downloads:", unique(dat$date)))
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
-          main = paste("R Downloads:", unique(dat$date)))
+          main = paste("R Application Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
       if (log.y) {
@@ -1715,7 +1715,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       p + theme_bw() +
-        ggtitle(paste("R Downloads:", unique(dat$date))) +
+        ggtitle(paste("R Application Downloads:", unique(dat$date))) +
         theme(panel.grid.major.x = element_blank(),
               panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5))
@@ -1769,7 +1769,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               pch = 16)
           }))
         }
-
+        
         invisible(lapply(seq_along(complete), function(i) {
           tmp <- complete[[i]]
           lines(tmp$date, tmp[, statistic], type = type, col = pltfrm.col[i])
@@ -2048,7 +2048,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           cex.axis = 2/3, padj = 0.9)
       }
 
-      title(main = "R Downloads")
+      title(main = "R Application Downloads")
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
@@ -2146,7 +2146,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
 
         p <- p + theme_bw() +
-          ggtitle("R Downloads") +
+          ggtitle("R Application Downloads") +
           theme(legend.position = "bottom",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -2342,7 +2342,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
       } else {
         p <- p + geom_line(size = 0.5) +
-          ggtitle("R Downloads") +
+          ggtitle("R Application Downloads") +
           theme_bw() +
           theme(panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
@@ -2373,7 +2373,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       p <- p + theme_bw() +
-        ggtitle("Total R Downloads") +
+        ggtitle("Total R Application Downloads") +
         theme(legend.position = "bottom",
               panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
@@ -2417,11 +2417,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       if (log.y) {
         dotchart(log10(dat$count), labels = dat$platform,
           xlab = paste("log10", y.nm.case),
-          main = paste("R Downloads:", unique(dat$date)))
+          main = paste("R Application Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       } else {
         dotchart(dat$count, labels = dat$platform, xlab = "Count",
-          main = paste("R Downloads:", unique(dat$date)))
+          main = paste("R Application Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       }
     } else if (graphics == "ggplot2") {
@@ -2437,7 +2437,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       }
 
       p + theme_bw() +
-        ggtitle(paste("R Downloads:", unique(dat$date))) +
+        ggtitle(paste("R Application Downloads:", unique(dat$date))) +
         theme(panel.grid.major.x = element_blank(),
               panel.grid.minor = element_blank(),
               plot.title = element_text(hjust = 0.5))
@@ -2623,7 +2623,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           cex.axis = 2/3, padj = 0.9)
       }
 
-      title(main = "Total R Downloads")
+      title(main = "Total R Application Downloads")
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
@@ -2795,7 +2795,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           theme(panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),
                 plot.title = element_text(hjust = 0.5)) +
-          ggtitle("Total R Downloads")
+          ggtitle("Total R Application Downloads")
 
         if (points) p <- p + geom_point()
       }
@@ -2817,7 +2817,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       }
 
       p <- p + theme_bw() +
-        ggtitle("Total R Downloads") +
+        ggtitle("Total R Application Downloads") +
         theme(legend.position = "bottom",
               panel.grid.major = element_blank(),
               panel.grid.minor = element_blank(),
