@@ -4,14 +4,14 @@
 \alias{plot.bioconductorRank}
 \title{Plot method for bioconductorRank().}
 \usage{
-\method{plot}{bioconductorRank}(x, graphics = NULL, log_count = TRUE, ...)
+\method{plot}{bioconductorRank}(x, graphics = NULL, log.y = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class "bioconductor_rank" created by \code{bioconductorRank()}.}
 
 \item{graphics}{Character. "base" or "ggplot2".}
 
-\item{log_count}{Logical. Logarithm of package downloads.}
+\item{log.y}{Logical. Logarithm of package downloads.}
 
 \item{...}{Additional plotting parameters.}
 }
