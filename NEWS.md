@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9084
+
+- replace log_count with log.y in plot.bioconductorRank and plot.packageRank().
+
+
 ### packageRank 0.8.3.9083
 
 - amend titles in rPlot() and rTotPlot().

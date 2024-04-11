@@ -90,6 +90,7 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
 #' @return A base R or ggplot2 plot.
 #' @export
 
+
 plot.bioconductorRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
   freqtab <- x$freqtab + 1
