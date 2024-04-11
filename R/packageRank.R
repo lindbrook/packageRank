@@ -90,7 +90,7 @@ packageRank <- function(packages = "HistData", date = NULL,
 #' Plot method for packageRank() and packageRank0().
 #' @param x An object of class "packageRank" created by \code{packageRank()}.
 #' @param graphics Character. "base" or "ggplot2".
-#' @param log_count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
 #' @export
@@ -100,8 +100,8 @@ packageRank <- function(packages = "HistData", date = NULL,
 #' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01"))
 #' }
 
-plot.packageRank <- function(x, graphics = NULL, log_count = TRUE, ...) {
-  if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
+plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
+  if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
 
   freqtab <- x$freqtab
   package.data <- x$package.data
@@ -117,26 +117,26 @@ plot.packageRank <- function(x, graphics = NULL, log_count = TRUE, ...) {
 
   if (is.null(graphics)) {
     if (length(packages) == 1) {
-      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
+      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
     } else if (length(packages) > 1) {
-      ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
+      ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
     } else stop("Error.")
   } else if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
-        basePlot(pkg, log_count, freqtab, iqr, package.data, y.max, date)
+        basePlot(pkg, log.y, freqtab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
+      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
     }
   } else if (graphics == "ggplot2") {
-    ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
+    ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
 #' Base R Graphics Plot.
 #' @param pkg Object.
-#' @param log_count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param freqtab Object.
 #' @param iqr Object.
 #' @param package.data Object.
@@ -144,8 +144,8 @@ plot.packageRank <- function(x, graphics = NULL, log_count = TRUE, ...) {
 #' @param date Character.
 #' @noRd
 
-basePlot <- function(pkg, log_count, freqtab, iqr, package.data, y.max, date) {
-  if (log_count) {
+basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
+  if (log.y) {
     plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Count)",
       log = "y")
   } else {
@@ -155,7 +155,7 @@ basePlot <- function(pkg, log_count, freqtab, iqr, package.data, y.max, date) {
   abline(v = iqr, col = "gray", lty = "dotted")
   iqr.labels <- c("75th", "50th", "25th")
 
-  if (log_count) {
+  if (log.y) {
     invisible(lapply(seq_along(iqr), function(i) {
       text(iqr[[i]], y.max / 2, labels = iqr.labels[i], cex = 0.75)
     }))
@@ -195,7 +195,7 @@ basePlot <- function(pkg, log_count, freqtab, iqr, package.data, y.max, date) {
 
 #' ggplot2 Graphics Plot.
 #' @param x Object.
-#' @param log_count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param freqtab Object.
 #' @param iqr Object.
 #' @param package.data Object.
@@ -203,7 +203,7 @@ basePlot <- function(pkg, log_count, freqtab, iqr, package.data, y.max, date) {
 #' @param date Character.
 #' @noRd
 
-ggPlot <- function(x, log_count, freqtab, iqr, package.data, y.max, date) {
+ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
   package.data <- x$package.data
   packages <- x$packages
 
@@ -295,7 +295,7 @@ ggPlot <- function(x, log_count, freqtab, iqr, package.data, y.max, date) {
        theme(panel.grid.major = element_blank(),
              panel.grid.minor = element_blank())
 
-  if (log_count) p + scale_y_log10() else p
+  if (log.y) p + scale_y_log10() else p
 }
 
 #' Print method for packageRank().

@@ -86,17 +86,15 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
 #' Plot method for bioconductorRank().
 #' @param x An object of class "bioconductor_rank" created by \code{bioconductorRank()}.
 #' @param graphics Character. "base" or "ggplot2".
-#' @param log_count Logical. Logarithm of package downloads.
+#' @param log.y Logical. Logarithm of package downloads.
 #' @param ... Additional plotting parameters.
 #' @return A base R or ggplot2 plot.
-#' @import graphics ggplot2
-#' @importFrom ggplot2 ggplot aes_string scale_y_log10 geom_point geom_line facet_wrap theme
 #' @export
 
-plot.bioconductorRank <- function(x, graphics = NULL, log_count = TRUE,
+plot.bioconductorRank <- function(x, graphics = NULL, log.y = TRUE,
   ...) {
 
-  if (is.logical(log_count) == FALSE) stop("log_count must be TRUE or FALSE.")
+  if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
 
   freqtab <- x$freqtab + 1
   package.data <- x$package.data
@@ -112,20 +110,20 @@ plot.bioconductorRank <- function(x, graphics = NULL, log_count = TRUE,
 
   if (is.null(graphics)) {
     if (length(packages) == 1) {
-      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
+      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
     } else if (length(packages) > 1) {
-      ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
+      ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
     } else stop("Error.")
   } else if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
-        basePlot(pkg, log_count, freqtab, iqr, package.data, y.max, date)
+        basePlot(pkg, log.y, freqtab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(packages, log_count, freqtab, iqr, package.data, y.max, date)
+      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
     }
   } else if (graphics == "ggplot2") {
-    ggPlot(x, log_count, freqtab, iqr, package.data, y.max, date)
+    ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
   } else stop('graphics must be "base" or "ggplot2"')
 }
 
