@@ -11,6 +11,7 @@
 #' @param sample.pct Numeric. Percent of packages to sample.
 #' @param population.seed Numeric. Seed for sample.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores to use. Note that due to performance considerations, the number of cores defaults to one on Windows.
+#' @importFrom ggplot2 aes element_blank geom_line geom_point geom_smooth ggplot scale_y_log10
 #' @noRd
 
 populationPlot <- function(x, graphics = NULL, log.y = TRUE, smooth = TRUE,
@@ -110,45 +111,45 @@ populationPlot <- function(x, graphics = NULL, log.y = TRUE, smooth = TRUE,
     }
 
   } else if (graphics == "ggplot2") {
-    p <- ggplot(data = pkg.data, aes_string("date", "count")) +
-           theme_bw() +
-           theme(panel.grid.major = element_blank(),
-                 panel.grid.minor = element_blank()) +
-           facet_wrap(~ package, nrow = 2)
+    p <- ggplot2::ggplot(data = pkg.data, 
+           ggplot2::aes(x = .data$date, y = .data$count)) +
+         ggplot2::theme_bw() +
+         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                        panel.grid.minor = ggplot2::element_blank()) +
+         ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
+         ggplot2::ylab("log 10 count")
 
     cran.smpl.lst <- rep(list(cran.smpl), length(packages))
 
     for (i in seq_along(packages)) {
       cran.smpl.data <- cran.smpl.lst[[i]]
+      vars <- c("date", "count")
       for (pkg in unique(cran.smpl.data$package)) {
         sel <- cran.smpl.data$package == pkg
+        smpl.data <- cran.smpl.data[sel, vars]
         if (sample.smooth) {
-          p <- p + geom_smooth(data = cran.smpl.data[sel, c("date", "count")],
-                               method = "loess",
-                               formula = "y ~ x",
-                               se = FALSE,
-                               span = span,
-                               size = 0.25,
-                               colour = "lightgray")
+          p <- p + ggplot2::geom_smooth(data = smpl.data, method = "loess",
+                     formula = "y ~ x", se = FALSE, span = span, size = 0.25,
+                     colour = "lightgray")
         } else {
-          p <- p + geom_line(data = cran.smpl[sel, c("date", "count")],
-                             colour = "lightgray")
+          p <- p + ggplot2::geom_line(data = smpl.data, colour = "lightgray")
         }
       }
     }
 
-    p <- p + geom_line(colour = "red", size = 1/3) +
-             geom_point(shape = 1, size = 2, colour = "red")
+    p <- p + ggplot2::geom_line(colour = "red", linewidth = 1/3) +
+             ggplot2::geom_point(shape = 1, size = 2, colour = "red")
 
-    if (smooth) p <- p + geom_smooth(colour = "blue", method = "loess",
-      formula = "y ~ x", se = FALSE, size = 0.75, span = span)
+    if (smooth) {
+      p <- p + ggplot2::geom_smooth(colour = "blue", method = "loess",
+                 formula = "y ~ x", se = FALSE, size = 0.75, span = span)
+    }
 
-    if (log.y) p <- p + scale_y_log10()
-
+    if (log.y) p <- p + ggplot2::scale_y_log10()
+    
     p
   } else stop('graphics must be "base" or "ggplot2"')
 }
-
 
 #' Base R Graphics Plot (Longitudinal).
 #' @param x Object.

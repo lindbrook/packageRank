@@ -25,8 +25,9 @@ Imports:
     ISOcodes,
     memoise,
     pkgsearch,
-    RCurl,
     R.utils,
+    RCurl,
+    rlang,
     rversions,
     sugrrants,
     tools

@@ -1,3 +1,7 @@
+#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_hline geom_line geom_point geom_smooth ggplot ggtitle scale_color_manual scale_linetype_manual scale_shape_manual scale_x_log10 scale_y_log10 theme theme_bw vars xlab ylab
+#' @importFrom graphics abline axis barplot dotchart legend lines mtext par points segments text title
+#' @importFrom rlang .data
+
 # Plot functions for plot.cranDownloads() #
 
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
@@ -27,18 +31,25 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
+
+        p <- ggplot2::ggplot(data = dat2, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2) + 
+             ggplot2::xlab(paste("log10", y.nm.case)) + 
+             ggplot2::ylab(NULL)
+      
       } else {
-        p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + ylab(NULL)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2) + 
+             ggplot2::ylab(NULL)
       }
 
-      p + theme_bw() +
-        ggtitle(paste("R Package Downloads:", unique(dat$date))) +
-        theme(panel.grid.major.x = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      p + ggplot2::theme_bw() +
+          ggplot2::ggtitle(paste("R Package Downloads:", unique(dat$date))) +
+          ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank(),
+                         plot.title = ggplot2::element_text(hjust = 0.5))
     }
 
   } else if (obs.ct > 1) {
@@ -214,9 +225,12 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string("date", "count"))
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$count))
+      
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string("date", "cumulative"))
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
       if (any(dat$in.progress)) {
@@ -237,41 +251,50 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         est.seg <- rbind(complete[last.obs, ], est.data)
         obs.seg <- rbind(complete[last.obs, ], ip.data)
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = "black",
-                                        "Estimate" = "red")) +
-          scale_shape_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = 0, "Estimate" = 1)) +
-          scale_linetype_manual(name = "In-progress",
-                                breaks = c("Observed", "Estimate"),
-                                values = c("Observed" = "dotted",
-                                           "Estimate" = "solid")) +
-          geom_line(data = est.seg, size = 1/3,
-            aes(col = "Estimate", linetype = "Estimate")) +
-          geom_line(data = obs.seg, size = 1/3,
-            aes(col = "Observed", linetype = "Observed")) +
-          geom_point(data = est.data,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-            aes(colour = "Observed", shape = "Observed"))
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c("black", "red")) +
+          ggplot2::scale_shape_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c(0, 1)) +
+          ggplot2::scale_linetype_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c("dotted", "solid")) +
+          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
+            ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
+          ggplot2::geom_line(data = obs.seg, linewidth = 1/3,
+            ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(data = est.data,
+            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(data = ip.data,
+            ggplot2::aes(colour = "Observed", shape = "Observed"))
 
-        if (points) p <- p + geom_point(data = complete)
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
+        if (points) p <- p + ggplot2::geom_point(data = complete)
+        
+        if (log.y) {
+          p <- p + ggplot2::scale_y_log10() + 
+                   ggplot2::ylab(paste("log10", statistic))
+        }
+        
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
+          
           } else if (any(dat$partial)) {
             smooth.data <- rbind(wk1.backdate, complete)
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
+          
           } else {
-            p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-              span = span)
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+              se = se, span = span)
           }
         }
 
@@ -330,102 +353,111 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         current.wk.seg <- rbind(complete[nrow(complete), ], current.wk)
         current.wk.est.seg <- rbind(complete[nrow(complete), ], current.wk.est)
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = "dodgerblue",
-                                        "Partial/In-Progress" = "black",
-                                        "Estimate" = "red")) +
-          scale_linetype_manual(name = "",
-                                breaks = c("Backdate",
-                                           "Partial/In-Progress",
-                                           "Estimate"),
-                                values = c("Backdate" = "solid",
-                                           "Partial/In-Progress" = "dotted",
-                                           "Estimate" = "solid")) +
-          scale_shape_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = 8,
-                                        "Partial/In-Progress" = 0,
-                                        "Estimate" = 1))
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("dodgerblue", "black", "red")) +
+          ggplot2::scale_linetype_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("solid", "dotted", "solid")) +
+          ggplot2::scale_shape_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c(8, 0, 1))
 
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
-            geom_line(data = current.wk.est.seg, size = 1/3) +
-            geom_point(data = current.wk.est)
+            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = current.wk.est)
         } else {
           p <- p +
-            geom_line(data = current.wk.est.seg, size = 1/3,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_point(data = current.wk.est, size = 1.5,
-              aes(colour = "Estimate", shape = "Estimate")) +
-            geom_line(data = current.wk.seg, size = 1/3,
-              aes(colour = "Partial/In-Progress",
-                  linetype = "Partial/In-Progress")) +
-            geom_point(data = current.wk,
-              aes(colour = "Partial/In-Progress",
-                  shape = "Partial/In-Progress"))
+            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
+            ggplot2::geom_point(data = current.wk.est, size = 1.5,
+              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = current.wk,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           shape = "Partial/In-Progress"))
          }
 
          if (weekdays(x$from) == "Sunday") {
            p <- p +
-             geom_line(data = wk1.partial.seg, size = 1/3) +
-             geom_point(data = wk1.partial)
+             ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+             ggplot2::geom_point(data = wk1.partial)
+         
          } else {
            p <- p +
-             geom_line(data = wk1.backdate.seg, size = 1/3,
-               aes(colour = "Backdate", linetype = "Backdate")) +
-             geom_point(data = wk1.backdate,
-               aes(colour = "Backdate", shape = "Backdate")) +
-             geom_line(data = wk1.partial.seg, size = 1/3,
-               aes(colour = "Partial/In-Progress",
-                   linetype = "Partial/In-Progress")) +
-             geom_point(data = wk1.partial,
-               aes(colour = "Partial/In-Progress",
-                   shape = "Partial/In-Progress"))
+             ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+               ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
+             ggplot2::geom_point(data = wk1.backdate,
+               ggplot2::aes(colour = "Backdate", shape = "Backdate")) +
+             ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+               ggplot2::aes(colour = "Partial/In-Progress",
+                            linetype = "Partial/In-Progress")) +
+             ggplot2::geom_point(data = wk1.partial,
+               ggplot2::aes(colour = "Partial/In-Progress",
+                            shape = "Partial/In-Progress"))
          }
 
-        if (points) p <- p + geom_point(data = complete)
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
+        if (points) p <- p + ggplot2::geom_point(data = complete)
+        
+        if (log.y) {
+          p <- p + ggplot2::scale_y_log10() + 
+                   ggplot2::ylab(paste("log10", statistic))
+        }
+
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
+
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
+          
           } else if (any(dat$partial)) {
             smooth.data <- rbind(wk1.backdate, complete)
+            
             if (weekdays(last.obs.date) == "Saturday") {
               smooth.data <- rbind(smooth.data, current.wk)
             }
-            p <- p + geom_smooth(data = smooth.data, method = "loess",
+            
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
+          
           } else {
-            p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-              span = span)
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+              se = se, span = span)
           }
         }
       } else {
-        p <- p + geom_line(size = 1/3)
-        if (points) p <- p + geom_point()
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
+        p <- p + ggplot2::geom_line(linewidth = 1/3)
+        
+        if (points) p <- p + ggplot2::geom_point()
+        
+        if (log.y) {
+          p <- p + ggplot2::scale_y_log10() + ggplot2::ylab(paste("log10", 
+            statistic))
+        }
+        
         if (smooth) {
-          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-            span = span)
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 
-      p <- p + theme_bw() +
-        ggtitle("Total Package Downloads") +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      p <- p + ggplot2::theme_bw() +
+               ggplot2::ggtitle("Total Package Downloads") +
+               ggplot2::theme(legend.position = "bottom",
+                              panel.grid.major = ggplot2::element_blank(),
+                              panel.grid.minor = ggplot2::element_blank(),
+                              plot.title = ggplot2::element_text(hjust = 0.5))
 
-      suppressWarnings(print(p))
+      p
     }
   }
 }
@@ -799,19 +831,27 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }
       }
 
-      p <- ggplot(data = dat) +
-           theme_bw() +
-           theme(panel.grid.major.x = element_blank(),
-                 panel.grid.minor = element_blank()) +
-           facet_wrap(~ date, nrow = 2)
+      p <- ggplot2::ggplot(data = dat) +
+           ggplot2::theme_bw() +
+           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                          panel.grid.minor = ggplot2::element_blank()) +
+           ggplot2::facet_wrap(vars(.data$package), nrow = 2)
 
       if (statistic == "count") {
-        p <- p + geom_point(aes_string("count", "package"), size = 1.5)
+        p <- p + ggplot2::geom_point(size = 1.5,
+                   ggplot2::aes(x = .data$count, y = .data$package))
+      
       } else if (statistic == "cumulative") {
-        p <- p + geom_point(aes_string("cumulative", "package"), size = 1.5)
+        p <- p + ggplot2::geom_point( size = 1.5,
+                   ggplot2::aes(x = .data$cumulative, y = .data$package))
       }
 
-      if (log.y) p <- p + scale_x_log10() + xlab(paste("log10", y.nm.case))
+      if (log.y) {
+        p <- p + ggplot2::scale_x_log10() + 
+                 ggplot2::xlab(paste("log10", y.nm.case))
+      }
+
+      p
 
     } else if (obs.ct > 1) {
       if (log.y) {
@@ -824,10 +864,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }
       }
 
+
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string("date", "count"))
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$count))
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string("date", "cumulative"))
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
       if (any(dat$in.progress)) {
@@ -860,28 +903,28 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = "black",
-                                        "Estimate" = "red")) +
-          scale_shape_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = 0, "Estimate" = 1)) +
-          scale_linetype_manual(name = "In-progress",
-                                breaks = c("Observed", "Estimate"),
-                                values = c("Observed" = "dotted",
-                                           "Estimate" = "solid")) +
-          geom_line(data = est.seg, size = 1/3,
-            aes(col = "Estimate", linetype = "Estimate")) +
-          geom_line(data = obs.seg, size = 1/3,
-            aes(col = "Observed", linetype = "Observed")) +
-          geom_point(data = est.data,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-            aes(colour = "Observed", shape = "Observed"))
+       
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(name = "In-progress",
+                                      breaks = c("Observed", "Estimate"),
+                                      values = c("black", "red")) +
+          ggplot2::scale_shape_manual(name = "In-progress",
+                                      breaks = c("Observed", "Estimate"),
+                                      values = c(0, 1)) +
+          ggplot2::scale_linetype_manual(name = "In-progress",
+                                         breaks = c("Observed", "Estimate"),
+                                         values = c("dotted", "solid")) +
+          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
+            ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
+          ggplot2::geom_line(data = obs.seg, linewidth = 1/3,
+            ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(data = est.data,
+            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(data = ip.data,
+            ggplot2::aes(colour = "Observed", shape = "Observed"))
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else if (any(dat$partial)) {
         ggplot.data <- lapply(x$package, function(pkg) {
@@ -969,98 +1012,103 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         current.wk.est.seg <- do.call(rbind, lapply(ggplot.data,
           function(x) x$current.wk.est.seg))
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = "dodgerblue",
-                                        "Partial/In-Progress" = "black",
-                                        "Estimate" = "red")) +
-          scale_linetype_manual(name = "",
-                                breaks = c("Backdate",
-                                           "Partial/In-Progress",
-                                           "Estimate"),
-                                values = c("Backdate" = "solid",
-                                           "Partial/In-Progress" = "dotted",
-                                           "Estimate" = "solid")) +
-          scale_shape_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = 8,
-                                        "Partial/In-Progress" = 0,
-                                        "Estimate" = 1))
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("dodgerblue", "black", "red")) +
+          ggplot2::scale_linetype_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("solid", "dotted", "solid")) +
+          ggplot2::scale_shape_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c(8, 0, 1))
 
         if (weekdays(last.obs.date) == "Saturday") {
            p <- p +
-            geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk)
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            geom_line(data = current.wk.est.seg, size = 1/3,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_point(data = current.wk.est, size = 1.5,
-              aes(colour = "Estimate", shape = "Estimate")) +
-            geom_line(data = current.wk.seg, size = 1/3,
-              aes(colour = "Partial/In-Progress",
-                  linetype = "Partial/In-Progress")) +
-            geom_point(data = current.wk,
-              aes(colour = "Partial/In-Progress",
-                  shape = "Partial/In-Progress"))
+            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
+            ggplot2::geom_point(data = current.wk.est, size = 1.5,
+              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = current.wk,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                shape = "Partial/In-Progress"))
         }
+
 
         if (weekdays(x$from) == "Sunday") {
           p <- p +
-            geom_line(data = wk1.partial.seg, size = 1/3) +
-            geom_point(data = wk1.partial)
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-          geom_line(data = wk1.backdate.seg, size = 1/3,
-            aes(colour = "Backdate", linetype = "Backdate")) +
-          geom_point(data = wk1.backdate,
-            aes(colour = "Backdate", shape = "Backdate")) +
-          geom_line(data = wk1.partial.seg, size = 1/3,
-            aes(colour = "Partial/In-Progress",
-                linetype = "Partial/In-Progress")) +
-          geom_point(data = wk1.partial,
-            aes(colour = "Partial/In-Progress", shape = "Partial/In-Progress"))
+            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Backdate", 
+                           linetype = "Backdate")) +
+            ggplot2::geom_point(data = wk1.backdate,
+              ggplot2::aes(colour = "Backdate", 
+                           shape = "Backdate")) +
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = wk1.partial,
+              ggplot2::aes(colour = "Partial/In-Progress", 
+                           shape = "Partial/In-Progress"))
         }
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
+
 
       } else {
-        p <- p + geom_line(size = 1/3)
-        if (points) p <- p + geom_point()
+        p <- p + ggplot2::geom_line(linewidth = 1/3)
+        if (points) p <- p + ggplot2::geom_point()
       }
 
-      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
-
+      
+      if (log.y) {
+        p <- p + ggplot2::scale_y_log10() + 
+                 ggplot2::ylab(paste("log10", statistic))
+      }
+      
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
+        
         } else if (any(dat$partial)) {
           smooth.data <- rbind(complete, wk1.backdate.seg)
+        
           if (weekdays(last.obs.date) == "Saturday") {
             smooth.data <- rbind(smooth.data, current.wk)
           }
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+        
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
+        
         } else {
-          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-            span = span)
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 
-      p <- p + facet_wrap(~ package, nrow = 2) +
-               theme_bw() +
-               theme(legend.position = "bottom",
-                    panel.grid.major = element_blank(),
-                    panel.grid.minor = element_blank())
+      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
+               ggplot2::theme_bw() +
+               ggplot2::theme(legend.position = "bottom",
+                              panel.grid.major = ggplot2::element_blank(),
+                              panel.grid.minor = ggplot2::element_blank())
     }
-    suppressWarnings(print(p))
+    p
   }
 }
 
@@ -1422,10 +1470,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
     }
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
-      p <- ggplot(data = dat, aes_string("count", y = "package"))
+      p <- ggplot2::ggplot(data = dat, 
+          ggplot2::aes(x = .data$count, y = .data$package))
+      
       if (log.y) {
         # p + scale_x_log10() + xlab("log10(count)") doesn't work!
         dat2 <- dat
+        
         if (any(dat2$count == 0)) {
           zero.ct.pkg <- unique(dat2[dat2$count == 0, "package"])
           dat2[dat2$count == 0, "count"] <- 1
@@ -1433,14 +1484,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             dat2$cumulative <- cumsum(dat2[dat2$package == p, "count"])
           }
         }
+
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string(x = "count", y = "package")) +
-             xlab(paste("log10", y.nm.case))
+        p <- ggplot2::ggplot(data = dat2, 
+               ggplot2::aes(x = .data$count, y = .data$package)) +
+             ggplot2::xlab(paste("log10", y.nm.case))
       }
 
-      p <- p + geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank())
+      p + ggplot2::geom_hline(yintercept = c(1, 2), linetype = "dotted") +
+          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank())
 
     } else if (obs.ct > 1) {
       if (log.y) {
@@ -1453,11 +1506,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         }
       }
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string(x = "date", y = "count",
-          colour = "package")) + ggtitle("Package Download Counts")
+        p <- ggplot2::ggplot(data = dat, 
+                ggplot2::aes(x = .data$date, y = .data$count, 
+                  colour = .data$package)) + 
+             ggplot2::ggtitle("Package Download Counts")
+      
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string(x = "date", y = "cumulative",
-          colour = "package")) + ggtitle("Cumulative Package Downloads")
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$cumulative, 
+                colour = .data$package)) + 
+             ggplot2::ggtitle("Cumulative Package Downloads")
       }
 
       if (any(dat$in.progress)) {
@@ -1490,24 +1548,30 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_shape_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = 0, "Estimate" = 1)) +
-          scale_linetype_manual(name = "In-progress",
-                                breaks = c("Observed", "Estimate"),
-                                values = c("Observed" = "dotted",
-                                           "Estimate" = "longdash")) +
-          geom_line(data = est.seg, size = 1/3, aes(linetype = "Estimate")) +
-          geom_line(data = obs.seg, size = 1/3, aes(linetype = "Observed")) +
-          geom_point(data = est.data, aes(shape = "Estimate")) +
-          geom_point(data = ip.data, aes(shape = "Observed")) +
-          theme(legend.position = "bottom",
-                panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5))
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_shape_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c(0, 1)) +
+          ggplot2::scale_linetype_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c("dotted", "longdash")) +
+          ggplot2::geom_line(data = est.seg, linewidth = 1/3, 
+            ggplot2::aes(linetype = "Estimate")) +
+          ggplot2::geom_line(data = obs.seg, linewidth = 1/3, 
+            ggplot2::aes(linetype = "Observed")) +
+          ggplot2::geom_point(data = est.data, 
+            ggplot2::aes(shape = "Estimate")) +
+          ggplot2::geom_point(data = ip.data, 
+            ggplot2::aes(shape = "Observed")) +
+          ggplot2::theme(legend.position = "bottom",
+                         panel.grid.major = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank(),
+                         plot.title = ggplot2::element_text(hjust = 0.5))
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else if (any(dat$partial)) {
         ggplot.data <- lapply(x$package, function(pkg) {
@@ -1594,91 +1658,97 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         current.wk.est.seg <- do.call(rbind, lapply(ggplot.data,
           function(x) x$current.wk.est.seg))
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_linetype_manual(name = "",
-                                breaks = c("Backdate",
-                                           "Partial/In-Progress",
-                                           "Estimate"),
-                                values = c("Backdate" = "dashed",
-                                           "Partial/In-Progress" = "dotted",
-                                           "Estimate" = "dashed")) +
-          scale_shape_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = 8,
-                                        "Partial/In-Progress" = 0,
-                                        "Estimate" = 1))
+        p <- p + 
+          ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_linetype_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("dashed", "dotted", "dashed")) +
+          ggplot2::scale_shape_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c(8, 0, 1))
 
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
-            geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk)
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            geom_line(data = current.wk.seg, size = 1/3,
-              aes(linetype = "Partial/In-Progress")) +
-            geom_point(data = current.wk, aes(shape = "Partial/In-Progress")) +
-            geom_line(data = current.wk.est.seg, size = 1/3,
-              aes(linetype = "Estimate")) +
-            geom_point(data = current.wk.est, size = 1.5,
-              aes(shape = "Estimate"))
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+              ggplot2::aes(linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = current.wk, 
+              ggplot2::aes(shape = "Partial/In-Progress")) +
+            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+              ggplot2::aes(linetype = "Estimate")) +
+            ggplot2::geom_point(data = current.wk.est, size = 1.5,
+              ggplot2::aes(shape = "Estimate"))
         }
 
         if (weekdays(x$from) == "Sunday") {
           p <- p +
-            geom_line(data = wk1.partial.seg, size = 1/3) +
-            geom_point(data = wk1.partial)
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-            geom_line(data = wk1.backdate.seg, size = 1/3,
-              aes(linetype = "Backdate")) +
-            geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
-            geom_line(data = wk1.partial.seg, size = 1/3,
-              aes(linetype = "Partial/In-Progress")) +
-            geom_point(data = wk1.partial,
-              aes(shape = "Partial/In-Progress"))
+            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+              ggplot2::aes(linetype = "Backdate")) +
+            ggplot2::geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+              ggplot2::aes(linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = wk1.partial,
+              ggplot2::aes(shape = "Partial/In-Progress"))
         }
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + geom_line(size = 1/3) +
-          theme(legend.position = "bottom",
-                panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5))
 
-        if (points) p <- p + geom_point()
+
+        
+        
+        p <- p + ggplot2::geom_line(data = dat, linewidth = 1/3) +
+                 ggplot2::theme(legend.position = "bottom",
+                                panel.grid.major = ggplot2::element_blank(),
+                                panel.grid.minor = ggplot2::element_blank(),
+                                plot.title = ggplot2::element_text(hjust = 0.5))
+
+        if (points) p <- p + ggplot2::geom_point()
       }
 
-      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", statistic))
+      if (log.y) {
+        p <- p + ggplot2::scale_y_log10() + 
+                 ggplot2::ylab(paste("log10", statistic))
+      }
 
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
+        
         } else if (any(dat$partial)) {
           smooth.data <- rbind(complete, wk1.backdate)
           if (weekdays(last.obs.date) == "Saturday") {
             smooth.data <- rbind(smooth.data, current.wk)
           }
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+        
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
+        
         } else {
-          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-            span = span)
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
       
-      p <- p + theme_bw() +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      p <- p + ggplot2::theme_bw() +
+               ggplot2::theme(legend.position = "bottom",
+                              panel.grid.major = ggplot2::element_blank(),
+                              panel.grid.minor = ggplot2::element_blank(),
+                              plot.title = ggplot2::element_text(hjust = 0.5))
 
-      suppressWarnings(print(p))
+      p
     }
   }
 }
@@ -1706,19 +1776,24 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) +
-          xlab(paste("log10", ylab))
+        p <- ggplot2::ggplot(data = dat2, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2) +
+             ggplot2::xlab(paste("log10", ylab))
+      
       } else {
-        p <- ggplot(data = dat, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2)
       }
 
-      p + theme_bw() +
-        ggtitle(paste("R Application Downloads:", unique(dat$date))) +
-        theme(panel.grid.major.x = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      ttl <- paste("R Application Downloads:", unique(dat$date))
+      
+      p + ggplot2::theme_bw() +
+          ggplot2::ggtitle(ttl) +
+          ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank(),
+                         plot.title = ggplot2::element_text(hjust = 0.5))
     }
 
   } else if (obs.ct > 1) {
@@ -2053,19 +2128,23 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
         if (multi.plot) {
-          p <- ggplot(data = dat, aes_string("date", "count",
-            colour = "platform"))
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, y = .data$count,
+                  colour = .data$platform))
         } else {
-          p <- ggplot(data = dat, aes_string("date", "count")) +
-            facet_wrap(~ platform, nrow = 2)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, y = .data$count)) +
+               ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
       } else if (statistic == "cumulative") {
         if (multi.plot) {
-          p <- ggplot(data = dat, aes_string("date", "cumulative",
-            colour = "platform"))
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, y = .data$cumulative, 
+                   colour = .data$platform))
         } else {
-          p <- ggplot(data = dat, aes_string("date", "cumulative")) +
-            facet_wrap(~ platform, nrow = 2)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, y = .data$cumulative)) +
+               ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
       }
 
@@ -2104,53 +2183,62 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         est.seg <- do.call(rbind, lapply(p.data, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(p.data, function(x) x$obs.seg))
 
-        p <- p + geom_line(data = complete, size = 1/3)
+        p <- p + ggplot2::geom_line(data = complete, linewidth = 1/3)
 
         if (multi.plot) {
           p <- p +
-            scale_shape_manual(name = "In-progress",
-                               breaks = c("Observed", "Estimate"),
-                               values = c("Observed" = 0, "Estimate" = 1)) +
-            scale_linetype_manual(name = "In-progress",
-                                  breaks = c("Observed", "Estimate"),
-                                  values = c("Observed" = "dotted",
-                                             "Estimate" = "solid")) +
-            geom_line(data = est.seg, aes(linetype = "Estimate")) +
-            geom_line(data = obs.seg, aes(linetype = "Observed")) +
-            geom_point(data = est.data, aes(shape = "Estimate")) +
-            geom_point(data = obs.data, aes(shape = "Observed"))
+            ggplot2::scale_shape_manual(
+              name = "In-progress",
+              breaks = c("Observed", "Estimate"),
+              values = c(0, 1)) +
+            ggplot2::scale_linetype_manual(
+              name = "In-progress",
+              breaks = c("Observed", "Estimate"),
+              values = c("dotted", "solid")) +
+            ggplot2::geom_line(data = est.seg, 
+              ggplot2::aes(linetype = "Estimate")) +
+            ggplot2::geom_line(data = obs.seg, 
+              ggplot2::aes(linetype = "Observed")) +
+            ggplot2::geom_point(data = est.data, 
+              ggplot2::aes(shape = "Estimate")) +
+            ggplot2::geom_point(data = obs.data, 
+              ggplot2::aes(shape = "Observed"))
         } else {
           p <- p +
-            scale_color_manual(name = "In-progress",
-                               breaks = c("Observed", "Estimate"),
-                               values = c("Observed" = "black",
-                                          "Estimate" = "red")) +
-            scale_shape_manual(name = "In-progress",
-                               breaks = c("Observed", "Estimate"),
-                               values = c("Observed" = 0, "Estimate" = 1)) +
-            scale_linetype_manual(name = "In-progress",
-                                  breaks = c("Observed", "Estimate"),
-                                  values = c("Observed" = "dotted",
-                                             "Estimate" = "solid")) +
-            geom_line(data = est.seg,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_line(data = obs.seg,
-              aes(col = "Observed", linetype = "Observed")) +
-            geom_point(data = est.data,
-              aes(colour = "Estimate", shape = "Estimate")) +
-            geom_point(data = obs.data,
-              aes(colour = "Observed", shape = "Observed"))
+            ggplot2::scale_color_manual(
+              name = "In-progress",
+              breaks = c("Observed", "Estimate"),
+              values = c("black", "red")) +
+            ggplot2::scale_shape_manual(
+              name = "In-progress",
+              breaks = c("Observed", "Estimate"),
+              values = c(0, 1)) +
+            ggplot2::scale_linetype_manual(
+              name = "In-progress",
+              breaks = c("Observed", "Estimate"),
+              values = c("dotted", "solid")) +
+            ggplot2::geom_line(data = est.seg,
+              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
+            ggplot2::geom_line(data = obs.seg,
+              ggplot2::aes(col = "Observed", linetype = "Observed")) +
+            ggplot2::geom_point(data = est.data,
+              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_point(data = obs.data,
+              ggplot2::aes(colour = "Observed", shape = "Observed"))
         }
 
-        if (points) p <- p + geom_point(data = complete)
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
+        if (points) p <- p + ggplot2::geom_point(data = complete)
+        if (log.y) {
+          p <- p + ggplot2::scale_y_log10() + 
+            ggplot2::ylab(paste("log10", ylab))
+        }
 
-        p <- p + theme_bw() +
-          ggtitle("R Application Downloads") +
-          theme(legend.position = "bottom",
-                panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5))
+        p <- p + ggplot2::theme_bw() +
+          ggplot2::ggtitle("R Application Downloads") +
+          ggplot2::theme(legend.position = "bottom",
+                panel.grid.major = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                plot.title = ggplot2::element_text(hjust = 0.5))
 
 
       } else if (any(dat$partial)) {
@@ -2243,143 +2331,140 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }))
 
         if (multi.plot) {
-          p <- p + geom_line(data = complete, size = 1/3) +
-            scale_linetype_manual(name = "",
-                                  breaks = c("Backdate",
-                                             "Partial/In-Progress",
-                                             "Observed"),
-                                  values = c("Backdate" = "longdash",
-                                             "Partial/In-Progress" = "longdash",
-                                             "Observed" = "dotted")) +
-            scale_shape_manual(name = "",
-                               breaks = c("Backdate",
-                                          "Partial/In-Progress",
-                                          "Observed"),
-                               values = c("Backdate" = 8,
-                                          "Partial/In-Progress" = 1,
-                                          "Observed" = 0))
+          p <- p + ggplot2::geom_line(data = complete, linewidth = 1/3) +
+            ggplot2::scale_linetype_manual(
+              name = NULL,
+              breaks = c("Backdate", "Partial/In-Progress", "Observed"),
+              values = c("longdash", "longdash", "dotted")) +
+            ggplot2::scale_shape_manual(
+              name = NULL,
+              breaks = c("Backdate", "Partial/In-Progress", "Observed"),
+              values = c(8, 1, 0))
         } else {
-          p <- p + geom_line(data = complete, size = 1/3) +
-            scale_colour_manual(name = "",
-                                breaks = c("Backdate",
-                                          "Partial/In-Progress",
-                                          "Observed"),
-                                values = c("Backdate" = "dodgerblue",
-                                           "Partial/In-Progress" = "red",
-                                           "Observed" = "gray")) +
-            scale_linetype_manual(name = "",
-                                  breaks = c("Backdate",
-                                             "Partial/In-Progress",
-                                             "Observed"),
-                                  values = c("Backdate" = "longdash",
-                                             "Partial/In-Progress" = "longdash",
-                                             "Observed" = "dotted")) +
-            scale_shape_manual(name = "",
-                               breaks = c("Backdate",
-                                          "Partial/In-Progress",
-                                          "Observed"),
-                               values = c("Backdate" = 8,
-                                          "Partial/In-Progress" = 1,
-                                          "Observed" = 0))
+          p <- p + ggplot2::geom_line(data = complete, linewidth = 1/3) +
+            ggplot2::scale_colour_manual(
+              name = NULL,
+              breaks = c("Backdate", "Partial/In-Progress", "Observed"),
+              values = c("dodgerblue", "red", "gray")) +
+            ggplot2::scale_linetype_manual(
+              name = NULL,
+              breaks = c("Backdate", "Partial/In-Progress", "Observed"),
+              values = c("longdash", "longdash", "dotted")) +
+            ggplot2::scale_shape_manual(
+              name = NULL,
+              breaks = c("Backdate", "Partial/In-Progress", "Observed"),
+              values = c(8, 1, 0))
         }
 
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
-            geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk)
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = current.wk)
         } else {
           if (multi.plot) {
             p <- p +
-              geom_line(data = current.wk.est.seg, size = 1/3,
-                aes(linetype = "Partial/In-Progress")) +
-              geom_point(data = current.wk.est, size = 1.5,
-                aes(shape = "Partial/In-Progress")) +
-              geom_line(data = current.wk.seg, size = 1/3,
-                aes(linetype = "Observed")) +
-              geom_point(data = current.wk, aes(shape = "Observed"))
+              ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+                ggplot2::aes(linetype = "Partial/In-Progress")) +
+              ggplot2::geom_point(data = current.wk.est, size = 1.5,
+                ggplot2::aes(shape = "Partial/In-Progress")) +
+              ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+                ggplot2::aes(linetype = "Observed")) +
+              ggplot2::geom_point(data = current.wk, 
+                ggplot2::aes(shape = "Observed"))
           } else {
             p <- p +
-              geom_line(data = current.wk.est.seg, size = 1/3,
-                aes(colour = "Partial/In-Progress",
-                    linetype = "Partial/In-Progress")) +
-              geom_point(data = current.wk.est, size = 1.5,
-                aes(colour = "Partial/In-Progress",
+              ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+                ggplot2::aes(colour = "Partial/In-Progress",
+                  linetype = "Partial/In-Progress")) +
+              ggplot2::geom_point(data = current.wk.est, size = 1.5,
+                ggplot2::aes(colour = "Partial/In-Progress",
                     shape = "Partial/In-Progress")) +
-              geom_line(data = current.wk.seg, size = 1/3,
-                aes(colour = "Observed", linetype = "Observed")) +
-              geom_point(data = current.wk,
-                aes(colour = "Observed", shape = "Observed"))
+              ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+                ggplot2::aes(colour = "Observed", linetype = "Observed")) +
+              ggplot2::geom_point(data = current.wk,
+                ggplot2::aes(colour = "Observed", shape = "Observed"))
           }
         }
 
         if (weekdays(x$from) == "Sunday") {
           p <- p +
-            geom_line(data = wk1.partial.seg, size = 1/3) +
-            geom_point(data = wk1.partial)
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = wk1.partial)
         } else {
           if (multi.plot) {
             p <- p +
-              geom_line(data = wk1.backdate.seg, size = 1/3,
-                aes(linetype = "Backdate")) +
-              geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
-              geom_line(data = wk1.partial.seg, size = 1/3,
-                aes(linetype = "Observed")) +
-              geom_point(data = wk1.partial, aes(shape = "Observed"))
+              ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+                ggplot2::aes(linetype = "Backdate")) +
+              ggplot2::geom_point(data = wk1.backdate, 
+                ggplot2::aes(shape = "Backdate")) +
+              ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+                ggplot2::aes(linetype = "Observed")) +
+              ggplot2::geom_point(data = wk1.partial, 
+                ggplot2::aes(shape = "Observed"))
           } else {
             p <- p +
-              geom_line(data = wk1.backdate.seg, size = 1/3,
-                aes(colour = "Backdate", linetype = "Backdate")) +
-              geom_point(data = wk1.backdate,
-                aes(shape = "Backdate", colour = "Backdate")) +
-              geom_line(data = wk1.partial.seg, size = 1/3,
-                aes(colour = "Observed", linetype = "Observed")) +
-              geom_point(data = wk1.partial,
-                aes(colour = "Observed", shape = "Observed"))
+              ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+                ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
+              ggplot2::geom_point(data = wk1.backdate,
+                ggplot2::aes(shape = "Backdate", colour = "Backdate")) +
+              ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+                ggplot2::aes(colour = "Observed", linetype = "Observed")) +
+              ggplot2::geom_point(data = wk1.partial,
+                ggplot2::aes(colour = "Observed", shape = "Observed"))
           }
         }
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + geom_line(size = 0.5) +
-          ggtitle("R Application Downloads") +
-          theme_bw() +
-          theme(panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5))
+        p <- p + ggplot2::geom_line(linewidth = 0.5) +
+          ggplot2::ggtitle("R Application Downloads") +
+          ggplot2::theme_bw() +
+          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                plot.title = ggplot2::element_text(hjust = 0.5))
 
-        if (points) p <- p + geom_point()
-        if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
-        if (!multi.plot) p <- p + facet_wrap(~ platform, nrow = 2)
+        if (points) p <- p + ggplot2::geom_point()
+        if (log.y) {
+          p <- p + ggplot2::scale_y_log10() + 
+            ggplot2::ylab(paste("log10", ylab))
+        }
+        if (!multi.plot) {
+          p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
+        }
       }
 
-      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", ylab))
+      if (log.y) {
+        p <- p + ggplot2::scale_y_log10() + ggplot2::ylab(paste("log10", ylab))
+      }
+
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else if (any(dat$partial)) {
           smooth.data <- rbind(wk1.backdate, complete)
           if (weekdays(last.obs.date) == "Saturday") {
             smooth.data <- rbind(smooth.data, current.wk)
           }
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-            span = span)
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 
-      p <- p + theme_bw() +
-        ggtitle("Total R Application Downloads") +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      p <- p + ggplot2::theme_bw() +
+        ggplot2::ggtitle("Total R Application Downloads") +
+        ggplot2::theme(legend.position = "bottom",
+              panel.grid.major = ggplot2::element_blank(),
+              panel.grid.minor = ggplot2::element_blank(),
+              plot.title = ggplot2::element_text(hjust = 0.5))
 
-      suppressWarnings(print(p))
+      # suppressWarnings(print(p))
+      p
     }
   }
 }
@@ -2429,18 +2514,26 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       if (log.y) {
         dat2 <- dat
         dat2$count <- log10(dat2$count)
-        p <- ggplot(data = dat2, aes_string(x = "count", y = "platform")) +
-          geom_point(size = 2) + xlab(paste("log10", y.nm.case)) + ylab(NULL)
+      
+        p <- ggplot2::ggplot(data = dat2, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2) + 
+             ggplot2::xlab(paste("log10", y.nm.case)) + 
+             ggplot2::ylab(NULL)
+      
       } else {
-        p <- ggplot(data = dat, aes_string("count", "platform")) +
-          geom_point(size = 2) + ylab(NULL)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$count, y = .data$platform)) +
+             ggplot2::geom_point(size = 2) + ggplot2::ylab(NULL)
       }
 
-      p + theme_bw() +
-        ggtitle(paste("R Application Downloads:", unique(dat$date))) +
-        theme(panel.grid.major.x = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      ttl <- paste("R Application Downloads:", unique(dat$date))
+
+      p + ggplot2::theme_bw() +
+          ggplot2::ggtitle(ttl) +
+          ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank(),
+                         plot.title = ggplot2::element_text(hjust = 0.5))
     }
 
   } else if (obs.ct > 1) {
@@ -2627,9 +2720,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
-        p <- ggplot(data = dat, aes_string("date", "count"))
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$count))
       } else if (statistic == "cumulative") {
-        p <- ggplot(data = dat, aes_string("date", "cumulative"))
+        p <- ggplot2::ggplot(data = dat,
+               ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
       if (any(dat$in.progress)) {
@@ -2650,28 +2745,29 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         est.seg <- rbind(complete[last.obs, ], est.data)
         obs.seg <- rbind(complete[last.obs, ], ip.data)
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = "black",
-                                        "Estimate" = "red")) +
-          scale_shape_manual(name = "In-progress",
-                             breaks = c("Observed", "Estimate"),
-                             values = c("Observed" = 0, "Estimate" = 1)) +
-          scale_linetype_manual(name = "In-progress",
-                                breaks = c("Observed", "Estimate"),
-                                values = c("Observed" = "dotted",
-                                           "Estimate" = "solid")) +
-          geom_line(data = est.seg, size = 1/3,
-            aes(colour = "Estimate", linetype = "Estimate")) +
-          geom_line(data = obs.seg,  size = 1/3,
-            aes(col = "Observed", linetype = "Observed")) +
-          geom_point(data = est.data,
-            aes(colour = "Estimate", shape = "Estimate")) +
-          geom_point(data = ip.data,
-            aes(colour = "Observed", shape = "Observed"))
+        p <- p + ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c("black", "red")) +
+          ggplot2::scale_shape_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c(0, 1)) +
+          ggplot2::scale_linetype_manual(
+            name = "In-progress",
+            breaks = c("Observed", "Estimate"),
+            values = c("dotted", "solid")) +
+          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
+            ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
+          ggplot2::geom_line(data = obs.seg,  linewidth = 1/3,
+            ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(data = est.data,
+            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(data = ip.data,
+            ggplot2::aes(colour = "Observed", shape = "Observed"))
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else if (any(dat$partial)) {
         unit.date <- dat$date
@@ -2728,102 +2824,98 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         current.wk.seg <- rbind(complete[nrow(complete), ], current.wk)
         current.wk.est.seg <- rbind(complete[nrow(complete), ], current.wk.est)
 
-        p <- p + geom_line(data = complete, size = 1/3) +
-          scale_color_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = "dodgerblue",
-                                        "Partial/In-Progress" = "black",
-                                        "Estimate" = "red")) +
-          scale_linetype_manual(name = "",
-                                breaks = c("Backdate",
-                                           "Partial/In-Progress",
-                                           "Estimate"),
-                                values = c("Backdate" = "solid",
-                                           "Partial/In-Progress" = "dotted",
-                                           "Estimate" = "solid")) +
-          scale_shape_manual(name = "",
-                             breaks = c("Backdate",
-                                        "Partial/In-Progress",
-                                        "Estimate"),
-                             values = c("Backdate" = 8,
-                                        "Partial/In-Progress" = 0,
-                                        "Estimate" = 1))
+        p <- p + ggplot2::geom_line(data = complete, linewidth = 1/3) +
+          ggplot2::scale_color_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("dodgerblue", "black", "red")) +
+          ggplot2::scale_linetype_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c("solid", "dotted", "solid")) +
+          ggplot2::scale_shape_manual(
+            name = NULL,
+            breaks = c("Backdate", "Partial/In-Progress", "Estimate"),
+            values = c(8, 0, 1))
 
         if (weekdays(last.obs.date) == "Saturday") {
           p <- p +
-            geom_line(data = current.wk.seg, size = 1/3) +
-            geom_point(data = current.wk)
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            geom_line(data = current.wk.est.seg, size = 1/3,
-              aes(colour = "Estimate", linetype = "Estimate")) +
-            geom_point(data = current.wk.est, size = 1.5,
-              aes(colour = "Estimate", shape = "Estimate")) +
-            geom_line(data = current.wk.seg, size = 1/3,
-              aes(colour = "Partial/In-Progress",
-                  linetype = "Partial/In-Progress")) +
-            geom_point(data = current.wk,
-              aes(colour = "Partial/In-Progress",
-                  shape = "Partial/In-Progress"))
+            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
+            ggplot2::geom_point(data = current.wk.est, size = 1.5,
+              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(data = current.wk,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           shape = "Partial/In-Progress"))
         }
 
         if (weekdays(x$from) == "Sunday") {
           p <- p +
-            geom_line(data = wk1.partial.seg, size = 1/3) +
-            geom_point(data = wk1.partial)
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+            ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-            geom_line(data = wk1.backdate.seg, size = 1/3,
-              aes(colour = "Backdate", linetype = "Backdate")) +
-            geom_point(data = wk1.backdate,
-              aes(colour = "Backdate", shape = "Backdate")) +
-            geom_line(data = wk1.partial.seg, size = 1/3,
-              aes(colour = "Partial/In-Progress",
+            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
+            ggplot2::geom_point(data = wk1.backdate,
+              ggplot2::aes(colour = "Backdate", shape = "Backdate")) +
+            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
+              ggplot2::aes(colour = "Partial/In-Progress",
                   linetype = "Partial/In-Progress")) +
-            geom_point(data = wk1.partial,
-              aes(colour = "Partial/In-Progress",
-                  shape = "Partial/In-Progress"))
+            ggplot2::geom_point(data = wk1.partial,
+              ggplot2::aes(colour = "Partial/In-Progress",
+                           shape = "Partial/In-Progress"))
         }
 
-        if (points) p <- p + geom_point(data = complete)
+        if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + geom_line(size = 0.5) +
-          theme_bw() +
-          theme(panel.grid.major = element_blank(),
-                panel.grid.minor = element_blank(),
-                plot.title = element_text(hjust = 0.5)) +
-          ggtitle("Total R Application Downloads")
+        p <- p + ggplot2::geom_line(linewidth = 0.5) +
+          ggplot2::theme_bw() +
+          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                panel.grid.minor = ggplot2::element_blank(),
+                plot.title = ggplot2::element_text(hjust = 0.5)) +
+          ggplot2::ggtitle("Total R Application Downloads")
 
-        if (points) p <- p + geom_point()
+        if (points) p <- p + ggplot2::geom_point()
       }
 
-      if (log.y) p <- p + scale_y_log10() + ylab(paste("log10", y.nm.case))
+      if (log.y) {
+        p <- p + ggplot2::scale_y_log10() + 
+                 ggplot2::ylab(paste("log10", y.nm.case))
+      }
+
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else if (any(dat$partial)) {
           smooth.data <- rbind(wk1.backdate, complete)
-          p <- p + geom_smooth(data = smooth.data, method = "loess",
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-            span = span)
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 
-      p <- p + theme_bw() +
-        ggtitle("Total R Application Downloads") +
-        theme(legend.position = "bottom",
-              panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5))
+      p <- p + ggplot2::theme_bw() +
+        ggplot2::ggtitle("Total R Application Downloads") +
+        ggplot2::theme(legend.position = "bottom",
+              panel.grid.major = ggplot2::element_blank(),
+              panel.grid.minor = ggplot2::element_blank(),
+              plot.title = ggplot2::element_text(hjust = 0.5))
 
-      suppressWarnings(print(p))
+      # suppressWarnings(print(p))
+      p
     }
   }
 }
