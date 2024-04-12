@@ -5,7 +5,6 @@
 #' @param date Character. Date. yyyy-mm
 #' @param count Character. "ip" or "download".
 #' @return An R data frame.
-#' @import data.table
 #' @export
 #' @examples
 #' \dontrun{
