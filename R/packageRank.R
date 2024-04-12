@@ -201,6 +201,7 @@ basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
 #' @param package.data Object.
 #' @param y.max Numeric.
 #' @param date Character.
+#' @importFrom ggplot2 geom_label geom_vline
 #' @noRd
 
 ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
@@ -222,9 +223,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
 
   download.lst <- rep(list(download.data), length(x$packages))
 
-  for (i in seq_along(download.lst)) {
-    download.lst[[i]]$id <- id[i]
-  }
+  for (i in seq_along(download.lst)) download.lst[[i]]$id <- id[i]
   
   download.data <- do.call(rbind, download.lst)
   first <- cumsum(vapply(download.lst, nrow, numeric(1L))) - length(freqtab) + 1
@@ -259,43 +258,49 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
 
   alpha.col <- grDevices::adjustcolor("red", alpha.f = 2/3)
 
-  p <- ggplot(data = download.data, aes_string("x", "y")) +
-       geom_line() +
-       geom_vline(xintercept = iqr, colour = "gray", linetype = "dotted") +
-       geom_point(data = download.data[first, ],
-                  shape = 1,
-                  colour = "dodgerblue") +
-       geom_text(data = download.data[first, ],
-                 colour = "dodgerblue",
-                 label = top.pkg,
-                 hjust = -0.1,
-                 size = 3) +
-       geom_text(data = data.frame(x = download.data[last, "x"], y = y.max),
-                 colour = "dodgerblue",
-                 label = tot.dwnld,
-                 hjust = 1,
-                 size = 3) +
-       geom_text(data = iqr.data, label = iqr.data$label) +
-       geom_vline(data = point.data, aes_string(xintercept = "x"),
-                  colour = alpha.col) +
-       geom_hline(data = point.data, aes_string(yintercept = "y"),
-                  colour = alpha.col) +
-       geom_point(data = point.data, aes_string("x", "y"), shape = 1,
-                  colour = "red", size = 2) +
-       geom_label(data = point.data, aes_string("x", "y"),
-                  fill = alpha.col, colour = "white", size = label.size,
-                  label = ylabel, nudge_x = 2000) +
-       geom_label(data = point.data, aes_string("x", "y"),
-                  fill = alpha.col, colour = "white", size = label.size,
-                  label = xlabel, nudge_y = ylabel.nudge) +
-       xlab("Rank") +
-       ylab("Count") +
-       facet_wrap(~ id, nrow = 2) +
-       theme_bw() +
-       theme(panel.grid.major = element_blank(),
-             panel.grid.minor = element_blank())
+  geom.text.data <- data.frame(x = download.data[last, "x"], y = y.max)
 
-  if (log.y) p + scale_y_log10() else p
+  p <- ggplot2::ggplot(data = download.data, 
+         ggplot2::aes(x = .data$x, y = .data$y)) +
+       ggplot2::geom_line() +
+       ggplot2::geom_vline(xintercept = iqr, colour = "gray", 
+        linetype = "dotted") +
+       ggplot2::geom_point(data = download.data[first, ],
+                           shape = 1,
+                           colour = "dodgerblue") +
+       ggplot2::geom_text(data = download.data[first, ],
+                          colour = "dodgerblue",
+                          label = top.pkg,
+                          hjust = -0.1,
+                          size = 3) +
+       ggplot2::geom_text(data = geom.text.data,
+                          colour = "dodgerblue",
+                          label = tot.dwnld,
+                          hjust = 1,
+                          size = 3) +
+       ggplot2::geom_text(data = iqr.data, label = iqr.data$label) +
+       ggplot2::geom_vline(data = point.data,
+         ggplot2::aes(xintercept = .data$x), colour = alpha.col) +
+       ggplot2::geom_hline(data = point.data, 
+         ggplot2::aes(yintercept = .data$y), colour = alpha.col) +
+       ggplot2::geom_point(data = point.data, 
+         ggplot2::aes(x = .data$x, y = .data$y), shape = 1, colour = "red", 
+           size = 2) +
+       ggplot2::geom_label(data = point.data, 
+         ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
+           colour = "white", size = label.size, label = ylabel, nudge_x = 2000) +
+       ggplot2::geom_label(data = point.data, 
+          ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
+            colour = "white", size = label.size, label = xlabel, 
+            nudge_y = ylabel.nudge) +
+       ggplot2::xlab("Rank") +
+       ggplot2::ylab("Count") +
+       ggplot2::facet_wrap(ggplot2::vars(.data$id), nrow = 2) +
+       ggplot2::theme_bw() +
+       ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                      panel.grid.minor = ggplot2::element_blank())
+
+  if (log.y) p + ggplot2::scale_y_log10() else p
 }
 
 #' Print method for packageRank().

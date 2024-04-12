@@ -1,6 +1,16 @@
-### packageRank 0.8.3.9084
+### packageRank 0.8.3.9086
+
+- update 'ggplot2' syntax in ggPlot() and gg_bioc_plot().
+
+
+### packageRank 0.8.3.9085
 
 - replace log_count with log.y in plot.bioconductorRank and plot.packageRank().
+
+
+### packageRank 0.8.3.9084
+
+- update 'ggplot2' syntax in cranDownloads() plot functions
 
 
 ### packageRank 0.8.3.9083

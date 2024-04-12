@@ -644,112 +644,126 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     if (multi.plot) {
       if (cumulative) {
         if (count == "download") {
-          p <- ggplot(data = dat, aes_string("date",
-            "cumulative_Nb_of_downloads", colour = "packages")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, 
+                              y = .data$cumulative_Nb_of_downloads, 
+                              colour = .data$packages))
         } else if (count == "ip") {
-          p <- ggplot(data = dat, aes_string("date",
-            "cumulative_Nb_of_distinct_IPs", colour = "packages")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date,
+                              y = .data$cumulative_Nb_of_distinct_IPs, 
+                              colour = .data$packages))
         }
       } else {
         if (count == "download") {
-          p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads",
-            colour = "packages")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, 
+                              y = .data$Nb_of_downloads,
+                              colour = .data$packages)) 
         } else if (count == "ip") {
-          p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs",
-            colour = "packages")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat, 
+                 ggplot2::aes(x = .data$date, 
+                              y =.data$Nb_of_distinct_IPs,
+                              colour = .data$packages)) 
         }
       }
 
-      p <- p + geom_line(data = complete.data, size = 1/3) +
-               geom_line(data = est.seg, size = 1/3) +
-               geom_line(data = obs.seg, size = 1/3, linetype = "dotted") +
-               geom_point(data = est.data, shape = 1) +
-               geom_point(data = ip.data, shape = 0) +
-               xlab("Date") +
-               theme(panel.grid.major = element_blank(),
-                     panel.grid.minor = element_blank())
+      p <- p + ggplot2::geom_line(data = complete.data, linewidth = 1/3) +
+        ggplot2::geom_line(data = est.seg, linewidth = 1/3) +
+        ggplot2::geom_line(data = obs.seg, linewidth = 1/3, 
+          linetype = "dotted") +
+        ggplot2::geom_point(data = est.data, shape = 1) +
+        ggplot2::geom_point(data = ip.data, shape = 0) +
+        ggplot2::xlab("Date") +
+        ggplot2::ylab(ylab) +
+        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank())
 
     } else {
       if (cumulative) {
         if (count == "download") {
-          p <- ggplot(data = dat,
-            aes_string("date", "cumulative_Nb_of_downloads")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat,
+                 ggplot2::aes(x = .data$date, 
+                              y = .data$cumulative_Nb_of_downloads))
         } else if (count == "ip") {
-          p <- ggplot(data = dat,
-            aes_string("date", "cumulative_Nb_of_distinct_IPs")) + ylab(ylab)
+          p <- ggplot2::ggplot(data = dat,
+                 ggplot2::aes(x = .data$date, 
+                              y = .data$cumulative_Nb_of_distinct_IPs)) 
         }
       } else {
         if (count == "download") {
-          p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-               ylab(ylab)
+          p <- ggplot2::ggplot(data = dat,
+                 ggplot2::aes(x = .data$date, y = .data$Nb_of_downloads)) 
         } else if (count == "ip") {
-          p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-               ylab(ylab)
+          p <- ggplot2::ggplot(data = dat,
+                 ggplot2::aes(x = .data$date, y = .data$Nb_of_distinct_IPs))
         }
       }
 
-      p <- p + geom_line(data = complete.data, size = 1/3) +
-               geom_line(data = est.seg, size = 1/3, col = "red") +
-               geom_line(data = obs.seg,  size = 1/3, linetype = "dotted") +
-               geom_point(data = est.data, col = "red") +
-               geom_point(data = ip.data, shape = 0) +
-               facet_wrap(~ packages, ncol = 2) +
-               xlab("Date") +
-               theme_bw() +
-               theme(panel.grid.major = element_blank(),
-                     panel.grid.minor = element_blank())
+      p <- p + 
+        ggplot2::geom_line(data = complete.data, linewidth = 1/3) +
+        ggplot2::geom_line(data = est.seg, linewidth = 1/3, col = "red") +
+        ggplot2::geom_line(data = obs.seg, linewidth = 1/3, 
+          linetype = "dotted") +
+        ggplot2::geom_point(data = est.data, col = "red") +
+        ggplot2::geom_point(data = ip.data, shape = 0) +
+        ggplot2::facet_wrap(ggplot2::vars(.data$packages), nrow = 2) +
+        ggplot2::xlab("Date") +
+        ggplot2::ylab(ylab) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank())
     }
 
-    if (points) p <- p + geom_point(data = complete.data)
-    if (log.y) p <- p + scale_y_log10()
+    if (points) p <- p + ggplot2::geom_point(data = complete.data)
+    if (log.y) p <- p + ggplot2::scale_y_log10()
     if (smooth) {
       smooth.data <- rbind(complete.data, est.data)
-      p <- p + geom_smooth(data = smooth.data, method = "loess",
+      p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
         formula = "y ~ x", se = se, span = span)
     }
 
   } else {
     if (cumulative) {
       if (count == "download") {
-        p <- ggplot(data = dat,
-          aes_string("date", "cumulative_Nb_of_downloads")) + ylab(ylab)
+        p <- ggplot2::ggplot(data = dat,
+               ggplot2::aes(x = .data$date, 
+                            y = .data$cumulative_Nb_of_downloads))
       } else if (count == "ip") {
-        p <- ggplot(data = dat,
-          aes_string("date", "cumulative_Nb_of_distinct_IPs")) + ylab(ylab)
+        p <- ggplot2::ggplot(data = dat,
+               ggplot2::aes(x = .data$date, 
+                            y = .data$cumulative_Nb_of_distinct_IPs))
       }
     } else {
       if (count == "download") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_downloads")) +
-             ylab(ylab)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$Nb_of_downloads))
       } else if (count == "ip") {
-        p <- ggplot(data = dat, aes_string("date", "Nb_of_distinct_IPs")) +
-             ylab(ylab)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data$date, y = .data$Nb_of_distinct_IPs))
       }
     }
 
-    if (multi.plot) {
-      p <- p + geom_line(size = 0.5) +
-        xlab("Date") +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank())
-    } else {
-      p <- p + geom_line(size = 0.5) +
-        facet_wrap(~ packages, ncol = 2) +
-        xlab("Date") +
-        theme_bw() +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank())
+    p <- p + ggplot2::geom_line(size = 0.5) +
+             ggplot2::xlab("Date") +
+             ggplot2::ylab(ylab) +
+             ggplot2::theme_bw() +
+             ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                            panel.grid.minor = ggplot2::element_blank())
+
+    if (isFALSE(multi.plot)) {
+      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$packages), ncol = 2) 
     }
 
-    if (points) p <- p + geom_point()
-    if (log.y) p <- p + scale_y_log10()
+    if (points) p <- p + ggplot2::geom_point()
+    if (log.y) p <- p + ggplot2::scale_y_log10()
     if (smooth) {
-      p <- p + geom_smooth(method = "loess", formula = "y ~ x", se = se,
-        span = span)
+      p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+        se = se, span = span)
     }
   }
 
-  suppressWarnings(print(p))
+  p
 }
 
 checkDate <- function(string, end.date = FALSE) {
