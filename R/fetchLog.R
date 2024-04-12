@@ -35,7 +35,8 @@ fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
 #' fread() to data.frame.
 #'
 #' @param x Character. URL.
-#' @import data.table memoise
+#' @import memoise
+#' @importFrom data.table fread
 #' @importFrom R.utils decompressFile
 #' @note mfetchLog() is memoized version.
 #' @noRd

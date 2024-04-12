@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9087
+
+- use importFrom rather than import for data.table::fread().
+
+
 ### packageRank 0.8.3.9086
 
 - update 'ggplot2' syntax in ggPlot() and gg_bioc_plot().
