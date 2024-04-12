@@ -222,9 +222,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
 
   download.lst <- rep(list(download.data), length(x$packages))
 
-  for (i in seq_along(download.lst)) {
-    download.lst[[i]]$id <- id[i]
-  }
+  for (i in seq_along(download.lst)) download.lst[[i]]$id <- id[i]
   
   download.data <- do.call(rbind, download.lst)
   first <- cumsum(vapply(download.lst, nrow, numeric(1L))) - length(freqtab) + 1
