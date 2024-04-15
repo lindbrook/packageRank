@@ -20,7 +20,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   ymd <- rev_fixDate_2012(file.url.date)
 
-  if (!package %in% cran_log$package) {
+  if (all(!package %in% cran_log$package)) {
     stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
   } else {
     cran_log <- cleanLog(cran_log)
