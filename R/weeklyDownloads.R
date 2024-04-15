@@ -75,24 +75,26 @@ plot.weeklyDownloads <- function(x, statistic = "percent", aggregation = "day",
 
   } else if (aggregation == "week") {
     if (statistic == "count") {
-      p <- ggplot(data = x, aes_string(x = "day.id", y = "count")) +
-        facet_wrap(~ week.id, nrow = nrow, scales = "free_y") +
-        ggtitle("Daily Count of Weekly CRAN Downloads")
+      p <- ggplot2::ggplot(data = x, 
+                           ggplot2::aes(x = .data$day.id, y = .data$count)) +
+        ggplot2::facet_wrap(ggplot2::vars(.data$week.id), nrow = nrow, 
+          scales = "free_y") +
+        ggplot2::ggtitle("Daily Count of Weekly CRAN Downloads")
     } else if (statistic == "percent") {
-      p <- ggplot(data = x, aes_string(x = "day.id", y = "percent")) +
-        facet_wrap(~ week.id, nrow = nrow) +
-        ggtitle("Percent of Weekly CRAN Downloads")
+      p <- ggplot2::ggplot(data = x, ggplot2::aes(x = .data$day.id, y = .data$percent)) +
+        ggplot2::facet_wrap(ggplot2::vars(.data$week.id), nrow = nrow) +
+        ggplot2::ggtitle("Percent of Weekly CRAN Downloads")
     } else stop('statistic must be "count" or "percent".')
 
-    p + geom_line() +
-      geom_point() +
-      scale_x_continuous(breaks = c(2, 4, 6), labels = days[c(2, 4, 6)]) +
-      xlab("Day") +
-      ylab(tools::toTitleCase(statistic)) +
-      theme_bw() +
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5))
+    p + ggplot2::geom_line() +
+      ggplot2::geom_point() +
+      ggplot2::scale_x_continuous(breaks = c(2, 4, 6), labels = days[c(2, 4, 6)]) +
+      ggplot2::xlab("Day") +
+      ggplot2::ylab(tools::toTitleCase(statistic)) +
+      ggplot2::theme_bw() +
+      ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                     panel.grid.minor = ggplot2::element_blank(),
+                     plot.title = ggplot2::element_text(hjust = 0.5))
 
   } else stop('aggregation must be "day" or "week".')
 }
