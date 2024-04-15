@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9089
+
+- update 'ggplot2' syntax in plot.weeklyDownloads().
+
+
 ### packageRank 0.8.3.9088
 
 - fix packageDistribution() for multiple packages.
