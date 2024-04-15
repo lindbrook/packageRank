@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9088
+
+- fix packageDistribution() for multiple packages.
+- update 'ggplot2' syntax in plot.packageDistribution().
+
+
 ### packageRank 0.8.3.9087
 
 - use importFrom rather than import for data.table::fread().
