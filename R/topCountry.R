@@ -30,6 +30,7 @@ topCountryCodes <- function(month_cran_log, top.n = 5L, multi.core = FALSE) {
 #' @export
 
 plotTopCountryCodes <- function(dataset = "october", second.place = FALSE) {
+  dataset <- tolower(dataset)
   if (dataset == "october") {
     dat <- packageRank::blog.data$top.n.oct2019
   } else if (dataset == "july") {
@@ -38,38 +39,35 @@ plotTopCountryCodes <- function(dataset = "october", second.place = FALSE) {
 
   dat$downloads <- dat$downloads / 10^6
 
-  p <- ggplot(data = dat,
-    aes_string(x = "id", y = "downloads", label = "country")) +
-    geom_line(size = 0.125) +
-    geom_point(data = dat[dat$id == 1, ],
-               color = "red") +
-    geom_text(data = dat[dat$id == 1, ],
-              nudge_x = 0.8,
-              size = 3,
-              color = "red")
+  p <- ggplot2::ggplot(data = dat,
+    ggplot2::aes(x = .data$id, y = .data$downloads, label = .data$country)) +
+    ggplot2::geom_line(linewidth = 0.125) +
+    ggplot2::geom_point(data = dat[dat$id == 1, ], color = "red") +
+    ggplot2::geom_text(data = dat[dat$id == 1, ], nudge_x = 0.8, size = 3, 
+      color = "red")
 
     if (second.place) {
-      p <- p + geom_point(data = dat[dat$id == 2, ],
-                          color = "dodgerblue",
-                          shape = 15) +
-               geom_text(data = dat[dat$id == 2, ],
-                         nudge_x = 0.8,
-                         nudge_y = 0.4,
-                         size = 3,
-                         color = "dodgerblue") +
-        geom_point(data = dat[!dat$id %in% 1:2, ], size = 1)
+      p <- p + ggplot2::geom_point(data = dat[dat$id == 2, ],
+                                   color = "dodgerblue",
+                                   shape = 15) +
+               ggplot2::geom_text(data = dat[dat$id == 2, ],
+                                  nudge_x = 0.8,
+                                  nudge_y = 0.4,
+                                  size = 3,
+                                  color = "dodgerblue") +
+               ggplot2::geom_point(data = dat[!dat $id %in% 1:2, ], size = 1)
     } else {
-      p <- p + geom_point(data = dat[dat$id != 1, ], size = 1)
+      p <- p + ggplot2::geom_point(data = dat[dat$id != 1, ], size = 1)
     }
 
-    p + theme_bw() +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()) +
+    p + ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank()) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
-    scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
-    scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 3)) +
-    xlab("Rank") +
-    ylab("Downloads (millions)")
+    ggplot2::scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 3)) +
+    ggplot2::xlab("Rank") +
+    ggplot2::ylab("Downloads (millions)")
 }
 
 #' Compute Downloads by Country Code.
@@ -108,19 +106,19 @@ downloadsCountry <- function(month_cran_log, multi.core = FALSE) {
 plotDownloadsCountry <- function() {
   dat <- packageRank::blog.data$download.country
   dat$downloads <- dat$downloads / 10^6
-  ggplot(data = dat, aes_string(x = "id", y = "downloads", label = "country")) +
-    geom_line() +
-    theme_bw() +
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()) +
+  ggplot2::ggplot(data = dat, ggplot2::aes(x = .data$id, y = .data$downloads, label = .data$country)) +
+    ggplot2::geom_line() +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank()) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
-    geom_point(data = dat[dat$id %in% 1:2, ], shape = 1, color = "red",
+    ggplot2::geom_point(data = dat[dat$id %in% 1:2, ], shape = 1, color = "red",
       stroke = 1) +
-    geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 45, size = 3,
+    ggplot2::geom_text(data = dat[dat$id %in% 1:2, ], nudge_x = 45, size = 3,
       color = "red") +
-    geom_point(size = 0.5) +
-    scale_x_continuous(breaks = c(0, 100, 200)) +
-    scale_y_continuous(breaks = c(0, 1, 2), limits = c(-0.25, 2.75)) +
-    xlab("Rank") +
-    ylab("Downloads (millions)")
+    ggplot2::geom_point(size = 0.5) +
+    ggplot2::scale_x_continuous(breaks = c(0, 100, 200)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 1, 2), limits = c(-0.25, 2.75)) +
+    ggplot2::xlab("Rank") +
+    ggplot2::ylab("Downloads (millions)")
 }

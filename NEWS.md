@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9091
+
+- update 'ggplot2' syntax in plotTopCountryCodes() and plotDownloadsCountry().
+
+
 ### packageRank 0.8.3.9090
 
 - update 'ggplot2' syntax in versionPlot().
