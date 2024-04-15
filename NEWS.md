@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9090
+
+- update 'ggplot2' syntax in versionPlot().
+
+
 ### packageRank 0.8.3.9089
 
 - update 'ggplot2' syntax in plot.weeklyDownloads().
