@@ -20,7 +20,7 @@ packageDistribution <- function(package = "HistData", date = NULL,
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   ymd <- rev_fixDate_2012(file.url.date)
 
-  if (!package %in% cran_log$package) {
+  if (all(!package %in% cran_log$package)) {
     stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
   } else {
     cran_log <- cleanLog(cran_log)
@@ -41,14 +41,9 @@ package_distribution <- function(package, ymd, all.filters, ip.filter,
     small.filter <- TRUE
   }
 
-  if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-
-  if (small.filter) {
-    cran_log <- smallFilter(cran_log)
-  }
-
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(freqtab))
   freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
@@ -82,22 +77,22 @@ plot.packageDistribution <- function(x, ...) {
     l.data <- data.frame(package = p.data$package, x = p.data$count,
       y = max(dat2$y))
 
-    ggplot(data = dat2, aes_string("x", "y")) +
-      geom_segment(aes_string(x = "x", xend = "x", y = 0, yend = "y"),
-                   size = 1/3) +
-      geom_vline(data = p.data, aes_string(xintercept = "count"),
-                 colour = grDevices::adjustcolor("red", alpha.f = 2/3),
-                 size = 0.5) +
-      geom_label(data = l.data, aes_string("x", "y"),
-                 fill = grDevices::adjustcolor("red", alpha.f = 2/3),
-                 colour = "white", size = 2.75, label = pkg.ct$count) +
-      scale_x_log10() +
-      facet_wrap(~ package, nrow = 2) +
-      xlab("Downloads") +
-      ylab("Frequency") +
-      theme_bw() +
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank())
+    geom.col <- grDevices::adjustcolor("red", alpha.f = 2/3)
+
+    ggplot2::ggplot(data = dat2, ggplot2::aes(x = .data$x, y = .data$y)) +
+      ggplot2::geom_segment(linewidth = 1/3,
+        ggplot2::aes(x = .data$x, xend = .data$x, y = 0, yend = .data$y)) +
+      ggplot2::geom_vline(data = p.data, colour = geom.col,  size = 0.5,
+        ggplot2::aes(xintercept = .data$count)) +
+      ggplot2::geom_label(data = l.data, aes(x = .data$x, y = .data$y),
+        fill = geom.col, colour = "white", size = 2.75, label = pkg.ct$count) +
+      ggplot2::scale_x_log10() +
+      ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
+      ggplot2::xlab("Downloads") +
+      ggplot2::ylab("Frequency") +
+      ggplot2::theme_bw() +
+      ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                     panel.grid.minor = ggplot2::element_blank())
   }
 }
 
