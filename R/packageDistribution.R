@@ -41,14 +41,9 @@ package_distribution <- function(package, ymd, all.filters, ip.filter,
     small.filter <- TRUE
   }
 
-  if (ip.filter) {
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-
-  if (small.filter) {
-    cran_log <- smallFilter(cran_log)
-  }
-
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   cts <- sort(unique(freqtab))
   freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
