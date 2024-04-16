@@ -96,24 +96,27 @@ plot.packageVersionPercent <- function(x, ...) {
   titleB <- 'CRAN (1-100) & Archive (101-200)'
   # titleC <- paste0(':', month(pkg.data[1, "date"]), year(pkg.data[1, "date"]))
 
-  ggplot(data = pkg.data, aes_string(x = "id", y = "pct.of.versions")) +
-    geom_point(color = "gray") +
-    geom_smooth(method = "loess", formula = "y ~ x", se = FALSE,
-      color = "red", size = 1.5) +
+  ggplot2::ggplot(data = pkg.data, 
+                  ggplot2::aes(x = .data$id, y = .data$pct.of.versions)) +
+    ggplot2::geom_point(color = "gray") +
+    ggplot2::geom_smooth(method = "loess", formula = "y ~ x", se = FALSE,
+      color = "red", linewidth = 1.5) +
 
     # https://github.com/tidyverse/ggplot2/issues/2963
     # geom_vline(xintercept) --> geom_vline(aes(xintercept))
-    geom_vline(aes(xintercept = 99.5), col = "black", linetype = "dashed") +
+    ggplot2::geom_vline(aes(xintercept = 99.5), col = "black", 
+      linetype = "dashed") +
 
-    xlab("Package ID") +
-    ylab("Percent") +
+    ggplot2::xlab("Package ID") +
+    ggplot2::ylab("Percent") +
+    # sugrrants::facet_calendar(ggplot2::vars(as.Date(date)), week_start = 7) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
-    theme_bw() +
-    theme(panel.grid.minor = element_blank(),
-          panel.grid.major = element_blank(),
-          plot.title = element_text(hjust = 0.5)) +
-    scale_y_continuous(breaks = c(0, 50, 100), limits = c(-10, 110)) +
-    scale_x_continuous(breaks = 100) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+                   panel.grid.major = ggplot2::element_blank(),
+                   plot.title = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 50, 100), limits = c(-10, 110)) +
+    ggplot2::scale_x_continuous(breaks = 100) +
     # ggtitle(paste(titleA, titleB, titleC))
-    ggtitle(paste(titleB))
+    ggplot2::ggtitle(paste(titleB))
 }
