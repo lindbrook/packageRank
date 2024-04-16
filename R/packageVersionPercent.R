@@ -112,7 +112,6 @@ plot.packageVersionPercent <- function(x, ...) {
 
     ggplot2::xlab("Package ID") +
     ggplot2::ylab("Percent") +
-    # sugrrants::facet_calendar(ggplot2::vars(as.Date(date)), week_start = 7) +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
