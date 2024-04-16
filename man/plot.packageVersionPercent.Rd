@@ -7,7 +7,7 @@
 \method{plot}{packageVersionPercent}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "packageVersions" created by \code{packageVersions()}.}
+\item{x}{An object of class "packageVersionPercent".}
 
 \item{...}{Additional plotting parameters.}
 }

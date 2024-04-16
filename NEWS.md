@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9092
+
+- amend packageVersionPercent() and helper functions.
+- update 'ggplot2' syntax in plot.packageVersionPercent().
+
+
 ### packageRank 0.8.3.9091
 
 - update 'ggplot2' syntax in plotTopCountryCodes() and plotDownloadsCountry().
