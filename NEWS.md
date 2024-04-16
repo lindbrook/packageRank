@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9093
+
+- amend dayOfMonth().
+
+
 ### packageRank 0.8.3.9092
 
 - amend packageVersionPercent() and helper functions.
