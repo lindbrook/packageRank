@@ -30,10 +30,16 @@ packageVersionPercent <- function(lst, yr.mo = "2020-07", multi.core = FALSE) {
       arch.pkgs <- packageRank::blog.data$arch.pkgs.jul
     }
   }
-
+  
   pkgs <- c(cran.pkgs, arch.pkgs)
-  pkg.data <- lapply(pkgs, function(x) computeVersionPercents(lst, x, cores))
+  histories <- lapply(pkgs, packageHistory)
+  names(histories) <- pkgs
+  
+  pkg.data <- lapply(pkgs, function(x) {
+    computeVersionPercents(lst, x, histories)
+  })
   names(pkg.data) <- pkgs
+  
   out <- list(cran.pkgs = cran.pkgs, arch.pkgs = arch.pkgs, pkg.data = pkg.data)
   class(out) <- "packageVersionPercent"
   out
@@ -52,39 +58,36 @@ monthlyLog <- function(yr.mo = "2020-07") {
   start.date <- fixDate_2012(start.date)
   end.date <- fixDate_2012(end.date)
   days <- seq(start.date, end.date, by = "day")
-  lapply(days, fetchCranLog)
+  out <- lapply(days, fetchCranLog)
+  names(out) <- days
+  out
 }
 
-computeVersionPercents <- function(lst, pkgs, cores) {
+computeVersionPercents <- function(lst, pkg, histories) {
   dates <- as.Date(names(lst))
   end.date <- dates[length(dates)]
-  obs.ver.ct <- observedVersionCount(lst, pkgs, cores)
-  exp.ver.ct <- expectedVersionCount(pkgs, end.date + 1)
-  out <- lapply(seq_along(obs.ver.ct), function(i) {
-    data.frame(date = dates[i], package = names(obs.ver.ct[[i]]),
-               obs = obs.ver.ct[[i]], row.names = NULL)
-  })
-  out <- do.call(rbind, out)
-  out$exp <- exp.ver.ct
+  obs.ver.ct <- observedVersionCount(lst, pkg)
+  exp.ver.ct <- expectedVersionCount(histories, pkg, dates)
+  out <- data.frame(date = dates, package = pkg, obs = obs.ver.ct, 
+    exp = exp.ver.ct, row.names = NULL)
   out$pct.of.versions <- 100 * out$obs / out$exp
   out
 }
 
-observedVersionCount <- function(lst, pkgs, cores) {
-  parallel::mclapply(lst, function(x) {
-    vapply(pkgs, function(p) {
-      length(unique(x[!is.na(x$package) & x$package == p, "version"]))
-    }, integer(1L))
-  }, mc.cores = cores)
+observedVersionCount <- function(lst, pkg) {
+  vapply(lst, function(x) {
+      length(unique(x[!is.na(x$package) & x$package == pkg, "version"]))
+  }, integer(1L))
 }
 
-expectedVersionCount <- function(pkgs, end.date) {
-  h <- lapply(pkgs, packageHistory0)
-  vapply(h, function(x) sum(x$date < end.date), integer(1L))
+expectedVersionCount <- function(histories, pkg, dates) {
+  vapply(seq_along(dates), function(i) {
+    sum(histories[[paste(pkg)]]$Date <= dates[i])
+  }, integer(1L))
 }
 
 #' Plot method for packageVersionPercent().
-#' @param x An object of class "packageVersions" created by \code{packageVersions()}.
+#' @param x An object of class "packageVersionPercent".
 #' @param ... Additional plotting parameters.
 #' @export
 
