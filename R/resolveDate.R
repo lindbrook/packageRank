@@ -26,9 +26,9 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
     } else if (date.check[2] %in% mm == FALSE) {
       stop("Month must be between 01 and 12.", call. = FALSE)
     } else if (type == "from") {
-      x.date <- dayOfMonth(date.txt, first.log)
+      x.date <- dayOfMonth(date.txt)
     } else if (type == "to") {
-      x.date <- dayOfMonth(date.txt, first.log, end.of.month = TRUE)
+      x.date <- dayOfMonth(date.txt, end.of.month = TRUE)
     }
   } else if (nchar(date.txt) == 4L) {
     if (is.na(suppressWarnings(as.numeric(date.txt)))) {
@@ -60,14 +60,14 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
   logDate(x.date, warning.msg = FALSE, fix.date = fix.date)
 }
 
-dayOfMonth <- function(string, first.log, end.of.month = FALSE) {
+dayOfMonth <- function(string, end.of.month = FALSE) {
   if (end.of.month) {
-    end.candidates <- lapply(28:31, function(day) {
-      as.Date(paste0(string , "-", day), optional = TRUE)
-    })
-    end.candidates <- do.call(c, end.candidates)
-    end.selelct <- rev(end.candidates[!is.na(end.candidates)])[1]
-    out <- as.Date(end.selelct, optional = TRUE)
+    date.parts <- unlist(strsplit(string, "-"))
+    next.mo <- as.numeric(date.parts[2]) + 1
+    next.mo <- ifelse(nchar(next.mo) == 1, paste0("0", next.mo), next.mo)
+    yr <- as.numeric(date.parts[1])
+    yr <- ifelse(next.mo > 12,  yr + 1, yr)
+    out <- as.Date(paste0(yr, "-", next.mo, "-01"), optional = TRUE) - 1
   } else {
     out <- as.Date(paste0(string , "-01"), optional = TRUE)
   }
