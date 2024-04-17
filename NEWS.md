@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9094
+
+- amend annualDownloads() and plot.annualDownloads(); update 'ggplot2' syntax.
+
+
 ### packageRank 0.8.3.9093
 
 - amend dayOfMonth().

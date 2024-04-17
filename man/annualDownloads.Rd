@@ -4,7 +4,7 @@
 \alias{annualDownloads}
 \title{Count Total CRAN Download.}
 \usage{
-annualDownloads(start.yr = 2013, end.yr = 2022)
+annualDownloads(start.yr = 2013, end.yr = 2023)
 }
 \arguments{
 \item{start.yr}{Numeric or Integer.}
@@ -13,4 +13,7 @@ annualDownloads(start.yr = 2013, end.yr = 2022)
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+}
+\note{
+A way around Gateway Timeout (HTTP 504). This takes a while since it computes each year separately.s
 }

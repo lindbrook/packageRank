@@ -4,16 +4,16 @@
 \alias{plot.annualDownloads}
 \title{Plot method for annualDownloads().}
 \usage{
-\method{plot}{annualDownloads}(x, statistic = "count", pool.obs = FALSE,
-  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, span = 3/4,
-  ...)
+\method{plot}{annualDownloads}(x, statistic = "count", pool = TRUE,
+  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/3,
+  span = 3/4, points = FALSE, ...)
 }
 \arguments{
 \item{x}{object.}
 
 \item{statistic}{Character. "count" or "percent".}
 
-\item{pool.obs}{Logical.}
+\item{pool}{Logical. Pool annual data into single time series.}
 
 \item{log.y}{Logical. Base 10 logarithm of y-axis.}
 
@@ -23,7 +23,11 @@
 
 \item{smooth}{Logical. Add smoother (loess).}
 
-\item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span). 3/4 is built-in default.}
+\item{f}{Numeric. Parameter for lowess.}
+
+\item{span}{Numeric. Smoothing parameter for geom_smooth(), which uses loess.}
+
+\item{points}{Logical.}
 
 \item{...}{Additional plotting parameters.}
 }
