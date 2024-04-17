@@ -38,7 +38,7 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2023) {
 #' @export
 
 plot.annualDownloads <- function(x, statistic = "count", pool = TRUE, 
-  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/3, span = 3/4, 
+  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/4, span = 3/4, 
   points = FALSE, ...) {
 
   if (!statistic %in% c("count", "percent")) {

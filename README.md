@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.3.9094-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.3.9095-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -306,6 +306,28 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 ![](man/figures/README-null_packages-1.png)<!-- -->
 
+Note that I often get a “Gateway Timeout (HTTP 504)” error when using
+this function for long time periods. This may be due to traffic but
+alternatively could be related to [‘cranlogs’ issue
+\#56](https://github.com/r-hub/cranlogs/issues/56). As a workaround,
+`annualDownloads()` downloads the data for each year individually and
+then `rbind()`’s them. This, of course, takes more time but seems to be
+more reliable.
+
+``` r
+plot(annualDownloads(start.yr = 2013, end.yr = 2023))
+```
+
+![](man/figures/README-annualDownloads-1.png)<!-- -->
+
+Note that in the plot above, three historical outlier days are
+highlighted: “2014-11-17”, “2018-10-21”, “2020-02-29”. The first was due
+to a disproportionate download of six packages: ‘BayHaz’, ‘clhs’,
+‘GPseq’, ‘OPI’, ‘YaleToolkit’ and ‘survsim’. The second date was due to
+downloads of ‘tidyverse’ (~700x the second place package ‘Rcppp’). The
+third is possibly related to some kind of scripting error that
+overlooked the fact that it was a leap day.
+
 #### `packages = "R"`
 
 `cranlogs::cran_download(packages = "R")` computes the total number of
@@ -437,6 +459,16 @@ smoother):
 ``` r
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"),
   unit.observation = "month", smooth = TRUE, graphics = "ggplot2")
+> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+> : span too small.  fewer data values than degrees of freedom.
+> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+> : pseudoinverse used at 18993
+> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+> : neighborhood radius 31.295
+> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+> : reciprocal condition number 0
+> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+> : There are other near singularities as well. 800.61
 ```
 
 ![](man/figures/README-month-1.png)<!-- -->
