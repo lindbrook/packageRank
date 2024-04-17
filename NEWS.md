@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9095
+
+- change plot.annualDownloads(f = 1/4).
+- add annualDownloads() example to README.
+
+
 ### packageRank 0.8.3.9094
 
 - amend annualDownloads() and plot.annualDownloads(); update 'ggplot2' syntax.
