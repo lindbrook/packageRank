@@ -56,9 +56,10 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
       if (format(currentTime(tz = "US/Eastern"), "%Z") == "EST") {
         upload.utc <- upload.utc + 3600L
       }
-      status <- paste0("'cranlogs' usually posts by ",
-        format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
-        format(upload.utc, date.fmt), ".")
+      # status <- paste0("'cranlogs' usually posts by ",
+      #   format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
+      #   format(upload.utc, date.fmt), ".")
+      status <- "'cranlogs' results not (yet) available."
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
         format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
