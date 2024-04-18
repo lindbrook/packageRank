@@ -1,6 +1,12 @@
+### packageRank 0.8.3.9097
+
+- amend 'cranlogs' status message in logInfo().
+
+
 ### packageRank 0.8.3.9096
 
 - add/set plot.annualDownloads(line.col = "gray") and fix outliers.
+
 
 ### packageRank 0.8.3.9095
 
