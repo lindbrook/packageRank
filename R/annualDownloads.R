@@ -34,12 +34,13 @@ annualDownloads <- function(start.yr = 2013, end.yr = 2023) {
 #' @param f Numeric. Parameter for lowess.
 #' @param span Numeric. Smoothing parameter for geom_smooth(), which uses loess.
 #' @param points Logical.
+#' @param line.col Character. Color of line
 #' @param ... Additional plotting parameters.
 #' @export
 
 plot.annualDownloads <- function(x, statistic = "count", pool = TRUE, 
   log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/4, span = 3/4, 
-  points = FALSE, ...) {
+  points = FALSE, line.col = "gray", ...) {
 
   if (!statistic %in% c("count", "percent")) {
     stop('statistic must be "count" or "percent".', call. = FALSE)
@@ -51,18 +52,23 @@ plot.annualDownloads <- function(x, statistic = "count", pool = TRUE,
   
   if (pool) {
     if (log.y) {
-      plot(x$date, x[, statistic], type = "l", col = "gray", xlab = "Date", 
+      plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
            ylab = y.nm.case, log = "y")
     } else {
-      plot(x$date, x[, statistic], type = "l", col = "gray", xlab = "Date", 
+      plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
            ylab = y.nm.case)   
     }
     
     if (points) points(x$date, x[, statistic])
-    points(outliers, x[x$date %in% outliers, statistic], col = "red")
     
+    if (any(outliers %in% x$date)) {
+      obs.outlier <- outliers[outliers %in% x$date]
+      points(obs.outlier, x[x$date %in% obs.outlier, statistic], col = "red")
+    }
+  
     if (smooth) {
-      lines(stats::lowess(x$date, x[, statistic], f = f), col = "blue")
+      lines(stats::lowess(x$date, x[, statistic], f = f), col = "blue", 
+        lwd = 1.5)
     }
 
     title(main = "Total CRAN Package Downloads")

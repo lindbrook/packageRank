@@ -5,8 +5,8 @@
 \title{Plot method for annualDownloads().}
 \usage{
 \method{plot}{annualDownloads}(x, statistic = "count", pool = TRUE,
-  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/3,
-  span = 3/4, points = FALSE, ...)
+  log.y = FALSE, sep.y = FALSE, nrow = 3, smooth = TRUE, f = 1/4,
+  span = 3/4, points = FALSE, line.col = "gray", ...)
 }
 \arguments{
 \item{x}{object.}
@@ -28,6 +28,8 @@
 \item{span}{Numeric. Smoothing parameter for geom_smooth(), which uses loess.}
 
 \item{points}{Logical.}
+
+\item{line.col}{Character. Color of line}
 
 \item{...}{Additional plotting parameters.}
 }
