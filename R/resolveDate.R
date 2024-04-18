@@ -54,7 +54,7 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
 
   if (x.date < first.log) {
     if (x.date < first.log) x.date <- first.log
-    message(paste0('Note: RStudio CRAN logs begin on ', first.log, "."))
+    message(paste0('Note: Posit/RStudio CRAN logs begin on ', first.log, "."))
   } else x.date
 
   logDate(x.date, warning.msg = FALSE, fix.date = fix.date)
