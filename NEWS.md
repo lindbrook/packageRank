@@ -1,3 +1,7 @@
+### packageRank 0.8.3.9096
+
+- add/set plot.annualDownloads(line.col = "gray") and fix outliers.
+
 ### packageRank 0.8.3.9095
 
 - change plot.annualDownloads(f = 1/4).
