@@ -53,10 +53,10 @@ plot.annualDownloads <- function(x, statistic = "count", pool = TRUE,
   if (pool) {
     if (log.y) {
       plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
-           ylab = y.nm.case, log = "y")
+           ylab = paste("log10", y.nm.case), log = "y")
     } else {
       plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
-           ylab = paste("log10", y.nm.case))
+           ylab = y.nm.case)
     }
     
     if (points) points(x$date, x[, statistic])
