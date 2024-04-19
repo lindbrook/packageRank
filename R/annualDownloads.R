@@ -53,10 +53,10 @@ plot.annualDownloads <- function(x, statistic = "count", pool = TRUE,
   if (pool) {
     if (log.y) {
       plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
-           ylab = y.nm.case, log = "y")
+           ylab = paste("log10", y.nm.case), log = "y")
     } else {
       plot(x$date, x[, statistic], type = "l", col = line.col, xlab = "Date", 
-           ylab = paste("log10", y.nm.case))
+           ylab = y.nm.case)
     }
     
     if (points) points(x$date, x[, statistic])
@@ -115,7 +115,7 @@ plot.annualDownloads <- function(x, statistic = "count", pool = TRUE,
     if (points) p <- p + ggplot2::geom_point()
     
     if (log.y) {
-      p <- p + ggplot2::scale_y_continuous(trans = "log10") + 
+      p <- p + ggplot2::scale_y_continuous(transform = "log10") + 
                ggplot2::ylab(paste("log10", y.nm.case))
     } else {
       p <- p + ggplot2::ylab(y.nm.case)

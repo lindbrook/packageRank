@@ -1,3 +1,9 @@
+### packageRank 0.8.3.9098
+
+- use transform argument in scale_y_continuous().
+- fix y-axis labels
+
+
 ### packageRank 0.8.3.9097
 
 - amend 'cranlogs' status message in logInfo().
