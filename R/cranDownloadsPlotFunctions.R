@@ -1818,10 +1818,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
-            ylab = paste("log10", ylab), ylim = ylim, log = "y")
+            ylab = paste("log10", y.nm.case), ylim = ylim, log = "y")
         } else {
-          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", ylab = ylab,
-            ylim = ylim)
+          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", 
+            ylab = y.nm.case, ylim = ylim)
         }
 
         if (points) {
@@ -1963,10 +1963,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         if (log.y) {
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date",
-            ylab = paste("log10", ylab), ylim = ylim, log = "y")
+            ylab = paste("log10", y.nm.case), ylim = ylim, log = "y")
         } else {
-          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", ylab = ylab,
-            ylim = ylim)
+          plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", 
+            ylab = y.nm.case, ylim = ylim)
         }
 
         if (points) {
@@ -2053,12 +2053,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           plot(dat[dat$platform == "win", "date"],
                dat[dat$platform == "win", statistic],
                pch = NA, ylim = range(dat[, statistic]),
-               xlab = "Date", ylab = paste("log10", ylab), log = "y")
+               xlab = "Date", ylab = paste("log10", y.nm.case), log = "y")
         } else {
           plot(dat[dat$platform == "win", "date"],
                dat[dat$platform == "win", statistic],
                pch = NA, ylim = range(dat[, statistic]),
-               xlab = "Date", ylab = ylab)
+               xlab = "Date", ylab = y.nm.case)
         }
 
         pltfrm <- sort(unique(dat$platform))
@@ -2215,9 +2215,10 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
+        
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-            ggplot2::ylab(paste("log10", ylab))
+            ggplot2::ylab(paste("log10", y.nm.case))
         }
 
         p <- p + ggplot2::theme_bw() +
@@ -2411,18 +2412,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 plot.title = ggplot2::element_text(hjust = 0.5))
 
         if (points) p <- p + ggplot2::geom_point()
+        
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-            ggplot2::ylab(paste("log10", ylab))
+            ggplot2::ylab(paste("log10", y.nm.case))
         }
+        
         if (!multi.plot) {
           p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
-      }
-
-      if (log.y) {
-        p <- p + ggplot2::scale_y_log10() + 
-          ggplot2::ylab(paste("log10", ylab))
       }
 
       if (smooth) {
