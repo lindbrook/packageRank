@@ -12,40 +12,35 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   type <- ifelse(points, "o", "l")
 
   y.nm <- statistic
-  y.var <- dat[, y.nm]
-  st <- strsplit(statistic, " ")[[1]]
-  y.nm.case <- paste(toupper(substring(st, 1, 1)), substring(st, 2), sep = "",
-    collapse = " ")
+  y.nm.case <- tools::toTitleCase(statistic)
 
   if (obs.ct == 1) {
     if (graphics == "base") {
       if (log.y) {
-        dotchart(log10(dat$count), xlab = paste("log10", y.nm.case),
+        dotchart(log10(dat[, y.nm]), xlab = paste("log10", y.nm.case),
           main = paste("R Package Downloads:", unique(dat$date)))
       } else {
-        dotchart(dat$count, xlab = "Count",
+        dotchart(dat[, y.nm], xlab = y.nm.case,
           main = paste("R Package Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  ""
       if (log.y) {
-        dat2 <- dat
-        dat2$count <- log10(dat2$count)
-
-        p <- ggplot2::ggplot(data = dat2, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
-             ggplot2::geom_point(size = 2) + 
-             ggplot2::xlab(paste("log10", y.nm.case)) + 
-             ggplot2::ylab(NULL)
-      
+        dat$count <- log10(dat$count)
+        dat$cumulative <- log10(dat$cumulative)
+        
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+             ggplot2::xlab(paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
-             ggplot2::geom_point(size = 2) + 
-             ggplot2::ylab(NULL)
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+             ggplot2::xlab(y.nm.case)  
       }
 
-      p + ggplot2::theme_bw() +
+      p + ggplot2::geom_point(size = 2) + 
+          ggplot2::ylab(NULL) +
+          ggplot2::theme_bw() +
           ggplot2::ggtitle(paste("R Package Downloads:", unique(dat$date))) +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
@@ -70,16 +65,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         est.data$cumulative <- last.cumulative + est.ct
 
         xlim <- range(dat$date)
-
-        if (statistic == "count") {
-          ylim <- range(c(dat[, y.nm], est.data$count))
-        } else if (statistic == "cumulative") {
-          ylim <- range(c(dat[, y.nm], est.data$cumulative))
-        }
+        ylim <- range(c(dat[, y.nm], est.data[, y.nm]))
 
         if (log.y) {
           plot(complete$date, complete[, y.nm], type = type,
-            xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
+            xlab = "Date", ylab = paste("log10", y.nm.case), xlim = xlim,
             ylim = ylim, log = "y", pch = 16)
         } else {
           plot(complete$date, complete[, y.nm], type = type,
@@ -159,7 +149,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
         if (log.y) {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+            ylab = paste("log10", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
         } else {
           plot(complete[, c("date", statistic)], type = type, xlab = "Date",
@@ -207,7 +197,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       } else {
         if (log.y) {
           plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), log = "y")
+            ylab = paste("log10", y.nm.case), log = "y")
         } else {
           plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
             ylab = y.nm.case)
@@ -440,8 +430,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (points) p <- p + ggplot2::geom_point()
         
         if (log.y) {
-          p <- p + ggplot2::scale_y_log10() + ggplot2::ylab(paste("log10", 
-            statistic))
+          p <- p + ggplot2::scale_y_log10() + 
+            ggplot2::ylab(paste("log10", statistic))
         }
         
         if (smooth) {
@@ -456,7 +446,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank(),
                               plot.title = ggplot2::element_text(hjust = 0.5))
-
+      
       p
     }
   }
@@ -470,7 +460,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   type <- ifelse(points, "o", "l")
 
   y.nm <- statistic
-  y.var <- dat[, y.nm]
   y.nm.case <- tools::toTitleCase(statistic)
 
   if (statistic == "count") {
@@ -489,10 +478,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             dat$cumulative <- cumsum(dat[dat$package == p, "count"])
           }
         }
-        dotchart(log10(dat$count), labels = dat$package,
+        dotchart(log10(dat[, y.nm]), labels = dat$package,
           xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
-        dotchart(dat$count, labels = dat$package, xlab = "Count",
+        dotchart(dat[, y.nm], labels = dat$package, xlab = "Count",
           main = paste(ttl, unique(dat$date)))
       }
     } else if (obs.ct > 1) {
@@ -546,7 +535,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (log.y) {
             plot(complete$date, complete[, y.nm], type = type,
-              xlab = "Date", ylab = paste0("log10 ", y.nm.case), xlim = xlim,
+              xlab = "Date", ylab = paste("log10", y.nm.case), xlim = xlim,
               ylim = ylim, log = "y", pch = 16)
           } else {
             plot(complete$date, complete[, y.nm], type = type,
@@ -695,7 +684,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (log.y) {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
-              ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+              ylab = paste("log10", y.nm.case), xlim = xlim, ylim = ylim,
               pch = 16, log = "y")
           } else {
             plot(complete[, c("date", y.nm)], type = type, xlab = "Date",
@@ -781,7 +770,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (log.y) {
             plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
-              ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+              ylab = paste("log10", y.nm.case), xlim = xlim, ylim = ylim,
               log = "y")
           } else {
             plot(pkg.dat$date, pkg.dat[, y.nm], type = type, xlab = "Date",
@@ -829,28 +818,25 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             dat$cumulative <- cumsum(dat[dat$package == p, "count"])
           }
         }
+
+        dat$count <- log10(dat$count)
+        dat$cumulative <- log10(dat$cumulative)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
+             ggplot2::xlab(paste("log10", y.nm.case))
+      } else {
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
+             ggplot2::xlab(y.nm.case)
       }
 
-      p <- ggplot2::ggplot(data = dat) +
-           ggplot2::theme_bw() +
-           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
-                          panel.grid.minor = ggplot2::element_blank()) +
-           ggplot2::facet_wrap(vars(.data$package), nrow = 2)
-
-      if (statistic == "count") {
-        p <- p + ggplot2::geom_point(size = 1.5,
-                   ggplot2::aes(x = .data$count, y = .data$package))
+      p <- p + ggplot2::geom_point(size = 1.5) +
+               ggplot2::ylab(NULL) +
+               ggplot2::theme_bw() +
+               ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                              panel.grid.minor = ggplot2::element_blank()) +
+               ggplot2::facet_wrap(vars(.data$date))
       
-      } else if (statistic == "cumulative") {
-        p <- p + ggplot2::geom_point( size = 1.5,
-                   ggplot2::aes(x = .data$cumulative, y = .data$package))
-      }
-
-      if (log.y) {
-        p <- p + ggplot2::scale_x_log10() + 
-                 ggplot2::xlab(paste("log10", y.nm.case))
-      }
-
       p
 
     } else if (obs.ct > 1) {
@@ -863,7 +849,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
         }
       }
-
 
       if (statistic == "count") {
         p <- ggplot2::ggplot(data = dat, 
@@ -903,7 +888,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         est.seg <- do.call(rbind, lapply(g, function(x) x$est.seg))
         obs.seg <- do.call(rbind, lapply(g, function(x) x$obs.seg))
 
-       
         p <- p + 
           ggplot2::geom_line(data = complete, linewidth = 1/3) +
           ggplot2::scale_color_manual(name = "In-progress",
@@ -1045,7 +1029,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                 shape = "Partial/In-Progress"))
         }
 
-
         if (weekdays(x$from) == "Sunday") {
           p <- p +
             ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
@@ -1068,13 +1051,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
-
       } else {
         p <- p + ggplot2::geom_line(linewidth = 1/3)
         if (points) p <- p + ggplot2::geom_point()
       }
 
-      
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
                  ggplot2::ylab(paste("log10", statistic))
@@ -1083,10 +1064,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
+          
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         
-        } else if (any(dat$partial)) {
+          } else if (any(dat$partial)) {
           smooth.data <- rbind(complete, wk1.backdate.seg)
         
           if (weekdays(last.obs.date) == "Saturday") {
@@ -1095,7 +1077,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
-        
+
         } else {
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
@@ -1135,10 +1117,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             dat$cumulative <- cumsum(dat[dat$package == p, "count"])
           }
         }
-        dotchart(log10(dat$count), labels = dat$package,
+        dotchart(log10(dat[, statistic]), labels = dat$package,
           xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
-        dotchart(dat$count, labels = dat$package, xlab = "Count",
+        dotchart(dat[, statistic], labels = dat$package, xlab = y.nm.case,
            main = paste(ttl, unique(dat$date)))
       }
     } else if (obs.ct > 1) {
@@ -1195,7 +1177,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl)
+              main = ttl, ylab = paste("log10", statistic))
           } else {
             plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
           }
@@ -1334,7 +1316,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl)
+              main = ttl, ylab = paste("log10", statistic))
           } else {
             plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
           }
@@ -1422,7 +1404,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               }
             }
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl)
+              main = ttl, ylab = paste("log10", statistic))
           } else {
             plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
           }
@@ -1470,31 +1452,35 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
     }
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
-      p <- ggplot2::ggplot(data = dat, 
-          ggplot2::aes(x = .data$count, y = .data$package))
-      
       if (log.y) {
-        # p + scale_x_log10() + xlab("log10(count)") doesn't work!
-        dat2 <- dat
-        
-        if (any(dat2$count == 0)) {
-          zero.ct.pkg <- unique(dat2[dat2$count == 0, "package"])
-          dat2[dat2$count == 0, "count"] <- 1
+        # p + scale_x_log10() doesn't work!
+        if (any(dat$count == 0)) {
+          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
+          dat[dat$count == 0, "count"] <- 1
           for (p in zero.ct.pkg) {
-            dat2$cumulative <- cumsum(dat2[dat2$package == p, "count"])
+            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
           }
         }
 
-        dat2$count <- log10(dat2$count)
-        p <- ggplot2::ggplot(data = dat2, 
-               ggplot2::aes(x = .data$count, y = .data$package)) +
+        dat$count <- log10(dat$count)
+        dat$cumulative <- log10(dat$cumulative)
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
              ggplot2::xlab(paste("log10", y.nm.case))
+      } else {
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
+             ggplot2::xlab(y.nm.case)
       }
 
-      p + ggplot2::geom_hline(yintercept = c(1, 2), linetype = "dotted") +
-          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
-                         panel.grid.minor = ggplot2::element_blank())
-
+      p + ggplot2::geom_point(size = 2) + 
+        ggplot2::geom_hline(yintercept = seq_along(x$packages), 
+                            linetype = "dotted") +
+        ggplot2::theme_bw() +
+        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank()) +
+        ggplot2::facet_wrap(vars(.data$date))
+        
     } else if (obs.ct > 1) {
       if (log.y) {
         if (any(dat$count == 0)) {
@@ -1505,6 +1491,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           }
         }
       }
+      
       if (statistic == "count") {
         p <- ggplot2::ggplot(data = dat, 
                 ggplot2::aes(x = .data$date, y = .data$count, 
@@ -1703,10 +1690,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-
-
-        
-        
         p <- p + ggplot2::geom_line(data = dat, linewidth = 1/3) +
                  ggplot2::theme(legend.position = "bottom",
                                 panel.grid.major = ggplot2::element_blank(),
@@ -1758,38 +1741,41 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   multi.plot) {
 
   dat <- x$cranlogs.data
-  ylab <- tools::toTitleCase(statistic)
+  y.nm <- statistic
+  y.nm.case <- tools::toTitleCase(y.nm)
   last.obs.date <- x$last.obs.date
   type <- ifelse(points, "o", "l")
 
   if (obs.ct == 1) {
     if (graphics == "base") {
       if (log.y) {
-        dotchart(log10(dat$count), labels = dat$platform,
+        dotchart(log10(as.numeric(dat[, statistic])), labels = dat$platform,
           xlab = paste("log10", statistic),
           main = paste("R Application Downloads:", unique(dat$date)))
       } else {
-        dotchart(dat$count, labels = dat$platform, xlab = "Count",
+        dotchart(as.numeric(dat[, statistic]), labels = dat$platform, xlab = "Count",
           main = paste("R Application Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
       if (log.y) {
-        dat2 <- dat
-        dat2$count <- log10(dat2$count)
-        p <- ggplot2::ggplot(data = dat2, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
-             ggplot2::geom_point(size = 2) +
-             ggplot2::xlab(paste("log10", ylab))
-      
+        dat$count <- log10(dat$count)
+        dat$cumulative <- log10(dat$cumulative)
+        
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+             ggplot2::xlab(paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
-             ggplot2::geom_point(size = 2)
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+             ggplot2::xlab(y.nm.case)
+             
       }
 
       ttl <- paste("R Application Downloads:", unique(dat$date))
       
-      p + ggplot2::theme_bw() +
+      p + ggplot2::geom_point(size = 2) +
+          ggplot2::ylab(NULL) +
+          ggplot2::theme_bw() +
           ggplot2::ggtitle(ttl) +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
@@ -2130,7 +2116,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (multi.plot) {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, y = .data$count,
-                  colour = .data$platform))
+                   colour = .data$platform))
         } else {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, y = .data$count)) +
@@ -2239,7 +2225,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                 panel.grid.major = ggplot2::element_blank(),
                 panel.grid.minor = ggplot2::element_blank(),
                 plot.title = ggplot2::element_text(hjust = 0.5))
-
 
       } else if (any(dat$partial)) {
         pltfrm <- unique(dat$platform)
@@ -2378,7 +2363,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                   linetype = "Partial/In-Progress")) +
               ggplot2::geom_point(data = current.wk.est, size = 1.5,
                 ggplot2::aes(colour = "Partial/In-Progress",
-                    shape = "Partial/In-Progress")) +
+                  shape = "Partial/In-Progress")) +
               ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
                 ggplot2::aes(colour = "Observed", linetype = "Observed")) +
               ggplot2::geom_point(data = current.wk,
@@ -2435,7 +2420,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (log.y) {
-        p <- p + ggplot2::scale_y_log10() + ggplot2::ylab(paste("log10", ylab))
+        p <- p + ggplot2::scale_y_log10() + 
+          ggplot2::ylab(paste("log10", ylab))
       }
 
       if (smooth) {
@@ -2463,7 +2449,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               panel.grid.minor = ggplot2::element_blank(),
               plot.title = ggplot2::element_text(hjust = 0.5))
 
-      # suppressWarnings(print(p))
       p
     }
   }
@@ -2500,31 +2485,32 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
   if (obs.ct == 1) {
     if (graphics == "base") {
       if (log.y) {
-        dotchart(log10(dat$count), labels = dat$platform,
+        dotchart(log10(dat[, statistic]), labels = dat$platform,
           xlab = paste("log10", y.nm.case),
           main = paste("R Application Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       } else {
-        dotchart(dat$count, labels = dat$platform, xlab = "Count",
+        dotchart(dat[, statistic], labels = dat$platform, xlab = "Count",
           main = paste("R Application Downloads:", unique(dat$date)))
         mtext("R", side = 2, las = 1, line = 1)
       }
     } else if (graphics == "ggplot2") {
       dat$platform <-  "R"
       if (log.y) {
-        dat2 <- dat
-        dat2$count <- log10(dat2$count)
+        dat$count <- log10(dat$count)
+        dat$cumulative <- log10(dat$cumulative)
       
-        p <- ggplot2::ggplot(data = dat2, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
+        p <- ggplot2::ggplot(data = dat, 
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
              ggplot2::geom_point(size = 2) + 
              ggplot2::xlab(paste("log10", y.nm.case)) + 
              ggplot2::ylab(NULL)
       
       } else {
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$count, y = .data$platform)) +
-             ggplot2::geom_point(size = 2) + ggplot2::ylab(NULL)
+               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+             ggplot2::geom_point(size = 2) + 
+             ggplot2::ylab(NULL)
       }
 
       ttl <- paste("R Application Downloads:", unique(dat$date))
@@ -2556,17 +2542,12 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         last.cumulative <- complete[nrow(complete), "cumulative"]
         est.data$cumulative <- last.cumulative + est.ct
 
-        if (statistic == "count") {
-          ylim <- range(c(dat[, statistic], est.data$count))
-        } else if (statistic == "cumulative") {
-          ylim <- range(c(dat[, statistic], est.data$cumulative))
-        }
-
         xlim <- range(dat$date)
-
+        ylim <- range(c(dat[, statistic], est.data[, statistic]))
+        
         if (log.y) {
           plot(complete[, vars], type = type, xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+            ylab = paste("log10", y.nm.case), xlim = xlim, ylim = ylim,
             log = "y", pch = 16)
         } else {
           plot(complete[, vars], type = type, xlab = "Date", ylab = y.nm.case,
@@ -2652,7 +2633,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
         if (log.y) {
           plot(complete[, vars], type = type, xlab = "Date",
-            ylab = paste0("log10 ", y.nm.case), xlim = xlim, ylim = ylim,
+            ylab = paste("log10", y.nm.case), xlim = xlim, ylim = ylim,
             pch = 16, log = "y")
         } else {
           plot(complete[, vars], type = type, xlab = "Date", ylab = y.nm.case,
@@ -2700,7 +2681,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       } else {
         if (log.y) {
           plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case,
-            log = "y")
+            log = "y", ylab = paste("log10", statistic))
         } else {
           plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case)
         }
@@ -2914,7 +2895,6 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
               panel.grid.minor = ggplot2::element_blank(),
               plot.title = ggplot2::element_text(hjust = 0.5))
 
-      # suppressWarnings(print(p))
       p
     }
   }
