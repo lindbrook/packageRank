@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9100
+
+- fix dotchart() and y-axis labels in rPlot().
+
+
 ### packageRank 0.8.3.9099
 
 - amend dotcharts/dotplots, code and axes labels in plot.cranDownloads().
