@@ -1750,10 +1750,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
     if (graphics == "base") {
       if (log.y) {
         dotchart(log10(as.numeric(dat[, statistic])), labels = dat$platform,
-          xlab = paste("log10", statistic),
+          xlab = paste("log10", y.nm.case), 
           main = paste("R Application Downloads:", unique(dat$date)))
       } else {
-        dotchart(as.numeric(dat[, statistic]), labels = dat$platform, xlab = "Count",
+        dotchart(as.numeric(dat[, statistic]), labels = dat$platform, 
+          xlab = y.nm.case,
           main = paste("R Application Downloads:", unique(dat$date)))
       }
     } else if (graphics == "ggplot2") {
