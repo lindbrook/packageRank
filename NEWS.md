@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9099
+
+- amend dotcharts/dotplots, code and axes labels in plot.cranDownloads().
+
+
 ### packageRank 0.8.3.9098
 
 - use transform argument in scale_y_continuous().
