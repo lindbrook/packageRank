@@ -338,7 +338,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   obs.ct <- length(unique(x$cranlogs.data$date))
 
   if (points == "auto") {
-    if (obs.ct <= 45) points <- TRUE else points <- FALSE
+    points <- ifelse(obs.ct <= 45, TRUE, FALSE)
   } else if (is.logical(points) == FALSE) {
     stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
   }

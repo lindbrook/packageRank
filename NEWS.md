@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9101
+
+- use ifelse() in plot.cranDownloads().
+
+
 ### packageRank 0.8.3.9100
 
 - fix dotchart() and y-axis labels in rPlot().
