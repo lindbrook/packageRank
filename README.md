@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.3.9101-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.3.9102-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -306,9 +306,9 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 ![](man/figures/README-null_packages-1.png)<!-- -->
 
-Note that I often get a “Gateway Timeout (HTTP 504)” error when using
-this function for long time periods. This may be due to traffic but
-alternatively could be related to [‘cranlogs’ issue
+Note that I sometimes get a “Gateway Timeout (HTTP 504)” error when
+using this function for long time periods. This may be due to traffic
+but alternatively could be related to [‘cranlogs’ issue
 \#56](https://github.com/r-hub/cranlogs/issues/56). As a workaround,
 `annualDownloads()` downloads the data for each year individually and
 then `rbind()`’s them. This, of course, takes more time but seems to be
@@ -459,16 +459,6 @@ smoother):
 ``` r
 plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"),
   unit.observation = "month", smooth = TRUE, graphics = "ggplot2")
-> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-> : span too small.  fewer data values than degrees of freedom.
-> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-> : pseudoinverse used at 18993
-> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-> : neighborhood radius 31.295
-> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-> : reciprocal condition number 0
-> Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-> : There are other near singularities as well. 800.61
 ```
 
 ![](man/figures/README-month-1.png)<!-- -->
@@ -908,10 +898,9 @@ which uses those logs to compute the download counts of both the R
 application and R packages.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the
-*previous* day are typically posted by 17:00 UTC and the results for
+*previous* day are typically posted by 17:00 UTC. The results for
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) usually become
-available soon thereafter (up to an hour depending when it’s standard
-time).
+available soon thereafter (sometimes as much as a day later).
 
 #### why aren’t today’s logs and results available?
 
@@ -935,8 +924,8 @@ is not (yet) on the server” error message.
 If there’s a problem with
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) but not with
 the [logs](http://cran-logs.rstudio.com/), only
-`packageRank::cranDownalods()` will be affected (the zero downloads
-problem). All other
+`packageRank::cranDownalods()` will be affected. In that case, you might
+get a warning that only “previous” results will be used. All other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
 functions should work since they either directly access the logs or use
 some other source. Usually, these errors resolve themselves the next

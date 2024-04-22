@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9102
+
+- use previous day if today not available in cranDownloads().
+
+
 ### packageRank 0.8.3.9101
 
 - use ifelse() in plot.cranDownloads().
