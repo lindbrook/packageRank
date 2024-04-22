@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9103
+
+- use suppressWarnings(print(p)) for 'ggplot2' graphs in plot.cranDownloads().
+
+
 ### packageRank 0.8.3.9102
 
 - use previous day if today not available in cranDownloads().

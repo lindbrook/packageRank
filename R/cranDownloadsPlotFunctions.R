@@ -447,7 +447,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
                               panel.grid.minor = ggplot2::element_blank(),
                               plot.title = ggplot2::element_text(hjust = 0.5))
       
-      p
+      suppressWarnings(print(p))
     }
   }
 }
@@ -830,14 +830,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
              ggplot2::xlab(y.nm.case)
       }
 
-      p <- p + ggplot2::geom_point(size = 1.5) +
-               ggplot2::ylab(NULL) +
-               ggplot2::theme_bw() +
-               ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
-                              panel.grid.minor = ggplot2::element_blank()) +
-               ggplot2::facet_wrap(vars(.data$date))
-      
-      p
+      p + ggplot2::geom_point(size = 1.5) +
+          ggplot2::ylab(NULL) +
+          ggplot2::theme_bw() +
+          ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                         panel.grid.minor = ggplot2::element_blank()) +
+          ggplot2::facet_wrap(vars(.data$date))
 
     } else if (obs.ct > 1) {
       if (log.y) {
@@ -1089,8 +1087,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank())
+      
+      suppressWarnings(print(p))
     }
-    p
   }
 }
 
@@ -1731,7 +1730,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                               panel.grid.minor = ggplot2::element_blank(),
                               plot.title = ggplot2::element_text(hjust = 0.5))
 
-      p
+      suppressWarnings(print(p))
     }
   }
 }
@@ -2448,7 +2447,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               panel.grid.minor = ggplot2::element_blank(),
               plot.title = ggplot2::element_text(hjust = 0.5))
 
-      p
+      suppressWarnings(print(p))
     }
   }
 }
@@ -2894,7 +2893,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
               panel.grid.minor = ggplot2::element_blank(),
               plot.title = ggplot2::element_text(hjust = 0.5))
 
-      p
+      suppressWarnings(print(p))
     }
   }
 }
