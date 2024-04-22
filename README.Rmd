@@ -250,7 +250,7 @@ Note that for the sake of the plot, zero counts are replaced by ones so that the
 plot(cranDownloads(from = 2019, to = 2019))
 ```
 
-Note that I often get a "Gateway Timeout (HTTP 504)" error when using this function for long time periods. This may be due to traffic but alternatively could be related to ['cranlogs' issue #56](https://github.com/r-hub/cranlogs/issues/56). As a workaround, `annualDownloads()` downloads the data for each year individually and then `rbind()`'s them. This, of course, takes more time but seems to be more reliable.
+Note that I sometimes get a "Gateway Timeout (HTTP 504)" error when using this function for long time periods. This may be due to traffic but alternatively could be related to ['cranlogs' issue #56](https://github.com/r-hub/cranlogs/issues/56). As a workaround, `annualDownloads()` downloads the data for each year individually and then `rbind()`'s them. This, of course, takes more time but seems to be more reliable.
 
 ```{r annualDownloads}
 plot(annualDownloads(start.yr = 2013, end.yr = 2023))
@@ -721,7 +721,7 @@ Ideally, we'd like to use both sets. However, the package-specific set is comput
 
 To understand when results become available, you need to be aware that [‘packageRank'](https://CRAN.R-project.org/package=packageRank) has two upstream, online dependencies. The first is Posit/RStudio's [CRAN package download logs](http://cran-logs.rstudio.com/), which record traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly Posit/RStudio's CRAN mirror). The second is Gábor Csárdi's [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) R package, which uses those logs to compute the download counts of both the R application and R packages.
 
-The [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day are typically posted by 17:00 UTC and the results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) usually become available soon thereafter (up to an hour depending when it's standard time).
+The [CRAN package download logs](http://cran-logs.rstudio.com/) for the _previous_ day are typically posted by 17:00 UTC. The results for [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) usually become available soon thereafter (sometimes as much as a day later).
 
 #### why aren't today's logs and results available?
 
@@ -737,7 +737,7 @@ If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they'
 'cranlogs' --> packageRank::cranDownloads()
 ```
 
-If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected (the zero downloads problem). All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they either directly access the logs or use some other source. Usually, these errors resolve themselves the next time the underlying scripts are run ("tomorrow", if not sooner). 
+If there's a problem with [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) but not with the [logs](http://cran-logs.rstudio.com/), only `packageRank::cranDownalods()` will be affected. In that case, you might get a warning that only "previous" results will be used. All other [‘packageRank'](https://CRAN.R-project.org/package=packageRank) functions should work since they either directly access the logs or use some other source. Usually, these errors resolve themselves the next time the underlying scripts are run ("tomorrow", if not sooner). 
 
 #### `logInfo()`
 

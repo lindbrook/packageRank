@@ -117,7 +117,14 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
         packages <- packages[!end.date.test]
         first.published <- first.published[!end.date.test]
       }
-    } else end.date <- available.log
+    } else {
+      if (clogs$count != 0) {
+        end.date <- available.log
+      } else {
+        end.date <- available.log - 1
+        message("Today's 'cranlogs' results not available. Using previous.")
+      }
+    }
     if (start.date > end.date) stop('"from" must be <= "to".', call. = FALSE)
     argmnts <- list(packages = packages, from = start.date, to = end.date)
   } else if (is.null(when) & !is.null(to)) {
