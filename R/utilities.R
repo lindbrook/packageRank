@@ -19,7 +19,6 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 #'
 #' @param lst Object. List of logs.
 #' @param i Numeric. Day/ID.
-#' @param triplet.filter Logical.
 #' @param ip.filter Logical.
 #' @param ip.campaigns Logical.
 #' @param small.filter Logical.
@@ -29,9 +28,9 @@ pkgLog0 <- function(lst, i = 1, pkg = "cholera", clean.output = TRUE) {
 #' @param clean.output Logical.
 #' @noRd
 
-pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
-  ip.campaigns = TRUE, small.filter = TRUE, sequence.filter = TRUE,
-  pkg = "cholera", multi.core = FALSE, clean.output = TRUE) {
+pkgLog <- function(lst, i = 1, ip.filter = TRUE, ip.campaigns = TRUE, 
+  small.filter = TRUE, sequence.filter = TRUE, pkg = "cholera", 
+  multi.core = FALSE, clean.output = TRUE) {
 
   cores <- multiCore(multi.core)
   cran_log <- cleanLog(lst[[i]])
@@ -45,7 +44,6 @@ pkgLog <- function(lst, i = 1, triplet.filter = TRUE, ip.filter = TRUE,
   tmp <- cran_log[cran_log$package == pkg, ]
 
   if (nrow(tmp) != 0) {
-    if (triplet.filter) tmp <- tripletFilter(tmp)
     if (small.filter) tmp <- smallFilter(tmp)
     if (sequence.filter) {
       pkg.history <- packageRank::blog.data$pkg.history
@@ -116,9 +114,6 @@ filter_counts <- function(dat, pkg = "cholera", date, ip.campaigns) {
     ip.filtered <- sum(!row.names(dat) %in% row.delete)
     out <- dat[!row.names(dat) %in% row.delete, ]
 
-    # Triplet filter #
-    out <- tripletFilter(dat)
-    triplet.filtered <- nrow(out)
 
     # Small Filter #
     small.filtered <- nrow(smallFilter(dat))
@@ -135,20 +130,19 @@ filter_counts <- function(dat, pkg = "cholera", date, ip.campaigns) {
     sequence.filtered <- nrow(out) + pre.filter
 
     # Output #
-    data.frame(package = pkg, ct = nrow(dat), triplet = triplet.filtered,
-      ip = ip.filtered, small = small.filtered, sequence = sequence.filtered,
-      all = nrow(out))
+    data.frame(package = pkg, ct = nrow(dat), ip = ip.filtered, 
+      small = small.filtered, sequence = sequence.filtered, all = nrow(out))
 
   } else {
-    data.frame(package = pkg, ct = nrow(dat), triplet = 0, ip = 0, small = 0,
-      sequence = 0, all = 0)
+    data.frame(package = pkg, ct = nrow(dat), ip = 0, small = 0, sequence = 0, 
+      all = 0)
   }
 }
 
 #' Plot method for packageFilterCounts().
 #'
 #' @param x object.
-#' @param filter Character. "triplet", "ip", "small", "sequence", "all".
+#' @param filter Character. "ip", "small", "sequence", "all".
 #' @param smooth Logical.
 #' @param median Logical.
 #' @param legend.loc Character. Location of legend.
