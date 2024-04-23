@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9107
+
+- use importFrom.R.
+
+
 ### packageRank 0.8.3.9106
 
 - remove tripletFilter() code from utilities.R functions.
