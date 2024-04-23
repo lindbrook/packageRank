@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9104
+
+- remove dev.mode argument from checkPackage().
+
+
 ### packageRank 0.8.3.9103
 
 - use suppressWarnings(print(p)) for 'ggplot2' graphs in plot.cranDownloads().

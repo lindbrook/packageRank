@@ -2,21 +2,15 @@
 #'
 #' "spell check" package names.
 #' @param packages Character. Vector of package name(s).
-#' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @param print.message Logical. Print availablity/spell check messages.
 #' @noRd
 
-checkPackage <- function(packages, dev.mode = FALSE, print.message = TRUE) {
+checkPackage <- function(packages, print.message = TRUE) {
   orig.timeout <- getOption("timeout") # R default is 60
   if (orig.timeout < 600L) options(timeout = 600L)
 
   packages0 <- packages
-  
-  if (dev.mode) {
-    pkg.chk <- validatePackage0(packages)
-  } else {
-    pkg.chk <- validatePackage(packages)
-  }
+  pkg.chk <- validatePackage(packages)
 
   if (any(pkg.chk$pkgsearch == FALSE)) {
     # 'pkgsearch' errors (not in db); removed (old w/o details) 
