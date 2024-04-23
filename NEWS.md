@@ -1,3 +1,8 @@
+### packageRank 0.8.3.9106
+
+- remove tripletFilter() code from utilities.R functions.
+
+
 ### packageRank 0.8.3.9105
 
 - use packageCRAN() instead of mpackages_on_CRAN() in packageHistory().
