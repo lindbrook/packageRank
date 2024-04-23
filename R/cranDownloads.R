@@ -57,7 +57,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
   if (!is.null(packages)) {
     if (!"R" %in% packages) {
-      if (check.package) packages <- checkPackage(packages, dev.mode)
+      if (check.package) packages <- checkPackage(packages)
       
       first.published <- do.call(c, lapply(packages, function(pkg) {
         packageHistory(pkg, check.package = FALSE)[1, "Date"]
