@@ -1,566 +1,82 @@
-### packageRank 0.8.3.9107
+### packageRank 0.9.0
 
-- use importFrom.R.
-
-
-### packageRank 0.8.3.9106
-
-- remove tripletFilter() code from utilities.R functions.
-
-
-### packageRank 0.8.3.9105
-
-- use packageCRAN() instead of mpackages_on_CRAN() in packageHistory().
-
-
-### packageRank 0.8.3.9104
-
-- remove dev.mode argument from checkPackage().
-
-
-### packageRank 0.8.3.9103
-
-- use suppressWarnings(print(p)) for 'ggplot2' graphs in plot.cranDownloads().
-
-
-### packageRank 0.8.3.9102
-
-- use previous day if today not available in cranDownloads().
-
-
-### packageRank 0.8.3.9101
-
-- use ifelse() in plot.cranDownloads().
-
-
-### packageRank 0.8.3.9100
-
-- fix dotchart() and y-axis labels in rPlot().
-
-
-### packageRank 0.8.3.9099
-
-- amend dotcharts/dotplots, code and axes labels in plot.cranDownloads().
-
-
-### packageRank 0.8.3.9098
-
-- use transform argument in scale_y_continuous().
-- fix y-axis labels
-
-
-### packageRank 0.8.3.9097
-
-- amend 'cranlogs' status message in logInfo().
-
-
-### packageRank 0.8.3.9096
-
-- add/set plot.annualDownloads(line.col = "gray") and fix outliers.
-
-
-### packageRank 0.8.3.9095
-
-- change plot.annualDownloads(f = 1/4).
-- add annualDownloads() example to README.
-
-
-### packageRank 0.8.3.9094
-
-- amend annualDownloads() and plot.annualDownloads(); update 'ggplot2' syntax.
-
-
-### packageRank 0.8.3.9093
-
-- amend dayOfMonth().
-
-
-### packageRank 0.8.3.9092
-
-- amend packageVersionPercent() and helper functions.
-- update 'ggplot2' syntax in plot.packageVersionPercent().
-
-
-### packageRank 0.8.3.9091
-
-- update 'ggplot2' syntax in plotTopCountryCodes() and plotDownloadsCountry().
-
-
-### packageRank 0.8.3.9090
-
-- update 'ggplot2' syntax in versionPlot().
-
-
-### packageRank 0.8.3.9089
-
-- update 'ggplot2' syntax in plot.weeklyDownloads().
-
-
-### packageRank 0.8.3.9088
-
-- fix packageDistribution() for multiple packages.
-- update 'ggplot2' syntax in plot.packageDistribution().
-
-
-### packageRank 0.8.3.9087
-
-- use importFrom rather than import for data.table::fread().
-
-
-### packageRank 0.8.3.9086
-
-- update 'ggplot2' syntax in ggPlot() and gg_bioc_plot().
-
-
-### packageRank 0.8.3.9085
-
-- replace log_count with log.y in plot.bioconductorRank and plot.packageRank().
-
-
-### packageRank 0.8.3.9084
-
-- update 'ggplot2' syntax in cranDownloads() plot functions
-
-
-### packageRank 0.8.3.9083
-
-- amend titles in rPlot() and rTotPlot().
-
-
-### packageRank 0.8.3.9082
-
-- match point types in 
-  plot.cranDownloads(graphics = "ggplot2", unit.observation = "week").
-
-
-### packageRank 0.8.3.9081
-
-- amend/correct aggregateData(unit.observation = "week").
-
-
-### packageRank 0.8.3.9080
-
-- fix/ensure exact package name matching in packageCRAN().
-
-
-### packageRank 0.8.3.9079
-
-- fix typo in plot.cranDownloads().
-
-
-### packageRank 0.8.3.9078
+#### New Functionality
 
 - add rLog().
-- sort rLog() by date-time.
+- add cranPackageSize(mac.ver = "arm")
 
-
-### packageRank 0.8.3.9077
-
-- name list elements and clean code in packageHistory().
-
-
-### packageRank 0.8.3.9076
-
-- fix error/typo in cranDownloads().
-
-
-### packageRank 0.8.3.9075
-
-- improve error for misspelled/missing packages with 
-  cranDownloads(check.package = FALSE).
-
-
-### packageRank 0.8.3.9074
-
-- return empty data frame for no CRAN, no Archive in packageHistory0().
-
-
-### packageRank 0.8.3.9073
-
-- fix typo/error in sequenceFilter().
-
-
-### packageRank 0.8.3.9072
-
-- check internet connection in bioconductorDownloads() and bioconductorRank().
-
-
-### packageRank 0.8.3.9071
-
-- check for unobserved packages earlier in packageLog().
-
-
-### packageRank 0.8.3.9070
-
-- remove unneeded checkPackage(); fix archive package names in packageHistory().
-
-
-### packageRank 0.8.3.9069
-
-- use data.frame code for archive packages in sizeFilter().
-
-
-### packageRank 0.8.3.9068
-
-- add delta count and inflation unit in filteredDownloads().
-
-
-### packageRank 0.8.3.9067
-
-- add method and set N in print.countryDistribution(N = 10).
-
-
-### packageRank 0.8.3.9066
-
-- update cranPackageSize(r.ver = "4.4").
-
-
-### packageRank 0.8.3.9065
-
-- change/set ipCount(sort.count = TRUE); use "file.url.date" in ipCount() and 
-    ipDownloads().
-
-
-### packageRank 0.8.3.9064
-
-= add/set plot.countryDistribution(N = 10) for top N country domains.
-
-
-### packageRank 0.8.3.9063
-
-- update cranMirrors().
-
-
-### packageRank 0.8.3.9062
-
-- amend "ymd", set cores = 1 on Windows, amend filtering in 
-  countryDistribution().
-
-
-### packageRank 0.8.3.9061
-
-- apply smallFilter() before ipFilter() in countryPackage().
-
-
-### packageRank 0.8.3.9060
-
-- remove multi.core argument and allow only ipFilter() and smallFilter() in 
-  countryPackage().
-
-
-### packageRank 0.8.3.9059
-
-- add pre-flight checks to sequenceFilter() and smallFilter().
-
-
-### packageRank 0.8.3.9058
-
-- amend "ymd", set cores = 1 on Windows, amend filtering in ipPackage().
-
-
-### packageRank 0.8.3.9057
-
-- amend "ymd" and set cores = 1 on Windows in filteredDownloads().
-
-
-### packageRank 0.8.3.9056
-
-- set cores = 1 on Windows in packageRank().
-
-
-### packageRank 0.8.3.9055
-
-- amend packageLog() and associated filter functions.
-
-
-### packageRank 0.8.3.9054
-
-- set cores = 1 on Windows and remove unneeded dev.mode argument in 
-  packageLogB().
-
-
-### packageRank 0.8.3.9053
-
-- remove unnused dev.mode arguments.
-
-
-### packageRank 0.8.3.9052
-
-- remove dev.mode argument from ipFilter().
-- compute run length encoding and candidate.data in ipFilter(campaigns = TRUE).
-
-
-### packageRank 0.8.3.9051
-
-- use ipFilter(cran_log, multi.core = cores) in packageLogB().
-
-
-### packageRank 0.8.3.9050
-
-- add packageLogB() prototype.
-- change "t2" variable to "date.time".
-
-
-### packageRank 0.8.3.9049
-
-- remove cores argument from sequenceFilter().
-
-
-### packageRank 0.8.3.9048
-
-- use "t2" as date-time variable in sequenceFilter().
-
-
-### packageRank 0.8.3.9047
-
-- fix computeFileSizeB() for multiple size units. 
-
-
-### packageRank 0.8.3.9046
-
-- fix argument error in packageArchive() for sizeFilter().
-
-
-### packageRank 0.8.3.9045
-
-- amend and use non-parallel smallFilter().
-
-
-### packageRank 0.8.3.9044
-
-- replace ip_filter() with greedyIP() in ipFilter().
-
-
-### packageRank 0.8.3.9043
-
-- return latest release in package_info() for packageCRAN() (n.b. pkg updates).
-
-
-### packageRank 0.8.3.9042
-
-- update and add/set cranPackageSize(r.ver = "4.3",  mac.ver = "arm").
-
-
-### packageRank 0.8.3.9041
-
-- rename/set sequenceFilter(delta.time = 10).
-- modify removeSequences() for high volume packages.
-
-
-### packageRank 0.8.3.9040
-
-- remove tripletFilter() from packageLog() and clean code.
-
-
-### packageRank 0.8.3.9039
-
-- amend removeSequences(); use rle().
-
-
-### packageRank 0.8.3.9038
-
-- use smallFilter().
-
-
-### packageRank 0.8.3.9037
-
-- update usage of ipFilter().
-
-
-### packageRank 0.8.3.9036
+#### Deprecated
 
 - remove tripletFilter() - redundant with amended sizeFilter().
 
+#### Fixes/Updates
 
-### packageRank 0.8.3.9035
+- If available, multi.core = FALSE by default in all functions.
 
-- use only counts in ip_filter().
+- amend/correct aggregateData(unit.observation = "week").
+- fix computeFileSizeB() for multiple size units. 
+- update cranMirrors().
+- update/set cranPackageSize(r.ver = "4.3").
+- fix argument error in packageArchive() for sizeFilter().
+- fix packageDistribution() for multiple packages.
+- add timeout fix to packages_on_CRAN(), packageArchive() and packageCRAN().
+- fix/ensure exact package name matching in packageCRAN().
+- return latest release in package_info() for packageCRAN() (n.b. pkg updates).
+- fix packageCRAN(size) and packageArchive(size).
+- fix packageHistory("R").
+- match point types in 
+  plot.cranDownloads(graphics = "ggplot2", unit.observation = "week").
+- modify removeSequences() for high volume packages.
+- fix typo/error in sequenceFilter().
 
+#### Function Changes
 
-### packageRank 0.8.3.9034
-
-- use dateTime() in ipFilter().
-- remove parallel computation of campaign.row.delete in ipFilter().
-
-
-### packageRank 0.8.3.9033
-
-- delete "t0" variable from removeSequences() output.
-
-
-### packageRank 0.8.3.9032
-
-- replace identifySequences() with removeSequences() in sequenceFilter().
-
-
-### packageRank 0.8.3.9031
-
-- amend variable name in ip_filter() and kmeanClassifier().
-- disable parallel code for ipFilter(campaigns = TRUE).
-
-
-### packageRank 0.8.3.9030
-
-- set packageHistory(check.package = FALSE) in sequenceFilter().
-- fix sequenceFilter().
-
-
-### packageRank 0.8.3.9029
-
-- set more multi.core = FALSE.
-
-
-### packageRank 0.8.3.9028
-
-- set multi.core = FALSE.
-
-
-### packageRank 0.8.3.9027
-
+- use previous day if today not available in cranDownloads().
 - remove non-user facing functions from NAMESPACE.
 
+- update 'ggplot2' syntax in cranDownloads() plot functions,
+  ggPlot(), gg_bioc_plot(), plot.annualDownloads(), plotDownloadsCountry(), 
+  plot.packageDistribution(), plotTopCountryCodes(), plot.weeklyDownloads() and 
+  plot.packageVersionPercent().
 
-### packageRank 0.8.3.9026
-
-- filter out undersized downloads of past versions in sizeFilter().
-
-
-### packageRank 0.8.3.9025
-
-- use isFALSE() in packageCRAN() and packageArchive().
-
-
-### packageRank 0.8.3.9024
-
-- update/set cranPackageSize(r.ver = "4.2").
-
-
-### packageRank 0.8.3.9023
-
-- fix packageCRAN(size) and packageArchive(size).
-
-
-### packageRank 0.8.3.9022
-
-- use date.fmt in logInfo().
-
-
-### packageRank 0.8.3.9021
-
-- add packageRank-package document stub.
-- sketch out packageRank-package document.
-
-
-### packageRank 0.8.3.9020
-
-- fix duplicate date-times in timeFix() in tripletFilter().
-
-
-### packageRank 0.8.3.9019
-
-- check last 3 rather than last 7 logs for logInfo(show.available = TRUE).
-
-
-### packageRank 0.8.3.9018
-
-- change/amend logInfo(show.available = FALSE) to logInfo(details = FALSE).
-
-
-### packageRank 0.8.3.9017
-
+- check internet connection in bioconductorDownloads() and bioconductorRank().
+- change "warn.msg" to "print.message" in checkPackage().
+- remove dev.mode argument from checkPackage().
+- add/set plot.countryDistribution(N = 10) for top N country domains.
+- match cranlogs::cran_downloads() behavior with duplicate packages in 
+  cranDownloads() and packageHistory().
+- add delta count and inflation unit in filteredDownloads().
+- replace ip_filter() with greedyIP() in ipFilter().
+- use only counts in greedyIP() in ipFilter().
+- compute run length encoding and candidate.data in ipFilter(campaigns = TRUE).
+- change/set ipCount(sort.count = TRUE)
+- use "file.url.date" in ipCount() and ipDownloads().
+- disable parallel code for ipFilter(campaigns = TRUE).
+- include local time with logInfo(details = TRUE).
+- check last 3 rather than last 7 logs for logInfo(details = TRUE).
+- name list elements in packageHistory().
+- set packageHistory(check.package = TRUE).
+- use "crandb_file_date" for dates in packageHistory().
+- use packageCRAN() instead of mpackages_on_CRAN() in packageHistory().
+- return empty data frame for no CRAN, no Archive in packageHistory0().
 - make packageHistory0(), packageCRAN() and packageArchive() standalone and 
   private.
-
-
-### packageRank 0.8.3.9016
-
-- amend logInfo() output.
-
-
-### packageRank 0.8.3.9015
-
-= include local time with logInfo().
-
-
-### packageRank 0.8.3.9014
-
-- add guesstimate for 'cranlogs' daylight saving post time in logInfo().
-- copyedit README.
-
-
-### packageRank 0.8.3.9013
-
-- clean packageHistory() output for archive-only packages.
-
-
-### packageRank 0.8.3.9012
-
-- amend 'cranlogs' status message in logInfo().
-
-
-### packageRank 0.8.3.9011
-
-- use packageHistory(check.package = check.package) in cranDownloads().
-
-
-### packageRank 0.8.3.9010
-
-- skip tools::CRAN_package_db() when packageHistory(check.package = FALSE).
-
-
-### packageRank 0.8.3.9009
-
-- use message() rather than warning() in checkPackage().
-- change "warn.msg" to "print.message" in checkPackage().
-
-
-### packageRank 0.8.3.9008
-
-- fix packageHistory("R").
-- add/set checkPackage(warn.msg = TRUE).
+- change plot.annualDownloads(f = 1/4).
+- add/set plot.annualDownloads(line.col = "gray") and fix outliers.
+- replace log_count argument with log.y in plot.bioconductorRank and 
+  plot.packageRank().
+- rename/set sequenceFilter(delta.time = 10).
+- add pre-flight checks to sequenceFilter() and smallFilter().
+- replace identifySequences() with removeSequences() in sequenceFilter().
+- set packageHistory(check.package = FALSE) in sequenceFilter().
+- filter out undersized downloads of past versions in sizeFilter().
 - add exception for "R" in validatePackage() and validatePackage0().
+- remove tripletFilter() code from utilities.R functions.
 
+#### Documentation
 
-### packageRank 0.8.3.9007
-
-- clean transform_pkgsearch().
-
-
-### packageRank 0.8.3.9006
-
-- use "crandb_file_date" for dates in packageHistory().
-
-
-### packageRank 0.8.3.9005
-
-- add timeout fix to packages_on_CRAN(), packageArchive() and packageCRAN().
-
-
-### packageRank 0.8.3.9004
-
-- rename/use computeFileSizeA() and computeFileSizeB().
-
-
-### packageRank 0.8.3.9003
-
-- match cranlogs::cran_downloads() behavior with duplicate packages in 
-  packageHistory().
-
-
-### packageRank 0.8.3.9002
-
-- match cranlogs::cran_downloads() behavior with duplicate packages in 
-  cranDownloads().
-
-
-### packageRank 0.8.3.9001
-
-- set packageHistory(check.package = TRUE).
-
-
-### packageRank 0.8.3.9000
-
-- filter out duplicate valid packages in checkPackage().
+- add annualDownloads() example to README.
+- add personal default plots to README.
 
 
 ### packageRank 0.8.3
