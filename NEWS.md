@@ -3,7 +3,7 @@
 #### New Functionality
 
 - add rLog().
-- add cranPackageSize(mac.ver = "arm")
+- add cranPackageSize(mac.ver = "arm").
 
 #### Deprecated
 
@@ -49,7 +49,7 @@
 - replace ip_filter() with greedyIP() in ipFilter().
 - use only counts in greedyIP() in ipFilter().
 - compute run length encoding and candidate.data in ipFilter(campaigns = TRUE).
-- change/set ipCount(sort.count = TRUE)
+- change/set ipCount(sort.count = TRUE).
 - use "file.url.date" in ipCount() and ipDownloads().
 - disable parallel code for ipFilter(campaigns = TRUE).
 - include local time with logInfo(details = TRUE).
