@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9000
+
+- update cranMirrors().
+
+
 ### packageRank 0.9.0
 
 #### New Functionality

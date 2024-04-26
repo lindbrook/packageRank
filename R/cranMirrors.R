@@ -15,9 +15,9 @@ cranMirrors <- function(description = FALSE) {
     gsub("<.*?>", "", x)
   }, character(1L)))
   
-  other.name <- c("0-Cloud", "Czech Republic",  "Iran", "Korea", "Russia", 
-    "Taiwan", "Turkey", "UK", "USA", "Worldwide")
-  host.tld <- c(NA, "CZ", "IR", "KR", "RU", "TW", "TR","GB", "US", NA)
+  other.name <- c("0-Cloud", "Czech Republic", "0-Cloud-East-Asia", "Iran", 
+    "Korea", "Russia", "Taiwan", "Turkey", "UK", "USA", "Worldwide")
+  host.tld <- c(NA, "CZ", "ASIA", "IR", "KR", "RU", "TW", "TR","GB", "US", NA)
   other.hosts <- data.frame(name = other.name, tld = host.tld)
   no.match <- hosts[!hosts %in% ISOcodes::ISO_3166_1$Name]
   
