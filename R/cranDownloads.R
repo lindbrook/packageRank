@@ -121,7 +121,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       if (clogs$count != 0) {
         end.date <- available.log
       } else {
-        end.date <- available.log - 1
+        end.date <- clogs$date - 1
         message("Today's 'cranlogs' results not available. Using previous.")
       }
     }
