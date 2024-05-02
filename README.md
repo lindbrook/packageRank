@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.0.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.0.9002-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -350,8 +350,7 @@ downloads](#r-windows-sunday-and-wednesday-downloads)).
 
 #### smoothers and confidence intervals
 
-To add a smoother (lowess with base graphics; loess with ‘ggplot2’) to
-your plot, use `smooth = TRUE`:
+To add a smoother to your plot, use `smooth = TRUE`:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
@@ -370,13 +369,16 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
 
 ![](man/figures/README-ci-1.png)<!-- -->
 
-You can control the degree of smooth using `f` argument for ‘base’
-graphics (the default is f = 2/3) and the `span` argument with ‘ggplot2’
-graphics (the default is span = 0.75):
+In general, loess is the chosen smoother. Note that with base graphics,
+lowess is used when there are 7 or fewer observations. Thus, to control
+the degree of smoothness, you’ll typically use the `span` argument (the
+default is span = 0.75). With base graphics with 7 or fewer
+observations, you control the degree of smoothness using the `f`
+argument (the default is f = 2/3):
 
 ``` r
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
-  from = "2020", to = "2020-03-20"), smooth = TRUE, graphics = "base", f = 0.33)
+  from = "2020", to = "2020-03-20"), smooth = TRUE, span = 0.75)
 
 plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   from = "2020", to = "2020-03-20"), smooth = TRUE, graphics = "ggplot2", 
