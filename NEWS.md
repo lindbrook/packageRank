@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9002
+
+- amend discussion of smoother parameters in README.
+
+
 ### packageRank 0.9.0.9001
 
 - fix cranDownloads(to = NULL).
