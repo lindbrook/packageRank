@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9003
+
+- fix dayOfMonth(end.of.month = TRUE).
+
+
 ### packageRank 0.9.0.9002
 
 - amend discussion of smoother parameters in README.

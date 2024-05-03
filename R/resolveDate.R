@@ -64,9 +64,10 @@ dayOfMonth <- function(string, end.of.month = FALSE) {
   if (end.of.month) {
     date.parts <- unlist(strsplit(string, "-"))
     next.mo <- as.numeric(date.parts[2]) + 1
-    next.mo <- ifelse(nchar(next.mo) == 1, paste0("0", next.mo), next.mo)
     yr <- as.numeric(date.parts[1])
-    yr <- ifelse(next.mo > 12,  yr + 1, yr)
+    yr <- ifelse(next.mo == 13,  yr + 1, yr)
+    next.mo <- ifelse(next.mo == 13,  1L, next.mo)
+    next.mo <- ifelse(nchar(next.mo) == 1, paste0("0", next.mo), next.mo)
     out <- as.Date(paste0(yr, "-", next.mo, "-01"), optional = TRUE) - 1
   } else {
     out <- as.Date(paste0(string , "-01"), optional = TRUE)
