@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9007
+
+- use title case for axes in plot.cranDownloads(graphics = "ggplot2").
+
+
 ### packageRank 0.9.0.9006
 
 - fix axis title case and format code in rTotPlot(graphics = "base").
