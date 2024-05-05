@@ -2507,7 +2507,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         mtext("R", side = 2, las = 1, line = 1)
       }
     } else if (graphics == "ggplot2") {
-      dat$platform <-  "R"
+      dat$platform <- "R"
       if (log.y) {
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
@@ -2693,7 +2693,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       } else {
         if (log.y) {
           plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case,
-            log = "y", ylab = paste("log10", statistic))
+            log = "y", ylab = paste("log10", y.nm.case))
         } else {
           plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case)
         }
