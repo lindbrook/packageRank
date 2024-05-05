@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9004
+
+- add loess span to subtitle in plot.cranDownloads(graphics = "base").
+
+
 ### packageRank 0.9.0.9003
 
 - fix dayOfMonth(end.of.month = TRUE).

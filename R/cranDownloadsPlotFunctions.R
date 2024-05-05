@@ -210,7 +210,10 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           cex.axis = 2/3, padj = 0.9)
       }
 
-      if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
+      if (smooth) {
+        addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
+        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+      } 
       title(main = "Total Package Downloads")
 
     } else if (graphics == "ggplot2") {
@@ -286,6 +289,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
               se = se, span = span)
           }
+
+          # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
 
       } else if (any(dat$partial)) {
@@ -405,24 +410,20 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (smooth) {
           if (any(dat$in.progress)) {
             smooth.data <- complete
-
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
-          
           } else if (any(dat$partial)) {
             smooth.data <- rbind(wk1.backdate, complete)
-            
             if (weekdays(last.obs.date) == "Saturday") {
               smooth.data <- rbind(smooth.data, current.wk)
             }
-            
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
-          
           } else {
             p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
               se = se, span = span)
           }
+          # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
       } else {
         p <- p + ggplot2::geom_line(linewidth = 1/3)
@@ -436,7 +437,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (smooth) {
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span)
+            se = se, span = span) 
+               # ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
       }
 
@@ -578,6 +580,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
+            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
           
           title(main = est.data$package)
@@ -746,6 +749,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
+            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
 
           title(main = wk1.backdate$package)
@@ -800,6 +804,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
                 col = "blue", lwd = 1.25)
             }
+            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
           title(main = pkg)
         }))
@@ -1062,24 +1067,24 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (smooth) {
         if (any(dat$in.progress)) {
           smooth.data <- complete
+          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
+            formula = "y ~ x", se = se, span = span)
+        
+        } else if (any(dat$partial)) {
+          smooth.data <- rbind(complete, wk1.backdate.seg)
+          
+          if (weekdays(last.obs.date) == "Saturday") {
+            smooth.data <- rbind(smooth.data, current.wk)
+          }
           
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         
-          } else if (any(dat$partial)) {
-          smooth.data <- rbind(complete, wk1.backdate.seg)
-        
-          if (weekdays(last.obs.date) == "Saturday") {
-            smooth.data <- rbind(smooth.data, current.wk)
-          }
-        
-          p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
-            formula = "y ~ x", se = se, span = span)
-
         } else {
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
+        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
@@ -1213,6 +1218,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
                 statistic, vars, NULL, NULL)
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
 
@@ -1381,6 +1387,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
                 statistic, vars, wk1.backdate, NULL)
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
 
@@ -1420,6 +1427,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
                 statistic, vars, NULL, tmp)
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
         }
@@ -1722,6 +1730,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
+        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
       
       p <- p + ggplot2::theme_bw() +
@@ -2101,6 +2110,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       if (smooth) {
         addRPlotSmoother(x, complete, f, span, pltfrm, pltfrm.col, statistic,
           wk1.backdate)
+        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
       }
 
       if (r.version) {
@@ -2438,6 +2448,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
+        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::theme_bw() +
@@ -2687,6 +2698,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
       if (smooth) {
         addRTotPlotSmoother(dat, complete, f, span, statistic, wk1.backdate)
+        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
       }
 
       if (r.version) {
@@ -2884,6 +2896,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
+        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::theme_bw() +
