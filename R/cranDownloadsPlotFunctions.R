@@ -271,7 +271,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", statistic))
+                   ggplot2::ylab(paste("log10", y.nm.case))
         }
         
         if (smooth) {
@@ -289,8 +289,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
               se = se, span = span)
           }
-
-          # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
 
       } else if (any(dat$partial)) {
@@ -404,7 +402,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", statistic))
+                   ggplot2::ylab(paste("log10", y.nm.case))
         }
 
         if (smooth) {
@@ -423,7 +421,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
               se = se, span = span)
           }
-          # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
       } else {
         p <- p + ggplot2::geom_line(linewidth = 1/3)
@@ -432,17 +429,19 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-            ggplot2::ylab(paste("log10", statistic))
+                   ggplot2::ylab(paste("log10", y.nm.case))
+        } else {
+          p <- p + ggplot2::ylab(y.nm.case)
         }
         
         if (smooth) {
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span) 
-               # ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
         }
       }
 
       p <- p + ggplot2::theme_bw() +
+               ggplot2::xlab("Date") +
                ggplot2::ggtitle("Total Package Downloads") +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
@@ -1061,7 +1060,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-                 ggplot2::ylab(paste("log10", statistic))
+                 ggplot2::ylab(paste("log10", y.nm.case))
+      } else {
+        p <- p + ggplot2::ylab(y.nm.case)
       }
       
       if (smooth) {
@@ -1084,10 +1085,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
-        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
+               ggplot2::xlab("Date") +
                ggplot2::theme_bw() +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
@@ -1700,18 +1701,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + ggplot2::geom_line(data = dat, linewidth = 1/3) +
-                 ggplot2::theme(legend.position = "bottom",
-                                panel.grid.major = ggplot2::element_blank(),
-                                panel.grid.minor = ggplot2::element_blank(),
-                                plot.title = ggplot2::element_text(hjust = 0.5))
-
+        p <- p + ggplot2::geom_line(data = dat, linewidth = 1/3)
         if (points) p <- p + ggplot2::geom_point()
       }
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-                 ggplot2::ylab(paste("log10", statistic))
+                 ggplot2::ylab(paste("log10", y.nm.case))
+      } else {
+        p <- p + ggplot2::ylab(y.nm.case)
       }
 
       if (smooth) {
@@ -1733,10 +1731,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
-        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
       
       p <- p + ggplot2::theme_bw() +
+               ggplot2::xlab("Date") +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank(),
@@ -2230,15 +2228,17 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-            ggplot2::ylab(paste("log10", y.nm.case))
+                   ggplot2::ylab(paste("log10", y.nm.case))
+        } else {
+          p <- p + ggplot2::ylab(y.nm.case)
         }
 
         p <- p + ggplot2::theme_bw() +
-          ggplot2::ggtitle("R Application Downloads") +
-          ggplot2::theme(legend.position = "bottom",
-                panel.grid.major = ggplot2::element_blank(),
-                panel.grid.minor = ggplot2::element_blank(),
-                plot.title = ggplot2::element_text(hjust = 0.5))
+                 ggplot2::ggtitle("R Application Downloads") +
+                 ggplot2::theme(legend.position = "bottom",
+                                panel.grid.major = ggplot2::element_blank(),
+                                panel.grid.minor = ggplot2::element_blank(),
+                                plot.title = ggplot2::element_text(hjust = 0.5))
 
       } else if (any(dat$partial)) {
         pltfrm <- unique(dat$platform)
@@ -2416,18 +2416,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + ggplot2::geom_line(linewidth = 0.5) +
-          ggplot2::ggtitle("R Application Downloads") +
-          ggplot2::theme_bw() +
-          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
-                panel.grid.minor = ggplot2::element_blank(),
-                plot.title = ggplot2::element_text(hjust = 0.5))
-
+        p <- p + ggplot2::geom_line(linewidth = 0.5)
+        
         if (points) p <- p + ggplot2::geom_point()
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-            ggplot2::ylab(paste("log10", y.nm.case))
+                   ggplot2::ylab(paste("log10", y.nm.case))
+        } else {
+          p <- p + ggplot2::ylab(y.nm.case)
         }
         
         if (!multi.plot) {
@@ -2451,15 +2448,15 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
-        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::theme_bw() +
-        ggplot2::ggtitle("Total R Application Downloads") +
-        ggplot2::theme(legend.position = "bottom",
-              panel.grid.major = ggplot2::element_blank(),
-              panel.grid.minor = ggplot2::element_blank(),
-              plot.title = ggplot2::element_text(hjust = 0.5))
+               ggplot2::xlab("Date") +
+               ggplot2::ggtitle("Total R Application Downloads") +
+               ggplot2::theme(legend.position = "bottom",
+                              panel.grid.major = ggplot2::element_blank(),
+                              panel.grid.minor = ggplot2::element_blank(),
+                              plot.title = ggplot2::element_text(hjust = 0.5))
 
       suppressWarnings(print(p))
     }
@@ -2871,19 +2868,16 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
       } else {
-        p <- p + ggplot2::geom_line(linewidth = 0.5) +
-          ggplot2::theme_bw() +
-          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
-                panel.grid.minor = ggplot2::element_blank(),
-                plot.title = ggplot2::element_text(hjust = 0.5)) +
-          ggplot2::ggtitle("Total R Application Downloads")
-
+        p <- p + ggplot2::geom_line(linewidth = 0.5)
+        
         if (points) p <- p + ggplot2::geom_point()
       }
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
                  ggplot2::ylab(paste("log10", y.nm.case))
+      } else {
+        p <- p + ggplot2::ylab(y.nm.case)
       }
 
       if (smooth) {
@@ -2899,15 +2893,15 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
             se = se, span = span)
         }
-        # p <- p + ggplot2::labs(subtitle = paste("loess span =", round(span, 2)))
       }
 
       p <- p + ggplot2::theme_bw() +
-        ggplot2::ggtitle("Total R Application Downloads") +
-        ggplot2::theme(legend.position = "bottom",
-              panel.grid.major = ggplot2::element_blank(),
-              panel.grid.minor = ggplot2::element_blank(),
-              plot.title = ggplot2::element_text(hjust = 0.5))
+               ggplot2::xlab("Date") +
+               ggplot2::ggtitle("Total R Application Downloads") +
+               ggplot2::theme(legend.position = "bottom",
+                               panel.grid.major = ggplot2::element_blank(),
+                               panel.grid.minor = ggplot2::element_blank(),
+                               plot.title = ggplot2::element_text(hjust = 0.5))
 
       suppressWarnings(print(p))
     }
