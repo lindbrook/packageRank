@@ -1,3 +1,9 @@
+### packageRank 0.9.0.9005
+
+- use title case for axes in plot.cranDownloads(graphics = "base", 
+  multi.plot = TRUE).
+
+
 ### packageRank 0.9.0.9004
 
 - add loess span to subtitle in plot.cranDownloads(graphics = "base").

@@ -1181,9 +1181,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl, ylab = paste("log10", statistic))
+              main = ttl, xlab = "Date", ylab = paste("log10", y.nm.case))
           } else {
-            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl, 
+              xlab = "Date", ylab = y.nm.case)
           }
 
           invisible(lapply(seq_along(pkg.data), function(i) {
@@ -1321,9 +1322,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           if (log.y) {
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl, ylab = paste("log10", statistic))
+              main = ttl, xlab = "Date", ylab = paste("log10", y.nm.case))
           } else {
-            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl,
+               xlab = "Date", ylab = y.nm.case)
           }
 
           invisible(lapply(seq_along(plot.data), function(i) {
@@ -1410,9 +1412,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               }
             }
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
-              main = ttl, ylab = paste("log10", statistic))
+              main = ttl, xlab = "Date", ylab = paste("log10", y.nm.case))
           } else {
-            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl)
+            plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl,
+              xlab = "Date", ylab = y.nm.case)
           }
 
           invisible(lapply(seq_along(x$packages), function(i) {
