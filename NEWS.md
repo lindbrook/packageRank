@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9008
+
+- add cranDownloadsB() prototype.
+
+
 ### packageRank 0.9.0.9007
 
 - use title case for axes in plot.cranDownloads(graphics = "ggplot2").
