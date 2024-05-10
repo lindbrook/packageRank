@@ -1,3 +1,9 @@
+### packageRank 0.9.0.9009
+
+- use cranlogs::cran_downloads() instead of cranDownloads() in 
+  cranDownloadsPlotFunctions.R
+
+
 ### packageRank 0.9.0.9008
 
 - add cranDownloadsB() prototype.

@@ -99,7 +99,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
-        wk1 <- cranDownloads(from = wk1.start, to = wk1.end)
+        wk1 <- cranlogs::cran_downloads(from = wk1.start, to = wk1.end)
 
         if (weekdays(x$from) == "Sunday") {
           wk1.partial <- dat[dat$date == wk1.start, ]
@@ -108,7 +108,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           sel <- dat$partial & dat$date == wk1.start
           wk1.partial <- dat[sel, ]
           wk1.backdate <- wk1.partial
-          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+          wk1.backdate$count <- sum(wk1$count)
           wk1.backdate$cumulative <- wk1.backdate$count
           cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
             dat$count[-1]))
@@ -141,7 +141,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
 
         complete <- dat.recompute[-c(1, nrow(dat.recompute)), ]
-        wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+        wk1.partial$date <- max(min(wk1$date), x$from)
 
         xlim <- range(dat$date)
         ylim.data <- rbind(dat, dat.recompute, current.wk.est)
@@ -296,7 +296,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
-        wk1 <- cranDownloads(from = wk1.start, to = wk1.end)
+        wk1 <- cranlogs::cran_downloads(from = wk1.start, to = wk1.end)
 
         if (weekdays(x$from) == "Sunday") {
           wk1.partial <- dat[dat$date == wk1.start, ]
@@ -305,8 +305,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           sel <- dat$partial & dat$date == wk1.start
           wk1.partial <- dat[sel, ]
           wk1.backdate <- wk1.partial
-
-          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+          wk1.backdate$count <- sum(wk1$count)
           wk1.backdate$cumulative <- wk1.backdate$count
           cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
             dat$count[-1]))
@@ -339,8 +338,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
 
         complete <- dat.recompute[-c(1, nrow(dat.recompute)), ]
-        wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
-
+        wk1.partial$date <- max(min(wk1$date), x$from)
         wk1.backdate.seg <- rbind(complete[1, ], wk1.backdate)
         wk1.partial.seg <- rbind(complete[1, ], wk1.partial)
         current.wk.seg <- rbind(complete[nrow(complete), ], current.wk)
@@ -604,7 +602,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           wk1.start <- pkg.dat$date[1]
           wk1.end <- pkg.dat$date[2] - 1
-          wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
+          wk1 <- cranlogs::cran_downloads(pkg, from = wk1.start, to = wk1.end)
 
           if (weekdays(x$from) == "Sunday") {
             wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
@@ -613,7 +611,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             sel <- pkg.dat$partial & pkg.dat$date == wk1.start
             wk1.partial <- pkg.dat[sel, ]
             wk1.backdate <- wk1.partial
-            wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+            wk1.backdate$count <- sum(wk1$count)
             wk1.backdate$cumulative <- wk1.backdate$count
             cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
               pkg.dat$count[-1]))
@@ -652,7 +650,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             complete <- pkg.dat.recompute[!pkg.dat.recompute$partial, ]
           }
 
-          wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+          wk1.partial$date <- max(min(wk1$date), x$from)
 
           list(pkg.dat = pkg.dat,
                wk1 = wk1,
@@ -919,7 +917,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           wk1.start <- pkg.dat$date[1]
           wk1.end <- pkg.dat$date[2] - 1
-          wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
+          wk1 <- cranlogs::cran_downloads(pkg, from = wk1.start, to = wk1.end)
 
           if (weekdays(x$from) == "Sunday") {
             wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
@@ -928,8 +926,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             sel <- pkg.dat$partial & pkg.dat$date == wk1.start
             wk1.partial <- pkg.dat[sel, ]
             wk1.backdate <- wk1.partial
-
-            wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+            wk1.backdate$count <- sum(wk1$count)
             wk1.backdate$cumulative <- wk1.backdate$count
             cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
               pkg.dat$count[-1]))
@@ -962,7 +959,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
-          wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+          wk1.partial$date <- max(min(wk1$date), x$from)
 
           list(pkg.dat = pkg.dat,
                wk1.partial = wk1.partial,
@@ -1252,7 +1249,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             wk1.start <- pkg.dat$date[1]
             wk1.end <- pkg.dat$date[2] - 1
-            wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
+            wk1 <- cranlogs::cran_downloads(pkg, from = wk1.start, to = wk1.end)
 
             if (weekdays(x$from) == "Sunday") {
               wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
@@ -1261,7 +1258,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               sel <- pkg.dat$partial & pkg.dat$date == wk1.start
               wk1.partial <- pkg.dat[sel, ]
               wk1.backdate <- wk1.partial
-              wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+              wk1.backdate$count <- sum(wk1$count)
               wk1.backdate$cumulative <- wk1.backdate$count
               cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
                 pkg.dat$count[-1]))
@@ -1300,7 +1297,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               complete <- pkg.dat.recompute[!pkg.dat.recompute$partial, ]
             }
 
-            wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+            wk1.partial$date <- max(min(wk1$date), x$from)
 
             list(pkg.dat = pkg.dat,
                  wk1.partial = wk1.partial,
@@ -1578,7 +1575,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           wk1.start <- pkg.dat$date[1]
           wk1.end <- pkg.dat$date[2] - 1
-          wk1 <- cranDownloads(pkg, from = wk1.start, to = wk1.end)
+          wk1 <- cranlogs::cran_downloads(pkg, from = wk1.start, to = wk1.end)
 
           if (weekdays(x$from) == "Sunday") {
             wk1.partial <- pkg.dat[pkg.dat$date == wk1.start, ]
@@ -1587,8 +1584,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             sel <- pkg.dat$partial & pkg.dat$date == wk1.start
             wk1.partial <- pkg.dat[sel, ]
             wk1.backdate <- wk1.partial
-
-            wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+            wk1.backdate$count <- sum(wk1$count)
             wk1.backdate$cumulative <- wk1.backdate$count
             cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
               pkg.dat$count[-1]))
@@ -1621,7 +1617,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           }
 
           complete <- pkg.dat.recompute[-c(1, nrow(pkg.dat.recompute)), ]
-          wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+          wk1.partial$date <- max(min(wk1$date), x$from)
 
           list(pkg.dat = pkg.dat,
                wk1.partial = wk1.partial,
@@ -1908,15 +1904,18 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         wk1.start <- unit.date[1]
         wk1.end <- unit.date[2] - 1
-        wk1 <- cranDownloads(x$packages, from = wk1.start, to = wk1.end)
-
+        
+        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+          to = wk1.end)
+        names(wk1)[names(wk1) == "os"] <- "platform"
+        wk1 <- wk1[wk1$platform != "NA", ]
+        
         wk1.partial <- do.call(rbind, lapply(platform.data, function(x)
           x[x$date == wk1.start, ]))
         wk1.backdate <- wk1.partial
 
         if (weekdays(x$from) != "Sunday") {
-          wk1.backdate$count <- tapply(wk1$cranlogs.data$count,
-            wk1$cranlogs.data$platform, sum)
+          wk1.backdate$count <- tapply(wk1$count, wk1$platform, sum)
         }
 
         current.wk <- do.call(rbind, lapply(platform.data, function(x)
@@ -1963,7 +1962,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           complete <- lapply(platform.recompute, function(x) x[!x$partial, ])
         }
 
-        wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+        wk1.partial$date <- max(min(wk1$date), x$from)
 
         range.data <- rbind(do.call(rbind, complete), wk1.partial,
           wk1.backdate, current.wk, current.wk.est)
@@ -2250,7 +2249,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         wk1.start <- unit.date[1]
         wk1.end <- unit.date[2] - 1
-        wk1 <- cranDownloads(x$packages, from = wk1.start, to = wk1.end)
+
+        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+          to = wk1.end)
+        names(wk1)[names(wk1) == "os"] <- "platform"
+        wk1 <- wk1[wk1$platform != "NA", ]
 
         wk1.partial <- do.call(rbind, lapply(platform.data, function(x)
           x[x$date == wk1.start, ]))
@@ -2258,8 +2261,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         wk1.backdate <- wk1.partial
 
         if (weekdays(x$from) != "Sunday") {
-          wk1.backdate$count <- tapply(wk1$cranlogs.data$count,
-            wk1$cranlogs.data$platform, sum)
+          wk1.backdate$count <- tapply(wk1$count, wk1$platform, sum)
         }
 
         current.wk <- do.call(rbind, lapply(platform.data, function(x)
@@ -2302,7 +2304,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           x[!x$partial, ]))
 
         wk1.partial <- do.call(rbind, lapply(pltfrm, function(p) {
-          tmp <- wk1$cranlogs.data
+          tmp <- wk1
           wk1.date <- tmp[tmp$platform == p & tmp$date == min(tmp$date), "date"]
           wk1.tmp <- wk1.partial[wk1.partial$platform == p,  ]
           wk1.tmp$date <- max(wk1.date, x$from)
@@ -2586,7 +2588,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
-        wk1 <- cranDownloads(x$packages, from = wk1.start, to = wk1.end)
+
+        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+          to = wk1.end)
+        names(wk1)[names(wk1) == "os"] <- "platform"
+        wk1 <- wk1[wk1$platform != "NA", ]
 
         if (weekdays(x$from) == "Sunday") {
           wk1.partial <- dat[dat$date == wk1.start, ]
@@ -2595,7 +2601,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           sel <- dat$partial & dat$date == wk1.start
           wk1.partial <- dat[sel, ]
           wk1.backdate <- wk1.partial
-          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+          wk1.backdate$count <- sum(wk1$count)
           wk1.backdate$cumulative <- wk1.backdate$count
           cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
             dat$count[-1]))
@@ -2634,7 +2640,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           complete <- dat.recompute[!dat.recompute$partial, ]
         }
 
-        wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
+        wk1.partial$date <- max(min(wk1$date), x$from)
 
         xlim <- range(dat$date)
         ylim.data <- rbind(dat, dat.recompute, current.wk.est)
@@ -2765,7 +2771,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
-        wk1 <- cranDownloads(x$packages, from = wk1.start, to = wk1.end)
+
+        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+          to = wk1.end)
+        names(wk1)[names(wk1) == "os"] <- "platform"
+        wk1 <- wk1[wk1$platform != "NA", ]
 
         if (weekdays(x$from) == "Sunday") {
           wk1.partial <- dat[dat$date == wk1.start, ]
@@ -2774,8 +2784,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           sel <- dat$partial & dat$date == wk1.start
           wk1.partial <- dat[sel, ]
           wk1.backdate <- wk1.partial
-
-          wk1.backdate$count <- sum(wk1$cranlogs.data$count)
+          wk1.backdate$count <- sum(wk1$count)
           wk1.backdate$cumulative <- wk1.backdate$count
           cumulative.recompute <- cumsum(c(wk1.backdate$cumulative,
             dat$count[-1]))
@@ -2808,8 +2817,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         }
 
         complete <- dat.recompute[-c(1, nrow(dat.recompute)), ]
-        wk1.partial$date <- max(min(wk1$cranlogs.data$date), x$from)
-
+        wk1.partial$date <- max(min(wk1$date), x$from)
         wk1.backdate.seg <- rbind(complete[1, ], wk1.backdate)
         wk1.partial.seg <- rbind(complete[1, ], wk1.partial)
         current.wk.seg <- rbind(complete[nrow(complete), ], current.wk)
