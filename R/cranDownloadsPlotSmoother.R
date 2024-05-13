@@ -88,9 +88,10 @@ addSinglePlotSmoother <- function(x, complete, current.wk, f, span,
 }
 
 addMultiPlotSmoother <- function(i, x, complete, cbPalette, f, span,
-  statistic, vars, wk1.backdate, tmp) {
+  statistic, vars, wk1.backdate) {
 
   dat <- x$cranlogs.data
+  dat <- dat[dat$package == x$packages[i], ]
   current.wk <- dat[nrow(dat), ]
   last.obs.date <- x$last.obs.date
 
@@ -117,16 +118,16 @@ addMultiPlotSmoother <- function(i, x, complete, cbPalette, f, span,
       lines(x.date, smooth.data$fitted, col = cbPalette[i])
     } else {
       smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
-      lines(smooth.data[, vars], col = cbPalette[i])
+      lines(smooth.data$x, smooth.data$y, col = cbPalette[i])
     }
   } else {
     if (nrow(dat) > 7) {
-      smooth.data <- stats::loess(tmp[, statistic] ~
-        as.numeric(tmp$date), span = span)
+      smooth.data <- stats::loess(dat[, statistic] ~ as.numeric(dat$date), 
+        span = span)
       x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
       lines(x.date, smooth.data$fitted, col = cbPalette[i])
     } else {
-      lines(stats::lowess(tmp[dat$package == x$packages[i], vars], f = f),
+      lines(stats::lowess(dat[dat$package == x$packages[i], vars], f = f),
         col = cbPalette[i])
     }
   }
