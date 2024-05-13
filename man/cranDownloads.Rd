@@ -5,7 +5,8 @@
 \title{Daily package downloads from the RStudio CRAN mirror.}
 \usage{
 cranDownloads(packages = NULL, when = NULL, from = NULL, to = NULL,
-  check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE)
+  check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE,
+  pro.mode = FALSE)
 }
 \arguments{
 \item{packages}{A character vector, the packages to query,
@@ -25,6 +26,8 @@ If this is given, then \code{from} and \code{to} are ignored.}
 \item{dev.mode}{Logical. Use validatePackage0() to scrape CRAN.}
 
 \item{fix.cranlogs}{Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.}
+
+\item{pro.mode}{Logical. Faster but fewer features. Closer to cranlogs::cran_downloads() but with cranDownload()'s plot method.}
 }
 \description{
 Enhanced implementation of cranlogs::cran_downloads().
@@ -41,7 +44,7 @@ cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-31")
 # February through March 2019
 cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
 
-# 2020 year-to-date
-cranDownloads(packages = "HistData", from = 2020)
+# 2024 year-to-date
+cranDownloads(packages = "HistData", from = 2024)
 }
 }

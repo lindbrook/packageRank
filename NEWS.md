@@ -1,3 +1,10 @@
+### packageRank 0.9.0.9012
+
+- add/set cranDownloads(pro.mode = FALSE).
+- add internal cranDownloadsA().
+- unexport cranDownloadsB().
+
+
 ### packageRank 0.9.0.9011
 
 - fix/amend addMultiPlotSmoother().

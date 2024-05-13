@@ -10,7 +10,7 @@
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
 #' @param fix.cranlogs Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.
-#' @export
+#' @noRd
 
 cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
   fix.cranlogs = TRUE) {
