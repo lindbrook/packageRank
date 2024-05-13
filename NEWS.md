@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9011
+
+- fix/amend addMultiPlotSmoother().
+
+
 ### packageRank 0.9.0.9010
 
 - rename smoothMonthData to smoothWeekData() and amend wk1 data frame.
