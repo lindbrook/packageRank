@@ -218,6 +218,50 @@ cranDownloads(packages = "HistData", when = "last-week")
     > 6 2020-05-06   356       1942 HistData
     > 7 2020-05-07   324       2266 HistData
 
+#### pro.mode
+
+The “spell check” or validation of packages described above, requires
+some additional background downloads. While those data are cached via
+the ‘meomoise’ package, this does add time the first time
+`cranDownloads()` is run. For faster results, which bypass this feature,
+set `pro.mode = TRUE`. The downside is that you’ll see zero downloads
+for packages on dates before they’re published on CRAN and zero
+downloads for mis-spelled/non-existent packages.
+
+For example, ‘packageRank’ was first published on CRAN on 2019-05-16 -
+you can verify this via `packageHistory("packageRank")`. If you use
+`cranlogs::cran_downloads()` or `cranDownloads(pro.mode = TRUE)` before
+that date, you’ll see zero downloads on dates before that time:
+
+``` r
+cranDownloads("packageRank", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
+>         date count cumulative     package
+> 1 2019-05-10     0          0 packageRank
+> 2 2019-05-11     0          0 packageRank
+> 3 2019-05-12     0          0 packageRank
+> 4 2019-05-13     0          0 packageRank
+> 5 2019-05-14     0          0 packageRank
+> 6 2019-05-15     0          0 packageRank
+> 7 2019-05-16    68         68 packageRank
+```
+
+You’ll notice this particularly when one of the packages you’re passing
+to cranDownloads() is new-ish.
+
+If you mis-spell a package :
+
+``` r
+cranDownloads("vr", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
+>         date count cumulative package
+> 1 2019-05-10     0          0      vr
+> 2 2019-05-11     0          0      vr
+> 3 2019-05-12     0          0      vr
+> 4 2019-05-13     0          0      vr
+> 5 2019-05-14     0          0      vr
+> 6 2019-05-15     0          0      vr
+> 7 2019-05-16     0          0      vr
+```
+
 <br/>
 
 ### visualizing package download counts
@@ -511,7 +555,7 @@ week.
 
 ##### my default plots
 
-For what it’s worth, below are the go-to commands for graphs. They take
+For what it’s worth, below are my go-to commands for graphs. They take
 advantage of RStudio IDE’s plot history panel, which allows you to cycle
 through and compare graphs. Typically, I’ll look at the data for the
 last year or so at the three available units of observation: day, week
@@ -534,6 +578,28 @@ plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
   graphics = "base", package.version = TRUE, smooth = FALSE, 
   unit.observation = "month")
 ```
+
+#### pro.mode
+
+Perhaps the biggest downside of using cranDownload(pro.mode = TRUE) is
+that you might draw mistaken inferences from plotting the data since it
+adds false zeroes to your data.
+
+Using the example of ‘packageRank’, which was published on 2019-05-16:
+
+``` r
+plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05", 
+  pro.mode = TRUE), smooth = TRUE)
+```
+
+![](man/figures/README-pro_mode_plot-1.png)<!-- -->
+
+``` r
+plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05", 
+  pro.mode = FALSE), smooth = TRUE)
+```
+
+![](man/figures/README-non_pro_mode_plot-1.png)<!-- -->
 
 ### II - download rank percentiles
 
@@ -657,9 +723,15 @@ To put it differently:
 ``` r
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["cholera"]))
 > [1] 12250
+```
+
+``` r
 
 (tot.pkgs <- length(downloads))
 > [1] 18038
+```
+
+``` r
 
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 67.9
@@ -681,6 +753,9 @@ downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
 > [1] 31
+```
+
+``` r
 length(downloads[downloads == 38])
 > [1] 263
 ```

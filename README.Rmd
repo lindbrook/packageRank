@@ -184,6 +184,24 @@ cranDownloads(packages = "HistData", when = "last-week")
 cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
 ```
 
+#### pro.mode
+
+The "spell check" or validation of packages described above, requires some additional background downloads. While those data are cached via the 'meomoise' package, this does add time the first time `cranDownloads()` is run. For faster results, which bypass this feature, set `pro.mode = TRUE`. The downside is that you'll see zero downloads for packages on dates before they're published on CRAN and zero downloads for mis-spelled/non-existent packages. 
+
+For example, 'packageRank' was first published on CRAN on 2019-05-16 - you can verify this via `packageHistory("packageRank")`. If you use `cranlogs::cran_downloads()` or `cranDownloads(pro.mode = TRUE)` before that date, you'll see zero downloads on dates before that time:
+
+```{r pro_mode_ex_ante}
+cranDownloads("packageRank", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
+```
+
+You'll notice this particularly when one of the packages you're passing to cranDownloads() is new-ish.
+
+If you mis-spell a package :
+
+```{r pro_mode_non_existent}
+cranDownloads("vr", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
+```
+
 <br/>
 
 ### visualizing package download counts
@@ -377,7 +395,7 @@ Four things to note. First, if the first week (far left) is incomplete (the 'fro
 
 ##### my default plots
 
-For what it's worth, below are the go-to commands for graphs. They take advantage of RStudio IDE's plot history panel, which allows you to cycle through and compare graphs.
+For what it's worth, below are my go-to commands for graphs. They take advantage of RStudio IDE's plot history panel, which allows you to cycle through and compare graphs.
 Typically, I'll look at the data for the last year or so at the three available units of observation: day, week and month. I use base graphics, via `graphics = "base"`, to take advantage of prompts and "nicer" axes annotation. This also allows me to easily add graphical elements afterwards as needed, e.g., `abline(h = 100, lty = "dotted")`.
 
 ```{r default, eval = FALSE}
@@ -394,6 +412,23 @@ plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
   graphics = "base", package.version = TRUE, smooth = FALSE, 
   unit.observation = "month")
 ```
+
+#### pro.mode
+
+Perhaps the biggest downside of using cranDownload(pro.mode = TRUE) is that you might draw mistaken inferences from plotting the data since it adds false zeroes to your data.
+
+Using the example of 'packageRank', which was published on 2019-05-16:
+
+```{r pro_mode_plot}
+plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05", 
+  pro.mode = TRUE), smooth = TRUE)
+```
+
+```{r non_pro_mode_plot}
+plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05", 
+  pro.mode = FALSE), smooth = TRUE)
+```
+
 
 ### II - download rank percentiles
 
