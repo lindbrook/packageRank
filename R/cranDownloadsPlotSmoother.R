@@ -83,7 +83,7 @@ addSinglePlotSmoother <- function(x, complete, current.wk, f, span,
     x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
     lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
   } else {
-    lines(smooth.data$date, smooth.data[, y.nm], col = "blue")
+    lines(smooth.data$x, smooth.data$y, col = "blue")
   }
 }
 
