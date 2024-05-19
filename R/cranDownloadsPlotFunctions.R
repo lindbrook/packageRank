@@ -665,7 +665,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         ylim.lst <- lapply(plot.data, function(x) {
           x[c("pkg.dat", "pkg.dat.recompute", "current.wk.est")]
         })
-
+        
         ylim.data <- do.call(rbind, lapply(ylim.lst, function(x) {
           do.call(rbind, x)
         }))
