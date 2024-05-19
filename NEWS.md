@@ -1,3 +1,9 @@
+### packageRank 0.9.0.9013
+
+- fix plot(cranDownloads(pkg, when = "last-month"), unit.observation = "week", 
+  smooth = TRUE).
+
+
 ### packageRank 0.9.0.9012
 
 - add/set cranDownloads(pro.mode = FALSE).
