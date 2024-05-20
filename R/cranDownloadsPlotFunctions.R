@@ -577,7 +577,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
-            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
           
           title(main = est.data$package)
@@ -746,7 +745,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
-            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
 
           title(main = wk1.backdate$package)
@@ -797,11 +795,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                 as.numeric(pkg.dat$date), span = span)
               x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
               lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             } else {
               lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
                 col = "blue", lwd = 1.25)
+              title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
             }
-            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
           }
           title(main = pkg)
         }))

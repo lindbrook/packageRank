@@ -1,3 +1,8 @@
+### packageRank 0.9.0.9014
+
+- contextualize smoother subtitle in addSinglePlotSmoother().
+
+
 ### packageRank 0.9.0.9013
 
 - fix plot(cranDownloads(pkg, when = "last-month"), unit.observation = "week", 
