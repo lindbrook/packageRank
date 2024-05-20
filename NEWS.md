@@ -1,3 +1,9 @@
+### packageRank 0.9.0.9016
+
+- contextualize smoother subtitle in addMultiPlotSmoother(), addRPlotSmoother() 
+  and addRTotPlotSmoother().
+
+
 ### packageRank 0.9.0.9015
 
 - contextualize smoother subtitle in addSmoother().
