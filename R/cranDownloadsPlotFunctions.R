@@ -1214,7 +1214,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
                 statistic, vars, NULL)
-              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
 
@@ -1384,7 +1383,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
                 statistic, vars, wk1.backdate)
-              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
 
@@ -1425,7 +1423,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             if (smooth) {
               addMultiPlotSmoother(i, x, NULL, cbPalette, f, span,
                 statistic, vars, NULL)
-              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
             }
           }))
         }
@@ -2107,7 +2104,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       if (smooth) {
         addRPlotSmoother(x, complete, f, span, pltfrm, pltfrm.col, statistic,
           wk1.backdate)
-        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
       }
 
       if (r.version) {
@@ -2701,7 +2697,6 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
       if (smooth) {
         addRTotPlotSmoother(dat, complete, f, span, statistic, wk1.backdate)
-        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
       }
 
       if (r.version) {
