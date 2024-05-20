@@ -223,10 +223,11 @@ cranDownloads(packages = "HistData", when = "last-week")
 The “spell check” or validation of packages described above, requires
 some additional background downloads. While those data are cached via
 the ‘meomoise’ package, this does add time the first time
-`cranDownloads()` is run. For faster results, which bypass this feature,
-set `pro.mode = TRUE`. The downside is that you’ll see zero downloads
-for packages on dates before they’re published on CRAN and zero
-downloads for mis-spelled/non-existent packages.
+`cranDownloads()` is run. For faster results, which bypass those
+features, set `pro.mode = TRUE`. The downside is that you’ll see zero
+downloads for packages on dates before they’re published on CRAN, you’ll
+see zero downloads for mis-spelled/non-existent packages and you can’t
+just use the `to =` argument alone.
 
 For example, ‘packageRank’ was first published on CRAN on 2019-05-16 -
 you can verify this via `packageHistory("packageRank")`. If you use
@@ -245,8 +246,8 @@ cranDownloads("packageRank", from = "2019-05-10", to = "2019-05-16", pro.mode = 
 > 7 2019-05-16    68         68 packageRank
 ```
 
-You’ll notice this particularly when one of the packages you’re passing
-to cranDownloads() is new-ish.
+You’ll notice this particularly when one of the packages you’re
+including newer packages in cranDownloads().
 
 If you mis-spell a package :
 
@@ -261,6 +262,15 @@ cranDownloads("vr", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
 > 6 2019-05-15     0          0      vr
 > 7 2019-05-16     0          0      vr
 ```
+
+If you just use `to =` without a value for `from =`, you’ll get an
+error:
+
+``` r
+cranDownloads(to = 2024, pro.mode = TRUE)
+```
+
+    Error: You must also provide a date for "from".
 
 <br/>
 

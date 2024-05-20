@@ -186,7 +186,7 @@ cranDownloads(packages = "HistData", from = "2020-05-01", to = "2020-05-07")
 
 #### pro.mode
 
-The "spell check" or validation of packages described above, requires some additional background downloads. While those data are cached via the 'meomoise' package, this does add time the first time `cranDownloads()` is run. For faster results, which bypass this feature, set `pro.mode = TRUE`. The downside is that you'll see zero downloads for packages on dates before they're published on CRAN and zero downloads for mis-spelled/non-existent packages. 
+The "spell check" or validation of packages described above, requires some additional background downloads. While those data are cached via the 'meomoise' package, this does add time the first time `cranDownloads()` is run. For faster results, which bypass those features, set `pro.mode = TRUE`. The downside is that you'll see zero downloads for packages on dates before they're published on CRAN, you'll see zero downloads for mis-spelled/non-existent packages and you can't just use the `to =` argument alone.
 
 For example, 'packageRank' was first published on CRAN on 2019-05-16 - you can verify this via `packageHistory("packageRank")`. If you use `cranlogs::cran_downloads()` or `cranDownloads(pro.mode = TRUE)` before that date, you'll see zero downloads on dates before that time:
 
@@ -194,12 +194,21 @@ For example, 'packageRank' was first published on CRAN on 2019-05-16 - you can v
 cranDownloads("packageRank", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
 ```
 
-You'll notice this particularly when one of the packages you're passing to cranDownloads() is new-ish.
+You'll notice this particularly when one of the packages you're including newer packages in cranDownloads().
 
 If you mis-spell a package :
 
 ```{r pro_mode_non_existent}
 cranDownloads("vr", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
+```
+
+If you just use `to =` without a value for `from =`, you'll get an error:
+
+```{r pro_mode_to, eval = FALSE}
+cranDownloads(to = 2024, pro.mode = TRUE)
+```
+```
+Error: You must also provide a date for "from".
 ```
 
 <br/>
