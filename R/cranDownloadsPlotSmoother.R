@@ -23,8 +23,10 @@ addSmoother <- function(x, complete, current.wk, f, span, wk1, y.nm) {
   if (nrow(dat) > 7) {
     x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
     lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+    title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
   } else {
     lines(smooth.data, col = "blue", lwd = 1.25)
+    title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
   }
 }
 
