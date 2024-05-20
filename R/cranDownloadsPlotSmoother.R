@@ -15,7 +15,7 @@ addSmoother <- function(x, complete, current.wk, f, span, wk1, y.nm) {
     if (any(dat$in.progress)) {
       smooth.data <- stats::lowess(complete$date, complete[, y.nm], f = f)
     } else if (any(dat$partial)) {
-      smooth.data <- smoothWeekData(x, current.wk, f, span, wk1)
+      smooth.data <- smoothWeekData(x, complete, current.wk, f, span, wk1, y.nm)
     } else {
       smooth.data <- stats::lowess(dat$date, dat[, y.nm], f = f)
     }
