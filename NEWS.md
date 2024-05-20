@@ -1,3 +1,9 @@
+### packageRank 0.9.0.9015
+
+- contextualize smoother subtitle in addSmoother().
+- fix call to smoothWeekData().
+
+
 ### packageRank 0.9.0.9014
 
 - contextualize smoother subtitle in addSinglePlotSmoother().

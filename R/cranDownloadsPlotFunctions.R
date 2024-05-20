@@ -210,10 +210,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           cex.axis = 2/3, padj = 0.9)
       }
 
-      if (smooth) {
-        addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
-        title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
-      } 
+      if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
+      
       title(main = "Total Package Downloads")
 
     } else if (graphics == "ggplot2") {
