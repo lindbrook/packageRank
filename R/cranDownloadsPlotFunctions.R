@@ -1450,6 +1450,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                lwd = 1,
                bty = "n")
         }
+
+        if (smooth) {
+          if (nrow(dat) > 7) {
+            title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+          } else {
+            title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
+          }
+        }
       }
     }
   } else if (graphics == "ggplot2") {
