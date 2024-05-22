@@ -1,3 +1,8 @@
+### packageRank 0.9.1.9000
+
+- fix multiple smoother subtitles: addMultiPlotSmoother and addRPlotSmoother().
+
+
 ### packageRank 0.9.1
 
 #### New Functionality
