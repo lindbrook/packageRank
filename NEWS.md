@@ -1,93 +1,26 @@
-### packageRank 0.9.0.9016
+### packageRank 0.9.1
 
-- contextualize smoother subtitle in addMultiPlotSmoother(), addRPlotSmoother() 
-  and addRTotPlotSmoother().
-
-
-### packageRank 0.9.0.9015
-
-- contextualize smoother subtitle in addSmoother().
-- fix call to smoothWeekData().
-
-
-### packageRank 0.9.0.9014
-
-- contextualize smoother subtitle in addSinglePlotSmoother().
-
-
-### packageRank 0.9.0.9013
-
-- fix plot(cranDownloads(pkg, when = "last-month"), unit.observation = "week", 
-  smooth = TRUE).
-
-
-### packageRank 0.9.0.9012
+#### New Functionality
 
 - add/set cranDownloads(pro.mode = FALSE).
-- add internal cranDownloadsA().
-- unexport cranDownloadsB().
 
-
-### packageRank 0.9.0.9011
-
-- fix/amend addMultiPlotSmoother().
-
-
-### packageRank 0.9.0.9010
-
-- rename smoothMonthData to smoothWeekData() and amend wk1 data frame.
-
-
-### packageRank 0.9.0.9009
-
-- use cranlogs::cran_downloads() instead of cranDownloads() in 
-  cranDownloadsPlotFunctions.R
-
-
-### packageRank 0.9.0.9008
-
-- add cranDownloadsB() prototype.
-
-
-### packageRank 0.9.0.9007
-
-- use title case for axes in plot.cranDownloads(graphics = "ggplot2").
-
-
-### packageRank 0.9.0.9006
-
-- fix axis title case and format code in rTotPlot(graphics = "base").
-
-
-### packageRank 0.9.0.9005
-
-- use title case for axes in plot.cranDownloads(graphics = "base", 
-  multi.plot = TRUE).
-
-
-### packageRank 0.9.0.9004
-
-- add loess span to subtitle in plot.cranDownloads(graphics = "base").
-
-
-### packageRank 0.9.0.9003
-
-- fix dayOfMonth(end.of.month = TRUE).
-
-
-### packageRank 0.9.0.9002
-
-- amend discussion of smoother parameters in README.
-
-
-### packageRank 0.9.0.9001
-
-- fix cranDownloads(to = NULL).
-
-
-### packageRank 0.9.0.9000
+#### Fixes/Updates
 
 - update cranMirrors().
+- fix cranDownloads(to = NULL).
+- fix dayOfMonth(end.of.month = TRUE).
+- fix plot(cranDownloads(pkg, when = "last-month"), unit.observation = "week", 
+  smooth = TRUE).
+- fix smoothWeekData() call in addSmoother()
+
+#### Plot Changes
+
+- use title case for axes labels.
+- contextualize smoother subtitle in plot.cranDownloads(graphics = "base").
+
+#### Documentation
+
+- amend discussion of smoother parameters (loess as "default") in README.
 
 
 ### packageRank 0.9.0
