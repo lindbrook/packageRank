@@ -15,10 +15,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
 
   upload.utc <- dateTime(utc.date, time = upload.time, tz = "GMT")
   upload.date <- as.Date(format(upload.utc, "%Y-%m-%d"))
-  
-  today.delta.time <- difftime(upload.utc, utc.date.time)
-  upload.delta.time <- difftime(utc.date.time, upload.utc)
-  
+ 
   today.log <- utc.date - 1
   today.upload <- as.POSIXlt(upload.utc, tz = tz)
   
