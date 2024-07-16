@@ -1,3 +1,8 @@
+### packageRank 0.9.1.9001
+
+- amend 'cranlogs' guess-timate in logInfo().
+
+
 ### packageRank 0.9.1.9000
 
 - fix multiple smoother subtitles: addMultiPlotSmoother and addRPlotSmoother().

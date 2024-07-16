@@ -15,10 +15,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
 
   upload.utc <- dateTime(utc.date, time = upload.time, tz = "GMT")
   upload.date <- as.Date(format(upload.utc, "%Y-%m-%d"))
-  
-  today.delta.time <- difftime(upload.utc, utc.date.time)
-  upload.delta.time <- difftime(utc.date.time, upload.utc)
-  
+ 
   today.log <- utc.date - 1
   today.upload <- as.POSIXlt(upload.utc, tz = tz)
   
@@ -56,10 +53,10 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
       if (format(currentTime(tz = "US/Eastern"), "%Z") == "EST") {
         upload.utc <- upload.utc + 3600L
       }
-      # status <- paste0("'cranlogs' usually posts by ",
-      #   format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
-      #   format(upload.utc, date.fmt), ".")
-      status <- "'cranlogs' results not (yet) available."
+      status <- paste0("'cranlogs' usually posts by ",
+        format(as.POSIXlt(upload.utc + 3600L, tz = tz), date.fmt), " -- ",
+        format(upload.utc + 3600L, date.fmt), ".")
+      # status <- "'cranlogs' results not (yet) available."
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
         format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
