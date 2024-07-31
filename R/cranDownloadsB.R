@@ -46,7 +46,9 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
     if (is.null(from)) {
-      stop('You must also provide a date for "from".', call. = FALSE)
+      msg1 <- 'With pro.mode = TRUE, '
+      msg2 <- 'provide a date for "from" or use pro.mode = FALSE.'
+      stop(msg1, msg2, call. = FALSE)
     } else {
       start.date <- resolveDate(from, type = "from") 
     }
