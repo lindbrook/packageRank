@@ -1,3 +1,8 @@
+### packageRank 0.9.1.9002
+
+- amend pro.mode = TRUE error message for cranDownloadsB() 'from' argument.
+
+
 ### packageRank 0.9.1.9001
 
 - amend 'cranlogs' guess-timate in logInfo().
