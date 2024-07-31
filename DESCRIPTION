@@ -29,7 +29,6 @@ Imports:
     RCurl,
     rlang,
     rversions,
-    sugrrants,
-    tools
+    sugrrants
 Suggests: knitr,
           rmarkdown
