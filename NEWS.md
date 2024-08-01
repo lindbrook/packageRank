@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9000
+
+- fix temporary multiple instances with package update in packageCRAN().
+
+
 ### packageRank 0.9.2
 
 #### Fixes
