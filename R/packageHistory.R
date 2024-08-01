@@ -155,7 +155,8 @@ packageCRAN <- function(package = "cholera", size = FALSE) {
 
       if (package %in% multiple.matches) {
         pkg.data <- pkg.data[multiple.matches %in% package]
-        out <- package_info(pkg.data)
+        out <- do.call(rbind, lapply(pkg.data, package_info))
+        out <- out[which.max(out$Date), ]
       } else out <- NULL
     } else if (length(pkg.data) == 1) out <- package_info(pkg.data)
 
