@@ -1,15 +1,9 @@
-### packageRank 0.9.1.9002
+### packageRank 0.9.2
+
+#### Fixes
 
 - amend pro.mode = TRUE error message for cranDownloadsB() 'from' argument.
-
-
-### packageRank 0.9.1.9001
-
 - amend 'cranlogs' guess-timate in logInfo().
-
-
-### packageRank 0.9.1.9000
-
 - fix multiple smoother subtitles: addMultiPlotSmoother and addRPlotSmoother().
 
 
