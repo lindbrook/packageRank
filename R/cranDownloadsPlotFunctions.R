@@ -561,7 +561,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (package.version) {
             if (dev.mode) p_v <- packageHistory0(est.data$package)
-            else p_v <- packageHistory(est.data$package)
+            else p_v <- packageHistory(est.data$package, check.package = FALSE)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
           }
@@ -729,7 +729,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (package.version) {
             if (dev.mode) p_v <- packageHistory0(current.wk.est$package)
-            else p_v <- packageHistory(current.wk.est$package)
+            else p_v <- packageHistory(current.wk.est$package, 
+              check.package = FALSE)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
           }
@@ -776,7 +777,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           
           if (package.version) {
             if (dev.mode) p_v <- packageHistory0(pkg)
-            else p_v <- packageHistory(pkg)
+            else p_v <- packageHistory(pkg, check.package = FALSE)
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
           }
