@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9002
+
+- add percentileRank() and plot.percentileRank() prototypes.
+
+
 ### packageRank 0.9.2.9001
 
 - set packageHistory(check.package = FALSE) in plot.cranDownloads().
