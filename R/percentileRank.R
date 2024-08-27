@@ -74,3 +74,99 @@ plot.percentileRank <- function(x, type = "histogram", ...) {
     plot(stats::density(log10(x$data$ct)), main = ttl, xlab = xlab)
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
+
+#' Count query.
+#'
+#' @param count Numeric or Integer.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
+#' @param all.filters Logical. Master switch for filters.
+#' @param ip.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+queryCount <- function(count = 1, date = NULL, all.filters = FALSE, 
+  ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
+  multi.core = FALSE) {
+
+  x <- percentileRank(date = date, all.filters = all.filters, 
+    ip.filter = ip.filter, small.filter = small.filter, 
+    memoization = memoization, multi.core = multi.core)
+  
+  tmp <- x$data
+  count.test <- any(tmp$ct == count)
+  if (count.test) x$data[tmp$ct == count, ]
+  else stop("Count not observed.", call. = FALSE)
+}
+
+#' Rank query.
+#'
+#' @param rank.num Numeric or Integer.
+#' @param rank.tie Logical. TRUE uses ties. FALSE does not.
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
+#' @param all.filters Logical. Master switch for filters.
+#' @param ip.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+queryRank <- function(rank.num = 1, rank.tie = FALSE, date = NULL, 
+  all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
+  memoization = TRUE, multi.core = FALSE) {
+  
+  x <- percentileRank(date = date, all.filters = all.filters, 
+    ip.filter = ip.filter, small.filter = small.filter, 
+    memoization = memoization, multi.core = multi.core)
+  
+  tmp <- x$data
+  tie <- ifelse(rank.tie, "t.rank",  "n.rank")
+  rank.test <- any(tmp[, tie] == rank.num)
+  if (rank.test) tmp[tmp[, tie] == rank.num, ]
+  else stop("Rank not observed.", call. = FALSE)
+}
+
+#' Percentile-rank query.
+#'
+#' @param percentile Numeric.
+#' @param lo Integer.
+#' @param hi Integer
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
+#' @param all.filters Logical. Master switch for filters.
+#' @param ip.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL, 
+  date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
+  memoization = TRUE, multi.core = FALSE) {
+  
+  x <- percentileRank(date = date, all.filters = all.filters, 
+    ip.filter = ip.filter, small.filter = small.filter, 
+    memoization = memoization, multi.core = multi.core)
+
+  tmp <- x$data
+  
+  if (!is.null(percentile)) {
+    if (percentile == 50) {
+      out <- tmp[tmp$pct.rank == stats::median(tmp$pct.rank), ]
+    } else {
+      out <- tmp[round(tmp$pct.rank) == percentile, ]  
+    }
+  } else if (!is.null(lo) & !is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= hi, ]
+  } else if (is.null(lo) & !is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= hi, ]
+  } else if (!is.null(lo) & is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= 100, ]
+  }
+  
+  if (nrow(out) == 0) stop("Percentile{s} not observed.", call. = FALSE)
+  else out
+}

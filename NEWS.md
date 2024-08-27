@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9003
+
+- add query functions for percentileRank().
+
+
 ### packageRank 0.9.2.9002
 
 - add percentileRank() and plot.percentileRank() prototypes.
