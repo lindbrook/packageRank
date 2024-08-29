@@ -153,19 +153,19 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
 
   tmp <- x$data
   
-  if (!is.null(percentile)) {
+  if (!is.null(lo) & !is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= hi, ]
+  } else if (is.null(lo) & !is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= hi, ]
+  } else if (!is.null(lo) & is.null(hi)) {
+    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= 100, ]
+  } else if (!is.null(percentile)) {
     if (percentile == 50) {
       out <- tmp[tmp$pct.rank == stats::median(tmp$pct.rank), ]
     } else {
       out <- tmp[round(tmp$pct.rank) == percentile, ]  
     }
-  } else if (!is.null(lo) & !is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= hi, ]
-  } else if (is.null(lo) & !is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= hi, ]
-  } else if (!is.null(lo) & is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= 100, ]
-  }
+  } 
   
   if (nrow(out) == 0) stop("Percentile{s} not observed.", call. = FALSE)
   else out
