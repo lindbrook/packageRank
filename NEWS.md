@@ -1,3 +1,9 @@
+### packageRank 0.9.2.9005
+
+- rename percentileRank() to countRankPercentile() and use 
+  rank(ties.method = "min").
+
+
 ### packageRank 0.9.2.9004
 
 - prioritize 'lo' & 'hi' and fix typo in queryPercentile().

@@ -1,4 +1,4 @@
-#' Counts and rank percentiles (prototype).
+#' Counts, ranks and percentiles (prototype).
 #'
 #' From Posit's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
@@ -10,8 +10,9 @@
 #' @return An R data frame.
 #' @export
 
-percentileRank <- function(date = NULL, all.filters = FALSE, ip.filter = FALSE, 
-  small.filter = FALSE, memoization = TRUE, multi.core = FALSE) {
+countRankPercentile <- function(date = NULL, all.filters = FALSE, 
+  ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
+  multi.core = FALSE) {
   
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
@@ -33,45 +34,36 @@ percentileRank <- function(date = NULL, all.filters = FALSE, ip.filter = FALSE,
   
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   
-  pkg.data <- data.frame(pkg = names(freqtab), ct = c(freqtab), 
+  pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
     row.names = NULL)
   pkg.data$n.rank <- seq_len(nrow(pkg.data))
-  pkg.data$pct.rank <- vapply(pkg.data$ct, function(x) {
-    100 * mean(pkg.data$ct < x)
+  
+  rnk <- rank(pkg.data$count, ties.method = "min")
+  pkg.data$rank <- (max(rnk) + 1) - rnk
+  
+  pkg.data$percentile <- vapply(pkg.data$count, function(x) {
+    100 * mean(pkg.data$count < x)
   }, numeric(1L))
   
-  rank.data <- sort(table(pkg.data$ct), decreasing = TRUE)
-  rank.data <- data.frame(ct = as.numeric(names(rank.data)), 
-                          freq = c(rank.data))
-  rank.data <- rank.data[order(rank.data$ct, decreasing = TRUE), ]
-  rank.data$freq <- NULL
-  row.names(rank.data) <- NULL
-  rank.data$t.rank <- seq_len(nrow(rank.data))
-  
-  pct.rank <- merge(pkg.data, rank.data, by = "ct", all.x = TRUE)
-  pct.rank <- pct.rank[, c("pkg", "ct", "n.rank", "t.rank", "pct.rank")]
-  pct.rank <- pct.rank[order(pct.rank$n.rank), ]
-  row.names(pct.rank) <- NULL
-  
-  out <- list(date = file.url.date, data = pct.rank)
-  class(out) <- "percentileRank"
+  out <- list(date = file.url.date, data = pkg.data)
+  class(out) <- "countRankPercentile"
   out
 }
 
-#' Plot method for percentileRank()..
-#' @param x An object of class "percentileRank" created by \code{percentileRank()}.
+#' Plot method for countRankPercentile()..
+#' @param x An object of class "countRankPercentile" created by \code{countRankPercentile()}.
 #' @param type Character. "histogram" or "density".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.percentileRank <- function(x, type = "histogram", ...) {
+plot.countRankPercentile <- function(x, type = "histogram", ...) {
   ttl <- paste("Package Download Distribution @", x$date)
   xlab <-  "Log10 Count"
   if (type == "histogram") {
-    graphics::hist(log10(x$data$ct), main = ttl, xlab = xlab)
+    graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
   } else if (type == "density") {
-    plot(stats::density(log10(x$data$ct)), main = ttl, xlab = xlab)
+    plot(stats::density(log10(x$data$count)), main = ttl, xlab = xlab)
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
@@ -91,19 +83,19 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
 
-  x <- percentileRank(date = date, all.filters = all.filters, 
+  x <- countRankPercentile(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
   tmp <- x$data
-  count.test <- any(tmp$ct == count)
-  if (count.test) x$data[tmp$ct == count, ]
+  count.test <- any(tmp$count == count)
+  if (count.test) x$data[tmp$count == count, ]
   else stop("Count not observed.", call. = FALSE)
 }
 
 #' Rank query.
 #'
-#' @param rank.num Numeric or Integer.
+#' @param num.rank Numeric or Integer.
 #' @param rank.tie Logical. TRUE uses ties. FALSE does not.
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
@@ -114,18 +106,18 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 #' @return An R data frame.
 #' @export
 
-queryRank <- function(rank.num = 1, rank.tie = FALSE, date = NULL, 
+queryRank <- function(num.rank = 1, rank.tie = FALSE, date = NULL, 
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- percentileRank(date = date, all.filters = all.filters, 
+  x <- countRankPercentile(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
   tmp <- x$data
-  tie <- ifelse(rank.tie, "t.rank",  "n.rank")
-  rank.test <- any(tmp[, tie] == rank.num)
-  if (rank.test) tmp[tmp[, tie] == rank.num, ]
+  tie <- ifelse(rank.tie, "rank",  "n.rank")
+  rank.test <- any(tmp[, tie] == num.rank)
+  if (rank.test) tmp[tmp[, tie] == num.rank, ]
   else stop("Rank not observed.", call. = FALSE)
 }
 
@@ -147,26 +139,26 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- percentileRank(date = date, all.filters = all.filters, 
+  x <- countRankPercentile(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
   tmp <- x$data
   
   if (!is.null(lo) & !is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= hi, ]
+    out <- tmp[round(tmp$percentile) >= lo & round(tmp$percentile) <= hi, ]
   } else if (is.null(lo) & !is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= 0 & round(tmp$pct.rank) <= hi, ]
+    out <- tmp[round(tmp$percentile) >= 0 & round(tmp$percentile) <= hi, ]
   } else if (!is.null(lo) & is.null(hi)) {
-    out <- tmp[round(tmp$pct.rank) >= lo & round(tmp$pct.rank) <= 100, ]
+    out <- tmp[round(tmp$percentile) >= lo & round(tmp$percentile) <= 100, ]
   } else if (!is.null(percentile)) {
     if (percentile == 50) {
-      out <- tmp[tmp$pct.rank == stats::median(tmp$pct.rank), ]
+      out <- tmp[tmp$percentile == stats::median(tmp$percentile), ]
     } else {
-      out <- tmp[round(tmp$pct.rank) == percentile, ]  
+      out <- tmp[round(tmp$percentile) == percentile, ]  
     }
   } 
   
-  if (nrow(out) == 0) stop("Percentile{s} not observed.", call. = FALSE)
+  if (nrow(out) == 0) stop("Percentile(s) not observed.", call. = FALSE)
   else out
 }
