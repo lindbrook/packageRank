@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9004
+
+- priorize 'lo' & 'hi' and fix typo in queryPercentile().
+
+
 ### packageRank 0.9.2.9003
 
 - add query functions for percentileRank().
