@@ -93,6 +93,39 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
   else stop("Count not observed.", call. = FALSE)
 }
 
+#' Query package name.
+#'
+#' @param package Character..
+#' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
+#' @param all.filters Logical. Master switch for filters.
+#' @param ip.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param memoization Logical. Use memoization when downloading logs.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
+#' @return An R data frame.
+#' @export
+
+queryPackage <- function(package = "packageRank", date = NULL, 
+  all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
+  memoization = TRUE, multi.core = FALSE) {
+  
+  x <- countRankPercentile(date = date, all.filters = all.filters, 
+                           ip.filter = ip.filter, small.filter = small.filter, 
+                           memoization = memoization, multi.core = multi.core)
+  
+  tmp <- x$data
+  
+  if (all(!package %in% tmp$package)) {
+    stop("Package(s) not observed. Check spelling.", call. = FALSE)
+  } else if (any(!package %in% tmp$package)) {
+    message("No downloads for ", paste(package[!package %in% tmp$package], 
+      collapse = ", "), ".")
+    tmp[tmp$package %in% package, ]
+  } else if (all(package %in% tmp$package)) {
+    tmp[tmp$package %in% package, ]
+  }
+}
+
 #' Rank query.
 #'
 #' @param num.rank Numeric or Integer.
