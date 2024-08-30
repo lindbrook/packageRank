@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9006
+
+- add queryPackage().
+
+
 ### packageRank 0.9.2.9005
 
 - rename percentileRank() to countRankPercentile() and use 
