@@ -6,7 +6,7 @@
 \usage{
 packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, multi.core = FALSE)
+  check.package = TRUE, rank.ties = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -22,6 +22,8 @@ packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
+
+\item{rank.ties}{Logical. TRUE uses ranks with ties (competition). FALSE uses nominal rank without ties.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
