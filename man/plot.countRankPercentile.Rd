@@ -2,7 +2,7 @@
 % Please edit documentation in R/countRankPercentile.R
 \name{plot.countRankPercentile}
 \alias{plot.countRankPercentile}
-\title{Plot method for countRankPercentile()..}
+\title{Plot method for countRankPercentile().}
 \usage{
 \method{plot}{countRankPercentile}(x, type = "histogram", ...)
 }
@@ -17,5 +17,5 @@
 A base R plot.
 }
 \description{
-Plot method for countRankPercentile()..
+Plot method for countRankPercentile().
 }

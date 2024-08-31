@@ -50,7 +50,7 @@ countRankPercentile <- function(date = NULL, all.filters = FALSE,
   out
 }
 
-#' Plot method for countRankPercentile()..
+#' Plot method for countRankPercentile().
 #' @param x An object of class "countRankPercentile" created by \code{countRankPercentile()}.
 #' @param type Character. "histogram" or "density".
 #' @param ... Additional plotting parameters.
