@@ -8,6 +8,7 @@
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
+#' @param rank.ties Logical. TRUE uses ranks with ties (competition). FALSE uses nominal rank without ties.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
@@ -19,7 +20,8 @@
 
 packageRank <- function(packages = "HistData", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
-  memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
+  memoization = TRUE, check.package = TRUE, rank.ties = TRUE, 
+  multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
@@ -52,18 +54,6 @@ packageRank <- function(packages = "HistData", date = NULL,
     packages <- packages[!unobs.pkgs]
   }
 
-  # packages in bin
-  pkg.bin <- lapply(packages, function(nm) freqtab[freqtab %in% freqtab[nm]])
-
-  # offset: ties arbitrarily broken by alphabetical order
-  pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
-    which(names(pkg.bin[[i]]) %in% packages[i])
-  }, numeric(1L))
-
-  nominal.rank <- lapply(seq_along(packages), function(i) {
-    sum(freqtab > freqtab[packages[i]]) + pkg.bin.delta[i]
-  })
-
   tot.pkgs <- length(freqtab)
 
   pkg.percentile <- vapply(packages, function(x) {
@@ -73,13 +63,30 @@ packageRank <- function(packages = "HistData", date = NULL,
   dat <- data.frame(date = ymd,
                     packages = packages,
                     downloads = c(freqtab[packages]),
-                    rank = unlist(nominal.rank),
                     percentile = pkg.percentile,
                     total.downloads = sum(freqtab),
                     total.packages = tot.pkgs,
                     stringsAsFactors = FALSE,
                     row.names = NULL)
 
+  if (rank.ties) {
+    num.rank <- rank(freqtab, ties.method = "min")
+    num.rank <- (max(num.rank) + 1) - num.rank
+    dat$rank <- num.rank[packages]
+  } else {
+    # packages in bin
+    pkg.bin <- lapply(packages, function(nm) freqtab[freqtab %in% freqtab[nm]])
+    
+    # offset: ties arbitrarily broken by alphabetical order
+    pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
+      which(names(pkg.bin[[i]]) %in% packages[i])
+    }, numeric(1L))
+    
+    dat$rank <- unlist(lapply(seq_along(packages), function(i) {
+      sum(freqtab > freqtab[packages[i]]) + pkg.bin.delta[i]
+    }))
+  }
+  
   out <- list(packages = packages, date = ymd, package.data = dat,
     freqtab = freqtab)
 
