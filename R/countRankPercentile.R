@@ -67,6 +67,18 @@ plot.countRankPercentile <- function(x, type = "histogram", ...) {
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
+#' Summary method for countRankPercentile().
+#'
+#' Five number summary of download count distribution
+#' @param object An object of class "countRankPercentile" created by \code{countRankPercentile()}.
+#' @param ... Additional plotting parameters.
+#' @return A base R vector
+#' @export
+
+summary.countRankPercentile <- function(object, ...) {
+  summary(object$data$count)
+}
+
 #' Count query.
 #'
 #' @param count Numeric or Integer.
