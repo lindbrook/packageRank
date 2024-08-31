@@ -4,14 +4,14 @@
 \alias{queryRank}
 \title{Rank query.}
 \usage{
-queryRank(num.rank = 1, rank.tie = FALSE, date = NULL,
+queryRank(num.rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
   memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{num.rank}{Numeric or Integer.}
 
-\item{rank.tie}{Logical. TRUE uses ties. FALSE does not.}
+\item{rank.ties}{Logical. TRUE uses ties. FALSE does not.}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 

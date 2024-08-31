@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9007
+
+- rename argument queryPackage(rank.ties).
+
+
 ### packageRank 0.9.2.9006
 
 - add queryPackage().
