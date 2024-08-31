@@ -148,7 +148,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
     memoization = memoization, multi.core = multi.core)
   
   tmp <- x$data
-  tie <- ifelse(rank.tie, "rank",  "n.rank")
+  tie <- ifelse(rank.ties, "rank",  "n.rank")
   rank.test <- any(tmp[, tie] == num.rank)
   if (rank.test) tmp[tmp[, tie] == num.rank, ]
   else stop("Rank not observed.", call. = FALSE)
