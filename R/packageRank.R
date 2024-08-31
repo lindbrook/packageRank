@@ -288,7 +288,8 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
            size = 2) +
        ggplot2::geom_label(data = point.data, 
          ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
-           colour = "white", size = label.size, label = ylabel, nudge_x = 2000) +
+           colour = "white", size = label.size, label = ylabel,
+           nudge_x = 2000) +
        ggplot2::geom_label(data = point.data, 
           ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
             colour = "white", size = label.size, label = xlabel, 
