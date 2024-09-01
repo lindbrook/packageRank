@@ -9,7 +9,7 @@ queryPercentile(percentile = 50, lo = NULL, hi = NULL, date = NULL,
   memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{percentile}{Numeric.}
+\item{percentile}{Numeric. 50 uses median().}
 
 \item{lo}{Integer.}
 
