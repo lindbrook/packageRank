@@ -168,7 +168,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
 
 #' Percentile-rank query.
 #'
-#' @param percentile Numeric.
+#' @param percentile Numeric. "50" uses median().
 #' @param lo Integer.
 #' @param hi Integer
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.

@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9010
+
+- note that queryPercentile(percentile = 50) uses median().
+
+
 ### packageRank 0.9.2.9009
 
 - add summary.countRankPercentile().
