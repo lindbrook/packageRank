@@ -63,7 +63,21 @@ plot.countRankPercentile <- function(x, type = "histogram", ...) {
   if (type == "histogram") {
     graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
   } else if (type == "density") {
-    plot(stats::density(log10(x$data$count)), main = ttl, xlab = xlab)
+    # plot(stats::density(log10(x$data$count)), main = ttl, xlab = xlab)
+    cts <- sort(unique(x$data$count))
+    freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
+    freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
+    freq.density <- freq.dist$frequency / sum(freq.dist$frequency)
+    xlim <- range(freq.dist$count)
+    ylim <- range(freq.density)
+    plot(freq.dist$count, freq.density, type = "h", log = "x", main = ttl,
+      xlab = "Downloads", ylab = "Density", xlim = xlim, ylim = ylim)
+    avg <- mean(freq.dist$count)
+    avg.lab <- round(avg, 1)
+    med <- median(freq.dist$count)
+    med.lab <- round(med, 1)
+    axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab)
+    axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab)
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
