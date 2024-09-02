@@ -1,3 +1,9 @@
+### packageRank 0.9.2.9014
+
+- set amended discrete density plot as default in plot.cranDistribution().
+- annotate mean and median.
+
+
 ### packageRank 0.9.2.9013
 
 - use "dotted" line type in plot.packageDistribution().
