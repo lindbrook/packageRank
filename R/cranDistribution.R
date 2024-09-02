@@ -57,7 +57,7 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
 #' @return A base R plot.
 #' @export
 
-plot.cranDistribution <- function(x, type = "histogram", ...) {
+plot.cranDistribution <- function(x, type = "density", ...) {
   ttl <- paste("Package Download Distribution @", x$date)
   xlab <-  "Log10 Count"
   if (type == "histogram") {
@@ -75,8 +75,19 @@ plot.cranDistribution <- function(x, type = "histogram", ...) {
     avg.lab <- round(avg, 1)
     med <- stats::median(freq.dist$count)
     med.lab <- round(med, 1)
-    axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab)
-    axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab)
+    axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
+      col.axis = "blue", col.ticks = "blue")
+    axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab, 
+      col.axis = "red", col.ticks = "red")
+    legend(x = "topright",
+           legend = c("med", "avg"),
+           col = c("red", "blue"),
+           pch = NULL,
+           bg = "white",
+           cex = 2/3,
+           title = NULL,
+           lwd = 1,
+           bty = "n")
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
