@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9013
+
+- use "dotted" line type in plot.packageDistribution().
+
+
 ### packageRank 0.9.2.9012
 
 - rename countRankPercentile() as cranDistribution().
