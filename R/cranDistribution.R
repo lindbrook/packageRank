@@ -1,4 +1,4 @@
-#' Counts, ranks and percentiles (prototype).
+#' CRAN distribution (prototype).
 #'
 #' From Posit's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
@@ -10,7 +10,7 @@
 #' @return An R data frame.
 #' @export
 
-countRankPercentile <- function(date = NULL, all.filters = FALSE, 
+cranDistribution <- function(date = NULL, all.filters = FALSE, 
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
   
@@ -46,24 +46,23 @@ countRankPercentile <- function(date = NULL, all.filters = FALSE,
   }, numeric(1L))
   
   out <- list(date = file.url.date, data = pkg.data)
-  class(out) <- "countRankPercentile"
+  class(out) <- "cranDistribution"
   out
 }
 
-#' Plot method for countRankPercentile().
-#' @param x An object of class "countRankPercentile" created by \code{countRankPercentile()}.
+#' Plot method for cranDistribution().
+#' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
 #' @param type Character. "histogram" or "density".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.countRankPercentile <- function(x, type = "histogram", ...) {
+plot.cranDistribution <- function(x, type = "histogram", ...) {
   ttl <- paste("Package Download Distribution @", x$date)
   xlab <-  "Log10 Count"
   if (type == "histogram") {
     graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
   } else if (type == "density") {
-    # plot(stats::density(log10(x$data$count)), main = ttl, xlab = xlab)
     cts <- sort(unique(x$data$count))
     freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
     freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
@@ -74,22 +73,22 @@ plot.countRankPercentile <- function(x, type = "histogram", ...) {
       xlab = "Downloads", ylab = "Density", xlim = xlim, ylim = ylim)
     avg <- mean(freq.dist$count)
     avg.lab <- round(avg, 1)
-    med <- median(freq.dist$count)
+    med <- stats::median(freq.dist$count)
     med.lab <- round(med, 1)
     axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab)
     axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab)
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
-#' Summary method for countRankPercentile().
+#' Summary method for cranDistribution().
 #'
 #' Five number summary of download count distribution
-#' @param object An object of class "countRankPercentile" created by \code{countRankPercentile()}.
+#' @param object An object of class "cranDistribution" created by \code{cranDistribution()}.
 #' @param ... Additional plotting parameters.
 #' @return A base R vector
 #' @export
 
-summary.countRankPercentile <- function(object, ...) {
+summary.cranDistribution <- function(object, ...) {
   summary(object$data$count)
 }
 
@@ -109,7 +108,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
 
-  x <- countRankPercentile(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
@@ -135,7 +134,7 @@ queryPackage <- function(package = "packageRank", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- countRankPercentile(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
                            ip.filter = ip.filter, small.filter = small.filter, 
                            memoization = memoization, multi.core = multi.core)
   
@@ -169,7 +168,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- countRankPercentile(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
@@ -198,7 +197,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- countRankPercentile(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
