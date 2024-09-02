@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9012
+
+- rename countRankPercentile() as cranDistribution().
+
+
 ### packageRank 0.9.2.9011
 
 - amend plot.countRankPercentile(type = "density").
