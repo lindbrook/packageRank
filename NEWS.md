@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9011
+
+- amend plot.countRankPercentile(type = "density").
+
+
 ### packageRank 0.9.2.9010
 
 - note queryPercentile(percentile = 50) uses median().
