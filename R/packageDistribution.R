@@ -82,8 +82,8 @@ plot.packageDistribution <- function(x, ...) {
     ggplot2::ggplot(data = dat2, ggplot2::aes(x = .data$x, y = .data$y)) +
       ggplot2::geom_segment(linewidth = 1/3,
         ggplot2::aes(x = .data$x, xend = .data$x, y = 0, yend = .data$y)) +
-      ggplot2::geom_vline(data = p.data, colour = geom.col,  size = 0.5,
-        ggplot2::aes(xintercept = .data$count)) +
+      ggplot2::geom_vline(data = p.data, colour = "red", linetype = "dotted",
+        size = 0.5, ggplot2::aes(xintercept = .data$count)) +
       ggplot2::geom_label(data = l.data, aes(x = .data$x, y = .data$y),
         fill = geom.col, colour = "white", size = 2.75, label = pkg.ct$count) +
       ggplot2::scale_x_log10() +
@@ -119,7 +119,7 @@ plot_package_distribution <- function(dat) {
     abline(v = freqtab[1], col = "dodgerblue", lty = "dotted")
     axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-    abline(v = pkg.ct, col = grDevices::adjustcolor("red", alpha.f = 0.5))
+    abline(v = pkg.ct, col = "red", lty = "dotted")
     day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
     title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
   } else {
