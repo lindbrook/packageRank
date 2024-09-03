@@ -75,10 +75,13 @@ plot.cranDistribution <- function(x, type = "density", ...) {
     avg.lab <- paste("avg =", round(avg, 1))
     med <- stats::median(x$data$count)
     med.lab <- paste("med =", round(med, 1))
+    max <- max(x$data$count)
+    max.lab <- paste("max =", format(max, big.mark = ","))
     axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
       col.axis = "blue", col.ticks = "blue")
     axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
+    axis(3, at = max, cex.axis = 0.8, padj = 0.9, labels = max.lab)
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
