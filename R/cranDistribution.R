@@ -70,7 +70,7 @@ plot.cranDistribution <- function(x, type = "density", ...) {
     xlim <- range(freq.dist$count)
     ylim <- range(freq.density)
     plot(freq.dist$count, freq.density, type = "h", log = "x", main = ttl,
-      xlab = "Downloads", ylab = "Density", xlim = xlim, ylim = ylim)
+      xlab = xlab, ylab = "Density", xlim = xlim, ylim = ylim)
     avg <- mean(x$data$count)
     avg.lab <- paste("avg =", round(avg, 1))
     med <- stats::median(x$data$count)
