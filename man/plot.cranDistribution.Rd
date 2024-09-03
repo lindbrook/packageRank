@@ -4,7 +4,7 @@
 \alias{plot.cranDistribution}
 \title{Plot method for cranDistribution().}
 \usage{
-\method{plot}{cranDistribution}(x, type = "histogram", ...)
+\method{plot}{cranDistribution}(x, type = "density", ...)
 }
 \arguments{
 \item{x}{An object of class "cranDistribution" created by \code{cranDistribution()}.}

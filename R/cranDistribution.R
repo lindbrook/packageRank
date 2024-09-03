@@ -71,23 +71,14 @@ plot.cranDistribution <- function(x, type = "density", ...) {
     ylim <- range(freq.density)
     plot(freq.dist$count, freq.density, type = "h", log = "x", main = ttl,
       xlab = "Downloads", ylab = "Density", xlim = xlim, ylim = ylim)
-    avg <- mean(freq.dist$count)
-    avg.lab <- round(avg, 1)
-    med <- stats::median(freq.dist$count)
-    med.lab <- round(med, 1)
+    avg <- mean(x$data$count)
+    avg.lab <- paste("avg =", round(avg, 1))
+    med <- stats::median(x$data$count)
+    med.lab <- paste("med =", round(med, 1))
     axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
       col.axis = "blue", col.ticks = "blue")
     axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
-    legend(x = "topright",
-           legend = c("med", "avg"),
-           col = c("red", "blue"),
-           pch = NULL,
-           bg = "white",
-           cex = 2/3,
-           title = NULL,
-           lwd = 1,
-           bty = "n")
   } else stop('type must be "historgram" or "density"', call. = FALSE)
 }
 
@@ -215,6 +206,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   tmp <- x$data
   
   if (!is.null(lo) & !is.null(hi)) {
+    if (lo > hi) stop("'lo' should be smaller than 'hi'", call. = FALSE)
     out <- tmp[round(tmp$percentile) >= lo & round(tmp$percentile) <= hi, ]
   } else if (is.null(lo) & !is.null(hi)) {
     out <- tmp[round(tmp$percentile) >= 0 & round(tmp$percentile) <= hi, ]
