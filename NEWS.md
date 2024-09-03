@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9015
+
+- correct mean and median in plot.cranDistribution().
+
+
 ### packageRank 0.9.2.9014
 
 - set amended discrete density plot as default in plot.cranDistribution().
