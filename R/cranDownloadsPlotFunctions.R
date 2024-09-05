@@ -2697,8 +2697,8 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         }
       } else {
         if (log.y) {
-          plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case,
-            log = "y", ylab = paste("log10", y.nm.case))
+          plot(dat[, vars], type = type, xlab = "Date", log = "y", 
+            ylab = paste("log10", y.nm.case))
         } else {
           plot(dat[, vars], type = type, xlab = "Date", ylab = y.nm.case)
         }
