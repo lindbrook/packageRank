@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9018
+
+- fix duplicate ylab in plot.cranDownloads(log.y = TRUE, r.total = TRUE).
+
+
 ### packageRank 0.9.2.9017
 
 - amend xlab in plot.cranDistribution().
