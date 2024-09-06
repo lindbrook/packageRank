@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9019
+
+- amend/rename 'type' from "density" to "count" in plot.cranDistribution().
+
+
 ### packageRank 0.9.2.9018
 
 - fix duplicate ylab in plot.cranDownloads(log.y = TRUE, r.total = TRUE).
