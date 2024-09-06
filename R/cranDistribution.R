@@ -52,25 +52,25 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
 
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
-#' @param type Character. "histogram" or "density".
+#' @param type Character. "histogram" or "count".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.cranDistribution <- function(x, type = "density", ...) {
-  ttl <- paste("Package Download Distribution @", x$date)
+plot.cranDistribution <- function(x, type = "count", ...) {
+  ttl <- paste("Download Count Distribution @", x$date)
   xlab <-  "Log10 Count"
   if (type == "histogram") {
     graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
-  } else if (type == "density") {
+  } else if (type == "count") {
     cts <- sort(unique(x$data$count))
     freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
     freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-    freq.density <- freq.dist$frequency / sum(freq.dist$frequency)
+    freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
     xlim <- range(freq.dist$count)
     ylim <- range(freq.density)
     plot(freq.dist$count, freq.density, type = "h", log = "x", main = ttl,
-      xlab = xlab, ylab = "Density", xlim = xlim, ylim = ylim)
+      xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
     avg <- mean(x$data$count)
     avg.lab <- paste("avg =", round(avg, 1))
     med <- stats::median(x$data$count)
@@ -82,7 +82,7 @@ plot.cranDistribution <- function(x, type = "density", ...) {
     axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
     axis(3, at = max, cex.axis = 0.8, padj = 0.9, labels = max.lab)
-  } else stop('type must be "historgram" or "density"', call. = FALSE)
+  } else stop('type must be "historgram" or "count"', call. = FALSE)
 }
 
 #' Summary method for cranDistribution().
