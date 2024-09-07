@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9020
+
+- add/use memoized cranDistribution().
+
+
 ### packageRank 0.9.2.9019
 
 - amend/rename 'type' from "density" to "count" in plot.cranDistribution().
