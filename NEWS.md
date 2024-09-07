@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9021
+
+- draft README section on query*() and cranDistribution().
+
+
 ### packageRank 0.9.2.9020
 
 - add/use memoized cranDistribution().
