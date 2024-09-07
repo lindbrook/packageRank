@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9020-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9021-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and rank percentiles
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -31,18 +31,22 @@ You can read more about the package in the sections below:
 - [IV Availability of Results](#iv---availability-of-results) discusses
   when results become available, how to use `logInfo()` to check the
   availability of results, and the effect of time zones.
-- [V Data Fix A](#v---data-fix-a) discusses two problems with download
+- [V Reverse lookup of counts, ranks and
+  percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles)
+  discusses `queryCount()`, `queryRank()`, `queryPercentile()` and
+  `cranDistribution()`.
+- [VI Data Fix A](#vi---data-fix-a) discusses two problems with download
   counts. The first stems from problems with the logs from the end of
   2012 through the beginning of 2013. These are fixed in
   `fixDate_2012()` and `fixCranlogs()`.
-- [VI Data Fix B](#vi---data-fix-b) discusses a problem with
+- [VII Data Fix B](#vii---data-fix-b) discusses a problem with
   [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
   or triples the number of R application downloads between 2023-09-13
   and 2023-10-02. This is fixed in `fixRCranlogs()`.
-- [VII Data Note](#vii---data-note) discusses the spike in the download
-  of the Windows version of the R application on Sundays and Wednesdays
-  between 06 November 2022 and 19 March 2023.
-- [VIII et cetera](#viii---et-cetera) discusses country code top-level
+- [VIII Data Note](#viii---data-note) discusses the spike in the
+  download of the Windows version of the R application on Sundays and
+  Wednesdays between 06 November 2022 and 19 March 2023.
+- [IX et cetera](#ix---et-cetera) discusses country code top-level
   domains (e.g., `countryPackage()` and `packageCountry()`), the use of
   memoization and the internet connection time out problem.
 
@@ -688,7 +692,7 @@ For example, we can compare Wednesday (“2020-03-04”) to Saturday
 ``` r
 packageRank(package = "cholera", date = "2020-03-04")
 >         date packages downloads            rank percentile
-> 1 2020-03-04  cholera        38 5,556 of 18,038       67.9
+> 1 2020-03-04  cholera        38 5,788 of 18,038       67.9
 ```
 
 On Wednesday, we can see that
@@ -699,7 +703,7 @@ downloaded, and earned a spot in the 68th percentile.
 ``` r
 packageRank(package = "cholera", date = "2020-03-07")
 >         date packages downloads            rank percentile
-> 1 2020-03-07  cholera        29 3,061 of 15,950         80
+> 1 2020-03-07  cholera        29 3,189 of 15,950         80
 ```
 
 On Saturday, we can see that
@@ -733,15 +737,9 @@ To put it differently:
 ``` r
 (pkgs.with.fewer.downloads <- sum(downloads < downloads["cholera"]))
 > [1] 12250
-```
-
-``` r
 
 (tot.pkgs <- length(downloads))
 > [1] 18038
-```
-
-``` r
 
 round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 67.9
@@ -763,9 +761,6 @@ downloads <- pkg.rank$freqtab
 
 which(names(downloads[downloads == 38]) == "cholera")
 > [1] 31
-```
-
-``` r
 length(downloads[downloads == 38])
 > [1] 263
 ```
@@ -1082,7 +1077,7 @@ packageRank(packages = "ergm")
 ```
 
     >         date packages downloads          rank percentile
-    > 1 2020-12-30     ergm       292 873 of 20,077       95.6
+    > 1 2020-12-30     ergm       292 878 of 20,077       95.6
 
 If you had specified the date, you’d get an additional warning:
 
@@ -1091,7 +1086,7 @@ packageRank(packages = "ergm", date = "2021-01-01")
 ```
 
     >         date packages downloads          rank percentile
-    > 1 2020-12-30     ergm       292 873 of 20,077       95.6
+    > 1 2020-12-30     ergm       292 878 of 20,077       95.6
 
     Warning message:
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
@@ -1130,7 +1125,117 @@ compute your local time and time zone (e.g., `Sys.time()` and
 `Sys.timezone()`). My understanding is that there may be operating
 system or platform specific issues that could undermine this.
 
-### V - data fix A
+### V - Reverse lookup of counts, ranks and percentiles
+
+To query the log for a specific count, rank or rank percentile, use the
+functions below:
+
+#### queryCount()
+
+To find the packages that had 100 downloads (the default is 1, least
+observable number of downloads):
+
+``` r
+queryCount(100)
+```
+
+    >           package count n.rank rank percentile
+    > 2129    analogsea   100   2129 2143   92.05089
+    > 2130 ComplexUpset   100   2130 2143   92.05089
+    > 2131     detrendr   100   2131 2143   92.05089
+    > 2132         drat   100   2132 2143   92.05089
+    > 2133      enrichR   100   2133 2143   92.05089
+    > 2134     exact2x2   100   2134 2143   92.05089
+    > 2135      fdapace   100   2135 2143   92.05089
+    > 2136         fdth   100   2136 2143   92.05089
+    > 2137       ggmcmc   100   2137 2143   92.05089
+    > 2138      jsTreeR   100   2138 2143   92.05089
+    > 2139       likert   100   2139 2143   92.05089
+    > 2140      praznik   100   2140 2143   92.05089
+    > 2141     rayimage   100   2141 2143   92.05089
+    > 2142       rlemon   100   2142 2143   92.05089
+    > 2143        worcs   100   2143 2143   92.05089
+
+#### queryRank()
+
+To find the package that was ranked 20th in downloads (the default is
+1st, the most downloaded package):
+
+``` r
+queryRank(20)
+```
+
+    >    package count n.rank rank percentile
+    > 20 stringr 33041     20   20   99.92581
+
+#### queryPercentile()
+
+If you want the packages with a particular rank percentile, use
+`queryPercentile()`. Note that due to the discrete nature of counts,
+your choice of percentile may not be observed because they may fall in
+the vertical gaps in the data:
+
+![](man/figures/README-discrete_counts-1.png)<!-- -->
+
+For this reason, `queryPercentile()` rounds you selection to whole
+numbers. Also, the default value is set to 50, which uses `median()`to
+guarantee a result.
+
+``` r
+# head() is used because there will be  many observations with median count.
+head(queryPercentile())
+```
+
+    >        package count n.rank  rank percentile
+    > 12845 AATtools    12  12845 13697   49.19322
+    > 12846    abdiv    12  12846 13697   49.19322
+    > 12847 abglasso    12  12847 13697   49.19322
+    > 12848  ablasso    12  12848 13697   49.19322
+    > 12849   Ac3net    12  12849 13697   49.19322
+    > 12850      acp    12  12850 13697   49.19322
+
+You can also set a range of rank percentiles using the ‘lo’ and/or ‘hi’
+arguments. If you get an error message, you may need to widen your
+interval:
+
+``` r
+head(queryPercentile(lo = 95, hi = 96), 3)
+tail(queryPercentile(lo = 95, hi = 96), 3)
+```
+
+    >      package count n.rank rank percentile
+    > 944 filehash   410    944  947   96.48726
+    > 945  NbClust   410    945  947   96.48726
+    > 946     sets   410    946  947   96.48726
+    >            package count n.rank rank percentile
+    > 1480  ParamHelpers   185   1480 1482   94.50276
+    > 1481 shinyvalidate   185   1481 1482   94.50276
+    > 1482         spocc   185   1482 1482   94.50276
+
+#### cranDistribution()
+
+The above functions leverage `cranDistribution()`, which computes the
+distribution of download counts for a given log. The generic summary
+method provides the five number summary plus the arithmetic mean:
+
+``` r
+summary(cranDistribution())
+```
+
+    >    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    >     1.0     6.0    12.0   213.7    28.0 56311.0
+
+The generic plot method graphs the distribution of base 10 logarithm of
+download counts. Each plot is annotated with the median, mean and
+maximum count.
+
+``` r
+plot(cranDistribution())
+```
+
+![](man/figures/README-plot_distribution_code-1.png)<!-- -->
+
+### VI - data fix A
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) fixes
 two data problems. The first addresses a problem that affects logs when
@@ -1189,7 +1294,7 @@ using the actual log(s) when any of the eight problematic dates are
 requested. Details about the 8 days and `fixCranlogs()` can be found
 [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
-### VI - data fix B
+### VII - data fix B
 
 The second data problem is of more recent vintage. From 2023-09-13
 through 2023-10-02, the download counts for the R application returned
@@ -1226,7 +1331,7 @@ the same period but that is now fixed in
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs). For details,
 see issue [\#68](https://github.com/r-hub/cranlogs/issues/68)
 
-### VII - data note
+### VIII - data note
 
 #### R Windows Sunday and Wednesday download spikes (06 Nov 2022 - 19 March 2023)
 
@@ -1270,7 +1375,7 @@ distinction.
 
 ![](man/figures/README-sundays_win-1.png)<!-- -->![](man/figures/README-sundays_win-2.png)<!-- -->
 
-### VIII - et cetera
+### IX - et cetera
 
 For those interested in directly using the , this section describes some
 issues that may be of use.

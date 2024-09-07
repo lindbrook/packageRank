@@ -26,10 +26,11 @@ You can read more about the package in the sections below:
 * [II Download Rank Percentiles](#ii---download-rank-percentiles) describes how `packageRank()` makes use of rank percentiles. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours: a package is in the 74th percentile has more downloads than 74% of packages. This facilitates comparison and helps you locate your package in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
 * [III Inflation Filters](#iii---inflation-filters) describes four filter functions that remove software and behavioral artifacts that inflate _nominal_ download counts. This functionality is available in `packageRank()` and `packageLog()`.
 * [IV Availability of Results](#iv---availability-of-results) discusses when results become available, how to use `logInfo()` to check the availability of results, and the effect of time zones.
-* [V Data Fix A](#v---data-fix-a) discusses two problems with download counts. The first stems from problems with the logs from the end of 2012 through the beginning of 2013. These are fixed in `fixDate_2012()` and `fixCranlogs()`. 
-* [VI Data Fix B](#vi---data-fix-b) discusses a problem with ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) that doubles or triples the number of R application downloads between 2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`.
-* [VII Data Note](#vii---data-note) discusses the spike in the download of the Windows version of the R application on Sundays and Wednesdays between 06 November 2022 and 19 March 2023.
-* [VIII et cetera](#viii---et-cetera) discusses country code top-level domains (e.g., `countryPackage()` and `packageCountry()`), the use of memoization and the internet connection time out problem. 
+* [V Reverse lookup of counts, ranks and percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles) discusses `queryCount()`, `queryRank()`, `queryPercentile()` and `cranDistribution()`.
+* [VI Data Fix A](#vi---data-fix-a) discusses two problems with download counts. The first stems from problems with the logs from the end of 2012 through the beginning of 2013. These are fixed in `fixDate_2012()` and `fixCranlogs()`. 
+* [VII Data Fix B](#vii---data-fix-b) discusses a problem with ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) that doubles or triples the number of R application downloads between 2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`.
+* [VIII Data Note](#viii---data-note) discusses the spike in the download of the Windows version of the R application on Sundays and Wednesdays between 06 November 2022 and 19 March 2023.
+* [IX et cetera](#ix---et-cetera) discusses country code top-level domains (e.g., `countryPackage()` and `packageCountry()`), the use of memoization and the internet connection time out problem. 
 
 ### getting started
 
@@ -870,7 +871,84 @@ $status
 
 The functions uses your local time zone, which depends on R's ability to compute your local time and time zone (e.g., `Sys.time()` and `Sys.timezone()`). My understanding is that there may be operating system or platform specific issues that could undermine this.
 
-### V - data fix A
+### V - Reverse lookup of counts, ranks and percentiles
+
+To query the log for a specific count, rank or rank percentile, use the functions below:
+
+#### queryCount()
+
+To find the packages that had 100 downloads (the default is 1, least observable number of downloads):
+
+```{R, count, eval = FALSE}
+queryCount(100)
+```
+```{R, count_code, echo = FALSE}
+queryCount(100, date = "2024-08-01")
+```
+
+#### queryRank()
+
+To find the package that was ranked 20th in downloads (the default is 1st, the most downloaded package):
+
+```{R, rank, eval = FALSE}
+queryRank(20)
+```
+```{R, rank_code, echo = FALSE}
+queryRank(20, date = "2024-08-01")
+```
+
+#### queryPercentile()
+
+If you want the packages with a particular rank percentile, use `queryPercentile()`. Note that due to the discrete nature of counts, your choice of percentile may not be observed because they may fall in the vertical gaps in the data:
+
+```{R, discrete_counts, echo = FALSE}
+tmp <- cranDistribution(date = "2024-08-01")
+plot(tmp$data$percentile, pch = 46, xlab = "Nominal Rank", ylab = "Rank Percentile", main = "Observed Rank Percentiles")
+```
+
+For this reason, `queryPercentile()` rounds you selection to whole numbers. Also, the default value is set to 50, which uses `median()`to guarantee a result.
+
+```{R, rank_percentile, eval = FALSE}
+# head() is used because there will be  many observations with median count.
+head(queryPercentile())
+```
+```{R, rank_percentile_code, echo = FALSE}
+# head() is used because there will be  many observations with median count.
+head(queryPercentile(date = "2024-08-01"))
+```
+
+You can also set a range of rank percentiles using the 'lo' and/or 'hi' arguments. If you get an error message, you may need to widen your interval:
+
+```{R, lo_hi, eval = FALSE}
+head(queryPercentile(lo = 95, hi = 96), 3)
+tail(queryPercentile(lo = 95, hi = 96), 3)
+```
+```{R, lo_hi_code, echo = FALSE}
+head(queryPercentile(lo = 95, hi = 96, date = "2024-08-01"), 3)
+tail(queryPercentile(lo = 95, hi = 96, date = "2024-08-01"), 3)
+```
+
+#### cranDistribution()
+
+The above functions leverage `cranDistribution()`, which computes the distribution of download counts for a given log. The generic summary method provides the five number summary plus the arithmetic mean:
+
+```{R, summary_distribution, eval = FALSE}
+summary(cranDistribution())
+```
+```{R, summary_distribution_code, echo = FALSE}
+summary(cranDistribution(date = "2024-08-01"))
+```
+
+The generic plot method graphs the distribution of base 10 logarithm of download counts. Each plot is annotated with the median, mean and maximum count.
+
+```{R, plot_distribution, eval = FALSE}
+plot(cranDistribution())
+```
+```{R, plot_distribution_code, echo = FALSE}
+plot(cranDistribution(date = "2024-08-01"))
+```
+
+### VI - data fix A
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) fixes two data problems. The first addresses a problem that affects logs when the data were first collected (late 2012 through the beginning of 2013). To understand the problem, we need to be know that the Posit/RStudio download logs, which begin on 01 October 2012, are stored as separate files with a name/URL that embeds the date:
 
@@ -894,7 +972,7 @@ To put it differently, ['cranlogs'](https://CRAN.R-project.org/package=cranlogs)
 
 [`fixCranlogs()`](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R) addresses this overcounting problem by recomputing the download counts using the actual log(s) when any of the eight problematic dates are requested. Details about the 8 days and `fixCranlogs()` can be found [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
-### VI - data fix B
+### VII - data fix B
 
 The second data problem is of more recent vintage. From 2023-09-13 through 2023-10-02, the download counts for the R application returned by `cranlogs::cran_downloads(packages = "R")`, is, with two exceptions, twice what one would expect when looking at the actual log(s). The two exceptions are: 1) 2023-09-28 where the counts are identical but for a "rounding error" possibly due to an NA and 2) 2023-09-30 where there is actually a three-fold difference. 
 
@@ -920,7 +998,7 @@ Details and code for replication can be found in issue [#69](https://github.com/
 Note that there was a similar issue for package download counts around the same period but that is now fixed in ['cranlogs'](https://CRAN.R-project.org/package=cranlogs). For details, see issue [#68](https://github.com/r-hub/cranlogs/issues/68)
 
 
-### VII - data note
+### VIII - data note
 
 #### R Windows Sunday and Wednesday download spikes (06 Nov 2022 - 19 March 2023)
 
@@ -1049,7 +1127,7 @@ points(win[win$date %in% wednesdays[inter.wed], c("date", "count")], pch = 16,
 title(main = "R Windows Wednesdays")
 ```
 
-### VIII - et cetera
+### IX - et cetera
 
 For those interested in directly using the , this section describes some issues that may be of use.
 
