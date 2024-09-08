@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9022
+
+- amend README ranks discussion and use "percentile rank".
+
+
 ### packageRank 0.9.2.9021
 
 - draft README section on query*() and cranDistribution().
