@@ -909,11 +909,11 @@ plot(tmp$data$percentile, pch = 46, xlab = "Nominal Rank", ylab = "Rank Percenti
 For this reason, `queryPercentile()` rounds you selection to whole numbers. Also, the default value is set to 50, which uses `median()`to guarantee a result.
 
 ```{R, rank_percentile, eval = FALSE}
-# head() is used because there will be  many observations with median count.
+# head() is used because there will be many observations with median count.
 head(queryPercentile())
 ```
 ```{R, rank_percentile_code, echo = FALSE}
-# head() is used because there will be  many observations with median count.
+# head() is used because there will be many observations with median count.
 head(queryPercentile(date = "2024-08-01"))
 ```
 

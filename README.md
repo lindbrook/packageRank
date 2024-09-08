@@ -1182,7 +1182,7 @@ numbers. Also, the default value is set to 50, which uses `median()`to
 guarantee a result.
 
 ``` r
-# head() is used because there will be  many observations with median count.
+# head() is used because there will be many observations with median count.
 head(queryPercentile())
 ```
 
