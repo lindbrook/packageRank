@@ -16,14 +16,14 @@ knitr::opts_chunk$set(
 library(packageRank)
 ```
 
-## packageRank: compute and visualize package download counts and rank percentiles
+## packageRank: compute and visualize package download counts and percentile ranks 
 
 ['packageRank'](https://CRAN.R-project.org/package=packageRank) is an R package that helps put package download counts into context. It does so via two core functions, `cranDownloads()` and `packageRank()`, a set of filters that reduce download count inflation, and a host of other assorted functions.
 
 You can read more about the package in the sections below:
 
 * [I Download Counts](#i---download-counts) describes how `cranDownloads()` gives [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html) a more user-friendly interface and makes visualizing those data easy via its generic R `plot()` method.
-* [II Download Rank Percentiles](#ii---download-rank-percentiles) describes how `packageRank()` makes use of rank percentiles. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours: a package is in the 74th percentile has more downloads than 74% of packages. This facilitates comparison and helps you locate your package in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
+* [II Download Percentile Ranks](#ii---download-rank-percentiles) describes how `packageRank()` makes use of percentiles ranks. This nonparametric statistic computes the percentage of packages that with fewer downloads than yours: a package is in the 74th percentile has more downloads than 74% of packages. This facilitates comparison and helps you locate your package in the overall distribution of [CRAN](https://CRAN.R-project.org/) package downloads.
 * [III Inflation Filters](#iii---inflation-filters) describes four filter functions that remove software and behavioral artifacts that inflate _nominal_ download counts. This functionality is available in `packageRank()` and `packageLog()`.
 * [IV Availability of Results](#iv---availability-of-results) discusses when results become available, how to use `logInfo()` to check the availability of results, and the effect of time zones.
 * [V Reverse lookup of counts, ranks and percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles) discusses `queryCount()`, `queryRank()`, `queryPercentile()` and `cranDistribution()`.
@@ -369,7 +369,7 @@ plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
   population.plot = TRUE, population.seed = 1)
 ```
 
-This longitudinal view plots the date (x-axis) against the base 10 logarithm of the selected package's download counts (y-axis). To get a sense of how the selected package's performance stacks up against "all" other packages, a set of smoothed curves representing a stratified random sample of packages is plotted in gray in the background (this is the "typical" pattern of downloads on [CRAN](https://cran.r-project.org/) for the selected time period).^[Specifically, within each 5% interval of rank percentiles (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked.]
+This longitudinal view plots the date (x-axis) against the base 10 logarithm of the selected package's download counts (y-axis). To get a sense of how the selected package's performance stacks up against "all" other packages, a set of smoothed curves representing a stratified random sample of packages is plotted in gray in the background (this is the "typical" pattern of downloads on [CRAN](https://cran.r-project.org/) for the selected time period).^[Specifically, within each 5% interval of percentile ranks (e.g., 0 to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages is selected and tracked.]
 
 #### unit of observation
 
@@ -440,7 +440,7 @@ plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05",
 ```
 
 
-### II - download rank percentiles
+### II - download percentile ranks
 
 After spending some time with nominal download counts, the "compared to what?" question will come to mind. For instance, consider the data for the 'cholera' package from the first week of March 2020:
 
@@ -512,7 +512,7 @@ plot_package_distribution(distn.data[[2]], xlim, ylim)
 
 While these plots give us a better picture of where ['cholera'](https://CRAN.R-project.org/package=cholera) is located, comparisons between Wednesday and Saturday are still impressionistic: all we can confidently say is that the download counts for both days were greater than the mode.
 
-To facilitate interpretation and comparison, I use the _rank percentile_ of a download count instead of the simple nominal download count. This nonparametric statistic tells you the percentage of packages that had fewer downloads. In other words, it gives you the location of your package relative to the locations of all other packages. More importantly, by rescaling download counts to lie on the bounded interval between 0 and 100, rank percentiles make it easier to compare packages within and across distributions.
+To facilitate interpretation and comparison, I use the _percentile rank_ of a download count instead of the simple nominal download count. This nonparametric statistic tells you the percentage of packages that had fewer downloads. In other words, it gives you the location of your package relative to the locations of all other packages. More importantly, by rescaling download counts to lie on the bounded interval between 0 and 100, percentile ranks make it easier to compare packages within and across distributions.
 
 For example, we can compare Wednesday ("2020-03-04") to Saturday ("2020-03-07"):
 
@@ -530,9 +530,9 @@ On Saturday, we can see that ['cholera'](https://CRAN.R-project.org/package=chol
 
 So contrary to what the nominal counts tell us, one could say that the interest in ['cholera'](https://CRAN.R-project.org/package=cholera) was actually greater on Saturday than on Wednesday.
 
-#### computing rank percentile
+#### computing percentile rank
 
-To compute rank percentiles, I do the following. For each package, I tabulate the number of downloads and then compute the percentage of packages with fewer downloads. Here are the details using ['cholera'](https://CRAN.R-project.org/package=cholera) from Wednesday as an example:
+To compute percentile ranks, I do the following. For each package, I tabulate the number of downloads and then compute the percentage of packages with fewer downloads. Here are the details using ['cholera'](https://CRAN.R-project.org/package=cholera) from Wednesday as an example:
 
 ```{r percentile}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
@@ -564,7 +564,7 @@ which(names(downloads[downloads == 38]) == "cholera")
 length(downloads[downloads == 38])
 ```
 
-### visualizing package download rank percentiles
+### visualizing package download percentile ranks 
 
 To visualize `packageRank()`, use `plot()`.
 
@@ -672,7 +672,7 @@ day <- weekdays(as.Date(date), abbreviate = TRUE)
 title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 ```
 
-These graphs above, which are customized here to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights (in red) a package's position in the distribution along with its rank percentile and download count. In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
+These graphs above, which are customized here to be on the same scale, plot the _rank order_ of packages' download counts (x-axis) against the logarithm of those counts (y-axis). It then highlights (in red) a package's position in the distribution along with its percentile rank and download count. In the background, the 75th, 50th and 25th percentiles are plotted as dotted vertical lines. The package with the most downloads, ['magrittr'](https://CRAN.R-project.org/package=magrittr) in both cases, is at top left (in blue). The total number of downloads is at the top right (in blue).
 
 ### III - inflation filters
 
@@ -811,7 +811,7 @@ $status
 
 #### time zones
 
-Because you're typically interested in _today's_ log file, another thing that affects availability is your time zone. For example, let's say that it's 09:01 on 01 January 2021 and you want to compute the rank percentile for ['ergm'](https://CRAN.R-project.org/package=ergm) for the last day of 2020. You might be tempted to use the following:
+Because you're typically interested in _today's_ log file, another thing that affects availability is your time zone. For example, let's say that it's 09:01 on 01 January 2021 and you want to compute the percentile rank for ['ergm'](https://CRAN.R-project.org/package=ergm) for the last day of 2020. You might be tempted to use the following:
 
 ```{r timezone, eval = FALSE}
 packageRank(packages = "ergm")
@@ -873,7 +873,7 @@ The functions uses your local time zone, which depends on R's ability to compute
 
 ### V - Reverse lookup of counts, ranks and percentiles
 
-To query the log for a specific count, rank or rank percentile, use the functions below:
+To query the log for a specific count, rank or percentile rank, use the functions below:
 
 #### queryCount()
 
@@ -899,11 +899,11 @@ queryRank(20, date = "2024-08-01")
 
 #### queryPercentile()
 
-If you want the packages with a particular rank percentile, use `queryPercentile()`. Note that due to the discrete nature of counts, your choice of percentile may not be observed because they may fall in the vertical gaps in the data:
+If you want the packages with a particular percentile rank, use `queryPercentile()`. Note that due to the discrete nature of counts, your choice of percentile may not be observed because they may fall in the vertical gaps in the data:
 
 ```{R, discrete_counts, echo = FALSE}
 tmp <- cranDistribution(date = "2024-08-01")
-plot(tmp$data$percentile, pch = 46, xlab = "Nominal Rank", ylab = "Rank Percentile", main = "Observed Rank Percentiles")
+plot(tmp$data$percentile, pch = 46, xlab = "Nominal Rank", ylab = "Percentile Rank", main = "Observed Percentile Ranks")
 ```
 
 For this reason, `queryPercentile()` rounds you selection to whole numbers. Also, the default value is set to 50, which uses `median()`to guarantee a result.
@@ -917,7 +917,7 @@ head(queryPercentile())
 head(queryPercentile(date = "2024-08-01"))
 ```
 
-You can also set a range of rank percentiles using the 'lo' and/or 'hi' arguments. If you get an error message, you may need to widen your interval:
+You can also set a range of percentile ranks using the 'lo' and/or 'hi' arguments. If you get an error message, you may need to widen your interval:
 
 ```{R, lo_hi, eval = FALSE}
 head(queryPercentile(lo = 95, hi = 96), 3)
