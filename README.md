@@ -1,8 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9021-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
-## packageRank: compute and visualize package download counts and rank percentiles
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9022-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
 package that helps put package download counts into context. It does so
@@ -17,8 +17,8 @@ You can read more about the package in the sections below:
   [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html)
   a more user-friendly interface and makes visualizing those data easy
   via its generic R `plot()` method.
-- [II Download Rank Percentiles](#ii---download-rank-percentiles)
-  describes how `packageRank()` makes use of rank percentiles. This
+- [II Download Percentile Ranks](#ii---download-rank-percentiles)
+  describes how `packageRank()` makes use of percentiles ranks. This
   nonparametric statistic computes the percentage of packages that with
   fewer downloads than yours: a package is in the 74th percentile has
   more downloads than 74% of packages. This facilitates comparison and
@@ -615,7 +615,7 @@ plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05",
 
 ![](man/figures/README-non_pro_mode_plot-1.png)<!-- -->
 
-### II - download rank percentiles
+### II - download percentile ranks
 
 After spending some time with nominal download counts, the “compared to
 what?” question will come to mind. For instance, consider the data for
@@ -677,13 +677,13 @@ comparisons between Wednesday and Saturday are still impressionistic:
 all we can confidently say is that the download counts for both days
 were greater than the mode.
 
-To facilitate interpretation and comparison, I use the *rank percentile*
+To facilitate interpretation and comparison, I use the *percentile rank*
 of a download count instead of the simple nominal download count. This
 nonparametric statistic tells you the percentage of packages that had
 fewer downloads. In other words, it gives you the location of your
 package relative to the locations of all other packages. More
 importantly, by rescaling download counts to lie on the bounded interval
-between 0 and 100, rank percentiles make it easier to compare packages
+between 0 and 100, percentile ranks make it easier to compare packages
 within and across distributions.
 
 For example, we can compare Wednesday (“2020-03-04”) to Saturday
@@ -697,7 +697,7 @@ packageRank(package = "cholera", date = "2020-03-04")
 
 On Wednesday, we can see that
 [‘cholera’](https://CRAN.R-project.org/package=cholera) had 38
-downloads, came in 5,556th place out of the 18,038 different packages
+downloads, came in 5,788th place out of the 18,038 different packages
 downloaded, and earned a spot in the 68th percentile.
 
 ``` r
@@ -708,16 +708,16 @@ packageRank(package = "cholera", date = "2020-03-07")
 
 On Saturday, we can see that
 [‘cholera’](https://CRAN.R-project.org/package=cholera) had 29
-downloads, came in 3,061st place out of the 15,950 different packages
+downloads, came in 3,189st place out of the 15,950 different packages
 downloaded, and earned a spot in the 80th percentile.
 
 So contrary to what the nominal counts tell us, one could say that the
 interest in [‘cholera’](https://CRAN.R-project.org/package=cholera) was
 actually greater on Saturday than on Wednesday.
 
-#### computing rank percentile
+#### computing percentile rank
 
-To compute rank percentiles, I do the following. For each package, I
+To compute percentile ranks, I do the following. For each package, I
 tabulate the number of downloads and then compute the percentage of
 packages with fewer downloads. Here are the details using
 [‘cholera’](https://CRAN.R-project.org/package=cholera) from Wednesday
@@ -745,27 +745,21 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 67.9
 ```
 
-#### nominal ranks
+#### competition v. nominal ranks
 
-In the example above, 38 downloads puts ‘cholera’ in 5,556th place among
-18,038 observed packages. This rank is “nominal” because it’s possible
-that multiple packages can have the same number of downloads. As a
-result, a package’s nominal rank but not its rank percentile can be
-affected by its name. For example, because packages with the same number
-of downloads are sorted in alphabetical order, ‘cholera’ benefits from
-the fact that it is 31st in the list of 263 packages with 38 downloads:
+In the example above, 38 downloads puts ‘cholera’ in 5,788th place if we
+allow for ties using
+[competition](https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
+(i.e., “1224” ranking) and 5,556th place if we don’t by using
+[nominal/ordinal](https://en.wikipedia.org/wiki/Ranking#Ordinal_ranking_(%221234%22_ranking))
+(i.e., “1234” ranking).
 
-``` r
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
-downloads <- pkg.rank$freqtab
+Prior to v0.9.2.9008, only nominal/ordinal ranking was available.
+Competition ranking is now the default via
+`packageRank(rank.ties = TRUE)`. If you want ordinal ranking, use
+`packageRank(rank.ties = FALSE)`.
 
-which(names(downloads[downloads == 38]) == "cholera")
-> [1] 31
-length(downloads[downloads == 38])
-> [1] 263
-```
-
-### visualizing package download rank percentiles
+### visualizing package download percentile ranks
 
 To visualize `packageRank()`, use `plot()`.
 
@@ -786,7 +780,7 @@ plot(packageRank(packages = "cholera", date = "2020-03-07"))
 These graphs above, which are customized here to be on the same scale,
 plot the *rank order* of packages’ download counts (x-axis) against the
 logarithm of those counts (y-axis). It then highlights (in red) a
-package’s position in the distribution along with its rank percentile
+package’s position in the distribution along with its percentile rank
 and download count. In the background, the 75th, 50th and 25th
 percentiles are plotted as dotted vertical lines. The package with the
 most downloads,
@@ -1041,9 +1035,9 @@ logInfo()
 
 Because you’re typically interested in *today’s* log file, another thing
 that affects availability is your time zone. For example, let’s say that
-it’s 09:01 on 01 January 2021 and you want to compute the rank
-percentile for [‘ergm’](https://CRAN.R-project.org/package=ergm) for the
-last day of 2020. You might be tempted to use the following:
+it’s 09:01 on 01 January 2021 and you want to compute the percentile
+rank for [‘ergm’](https://CRAN.R-project.org/package=ergm) for the last
+day of 2020. You might be tempted to use the following:
 
 ``` r
 packageRank(packages = "ergm")
@@ -1127,7 +1121,7 @@ system or platform specific issues that could undermine this.
 
 ### V - Reverse lookup of counts, ranks and percentiles
 
-To query the log for a specific count, rank or rank percentile, use the
+To query the log for a specific count, rank or percentile rank, use the
 functions below:
 
 #### queryCount()
@@ -1170,7 +1164,7 @@ queryRank(20)
 
 #### queryPercentile()
 
-If you want the packages with a particular rank percentile, use
+If you want the packages with a particular percentile rank, use
 `queryPercentile()`. Note that due to the discrete nature of counts,
 your choice of percentile may not be observed because they may fall in
 the vertical gaps in the data:
@@ -1194,7 +1188,7 @@ head(queryPercentile())
     > 12849   Ac3net    12  12849 13697   49.19322
     > 12850      acp    12  12850 13697   49.19322
 
-You can also set a range of rank percentiles using the ‘lo’ and/or ‘hi’
+You can also set a range of percentile ranks using the ‘lo’ and/or ‘hi’
 arguments. If you get an error message, you may need to widen your
 interval:
 
@@ -1436,6 +1430,6 @@ true over slower internet connections or when you’re dealing with large
 log files. To fix this, `fetchCranLog()` will, if needed, temporarily
 set the timeout to 600 seconds.
 
-[^1]: Specifically, within each 5% interval of rank percentiles (e.g., 0
+[^1]: Specifically, within each 5% interval of percentile ranks (e.g., 0
     to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages
     is selected and tracked.
