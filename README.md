@@ -1,6 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9022-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -696,7 +697,7 @@ packageRank(package = "cholera", date = "2020-03-04")
 
 On Wednesday, we can see that
 [‘cholera’](https://CRAN.R-project.org/package=cholera) had 38
-downloads, came in 5,556th place out of the 18,038 different packages
+downloads, came in 5,788th place out of the 18,038 different packages
 downloaded, and earned a spot in the 68th percentile.
 
 ``` r
@@ -707,7 +708,7 @@ packageRank(package = "cholera", date = "2020-03-07")
 
 On Saturday, we can see that
 [‘cholera’](https://CRAN.R-project.org/package=cholera) had 29
-downloads, came in 3,061st place out of the 15,950 different packages
+downloads, came in 3,189st place out of the 15,950 different packages
 downloaded, and earned a spot in the 80th percentile.
 
 So contrary to what the nominal counts tell us, one could say that the
@@ -744,25 +745,19 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 > [1] 67.9
 ```
 
-#### nominal ranks
+#### competition v. nominal ranks
 
-In the example above, 38 downloads puts ‘cholera’ in 5,556th place among
-18,038 observed packages. This rank is “nominal” because it’s possible
-that multiple packages can have the same number of downloads. As a
-result, a package’s nominal rank but not its rank percentile can be
-affected by its name. For example, because packages with the same number
-of downloads are sorted in alphabetical order, ‘cholera’ benefits from
-the fact that it is 31st in the list of 263 packages with 38 downloads:
+In the example above, 38 downloads puts ‘cholera’ in 5,788th place if we
+allow for ties using
+[competition](https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
+(i.e., “1224” ranking) and 5,556th place if we don’t by using
+[nominal/ordinal](https://en.wikipedia.org/wiki/Ranking#Ordinal_ranking_(%221234%22_ranking))
+(i.e., “1234” ranking).
 
-``` r
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
-downloads <- pkg.rank$freqtab
-
-which(names(downloads[downloads == 38]) == "cholera")
-> [1] 31
-length(downloads[downloads == 38])
-> [1] 263
-```
+Prior to v0.9.2.9008, only nominal/ordinal ranking was available.
+Competition ranking is now the default via
+`packageRank(rank.ties = TRUE)`. If you want ordinal ranking, use
+`packageRank(rank.ties = FALSE)`.
 
 ### visualizing package download percentile ranks
 
