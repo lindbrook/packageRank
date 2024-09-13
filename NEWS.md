@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9023
+
+- add unique package count to plot.cranDistribution().
+
+
 ### packageRank 0.9.2.9022
 
 - amend README ranks discussion and use "percentile rank".
