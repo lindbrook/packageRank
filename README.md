@@ -18,7 +18,7 @@ You can read more about the package in the sections below:
   a more user-friendly interface and makes visualizing those data easy
   via its generic R `plot()` method.
 - [II Download Percentile Ranks](#ii---download-rank-percentiles)
-  describes how `packageRank()` makes use of percentiles ranks. This
+  describes how `packageRank()` makes use of percentile ranks. This
   nonparametric statistic computes the percentage of packages that with
   fewer downloads than yours: a package is in the 74th percentile has
   more downloads than 74% of packages. This facilitates comparison and
