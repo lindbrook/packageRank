@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9024
+
+- amend package count subtitle in plot.cranDistribution().
+
+
 ### packageRank 0.9.2.9023
 
 - add unique package count to plot.cranDistribution().
