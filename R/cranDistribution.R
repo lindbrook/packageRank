@@ -122,8 +122,8 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
     memoization = memoization, multi.core = multi.core)
   
   tmp <- x$data
-  count.test <- any(tmp$count == count)
-  if (count.test) x$data[tmp$count == count, ]
+  count.test <- any(tmp$count %in% count)
+  if (count.test) x$data[tmp$count %in% count, ]
   else stop("Count not observed.", call. = FALSE)
 }
 
@@ -183,8 +183,8 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   
   tmp <- x$data
   tie <- ifelse(rank.ties, "rank",  "n.rank")
-  rank.test <- any(tmp[, tie] == num.rank)
-  if (rank.test) tmp[tmp[, tie] == num.rank, ]
+  rank.test <- any(tmp[, tie] %in% num.rank)
+  if (rank.test) tmp[tmp[, tie] %in% num.rank, ]
   else stop("Rank not observed.", call. = FALSE)
 }
 
