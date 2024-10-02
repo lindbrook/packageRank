@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9025
+
+- enable vectors of length > 1 in queryCount() and queryRank().
+
+
 ### packageRank 0.9.2.9024
 
 - amend package count subtitle in plot.cranDistribution().
