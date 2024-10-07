@@ -91,7 +91,7 @@ plot.cranDistribution <- function(x, type = "count", ...) {
 
 #' Summary method for cranDistribution().
 #'
-#' Five number summary of download count distribution
+#' Five number (+ mean) summary of download count distribution
 #' @param object An object of class "cranDistribution" created by \code{cranDistribution()}.
 #' @param ... Additional plotting parameters.
 #' @return A base R vector

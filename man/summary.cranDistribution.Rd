@@ -15,5 +15,5 @@
 A base R vector
 }
 \description{
-Five number summary of download count distribution
+Five number (+ mean) summary of download count distribution
 }
