@@ -79,11 +79,11 @@ plot.cranDistribution <- function(x, type = "count", ...) {
     med.lab <- paste("med =", round(med, 1))
     max <- max(x$data$count)
     max.lab <- paste("max =", format(max, big.mark = ","))
-    axis(3, at = avg, cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
+    axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
       col.axis = "blue", col.ticks = "blue")
-    axis(3, at = med, cex.axis = 0.8, padj = 0.9, labels = med.lab, 
+    axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
-    axis(3, at = max, cex.axis = 0.8, padj = 0.9, labels = max.lab)
+    axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
   } else stop('type must be "historgram" or "count"', call. = FALSE)
   title(sub = paste(format(nrow(x$data), big.mark = ","), 
     "unique packages downloaded"), cex.sub = 0.9)
