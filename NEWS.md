@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9027
+
+- amend top axis (side = 3) in plot.cranDistribution(type = "count").
+
+
 ### packageRank 0.9.2.9026
 
 - amend x-axis in plot.cranDistribution(type = "count").
