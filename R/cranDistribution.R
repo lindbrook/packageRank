@@ -69,9 +69,9 @@ plot.cranDistribution <- function(x, type = "count", ...) {
     freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
     freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
     freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
-    xlim <- range(freq.dist$count)
+    xlim <- range(log10(freq.dist$count))
     ylim <- range(freq.density)
-    plot(freq.dist$count, freq.density, type = "h", log = "x", main = ttl,
+    plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
       xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
     avg <- mean(x$data$count)
     avg.lab <- paste("avg =", round(avg, 1))
