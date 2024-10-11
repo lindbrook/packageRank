@@ -1,6 +1,6 @@
 ### packageRank 0.9.2.9028
 
-- change "n.rank" to "nominal.rank" in query functions.
+- change "n.rank" to "nominal.rank" in cranDistribution(() and queryRank().
 
 
 ### packageRank 0.9.2.9027
