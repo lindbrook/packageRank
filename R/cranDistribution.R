@@ -36,7 +36,7 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   
   pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
     row.names = NULL)
-  pkg.data$n.rank <- seq_len(nrow(pkg.data))
+  pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
   
   rnk <- rank(pkg.data$count, ties.method = "min")
   pkg.data$rank <- (max(rnk) + 1) - rnk
@@ -182,7 +182,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
     memoization = memoization, multi.core = multi.core)
   
   tmp <- x$data
-  tie <- ifelse(rank.ties, "rank",  "n.rank")
+  tie <- ifelse(rank.ties, "rank",  "nominal.rank")
   rank.test <- any(tmp[, tie] %in% num.rank)
   if (rank.test) tmp[tmp[, tie] %in% num.rank, ]
   else stop("Rank not observed.", call. = FALSE)

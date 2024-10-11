@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9028
+
+- change "n.rank" to "nominal.rank" in cranDistribution(() and queryRank().
+
+
 ### packageRank 0.9.2.9027
 
 - amend top axis (side = 3) in plot.cranDistribution(type = "count").
