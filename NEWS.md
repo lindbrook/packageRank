@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9029
+
+- add print.cranDistribution().
+
+
 ### packageRank 0.9.2.9028
 
 - change "n.rank" to "nominal.rank" in cranDistribution(() and queryRank().
