@@ -89,6 +89,15 @@ plot.cranDistribution <- function(x, type = "count", ...) {
     "unique packages downloaded"), cex.sub = 0.9)
 }
 
+#' Print method for cranDistribution().
+#' @param x object.
+#' @param ... Additional parameters.
+#' @export
+
+print.cranDistribution <- function(x, ...) {
+  print(list(x$date, head(x$data, 20)))
+}
+
 #' Summary method for cranDistribution().
 #'
 #' Five number (+ mean) summary of download count distribution
