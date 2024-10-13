@@ -86,7 +86,7 @@ plot.cranDistribution <- function(x, type = "downloads", ...) {
       col.axis = "red", col.ticks = "red")
     axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
   } else stop('type must be "historgram" or "downloads"', call. = FALSE)
-  title(sub = paste(format(x$data$unique.packages, big.mark = ","), 
+  title(sub = paste(format(x$data$unique.packages[1], big.mark = ","), 
     "unique packages"), cex.sub = 0.9)
 }
 
