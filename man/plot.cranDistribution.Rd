@@ -4,12 +4,12 @@
 \alias{plot.cranDistribution}
 \title{Plot method for cranDistribution().}
 \usage{
-\method{plot}{cranDistribution}(x, type = "count", ...)
+\method{plot}{cranDistribution}(x, type = "downloads", ...)
 }
 \arguments{
 \item{x}{An object of class "cranDistribution" created by \code{cranDistribution()}.}
 
-\item{type}{Character. "histogram" or "count".}
+\item{type}{Character. "histogram" or "downloads".}
 
 \item{...}{Additional plotting parameters.}
 }
