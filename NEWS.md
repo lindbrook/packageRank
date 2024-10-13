@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9030
+
+- use 'ymd' as date in cranDistribution(); rename queryCount() to queryDownloads().
+
+
 ### packageRank 0.9.2.9029
 
 - add print.cranDistribution().
