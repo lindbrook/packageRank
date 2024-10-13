@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9031
+
+- fix plot.cranDistribution() subtitle.
+
+
 ### packageRank 0.9.2.9030
 
 - use 'ymd' as date in cranDistribution(); rename queryCount() to queryDownloads().
