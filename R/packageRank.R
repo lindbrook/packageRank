@@ -110,7 +110,8 @@ packageRank <- function(packages = "HistData", date = NULL,
 plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
 
-  freqtab <- x$freqtab
+  freqtab <- x$cran.data$downloads
+  names(freqtab) <- x$cran.data$package
   package.data <- x$package.data
   packages <- x$packages
   date <- x$date
