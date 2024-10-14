@@ -2,9 +2,9 @@
 % Please edit documentation in R/packageRank.R
 \name{packageRank}
 \alias{packageRank}
-\title{Package download counts and rank percentiles (prototype).}
+\title{Package download counts and rank percentiles.}
 \usage{
-packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
+packageRank(packages = "packageRank", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
   check.package = TRUE, rank.ties = TRUE, multi.core = FALSE)
 }
@@ -23,7 +23,7 @@ packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
-\item{rank.ties}{Logical. TRUE uses ranks with ties (competition). FALSE uses nominal rank without ties.}
+\item{rank.ties}{Logical. TRUE uses competition ranking ("1224") for ties. FALSE uses nominal rank (no ties).}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 }
@@ -31,11 +31,11 @@ packageRank(packages = "HistData", date = NULL, all.filters = FALSE,
 An R data frame.
 }
 \description{
-From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+From Posit/RStudio's CRAN Mirror (CDN) http://cran-logs.rstudio.com/
 }
 \examples{
 \dontrun{
-packageRank(packages = "HistData", date = "2020-01-01")
+packageRank(packages = "cholera", date = "2020-01-01")
 packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 }
 }
