@@ -1,6 +1,6 @@
-#' Package download counts and rank percentiles (prototype).
+#' Package download counts and rank percentiles.
 #'
-#' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+#' From Posit/RStudio's CRAN Mirror (CDN) http://cran-logs.rstudio.com/
 #' @param packages Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
@@ -8,88 +8,53 @@
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param rank.ties Logical. TRUE uses ranks with ties (competition). FALSE uses nominal rank without ties.
+#' @param rank.ties Logical. TRUE uses competition ranking ("1224") for ties. FALSE uses nominal rank (no ties).
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 #' @examples
 #' \dontrun{
-#' packageRank(packages = "HistData", date = "2020-01-01")
+#' packageRank(packages = "cholera", date = "2020-01-01")
 #' packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 #' }
 
-packageRank <- function(packages = "HistData", date = NULL,
+packageRank <- function(packages = "packageRank", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
   memoization = TRUE, check.package = TRUE, rank.ties = TRUE, 
   multi.core = FALSE) {
 
-  if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-
   if (check.package) packages <- checkPackage(packages)
-  file.url.date <- logDate(date)
-  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
-  cran_log <- cleanLog(cran_log)
-  ymd <- rev_fixDate_2012(file.url.date)
-  
-  if (all.filters) {
-    ip.filter <- TRUE
-    small.filter <- TRUE
-  }
 
-  if (small.filter) cran_log <- smallFilter(cran_log)
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-  
-  freqtab <- sort(table(cran_log$package), decreasing = TRUE)
+  x <- mcranDistribution(date = date, all.filters = all.filters, 
+    ip.filter = ip.filter, small.filter = small.filter, 
+    memoization = memoization, multi.core = multi.core)
 
-  unobs.pkgs <- !packages %in% cran_log$package
+  unobs.pkgs <- !packages %in% x$data$package
   if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
 
   if (all(unobs.pkgs)) {
-    stop("No downloads for ", pkg.msg, " on ", ymd, ".", call. = FALSE)
+    stop("No downloads for ", pkg.msg, " on ", x$date, ".", call. = FALSE)
   } else if (any(unobs.pkgs)) {
-    message("No downloads for ", pkg.msg, " on ", ymd, ".")
+    message("No downloads for ", pkg.msg, " on ", x$date, ".")
     packages <- packages[!unobs.pkgs]
   }
-
-  tot.pkgs <- length(freqtab)
-
-  pkg.percentile <- vapply(packages, function(x) {
-    100 * mean(freqtab < freqtab[x])
-  }, numeric(1L))
-
-  dat <- data.frame(date = ymd,
-                    packages = packages,
-                    downloads = c(freqtab[packages]),
-                    percentile = pkg.percentile,
-                    total.downloads = sum(freqtab),
-                    total.packages = tot.pkgs,
-                    stringsAsFactors = FALSE,
-                    row.names = NULL)
-
+  
+  tmp <- x$data[x$data$package %in% packages, ]
+  
   if (rank.ties) {
-    num.rank <- rank(freqtab, ties.method = "min")
-    num.rank <- (max(num.rank) + 1) - num.rank
-    dat$rank <- num.rank[packages]
+    rnk <- paste(format(tmp$rank, big.mark = ","), "of", 
+                 format(tmp$unique.packages, big.mark = ","))
   } else {
-    # packages in bin
-    pkg.bin <- lapply(packages, function(nm) freqtab[freqtab %in% freqtab[nm]])
-    
-    # offset: ties arbitrarily broken by alphabetical order
-    pkg.bin.delta <- vapply(seq_along(pkg.bin), function(i) {
-      which(names(pkg.bin[[i]]) %in% packages[i])
-    }, numeric(1L))
-    
-    dat$rank <- unlist(lapply(seq_along(packages), function(i) {
-      sum(freqtab > freqtab[packages[i]]) + pkg.bin.delta[i]
-    }))
+    rnk <- paste(format(tmp$nominal.rank, big.mark = ","), "of", 
+                 format(tmp$unique.packages, big.mark = ","))
   }
   
-  out <- list(packages = packages, date = ymd, package.data = dat,
-    freqtab = freqtab)
-
+  pkg.data <- data.frame(date = x$date, tmp[, c("package", "downloads")], 
+    rank = rnk, percentile = tmp$percentile)
+  
+  out <- list(packages = packages, date = x$date, package.data = pkg.data, 
+    cran.data = x$data)
+  
   class(out) <- "packageRank"
   out
 }

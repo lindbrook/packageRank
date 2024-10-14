@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9033
+
+- refactor and use memoization and cranDistribution() in packageRank().
+
+
 ### packageRank 0.9.2.9032
 
 - compute cores only when cranDistribution(ip.filter = TRUE).
