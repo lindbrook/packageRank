@@ -317,14 +317,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
 #' @export
 
 print.packageRank <- function(x, ...) {
-  dat <- x$package.data
-  dat$downloads <- format(dat$downloads, big.mark = ",")
-  rank <- paste(format(dat$rank, big.mark = ","), "of",
-                format(dat$total.packages, big.mark = ","))
-  out <- data.frame(dat[, c("date", "packages", "downloads")], rank,
-    percentile = round(dat[, "percentile"], 1), stringsAsFactors = FALSE,
-    row.names = NULL)
-  print(out)
+  print(x$package.data)
 }
 
 #' Summary method for packageRank().
