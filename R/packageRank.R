@@ -217,16 +217,15 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
 
   if (inherits(date, "Date")) {
     day <- weekdays(as.Date(date), abbreviate = TRUE)
-    id <- paste0(package.data$packages, " @ ", date, " (", day, ")")
+    id <- paste0(package.data$package, " @ ", date, " (", day, ")")
   } else {
-    id <- paste0(package.data$packages, " @ ", date)
+    id <- paste0(package.data$packags, " @ ", date)
   }
 
   download.data <- data.frame(x = seq_along(freqtab),
-                              y = c(freqtab),
+                              y = freqtab,
                               packages = names(freqtab),
-                              row.names = NULL,
-                              stringsAsFactors = FALSE)
+                              row.names = NULL)
 
   download.lst <- rep(list(download.data), length(x$packages))
 
