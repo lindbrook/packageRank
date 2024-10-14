@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9032
+
+- compute cores only when cranDistribution(ip.filter = TRUE).
+
+
 ### packageRank 0.9.2.9031
 
 - fix plot.cranDistribution() subtitle.

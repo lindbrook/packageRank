@@ -15,10 +15,6 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   multi.core = FALSE) {
   
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
@@ -30,7 +26,12 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   }
   
   if (small.filter) cran_log <- smallFilter(cran_log)
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+
+  if (ip.filter) {
+    cores <- multiCore(multi.core)
+    if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+    cran_log <- ipFilter(cran_log, multi.core = cores)
+  }
   
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   
