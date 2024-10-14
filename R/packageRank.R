@@ -153,10 +153,10 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
 
 basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
   if (log.y) {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Count)",
+    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Downloads)",
       log = "y")
   } else {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Count")
+    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Downloads")
   }
 
   abline(v = iqr, col = "gray", lty = "dotted")
