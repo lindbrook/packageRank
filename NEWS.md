@@ -1,3 +1,9 @@
+### packageRank 0.9.2.9034
+
+- use grDevices::devAskNewPage() with multiple packages in 
+  plot.packageRank(graphics = "base").
+
+
 ### packageRank 0.9.2.9033
 
 - refactor and use memoization and cranDistribution() in packageRank().

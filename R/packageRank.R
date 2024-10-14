@@ -97,7 +97,9 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   } else if (graphics == "base") {
     if (length(packages) > 1) {
       invisible(lapply(packages, function(pkg) {
+        grDevices::devAskNewPage(ask = TRUE)
         basePlot(pkg, log.y, freqtab, iqr, package.data, y.max, date)
+        grDevices::devAskNewPage(ask = FALSE)
       }))
     } else {
       basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
