@@ -271,7 +271,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
          ggplot2::aes(x = .data$x, y = .data$y)) +
        ggplot2::geom_line() +
        ggplot2::geom_vline(xintercept = iqr, colour = "gray", 
-        linetype = "dotted") +
+         linetype = "dotted") +
        ggplot2::geom_point(data = download.data[first, ],
                            shape = 1,
                            colour = "dodgerblue") +
