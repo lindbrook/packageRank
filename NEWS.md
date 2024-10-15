@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9040
+
+- amend importFrom.R.
+
+
 ### packageRank 0.9.2.9039
 
 - amend/update README.
