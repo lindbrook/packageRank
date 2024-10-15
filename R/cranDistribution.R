@@ -35,16 +35,16 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   
-  pkg.data <- data.frame(package = names(freqtab), downloads = c(freqtab), 
+  pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
     row.names = NULL)
 
-  rnk <- rank(pkg.data$downloads, ties.method = "min")
+  rnk <- rank(pkg.data$count, ties.method = "min")
   pkg.data$rank <- (max(rnk) + 1) - rnk
   pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
   pkg.data$unique.packages <- length(freqtab)
 
-  pkg.data$percentile <- vapply(pkg.data$downloads, function(x) {
-    round(100 * mean(pkg.data$downloads < x), 1)
+  pkg.data$percentile <- vapply(pkg.data$count, function(x) {
+    round(100 * mean(pkg.data$count < x), 1)
   }, numeric(1L))
   
   out <- list(date = ymd, data = pkg.data)
@@ -56,37 +56,37 @@ mcranDistribution <- memoise::memoise(cranDistribution)
 
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
-#' @param type Character. "histogram" or "downloads".
+#' @param type Character. "histogram" or "count".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.cranDistribution <- function(x, type = "downloads", ...) {
+plot.cranDistribution <- function(x, type = "count", ...) {
   ttl <- paste("Download Count Distribution @", x$date)
-  xlab <-  "Log10 Downloads"
+  xlab <-  "Log10 Count"
   if (type == "histogram") {
-    graphics::hist(log10(x$data$downloads), main = ttl, xlab = xlab)
-  } else if (type == "downloads") {
-    cts <- sort(unique(x$data$downloads))
-    freq <- vapply(cts, function(ct) sum(x$data$downloads == ct), integer(1L))
-    freq.dist <- data.frame(downloads = cts, frequency = freq, row.names = NULL)
+    graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
+  } else if (type == "count") {
+    cts <- sort(unique(x$data$count))
+    freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
+    freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
     freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
-    xlim <- range(log10(freq.dist$downloads))
+    xlim <- range(log10(freq.dist$count))
     ylim <- range(freq.density)
-    plot(log10(freq.dist$downloads), freq.density, type = "h", main = ttl,
+    plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
       xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
-    avg <- mean(x$data$downloads)
+    avg <- mean(x$data$count)
     avg.lab <- paste("avg =", round(avg, 1))
-    med <- stats::median(x$data$downloads)
+    med <- stats::median(x$data$count)
     med.lab <- paste("med =", round(med, 1))
-    max <- max(x$data$downloads)
+    max <- max(x$data$count)
     max.lab <- paste("max =", format(max, big.mark = ","))
     axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
       col.axis = "blue", col.ticks = "blue")
     axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
     axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
-  } else stop('type must be "historgram" or "downloads"', call. = FALSE)
+  } else stop('type must be "historgram" or "count"', call. = FALSE)
   title(sub = paste(format(x$data$unique.packages[1], big.mark = ","), 
     "unique packages"), cex.sub = 0.9)
 }
@@ -109,7 +109,7 @@ print.cranDistribution <- function(x, ...) {
 #' @export
 
 summary.cranDistribution <- function(object, ...) {
-  summary(object$data$downloads)
+  summary(object$data$count)
 }
 
 #' Query download count.
@@ -124,7 +124,7 @@ summary.cranDistribution <- function(object, ...) {
 #' @return An R data frame.
 #' @export
 
-queryDownloads <- function(downloads = 1, date = NULL, all.filters = FALSE, 
+queryCount <- function(count = 1, date = NULL, all.filters = FALSE, 
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
 
@@ -132,8 +132,8 @@ queryDownloads <- function(downloads = 1, date = NULL, all.filters = FALSE,
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
-  count.test <- any(x$data$downloads %in% downloads)
-  if (count.test) x$data[x$data$downloads %in% downloads, ]
+  count.test <- any(x$data$count %in% count)
+  if (count.test) x$data[x$data$count %in% count, ]
   else stop("Unobserved download count.", call. = FALSE)
 }
 

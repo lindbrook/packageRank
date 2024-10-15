@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9036
+
+- revert to queryCount() and 'count' in cranDistribution() and packageRank().
+
+
 ### packageRank 0.9.2.9035
 
 - amend IQR label size in plot.packageRank(graphics = "ggplot2").
@@ -26,7 +31,8 @@
 
 ### packageRank 0.9.2.9030
 
-- use 'ymd' as date in cranDistribution(); rename queryCount() to queryDownloads().
+- use 'ymd' as date in cranDistribution(); rename queryCount() to 
+  queryDownloads().
 
 
 ### packageRank 0.9.2.9029
