@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9035
+
+- amend IQR label size in plot.packageRank(graphics = "ggplot2").
+
+
 ### packageRank 0.9.2.9034
 
 - use grDevices::devAskNewPage() with multiple packages in 
