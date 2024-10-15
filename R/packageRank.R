@@ -252,7 +252,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
                           label = tot.dwnld,
                           hjust = 1,
                           size = 3) +
-       ggplot2::geom_text(data = iqr.data, label = iqr.data$label) +
+       ggplot2::geom_text(data = iqr.data, label = iqr.data$label, size = 3.5) +
        ggplot2::geom_vline(data = point.data,
          ggplot2::aes(xintercept = .data$x), colour = alpha.col) +
        ggplot2::geom_hline(data = point.data, 
