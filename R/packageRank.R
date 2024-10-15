@@ -50,7 +50,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
   }
   
   pkg.data <- data.frame(date = x$date, tmp[, c("package", "count")], 
-    rank = rnk, percentile = tmp$percentile)
+    rank = rnk, percentile = tmp$percentile, row.names = NULL)
   
   out <- list(packages = packages, date = x$date, package.data = pkg.data, 
     cran.data = x$data)

@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9038
+
+- clean output of packageRank(), cranDistribution() and query functions.
+
+
 ### packageRank 0.9.2.9037
 
 - amend function documentation for queryCount().

@@ -133,8 +133,14 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
     memoization = memoization, multi.core = multi.core)
 
   count.test <- any(x$data$count %in% count)
-  if (count.test) x$data[x$data$count %in% count, ]
-  else stop("Unobserved download count.", call. = FALSE)
+  
+  if (!count.test) {
+    stop("Unobserved download count.", call. = FALSE)
+  } else {
+    out <- x$data[x$data$count %in% count, ]
+  }
+  rownames(out) <- NULL
+  out
 }
 
 #' Query package name.
@@ -164,10 +170,12 @@ queryPackage <- function(package = "packageRank", date = NULL,
   } else if (any(!package %in% tmp$package)) {
     message("No downloads for ", paste(package[!package %in% tmp$package], 
       collapse = ", "), ".")
-    tmp[tmp$package %in% package, ]
+    out <- tmp[tmp$package %in% package, ]
   } else if (all(package %in% tmp$package)) {
-    tmp[tmp$package %in% package, ]
+    out <- tmp[tmp$package %in% package, ]
   }
+  rownames(out) <- NULL
+  out
 }
 
 #' Rank query.
@@ -194,8 +202,10 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   tmp <- x$data
   tie <- ifelse(rank.ties, "rank",  "nominal.rank")
   rank.test <- any(tmp[, tie] %in% num.rank)
-  if (rank.test) tmp[tmp[, tie] %in% num.rank, ]
-  else stop("Rank not observed.", call. = FALSE)
+  if (!rank.test) stop("Rank not observed.", call. = FALSE)
+  else out <- tmp[tmp[, tie] %in% num.rank, ]
+  rownames(out) <- NULL
+  out
 }
 
 #' Percentile-rank query.
@@ -238,5 +248,8 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   } 
   
   if (nrow(out) == 0) stop("Percentile(s) not observed.", call. = FALSE)
-  else out
+  else {
+    rownames(out) <- NULL
+    out
+  }
 }
