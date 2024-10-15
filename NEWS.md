@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9037
+
+- amend function documentation for queryCount().
+
+
 ### packageRank 0.9.2.9036
 
 - revert to queryCount() and 'count' in cranDistribution() and packageRank().
