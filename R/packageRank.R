@@ -49,7 +49,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
                  format(tmp$unique.packages, big.mark = ","))
   }
   
-  pkg.data <- data.frame(date = x$date, tmp[, c("package", "downloads")], 
+  pkg.data <- data.frame(date = x$date, tmp[, c("package", "count")], 
     rank = rnk, percentile = tmp$percentile)
   
   out <- list(packages = packages, date = x$date, package.data = pkg.data, 
@@ -75,7 +75,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
 plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
 
-  freqtab <- x$cran.data$downloads
+  freqtab <- x$cran.data$count
   names(freqtab) <- x$cran.data$package
   package.data <- x$package.data
   packages <- x$packages
@@ -121,10 +121,10 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
 
 basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
   if (log.y) {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Downloads)",
+    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Count)",
       log = "y")
   } else {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Downloads")
+    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Count")
   }
 
   abline(v = iqr, col = "gray", lty = "dotted")
