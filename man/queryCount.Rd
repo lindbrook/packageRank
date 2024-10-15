@@ -9,6 +9,8 @@ queryCount(count = 1, date = NULL, all.filters = FALSE,
   multi.core = FALSE)
 }
 \arguments{
+\item{count}{Numeric or Integer. whole number.}
+
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
 \item{all.filters}{Logical. Master switch for filters.}
@@ -20,8 +22,6 @@ queryCount(count = 1, date = NULL, all.filters = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
-
-\item{downloads}{Numeric or Integer. whole number.}
 }
 \value{
 An R data frame.

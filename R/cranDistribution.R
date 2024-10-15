@@ -114,7 +114,7 @@ summary.cranDistribution <- function(object, ...) {
 
 #' Query download count.
 #'
-#' @param downloads Numeric or Integer. whole number.
+#' @param count Numeric or Integer. whole number.
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
