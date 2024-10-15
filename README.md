@@ -1222,7 +1222,8 @@ summary(cranDistribution())
 
 The generic plot method graphs the distribution of base 10 logarithm of
 download counts. Each plot is annotated with the median, mean and
-maximum count.
+maximum download counts, as well as the total number of unique packages 
+observed.
 
 ``` r
 plot(cranDistribution())
