@@ -12,7 +12,7 @@
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param dev.mode Logical. Use validatePackage0() to scrape CRAN.
 #' @param fix.cranlogs Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.
-#' @param pro.mode Logical. Faster but fewer checks/features. Closer to cranlogs::cran_downloads() but with cranDownload()'s plot method.
+#' @param pro.mode Logical. Faster but fewer checks/features. Closer to cranlogs::cran_downloads() but with cranDownloads()'s plot method.
 #' @export
 #' @examples
 #' \dontrun{

@@ -27,7 +27,7 @@ If this is given, then \code{from} and \code{to} are ignored.}
 
 \item{fix.cranlogs}{Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.}
 
-\item{pro.mode}{Logical. Faster but fewer checks/features. Closer to cranlogs::cran_downloads() but with cranDownload()'s plot method.}
+\item{pro.mode}{Logical. Faster but fewer checks/features. Closer to cranlogs::cran_downloads() but with cranDownloads()'s plot method.}
 }
 \description{
 Enhanced implementation of cranlogs::cran_downloads().
