@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9035-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.2.9039-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -595,7 +595,7 @@ plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
 
 #### pro.mode
 
-Perhaps the biggest downside of using cranDownload(pro.mode = TRUE) is
+Perhaps the biggest downside of using cranDownloads(pro.mode = TRUE) is
 that you might draw mistaken inferences from plotting the data since it
 adds false zeroes to your data.
 
@@ -691,8 +691,8 @@ For example, we can compare Wednesday (“2020-03-04”) to Saturday
 
 ``` r
 packageRank(package = "cholera", date = "2020-03-04")
->         date packages downloads            rank percentile
-> 1 2020-03-04  cholera        38 5,788 of 18,038       67.9
+>         date package count            rank percentile
+> 1 2020-03-04 cholera    38 5,788 of 18,038       67.9
 ```
 
 On Wednesday, we can see that
@@ -702,8 +702,8 @@ downloaded, and earned a spot in the 68th percentile.
 
 ``` r
 packageRank(package = "cholera", date = "2020-03-07")
->         date packages downloads            rank percentile
-> 1 2020-03-07  cholera        29 3,189 of 15,950         80
+>         date package count            rank percentile
+> 1 2020-03-07 cholera    29 3,189 of 15,950         80
 ```
 
 On Saturday, we can see that
@@ -726,7 +726,8 @@ as an example:
 ``` r
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 
-downloads <- pkg.rank$freqtab
+downloads <- pkg.rank$cran.data$count
+names(downloads) <- pkg.rank$cran.data$package
 
 round(100 * mean(downloads < downloads["cholera"]), 1)
 > [1] 67.9
@@ -1070,8 +1071,8 @@ for 30 December 2020:
 packageRank(packages = "ergm")
 ```
 
-    >         date packages downloads          rank percentile
-    > 1 2020-12-30     ergm       292 878 of 20,077       95.6
+    >         date package count          rank percentile
+    > 1 2020-12-30    ergm   292 878 of 20,077       95.6
 
 If you had specified the date, you’d get an additional warning:
 
@@ -1079,8 +1080,8 @@ If you had specified the date, you’d get an additional warning:
 packageRank(packages = "ergm", date = "2021-01-01")
 ```
 
-    >         date packages downloads          rank percentile
-    > 1 2020-12-30     ergm       292 878 of 20,077       95.6
+    >         date package count          rank percentile
+    > 1 2020-12-30    ergm   292 878 of 20,077       95.6
 
     Warning message:
     2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
@@ -1126,29 +1127,29 @@ functions below:
 
 #### queryCount()
 
-To find the packages that had 100 downloads (the default is 1, least
-observable number of downloads):
+To find the packages that had 100 downloads (the default is 1, the
+lowest number of observable downloads):
 
 ``` r
 queryCount(100)
 ```
 
-    >           package count n.rank rank percentile
-    > 2129    analogsea   100   2129 2143   92.05089
-    > 2130 ComplexUpset   100   2130 2143   92.05089
-    > 2131     detrendr   100   2131 2143   92.05089
-    > 2132         drat   100   2132 2143   92.05089
-    > 2133      enrichR   100   2133 2143   92.05089
-    > 2134     exact2x2   100   2134 2143   92.05089
-    > 2135      fdapace   100   2135 2143   92.05089
-    > 2136         fdth   100   2136 2143   92.05089
-    > 2137       ggmcmc   100   2137 2143   92.05089
-    > 2138      jsTreeR   100   2138 2143   92.05089
-    > 2139       likert   100   2139 2143   92.05089
-    > 2140      praznik   100   2140 2143   92.05089
-    > 2141     rayimage   100   2141 2143   92.05089
-    > 2142       rlemon   100   2142 2143   92.05089
-    > 2143        worcs   100   2143 2143   92.05089
+    >         package count rank nominal.rank unique.packages percentile
+    > 1     analogsea   100 2143         2129           26959       92.1
+    > 2  ComplexUpset   100 2143         2130           26959       92.1
+    > 3      detrendr   100 2143         2131           26959       92.1
+    > 4          drat   100 2143         2132           26959       92.1
+    > 5       enrichR   100 2143         2133           26959       92.1
+    > 6      exact2x2   100 2143         2134           26959       92.1
+    > 7       fdapace   100 2143         2135           26959       92.1
+    > 8          fdth   100 2143         2136           26959       92.1
+    > 9        ggmcmc   100 2143         2137           26959       92.1
+    > 10      jsTreeR   100 2143         2138           26959       92.1
+    > 11       likert   100 2143         2139           26959       92.1
+    > 12      praznik   100 2143         2140           26959       92.1
+    > 13     rayimage   100 2143         2141           26959       92.1
+    > 14       rlemon   100 2143         2142           26959       92.1
+    > 15        worcs   100 2143         2143           26959       92.1
 
 #### queryRank()
 
@@ -1159,8 +1160,8 @@ To find the package that was ranked 20th in downloads (the default is
 queryRank(20)
 ```
 
-    >    package count n.rank rank percentile
-    > 20 stringr 33041     20   20   99.92581
+    >   package count rank nominal.rank unique.packages percentile
+    > 1 stringr 33041   20           20           26959       99.9
 
 #### queryPercentile()
 
@@ -1180,13 +1181,13 @@ guarantee a result.
 head(queryPercentile())
 ```
 
-    >        package count n.rank  rank percentile
-    > 12845 AATtools    12  12845 13697   49.19322
-    > 12846    abdiv    12  12846 13697   49.19322
-    > 12847 abglasso    12  12847 13697   49.19322
-    > 12848  ablasso    12  12848 13697   49.19322
-    > 12849   Ac3net    12  12849 13697   49.19322
-    > 12850      acp    12  12850 13697   49.19322
+    >    package count  rank nominal.rank unique.packages percentile
+    > 1 AATtools    12 13697        12845           26959       49.2
+    > 2    abdiv    12 13697        12846           26959       49.2
+    > 3 abglasso    12 13697        12847           26959       49.2
+    > 4  ablasso    12 13697        12848           26959       49.2
+    > 5   Ac3net    12 13697        12849           26959       49.2
+    > 6      acp    12 13697        12850           26959       49.2
 
 You can also set a range of percentile ranks using the ‘lo’ and/or ‘hi’
 arguments. If you get an error message, you may need to widen your
@@ -1197,14 +1198,14 @@ head(queryPercentile(lo = 95, hi = 96), 3)
 tail(queryPercentile(lo = 95, hi = 96), 3)
 ```
 
-    >      package count n.rank rank percentile
-    > 944 filehash   410    944  947   96.48726
-    > 945  NbClust   410    945  947   96.48726
-    > 946     sets   410    946  947   96.48726
-    >            package count n.rank rank percentile
-    > 1480  ParamHelpers   185   1480 1482   94.50276
-    > 1481 shinyvalidate   185   1481 1482   94.50276
-    > 1482         spocc   185   1482 1482   94.50276
+    >      package count rank nominal.rank unique.packages percentile
+    > 1    mapdata   420  931          931           26959       96.5
+    > 2 shinyalert   418  932          932           26959       96.5
+    > 3       klaR   416  935          933           26959       96.5
+    >                package count rank nominal.rank unique.packages percentile
+    > 536 PortfolioAnalytics   189 1466         1466           26959       94.6
+    > 537              binom   188 1468         1467           26959       94.6
+    > 538            prefmod   188 1468         1468           26959       94.6
 
 #### cranDistribution()
 

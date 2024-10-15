@@ -1,3 +1,8 @@
+### packageRank 0.9.2.9039
+
+- amend/update README.
+
+
 ### packageRank 0.9.2.9038
 
 - clean output of packageRank(), cranDistribution() and query functions.

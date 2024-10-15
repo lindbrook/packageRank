@@ -425,7 +425,7 @@ plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
 
 #### pro.mode
 
-Perhaps the biggest downside of using cranDownload(pro.mode = TRUE) is that you might draw mistaken inferences from plotting the data since it adds false zeroes to your data.
+Perhaps the biggest downside of using cranDownloads(pro.mode = TRUE) is that you might draw mistaken inferences from plotting the data since it adds false zeroes to your data.
 
 Using the example of 'packageRank', which was published on 2019-05-16:
 
@@ -473,7 +473,7 @@ plot_package_distribution <- function(dat, xlim, ylim) {
   freq.dist <- dat$freq.dist
   freqtab <- dat$freqtab
   plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
-    xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
+    xlab = "Count", ylab = "Frequency", xlim = xlim, ylim = ylim)
   axis(3, at = freqtab[1], cex.axis = 0.8, padj = 0.9, col.axis = "dodgerblue",
     col.ticks = "dodgerblue", labels = paste(names(freqtab[1]), "=",
     format(freqtab[1], big.mark = ",")))
@@ -537,7 +537,8 @@ To compute percentile ranks, I do the following. For each package, I tabulate th
 ```{r percentile}
 pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
 
-downloads <- pkg.rank$freqtab
+downloads <- pkg.rank$cran.data$count
+names(downloads) <- pkg.rank$cran.data$package
 
 round(100 * mean(downloads < downloads["cholera"]), 1)
 ```
@@ -572,15 +573,16 @@ dat <- lapply(c("2020-03-04", "2020-03-07"), function(x) {
   packageRank("cholera", date = x)
 })
 
-freqtab1 <- dat[[1]]$freqtab
-freqtab2 <- dat[[2]]$freqtab
+freqtab1 <- dat[[1]]$cran.data$count
+freqtab2 <- dat[[2]]$cran.data$count
 xlim <- range(seq_along(freqtab1), seq_along(freqtab2))
 ylim <- range(c(freqtab1), c(freqtab2))
 ```
 
 ```{r packageRank_plot_code_wed, echo = FALSE, fig.align = "center"}
 
-freqtab <- dat[[1]]$freqtab
+freqtab <- dat[[1]]$cran.data$count
+names(freqtab) <- dat[[1]]$cran.data$package
 package.data <- dat[[1]]$package.data
 pkg <- dat[[1]]$packages
 date <- dat[[1]]$date
@@ -627,7 +629,8 @@ plot(packageRank(packages = "cholera", date = "2020-03-07"))
 ```
 
 ```{r packageRank_plot_code_sat, echo = FALSE, fig.align = "center"}
-freqtab <- dat[[2]]$freqtab
+freqtab <- dat[[2]]$cran.data$count
+names(freqtab) <- dat[[2]]$cran.data$package
 package.data <- dat[[2]]$package.data
 pkg <- dat[[2]]$packages
 date <- dat[[2]]$date
@@ -872,7 +875,7 @@ To query the log for a specific count, rank or percentile rank, use the function
 
 #### queryCount()
 
-To find the packages that had 100 downloads (the default is 1, least observable number of downloads):
+To find the packages that had 100 downloads (the default is 1, the lowest number of observable downloads):
 
 ```{R, count, eval = FALSE}
 queryCount(100)
