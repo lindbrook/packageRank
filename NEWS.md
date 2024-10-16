@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9000
+
+- match input vector order with output data frame in packageRank().
+
+
 ### packageRank 0.9.3
 
 #### New Functionality

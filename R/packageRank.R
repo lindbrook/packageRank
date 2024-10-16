@@ -40,6 +40,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
   }
   
   tmp <- x$data[x$data$package %in% packages, ]
+  tmp <- tmp[match(packages, tmp$package), ]
   
   if (rank.ties) {
     rnk <- paste(format(tmp$rank, big.mark = ","), "of", 
