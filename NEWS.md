@@ -1,210 +1,25 @@
-### packageRank 0.9.2.9040
+### packageRank 0.9.3
 
-- amend importFrom.R.
+#### New Functionality
 
+- add cranDistribution() with plot, print and summary methods.
+- add queryCount(), queryPackage(), queryPercentile() and queryRank().
+- refactor and use memoization and cranDistribution() in packageRank().
 
-### packageRank 0.9.2.9039
+#### Function Changes
 
-- amend/update README.
+- add/set packageRank(rank.ties = TRUE).
+- compute cores only for cranDistribution(ip.filter = TRUE).
 
-
-### packageRank 0.9.2.9038
-
-- clean output of packageRank(), cranDistribution() and query functions.
-
-
-### packageRank 0.9.2.9037
-
-- amend function documentation for queryCount().
-
-
-### packageRank 0.9.2.9036
-
-- revert to queryCount() and 'count' in cranDistribution() and packageRank().
-
-
-### packageRank 0.9.2.9035
-
-- amend IQR label size in plot.packageRank(graphics = "ggplot2").
-
-
-### packageRank 0.9.2.9034
+#### Plot Changes
 
 - use grDevices::devAskNewPage() with multiple packages in 
   plot.packageRank(graphics = "base").
 
+#### Fixes
 
-### packageRank 0.9.2.9033
-
-- refactor and use memoization and cranDistribution() in packageRank().
-
-
-### packageRank 0.9.2.9032
-
-- compute cores only when cranDistribution(ip.filter = TRUE).
-
-
-### packageRank 0.9.2.9031
-
-- fix plot.cranDistribution() subtitle.
-
-
-### packageRank 0.9.2.9030
-
-- use 'ymd' as date in cranDistribution(); rename queryCount() to 
-  queryDownloads().
-
-
-### packageRank 0.9.2.9029
-
-- add print.cranDistribution().
-
-
-### packageRank 0.9.2.9028
-
-- change "n.rank" to "nominal.rank" in cranDistribution(() and queryRank().
-
-
-### packageRank 0.9.2.9027
-
-- amend top axis (side = 3) in plot.cranDistribution(type = "count").
-
-
-### packageRank 0.9.2.9026
-
-- amend x-axis in plot.cranDistribution(type = "count").
-
-
-### packageRank 0.9.2.9025
-
-- enable vectors of length > 1 in queryCount() and queryRank().
-
-
-### packageRank 0.9.2.9024
-
-- amend package count subtitle in plot.cranDistribution().
-
-
-### packageRank 0.9.2.9023
-
-- add unique package count to plot.cranDistribution().
-
-
-### packageRank 0.9.2.9022
-
-- amend README ranks discussion and use "percentile rank".
-
-
-### packageRank 0.9.2.9021
-
-- draft README section on query*() and cranDistribution().
-
-
-### packageRank 0.9.2.9020
-
-- add/use memoized cranDistribution().
-
-
-### packageRank 0.9.2.9019
-
-- amend/rename 'type' from "density" to "count" in plot.cranDistribution().
-
-
-### packageRank 0.9.2.9018
-
-- fix duplicate ylab in plot.cranDownloads(log.y = TRUE, r.total = TRUE).
-
-
-### packageRank 0.9.2.9017
-
-- amend xlab in plot.cranDistribution().
-
-
-### packageRank 0.9.2.9016
-
-- add max to plot.cranDistribution().
-
-
-### packageRank 0.9.2.9015
-
-- correct mean and median in plot.cranDistribution().
-
-
-### packageRank 0.9.2.9014
-
-- set amended discrete density plot as default in plot.cranDistribution().
-- annotate mean and median.
-
-
-### packageRank 0.9.2.9013
-
-- use "dotted" line type in plot.packageDistribution().
-
-
-### packageRank 0.9.2.9012
-
-- rename countRankPercentile() as cranDistribution().
-
-
-### packageRank 0.9.2.9011
-
-- amend plot.countRankPercentile(type = "density").
-
-
-### packageRank 0.9.2.9010
-
-- note queryPercentile(percentile = 50) uses median().
-
-
-### packageRank 0.9.2.9009
-
-- add summary.countRankPercentile().
-
-
-### packageRank 0.9.2.9008
-
-- add/set packageRank(rank.ties = TRUE).
-
-
-### packageRank 0.9.2.9007
-
-- rename argument queryPackage(rank.ties).
-
-
-### packageRank 0.9.2.9006
-
-- add queryPackage().
-
-
-### packageRank 0.9.2.9005
-
-- rename percentileRank() to countRankPercentile() and use 
-  rank(ties.method = "min").
-
-
-### packageRank 0.9.2.9004
-
-- prioritize 'lo' & 'hi' and fix typo in queryPercentile().
-
-
-### packageRank 0.9.2.9003
-
-- add query functions for percentileRank().
-
-
-### packageRank 0.9.2.9002
-
-- add percentileRank() and plot.percentileRank() prototypes.
-
-
-### packageRank 0.9.2.9001
-
-- set packageHistory(check.package = FALSE) in plot.cranDownloads().
-
-
-### packageRank 0.9.2.9000
-
-- fix temporary multiple instances with package update in packageCRAN().
+- fix transitory problem of multiple instances of a package on CRAN during a
+  package update.
 
 
 ### packageRank 0.9.2
