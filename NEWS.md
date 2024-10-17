@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9002
+
+- add/set queryPackage(check.package = TRUE).
+
+
 ### packageRank 0.9.3.9001
 
 - match input vector order with output data frame in queryPackage().
