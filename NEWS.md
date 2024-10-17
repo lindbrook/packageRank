@@ -1,3 +1,9 @@
+### packageRank 0.9.3.9001
+
+- match input vector order with output data frame in queryPackage().
+- use 'packages' as argument.
+
+
 ### packageRank 0.9.3.9000
 
 - match input vector order with output data frame in packageRank().

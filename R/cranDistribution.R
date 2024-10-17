@@ -174,6 +174,8 @@ queryPackage <- function(package = "packageRank", date = NULL,
   } else if (all(package %in% tmp$package)) {
     out <- tmp[tmp$package %in% package, ]
   }
+
+  out <- out[match(package, out$package), ]
   rownames(out) <- NULL
   out
 }
