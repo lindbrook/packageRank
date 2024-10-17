@@ -4,12 +4,12 @@
 \alias{queryPackage}
 \title{Query package name.}
 \usage{
-queryPackage(package = "packageRank", date = NULL, all.filters = FALSE,
+queryPackage(packages = "packageRank", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
   multi.core = FALSE)
 }
 \arguments{
-\item{package}{Character..}
+\item{packages}{Character..}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 

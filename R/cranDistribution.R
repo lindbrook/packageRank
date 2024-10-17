@@ -145,7 +145,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 
 #' Query package name.
 #'
-#' @param package Character..
+#' @param packages Character..
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -155,7 +155,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 #' @return An R data frame.
 #' @export
 
-queryPackage <- function(package = "packageRank", date = NULL, 
+queryPackage <- function(packages = "packageRank", date = NULL, 
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
@@ -165,17 +165,17 @@ queryPackage <- function(package = "packageRank", date = NULL,
   
   tmp <- x$data
   
-  if (all(!package %in% tmp$package)) {
+  if (all(!packages %in% tmp$package)) {
     stop("Package(s) not observed. Check spelling.", call. = FALSE)
-  } else if (any(!package %in% tmp$package)) {
-    message("No downloads for ", paste(package[!package %in% tmp$package], 
+  } else if (any(!packages %in% tmp$package)) {
+    message("No downloads for ", paste(packages[!packages %in% tmp$package], 
       collapse = ", "), ".")
-    out <- tmp[tmp$package %in% package, ]
-  } else if (all(package %in% tmp$package)) {
-    out <- tmp[tmp$package %in% package, ]
+    out <- tmp[tmp$package %in% packages, ]
+  } else if (all(packages %in% tmp$package)) {
+    out <- tmp[tmp$package %in% packages, ]
   }
 
-  out <- out[match(package, out$package), ]
+  out <- out[match(packages, out$package), ]
   rownames(out) <- NULL
   out
 }
