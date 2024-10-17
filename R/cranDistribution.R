@@ -151,17 +151,30 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 #' @param ip.filter Logical.
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
+#' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 queryPackage <- function(packages = "packageRank", date = NULL, 
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
-  memoization = TRUE, multi.core = FALSE) {
+  memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
   
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
-                           ip.filter = ip.filter, small.filter = small.filter, 
-                           memoization = memoization, multi.core = multi.core)
+  if (check.package) packages <- checkPackage(packages)
+  
+  x <- mcranDistribution(date = date, all.filters = all.filters,
+    ip.filter = ip.filter, small.filter = small.filter, 
+    memoization = memoization, multi.core = multi.core)
+
+  unobs.pkgs <- !packages %in% x$data$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+
+  if (all(unobs.pkgs)) {
+    stop("No downloads for ", pkg.msg, " on ", x$date, ".", call. = FALSE)
+  } else if (any(unobs.pkgs)) {
+    message("No downloads for ", pkg.msg, " on ", x$date, ".")
+    packages <- packages[!unobs.pkgs]
+  }
   
   tmp <- x$data
   
