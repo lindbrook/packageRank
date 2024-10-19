@@ -20,19 +20,17 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   cran_log <- cleanLog(cran_log)
   ymd <- rev_fixDate_2012(file.url.date)
   
+  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+  
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
   }
   
   if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
 
-  if (ip.filter) {
-    cores <- multiCore(multi.core)
-    if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-  
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   
   pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
@@ -43,16 +41,14 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
   pkg.data$unique.packages <- length(freqtab)
 
-  pkg.data$percentile <- vapply(pkg.data$count, function(x) {
+  pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
     round(100 * mean(pkg.data$count < x), 1)
-  }, numeric(1L))
+  }, mc.cores = cores))
   
   out <- list(date = ymd, data = pkg.data)
   class(out) <- "cranDistribution"
   out
 }
-
-mcranDistribution <- memoise::memoise(cranDistribution)
 
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
@@ -128,7 +124,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
 
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
@@ -162,7 +158,7 @@ queryPackage <- function(packages = "packageRank", date = NULL,
   
   if (check.package) packages <- checkPackage(packages)
   
-  x <- mcranDistribution(date = date, all.filters = all.filters,
+  x <- cranDistribution(date = date, all.filters = all.filters,
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
@@ -210,7 +206,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
@@ -241,7 +237,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 

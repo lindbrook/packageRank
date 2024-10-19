@@ -25,7 +25,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
 
   if (check.package) packages <- checkPackage(packages)
 
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
