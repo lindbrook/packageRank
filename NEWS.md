@@ -1,3 +1,9 @@
+### packageRank 0.9.3.9003
+
+- remove memoized cranDistribution().
+- include parallelized code for percentile rank in cranDistribution().
+
+
 ### packageRank 0.9.3.9002
 
 - add/set queryPackage(check.package = TRUE).

@@ -52,8 +52,6 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   out
 }
 
-mcranDistribution <- memoise::memoise(cranDistribution)
-
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
 #' @param type Character. "histogram" or "count".
@@ -128,7 +126,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   multi.core = FALSE) {
 
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
@@ -162,7 +160,7 @@ queryPackage <- function(packages = "packageRank", date = NULL,
   
   if (check.package) packages <- checkPackage(packages)
   
-  x <- mcranDistribution(date = date, all.filters = all.filters,
+  x <- cranDistribution(date = date, all.filters = all.filters,
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
@@ -210,7 +208,7 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
@@ -241,7 +239,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
-  x <- mcranDistribution(date = date, all.filters = all.filters, 
+  x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
