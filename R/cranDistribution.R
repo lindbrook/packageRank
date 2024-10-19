@@ -20,19 +20,17 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   cran_log <- cleanLog(cran_log)
   ymd <- rev_fixDate_2012(file.url.date)
   
+  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+  
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
   }
   
   if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
 
-  if (ip.filter) {
-    cores <- multiCore(multi.core)
-    if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-    cran_log <- ipFilter(cran_log, multi.core = cores)
-  }
-  
   freqtab <- sort(table(cran_log$package), decreasing = TRUE)
   
   pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
@@ -43,9 +41,9 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
   pkg.data$unique.packages <- length(freqtab)
 
-  pkg.data$percentile <- vapply(pkg.data$count, function(x) {
+  pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
     round(100 * mean(pkg.data$count < x), 1)
-  }, numeric(1L))
+  }, mc.cores = cores))
   
   out <- list(date = ymd, data = pkg.data)
   class(out) <- "cranDistribution"
