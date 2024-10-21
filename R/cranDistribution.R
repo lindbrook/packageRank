@@ -39,13 +39,12 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   rnk <- rank(pkg.data$count, ties.method = "min")
   pkg.data$rank <- (max(rnk) + 1) - rnk
   pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
-  pkg.data$unique.packages <- length(freqtab)
 
   pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
     round(100 * mean(pkg.data$count < x), 1)
   }, mc.cores = cores))
   
-  out <- list(date = ymd, data = pkg.data)
+  out <- list(date = ymd, unique.packages = length(freqtab), data = pkg.data)
   class(out) <- "cranDistribution"
   out
 }
@@ -109,7 +108,8 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
 #' @export
 
 summary.cranDistribution <- function(object, ...) {
-  summary(object$data$count)
+  list(unique.packages.downloaded = object$unique.packages, 
+       summary(object$data$count))
 }
 
 #' Query download count.
