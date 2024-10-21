@@ -89,11 +89,15 @@ plot.cranDistribution <- function(x, type = "count", ...) {
 
 #' Print method for cranDistribution().
 #' @param x object.
+#' @param top.n Numeric or Integer.
 #' @param ... Additional parameters.
 #' @export
 
-print.cranDistribution <- function(x, ...) {
-  print(list(x$date, head(x$data, 20)))
+print.cranDistribution <- function(x, top.n = 20, ...) {
+  pkg.ct <- format(x$unique.packages, big.mark = ",")
+  print(list(date = x$date, 
+             unique.packages.downloaded = pkg.ct,
+             top.n = head(x$data, top.n)))
 }
 
 #' Summary method for cranDistribution().
