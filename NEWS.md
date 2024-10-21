@@ -1,3 +1,11 @@
+### packageRank 0.9.3.9004
+
+- move unique.packages to cranDistribution() list element and return via 
+  summary().
+- amend subtitle in plot.cranDistribution().
+- add/set print.cranDistribution(top.n = 20).
+
+
 ### packageRank 0.9.3.9003
 
 - remove memoized cranDistribution().

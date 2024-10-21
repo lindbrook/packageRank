@@ -39,13 +39,12 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
   rnk <- rank(pkg.data$count, ties.method = "min")
   pkg.data$rank <- (max(rnk) + 1) - rnk
   pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
-  pkg.data$unique.packages <- length(freqtab)
 
   pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
     round(100 * mean(pkg.data$count < x), 1)
   }, mc.cores = cores))
   
-  out <- list(date = ymd, data = pkg.data)
+  out <- list(date = ymd, unique.packages = length(freqtab), data = pkg.data)
   class(out) <- "cranDistribution"
   out
 }
@@ -83,17 +82,21 @@ plot.cranDistribution <- function(x, type = "count", ...) {
       col.axis = "red", col.ticks = "red")
     axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
   } else stop('type must be "historgram" or "count"', call. = FALSE)
-  title(sub = paste(format(x$data$unique.packages[1], big.mark = ","), 
-    "unique packages"), cex.sub = 0.9)
+  title(sub = paste(format(x$unique.packages, big.mark = ","), 
+    "unique packages downloaded"), cex.sub = 0.9)
 }
 
 #' Print method for cranDistribution().
 #' @param x object.
+#' @param top.n Numeric or Integer.
 #' @param ... Additional parameters.
 #' @export
 
-print.cranDistribution <- function(x, ...) {
-  print(list(x$date, head(x$data, 20)))
+print.cranDistribution <- function(x, top.n = 20, ...) {
+  pkg.ct <- format(x$unique.packages, big.mark = ",")
+  print(list(date = x$date, 
+             unique.packages.downloaded = pkg.ct,
+             top.n = head(x$data, top.n)))
 }
 
 #' Summary method for cranDistribution().
@@ -105,7 +108,8 @@ print.cranDistribution <- function(x, ...) {
 #' @export
 
 summary.cranDistribution <- function(object, ...) {
-  summary(object$data$count)
+  list(unique.packages.downloaded = object$unique.packages, 
+       summary(object$data$count))
 }
 
 #' Query download count.
