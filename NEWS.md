@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9005
+
+- remove parallel implementation of packageLog().
+
+
 ### packageRank 0.9.3.9004
 
 - move unique.packages to cranDistribution() list element and return via 

@@ -10,20 +10,14 @@
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @return An R data frame.
 #' @export
 
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE, 
-  small.filter = FALSE, memoization = TRUE, check.package = TRUE, 
-  multi.core = FALSE) {
+  small.filter = FALSE, memoization = TRUE, check.package = TRUE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-  
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
@@ -47,9 +41,9 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     size.filter <- TRUE
   }
   
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  if (ip.filter) cran_log <- ipFilter(cran_log)
   
-  out <- parallel::mclapply(packages, function(p) {
+  out <- lapply(packages, function(p) {
     pkg.data <- cran_log[cran_log$package == p, ]
     if (small.filter) pkg.data <- smallFilter(pkg.data)
     if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
@@ -58,7 +52,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     pkg.data <- pkg.data[order(pkg.data$date.time), ]
     pkg.data$date.time <- NULL
     pkg.data
-  }, mc.cores = cores)
+  })
   
   names(out) <- packages
   
