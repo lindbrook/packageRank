@@ -44,10 +44,10 @@ packageRank <- function(packages = "packageRank", date = NULL,
   
   if (rank.ties) {
     rnk <- paste(format(tmp$rank, big.mark = ","), "of", 
-                 format(tmp$unique.packages, big.mark = ","))
+                 format(x$unique.packages, big.mark = ","))
   } else {
     rnk <- paste(format(tmp$nominal.rank, big.mark = ","), "of", 
-                 format(tmp$unique.packages, big.mark = ","))
+                 format(x$unique.packages, big.mark = ","))
   }
   
   pkg.data <- data.frame(date = x$date, tmp[, c("package", "count")], 
