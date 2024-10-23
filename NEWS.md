@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9006
+
+- update reference for unique packages downloaded in packageRank().
+
+
 ### packageRank 0.9.3.9005
 
 - remove parallel implementation of packageLog().
