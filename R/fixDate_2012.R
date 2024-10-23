@@ -40,16 +40,18 @@ fixDate_2012 <- function(date = "2012-12-31") {
 #' @noRd
 
 rev_fixDate_2012 <- function(file.url.date) {
-  offset.date <- file.url.date >= as.Date("2012-10-16") &
-                 file.url.date <= as.Date("2012-12-31")
+  if (format(file.url.date, "%Y") == "2012") {
+    offset.date <- file.url.date >= as.Date("2012-10-16") &
+                   file.url.date <= as.Date("2012-12-31")
 
-  if (offset.date) ymd <- file.url.date - 3L
-  else ymd <- file.url.date
+    if (offset.date) ymd <- file.url.date - 3L
+    else ymd <- file.url.date
 
-  if (file.url.date == as.Date("2012-10-12")) {
-    ymd <- as.Date("2012-10-11")
-  } else if (file.url.date == as.Date("2012-10-14")) {
-    ymd <- as.Date("2012-10-12")
-  }
-  ymd
+    if (file.url.date == as.Date("2012-10-12")) {
+      ymd <- as.Date("2012-10-11")
+    } else if (file.url.date == as.Date("2012-10-14")) {
+      ymd <- as.Date("2012-10-12")
+    }
+    ymd
+  } else file.url.date
 }
