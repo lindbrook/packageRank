@@ -28,7 +28,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   ymd <- rev_fixDate_2012(file.url.date)
 
   cran_log <- packageLog(packages = packages, date = ymd,
-    memoization = memoization, check.package = FALSE, multi.core = cores)
+    memoization = memoization, check.package = FALSE)
 
   if (is.data.frame(cran_log)) ct <- nrow(cran_log)
   else ct <- vapply(cran_log, nrow, integer(1L))
@@ -41,8 +41,7 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   f.cran_log <- packageLog(packages = packages, date = ymd,
     all.filters = all.filters, ip.filter = ip.filter,
     small.filter = small.filter, sequence.filter = sequence.filter, 
-    size.filter = size.filter, memoization = memoization, check.package = FALSE,
-    multi.core = cores)
+    size.filter = size.filter, memoization = memoization, check.package = FALSE)
 
   if (is.data.frame(f.cran_log)) f.ct <- nrow(f.cran_log)
   else f.ct <- vapply(f.cran_log, nrow, integer(1L))

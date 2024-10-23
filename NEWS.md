@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9007
+
+- update syntax for packageLog() in filteredDownloads() and packageCountry().
+
+
 ### packageRank 0.9.3.9006
 
 - update reference for unique packages downloaded in packageRank().

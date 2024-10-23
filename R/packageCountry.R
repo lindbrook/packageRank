@@ -30,8 +30,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
   p.log <- packageLog(packages = packages, date = date,
     ip.filter = ip.filter, small.filter = small.filter, 
     sequence.filter = sequence.filter, size.filter = size.filter, 
-    memoization = memoization, check.package = check.package, 
-    multi.core = FALSE)
+    memoization = memoization, check.package = check.package)
 
   if (na.rm) {
     if (is.data.frame(p.log)) {
