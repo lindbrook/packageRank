@@ -928,7 +928,30 @@ tail(queryPercentile(lo = 95, hi = 96, date = "2024-08-01"), 3)
 
 #### cranDistribution()
 
-The above functions leverage `cranDistribution()`, which computes the distribution of download counts for a given log. The generic summary method provides the five number summary plus the arithmetic mean:
+The above functions leverage `cranDistribution()`, which computes the ranks and the distribution of download counts for a given day's log. 
+
+Its print method provides the date, the number of unique packages downloaded and the count and rank data for the top 20 packages: :
+
+```{R, print_distribution, eval = FALSE}
+cranDistribution()
+```
+```{R, print_distribution_code, echo = FALSE}
+cranDistribution(date = "2024-08-01")
+```
+
+Note that if you want to specify the number of top N packages, you'll have to explicity use the print() and the 'top.n' argument:
+
+```{R, print_to.n_distribution_code, eval = FALSE}
+print(cranDistribution(), top.n = 7)
+```
+
+Alternatively, you can use `queryRank()`:
+
+```{R, print_n_queryRank, eval = FALSE}
+queryRank(1:7)
+```
+
+The summary method provides the number of unique packages downloaded and the five number summary (plus the arithmetic mean):
 
 ```{R, summary_distribution, eval = FALSE}
 summary(cranDistribution())
@@ -937,7 +960,7 @@ summary(cranDistribution())
 summary(cranDistribution(date = "2024-08-01"))
 ```
 
-The generic plot method graphs the distribution of base 10 logarithm of download counts. Each plot is annotated with the median, mean and maximum download counts, as well as the total number of unique packages observed.
+The plot method graphs the distribution of base 10 logarithm of download counts. Each plot is annotated with the median, mean and maximum download counts, as well as the total number of unique packages observed.
 
 ```{R, plot_distribution, eval = FALSE}
 plot(cranDistribution())

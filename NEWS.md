@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9009
+
+- amend README query functions and cranDistribution() sections.
+
+
 ### packageRank 0.9.3.9008
 
 - amend stop() message in fixDate_2012().
