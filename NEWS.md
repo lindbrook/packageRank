@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9011
+
+- add day of week to plot.cranDistribution() title.
+
+
 ### packageRank 0.9.3.9010
 
 - amend x-axis in plot.packageDistribution().
