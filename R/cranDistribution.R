@@ -57,8 +57,9 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
 #' @export
 
 plot.cranDistribution <- function(x, type = "count", ...) {
-  ttl <- paste("Download Count Distribution @", x$date)
-  xlab <-  "Log10 Count"
+  day <- weekdays(as.Date(x$date), abbreviate = TRUE)
+  ttl <- paste0("CRAN Download Counts @ ", x$date, " (", day, ")")
+  xlab <-  "Log10 Download Count"
   if (type == "histogram") {
     graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
   } else if (type == "count") {
