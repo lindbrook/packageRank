@@ -98,33 +98,33 @@ plot.packageDistribution <- function(x, ...) {
 
 plot_package_distribution <- function(dat) {
   freq.dist <- dat$freq.dist
-  xlim <- range(dat$freq.dist$count)
+  xlim <- range(log10(dat$freq.dist$count))
   ylim <- range(dat$freq.dist$frequency)
   freqtab <- dat$freqtab
 
-  plot(freq.dist$count, freq.dist$frequency, type = "h", log = "x",
-    xlab = "Downloads", ylab = "Frequency", xlim = xlim, ylim = ylim)
+  plot(log10(freq.dist$count), freq.dist$frequency, type = "h", 
+    xlab = "Log10 Download Count", ylab = "Frequency", xlim = xlim, ylim = ylim)
   if (!is.null(dat$package)) {
     pkg.ct <- freqtab[names(freqtab) == dat$package]
     if (pkg.ct > 10000) {
-      axis(1, at = freqtab[1], cex.axis = 0.8, col.axis = "dodgerblue",
+      axis(1, at = log10(freqtab[1]), cex.axis = 0.8, col.axis = "dodgerblue",
         col.ticks = "dodgerblue", labels = paste(names(freqtab[1]), "=",
         format(freqtab[1], big.mark = ",")))
     } else {
-      axis(3, at = freqtab[1], cex.axis = 0.8, padj = 0.9,
+      axis(3, at = log10(freqtab[1]), cex.axis = 0.8, padj = 0.9,
         col.axis = "dodgerblue", col.ticks = "dodgerblue",
         labels = paste(names(freqtab[1]), "=",
         format(freqtab[1], big.mark = ",")))
     }
-    abline(v = freqtab[1], col = "dodgerblue", lty = "dotted")
-    axis(3, at = pkg.ct, labels = format(pkg.ct, big.mark = ","),
+    abline(v = log10(freqtab[1]), col = "dodgerblue", lty = "dotted")
+    axis(3, at = log10(pkg.ct), labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
-    abline(v = pkg.ct, col = "red", lty = "dotted")
+    abline(v = log10(pkg.ct), col = "red", lty = "dotted")
     day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
     title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
   } else {
-    abline(v = freqtab[1], col = "dodgerblue", lty = "dotted")
-    axis(3, at = freqtab[1], cex.axis = 0.8, padj = 0.9,
+    abline(v = log10(freqtab[1]), col = "dodgerblue", lty = "dotted")
+    axis(3, at = log10(freqtab[1]), cex.axis = 0.8, padj = 0.9,
       col.axis = "dodgerblue", col.ticks = "dodgerblue",
       labels = paste(names(freqtab[1]), "=",
       format(freqtab[1], big.mark = ",")))

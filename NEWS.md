@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9010
+
+- amend x-axis in plot.packageDistribution().
+
+
 ### packageRank 0.9.3.9009
 
 - amend README query functions and cranDistribution() sections.
