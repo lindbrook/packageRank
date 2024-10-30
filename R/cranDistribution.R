@@ -58,7 +58,7 @@ cranDistribution <- function(date = NULL, all.filters = FALSE,
 
 plot.cranDistribution <- function(x, type = "count", ...) {
   day <- weekdays(as.Date(x$date), abbreviate = TRUE)
-  ttl <- paste0("CRAN/Posit CDN @ ", x$date, " (", day, ")")
+  ttl <- paste0("CRAN/Posit @ ", x$date, " (", day, ")")
   xlab <-  "Log10 Download Count"
   if (type == "histogram") {
     graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
@@ -83,8 +83,10 @@ plot.cranDistribution <- function(x, type = "count", ...) {
       col.axis = "red", col.ticks = "red")
     axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
   } else stop('type must be "historgram" or "count"', call. = FALSE)
-  title(sub = paste(format(x$unique.packages, big.mark = ","), 
-    "unique packages downloaded"), cex.sub = 0.9)
+  title(sub = paste(
+    format(sum(x$data$count), big.mark = ","), "total downloads;",
+    format(x$unique.packages, big.mark = ","), "unique packages"), 
+    cex.sub = 0.9)
 }
 
 #' Print method for cranDistribution().
