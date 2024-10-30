@@ -95,8 +95,10 @@ plot.cranDistribution <- function(x, type = "count", ...) {
 
 print.cranDistribution <- function(x, top.n = 20, ...) {
   pkg.ct <- format(x$unique.packages, big.mark = ",")
+  dwnld.ct <- format(sum(x$data$count), big.mark = ",")
   print(list(date = x$date, 
              unique.packages.downloaded = pkg.ct,
+             total.downloads = dwnld.ct,
              top.n = head(x$data, top.n)))
 }
 
@@ -109,8 +111,9 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
 #' @export
 
 summary.cranDistribution <- function(object, ...) {
-  list(unique.packages.downloaded = object$unique.packages, 
-       summary(object$data$count))
+  list(unique.packages.downloaded = object$unique.packages,
+       total.downloads = sum(object$data$count),
+       download.summary = summary(object$data$count))
 }
 
 #' Query download count.

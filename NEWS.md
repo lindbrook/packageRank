@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9013
+
+- add total downloads to print.cranDistribution() & summary.cranDistribution().
+
+
 ### packageRank 0.9.3.9012
 
 - amend plot.cranDistribution() title.
