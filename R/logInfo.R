@@ -45,22 +45,19 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   }
 
   date.fmt <- "%d %b %H:%M %Z"
+  upload.loc <- localTime(upload.date, time = upload.time, tz = tz)
   
   if (rstudio.server.available & cranlogs.server.available) {
     if (rstudio.results.available & cranlogs.results.available) {
       status <- "Everything OK." 
     } else if (rstudio.results.available & !cranlogs.results.available) {
-      if (format(currentTime(tz = "US/Eastern"), "%Z") == "EST") {
-        upload.utc <- upload.utc + 3600L
-      }
-      status <- paste0("'cranlogs' usually posts by ",
-        format(as.POSIXlt(upload.utc + 3600L, tz = tz), date.fmt), " -- ",
-        format(upload.utc + 3600L, date.fmt), ".")
-      # status <- "'cranlogs' results not (yet) available."
+      status <- paste0("Today's 'cranlogs' usually posts by ",
+                       format(upload.loc + 3600L, date.fmt), " | ", 
+                       format(upload.utc + 3600L, date.fmt), ".")
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
-        format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
-        format(upload.utc, date.fmt), ".")
+                       format(upload.loc, date.fmt), " | ",
+                       format(upload.utc, date.fmt), ".")
     }
   }
   
