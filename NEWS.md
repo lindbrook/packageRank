@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9015
+
+- use localTime() in logInfo().
+
+
 ### packageRank 0.9.3.9014
 
 - amend plot.cranDistribution() title and subtitle.

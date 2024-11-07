@@ -13,7 +13,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   utc.date.time <- utc()
   utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
 
-  upload.utc <- dateTime(utc.date, time = upload.time, tz = "GMT")
+  upload.utc <- dateTime(utc.date, time = upload.time, tz = "UTC")
   upload.date <- as.Date(format(upload.utc, "%Y-%m-%d"))
  
   today.log <- utc.date - 1
@@ -45,22 +45,19 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   }
 
   date.fmt <- "%d %b %H:%M %Z"
+  upload.loc <- localTime(upload.date, time = upload.time, tz = tz)
   
   if (rstudio.server.available & cranlogs.server.available) {
     if (rstudio.results.available & cranlogs.results.available) {
       status <- "Everything OK." 
     } else if (rstudio.results.available & !cranlogs.results.available) {
-      if (format(currentTime(tz = "US/Eastern"), "%Z") == "EST") {
-        upload.utc <- upload.utc + 3600L
-      }
-      status <- paste0("'cranlogs' usually posts by ",
-        format(as.POSIXlt(upload.utc + 3600L, tz = tz), date.fmt), " -- ",
-        format(upload.utc + 3600L, date.fmt), ".")
-      # status <- "'cranlogs' results not (yet) available."
+      status <- paste0("Today's 'cranlogs' usually posts by ",
+                       format(upload.loc + 3600L, date.fmt), " | ", 
+                       format(upload.utc + 3600L, date.fmt), ".")
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
-        format(as.POSIXlt(upload.utc, tz = tz), date.fmt), " -- ",
-        format(upload.utc, date.fmt), ".")
+                       format(upload.loc, date.fmt), " | ",
+                       format(upload.utc, date.fmt), ".")
     }
   }
   
