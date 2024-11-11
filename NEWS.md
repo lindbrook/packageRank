@@ -1,3 +1,8 @@
+### packageRank 0.9.3.9016
+
+- update/copyedit README sections IV and V.
+
+
 ### packageRank 0.9.3.9015
 
 - use localTime() in logInfo().

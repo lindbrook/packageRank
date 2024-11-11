@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.3.9015-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.3.9016-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -1030,7 +1030,7 @@ logInfo()
     [1] "No"
 
     $status
-    [1] "Today's log is typically posted by 09:00 PST (01 Feb 17:00 GMT)."
+    [1] "Today's log is typically posted by 01 Feb 09:00 PST | 01 Feb 17:00 UTC."
 
 #### time zones
 
@@ -1084,20 +1084,20 @@ packageRank(packages = "ergm", date = "2021-01-01")
     > 1 2020-12-30    ergm   292 878 of 20,077       95.6
 
     Warning message:
-    2020-12-31 log arrives in appox. 19 hours at 02 Jan 04:00 AEDT. Using last available!
+    2020-12-31 log arrives in ~19 hours at 02 Jan 04:00 AEDT. Using previous!
 
 Keep in mind that 17:00 UTC is not a hard deadline. Barring server
 issues, the logs are usually posted a little *before* that time. I don’t
 know when the script starts but the posting time seems to be a function
 of the number of entries: closer to 17:00 UTC when there are more
-entries (e.g., weekdays); before 17:00 UTC when there are fewer entries
-(e.g., weekends). Again, barring server issues, the ‘cranlogs’ results
-are usually available shortly *after* 17:00 UTC.
+entries (e.g., weekdays); earlier than 17:00 UTC when there are fewer
+entries (e.g., weekends). Again, barring server issues, the ‘cranlogs’
+results are usually available *before* 18:00 UTC.
 
 Here’s what you’d see using the Honolulu example:
 
 ``` r
-logInfo(show.available = TRUE)
+logInfo(details = TRUE)
 ```
 
     $`Today's log/result`
@@ -1115,7 +1115,7 @@ logInfo(show.available = TRUE)
     $status
     [1] "Everything OK."
 
-The functions uses your local time zone, which depends on R’s ability to
+The function uses your local time zone, which depends on R’s ability to
 compute your local time and time zone (e.g., `Sys.time()` and
 `Sys.timezone()`). My understanding is that there may be operating
 system or platform specific issues that could undermine this.
@@ -1167,13 +1167,13 @@ queryRank(20)
 
 If you want the packages with a particular percentile rank, use
 `queryPercentile()`. Note that due to the discrete nature of counts,
-your choice of percentile may not be observed because they may fall in
-the vertical gaps in the data:
+your choice of percentile may not be available because they may fall in
+the vertical gaps in the observed data:
 
 ![](man/figures/README-discrete_counts-1.png)<!-- -->
 
 For this reason, `queryPercentile()` rounds you selection to whole
-numbers. Also, the default value is set to 50, which uses `median()`to
+numbers. Also, the default value, which is set to 50, uses `median()`to
 guarantee a result.
 
 ``` r
@@ -1213,7 +1213,9 @@ The above functions leverage `cranDistribution()`, which computes the
 ranks and the distribution of download counts for a given day’s log.
 
 Its print method provides the date, the number of unique packages
-downloaded and the count and rank data for the top 20 packages: :
+downloaded, the total number of downloads (the total number of
+rows/observations in the log) and the count and rank data for the top 20
+packages:
 
 ``` r
 cranDistribution()
@@ -1224,6 +1226,9 @@ cranDistribution()
     > 
     > $unique.packages.downloaded
     > [1] "26,959"
+    > 
+    > $total.downloads
+    > [1] "5,760,937"
     > 
     > $top.n
     >       package count rank nominal.rank percentile
@@ -1249,7 +1254,7 @@ cranDistribution()
     > 20    stringr 33041   20           20       99.9
 
 Note that if you want to specify the number of top N packages, you’ll
-have to explicity use the print() and the ‘top.n’ argument:
+have to explicitly use the print() and the ‘top.n’ argument:
 
 ``` r
 print(cranDistribution(), top.n = 7)
@@ -1261,8 +1266,9 @@ Alternatively, you can use `queryRank()`:
 queryRank(1:7)
 ```
 
-The summary method provides the number of unique packages downloaded and
-the five number summary (plus the arithmetic mean):
+The summary method provides the number of unique packages downloaded,
+the total number of downloads and the five number summary (plus the
+arithmetic mean):
 
 ``` r
 summary(cranDistribution())
@@ -1271,14 +1277,17 @@ summary(cranDistribution())
     > $unique.packages.downloaded
     > [1] 26959
     > 
-    > [[2]]
+    > $total.downloads
+    > [1] 5760937
+    > 
+    > $download.summary
     >    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
     >     1.0     6.0    12.0   213.7    28.0 56311.0
 
 The plot method graphs the distribution of base 10 logarithm of download
 counts. Each plot is annotated with the median, mean and maximum
-download counts, as well as the total number of unique packages
-observed.
+download counts, as well as the total number of downloads and the total
+number of unique packages observed.
 
 ``` r
 plot(cranDistribution())
