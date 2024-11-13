@@ -1,92 +1,28 @@
-### packageRank 0.9.3.9016
+### packageRank 0.9.4
 
-- update/copyedit README sections IV and V.
+#### Function Changes
 
-
-### packageRank 0.9.3.9015
-
-- use localTime() in logInfo().
-
-
-### packageRank 0.9.3.9014
-
-- amend plot.cranDistribution() title and subtitle.
-
-
-### packageRank 0.9.3.9013
-
-- add total downloads to print.cranDistribution() & summary.cranDistribution().
-
-
-### packageRank 0.9.3.9012
-
-- amend plot.cranDistribution() title.
-
-
-### packageRank 0.9.3.9011
-
-- add day of week to plot.cranDistribution() title.
-
-
-### packageRank 0.9.3.9010
-
-- amend x-axis in plot.packageDistribution().
-
-
-### packageRank 0.9.3.9009
-
-- amend README query functions and cranDistribution() sections.
-
-
-### packageRank 0.9.3.9008
-
+- match input vector order with output data frame in packageRank() and
+  queryPackage().
+- add/set queryPackage(check.package = TRUE).
+- move unique.packages to cranDistribution() list element and return via
+  summary().
+- add/set print.cranDistribution(top.n = 20).
+- remove parallel implementation of packageLog().
 - amend stop() message in fixDate_2012().
 - add 2012 exception to rev_fixDate_2012().
+- add total downloads to print.cranDistribution() & summary.cranDistribution().
+- use localTime() in logInfo().
 
+#### Plot Changes
 
-### packageRank 0.9.3.9007
+- amend title and subtitle in plot.cranDistribution().
+- amend x-axis in plot.packageDistribution().
+- add day of week to plot.cranDistribution() title.
 
-- update syntax for packageLog() in filteredDownloads() and packageCountry().
+#### Fixes
 
-
-### packageRank 0.9.3.9006
-
-- update reference for unique packages downloaded in packageRank().
-
-
-### packageRank 0.9.3.9005
-
-- remove parallel implementation of packageLog().
-
-
-### packageRank 0.9.3.9004
-
-- move unique.packages to cranDistribution() list element and return via 
-  summary().
-- amend subtitle in plot.cranDistribution().
-- add/set print.cranDistribution(top.n = 20).
-
-
-### packageRank 0.9.3.9003
-
-- remove memoized cranDistribution().
-- include parallelized code for percentile rank in cranDistribution().
-
-
-### packageRank 0.9.3.9002
-
-- add/set queryPackage(check.package = TRUE).
-
-
-### packageRank 0.9.3.9001
-
-- match input vector order with output data frame in queryPackage().
-- use 'packages' as argument.
-
-
-### packageRank 0.9.3.9000
-
-- match input vector order with output data frame in packageRank().
+- fix memoization in cranDistribution().
 
 
 ### packageRank 0.9.3
