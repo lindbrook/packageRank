@@ -778,7 +778,7 @@ Occasionally problems with "today's" data can emerge due to the upstream depende
 CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 ```
 
-If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. If this happens, you'll see things like an unexpected zero count(s) for your package(s) (actually, you'll see a zero download count for both our package and for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
+If there's a problem with the [logs](http://cran-logs.rstudio.com/) (e.g., they're not posted on time), both [‘cranlogs'](https://CRAN.R-project.org/package=cranlogs) and [‘packageRank'](https://CRAN.R-project.org/package=packageRank) will be affected. If this happens, you'll see things like an unexpected zero count(s) for your package(s) (actually, you'll see a zero download count for both your package and for all of [CRAN](https://cran.r-project.org/)), data from "yesterday", or a "Log is not (yet) on the server" error message.
 
 ```
 'cranlogs' --> packageRank::cranDownloads()

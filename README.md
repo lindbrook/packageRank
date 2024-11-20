@@ -993,7 +993,7 @@ If there’s a problem with the [logs](http://cran-logs.rstudio.com/)
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) will be
 affected. If this happens, you’ll see things like an unexpected zero
 count(s) for your package(s) (actually, you’ll see a zero download count
-for both our package and for all of
+for both your package and for all of
 [CRAN](https://cran.r-project.org/)), data from “yesterday”, or a “Log
 is not (yet) on the server” error message.
 
