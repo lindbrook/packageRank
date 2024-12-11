@@ -1,3 +1,8 @@
+### packageRank 0.9.4.9000
+
+- prioritize packageCRAN() over 'pkgsearch' results in packageHistory().
+
+
 ### packageRank 0.9.4
 
 #### Function Changes

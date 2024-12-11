@@ -31,11 +31,10 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   } else {
     # problem with pkgsearch::cran_package_history()
     
-    # cran <- mpackages_on_CRAN()
-    # on.cran <- package %in% cran$Package
-    on.cran <- vapply(package, function(x) !is.null(packageCRAN(x)), 
-      logical(1L))
-   
+    pkg.cran <- lapply(package, packageCRAN)
+    names(pkg.cran) <- package
+    on.cran <- !vapply(pkg.cran, is.null, logical(1L))
+    
     # Use packageHistory0() for "missing" and latest packages.
     # e.g., "VR" in cran_package() but not cran_package_history()
     # history <- try(lapply(package, pkgsearch::cran_package_history),
@@ -43,7 +42,6 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
     
     if (any(!on.cran)) {
       archive.out <- lapply(package[!on.cran], packageHistory0)
-      # archive.chk <- vapply(archive.out, nrow, integer(1L))
       names(archive.out) <- package[!on.cran]
     }
     
@@ -51,7 +49,20 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
       history <- lapply(package[on.cran], function(x) {
         pkgsearch::cran_package_history(x)
       })
+      
       cran.out <- transform_pkgsearch(history)
+      names(cran.out) <- package[on.cran]
+      
+      cran.out <- lapply(names(cran.out), function(nm) {
+        h <- cran.out[[nm]]
+        h.last <- h[nrow(h), ]
+        row.names(h.last) <- NULL
+        if (!identical(h.last, pkg.cran[[nm]])) {
+          h[nrow(h), ] <- pkg.cran[[nm]]
+        }
+        h
+      })
+    
       names(cran.out) <- package[on.cran]
     }
     
@@ -76,7 +87,9 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
 }
 
 transform_pkgsearch <- function(history) {
+  vars0 <- c("Package", "Version", "Date", "Repository")
   vars <- c("Package", "Version", "crandb_file_date", "Repository")
+  
   lapply(history, function(x) {
     if ("Repository" %in% colnames(x)) {
       tmp <- data.frame(x[, vars])
@@ -86,7 +99,7 @@ transform_pkgsearch <- function(history) {
       tmp$Date <- as.Date(dts)
       tmp$crandb_file_date <- NULL
       if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
-      tmp <- tmp[, c("Package", "Version", "Date", "Repository")]
+      tmp <- tmp[, vars0]
     } else {
       tmp <- data.frame(x[, vars[-length(vars)]])
       row.names(tmp) <- NULL
