@@ -1,3 +1,8 @@
+### packageRank 0.9.4.9001
+
+- show day of week in print.cranDistribution().
+
+
 ### packageRank 0.9.4.9000
 
 - prioritize packageCRAN() over 'pkgsearch' results in packageHistory().
