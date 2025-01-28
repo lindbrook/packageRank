@@ -176,7 +176,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     }
   } else if (is.null(x$packages)) {
     cranPlot(x, statistic, graphics, obs.ct, points, log.y, smooth, se, f,
-      span, r.version)
+      span, r.version, unit.observation)
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,

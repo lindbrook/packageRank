@@ -5,7 +5,7 @@
 # Plot functions for plot.cranDownloads() #
 
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
-  se, f, span, r.version) {
+  se, f, span, r.version, unit.observation) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -49,15 +49,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
   } else if (obs.ct > 1) {
     if (graphics == "base") {
-      if (any(dat$in.progress)) {
+      if (any(dat$in.progress)) { # unit.observation %in% c("year", "month")
         ip.sel <- dat$in.progress == TRUE
         ip.data <- dat[ip.sel, ]
         complete <- dat[!ip.sel, ]
         last.obs <- nrow(complete)
 
-        obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-        est.ct <- round(ip.data$count * exp.days / obs.days)
+        est.ct <- inProgressEstimate(x, unit.observation)
 
         est.data <- ip.data
         est.data$count <- est.ct
@@ -93,7 +91,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         axis(4, at = ip.data[, y.nm], labels = "obs")
         axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
           col.ticks = "red")
-
       } else if (any(dat$partial)) { # unit.observation = "week"
         unit.date <- dat$date
 
@@ -230,15 +227,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         complete <- dat[!ip.sel, ]
         last.obs <- nrow(complete)
 
-        obs.days <- as.numeric(format(last.obs.date , "%d"))
-        exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-        est.ct <- round(ip.data$count * exp.days / obs.days)
+        est.ct <- inProgressEstimate(x, unit.observation)
 
         est.data <- ip.data
         est.data$count <- est.ct
-        last.cumulative <- complete[nrow(complete), "cumulative"]
-        est.data$cumulative <- last.cumulative + est.ct
 
+        last.cumulative <- complete[last.obs, "cumulative"]
+        est.data$cumulative <- last.cumulative + est.ct
         est.seg <- rbind(complete[last.obs, ], est.data)
         obs.seg <- rbind(complete[last.obs, ], ip.data)
 
