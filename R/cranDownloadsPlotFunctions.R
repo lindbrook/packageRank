@@ -445,7 +445,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.y, package.version, dev.mode, r.version, same.xy) {
+  se, f, span, log.y, package.version, dev.mode, r.version, same.xy,
+  unit.observation) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -486,6 +487,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
 
       if (any(dat$in.progress)) {
+        est.ct <- packageRank:::inProgressEstimate(x, unit.observation)
+        names(est.ct) <- x$packages
+        
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
 
@@ -501,15 +505,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete <- pkg.dat[!ip.sel, ]
-
-          obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-          est.ct <- round(ip.data$count * exp.days / obs.days)
+          last.obs <- nrow(complete)
 
           est.data <- ip.data
-          est.data$count <- est.ct
-          last.cumulative <- complete[nrow(complete), "cumulative"]
-          est.data$cumulative <- last.cumulative + est.ct
+          est.data$count <- est.ct[pkg]
+          last.cumulative <- complete[last.obs, "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct[pkg]
 
           list(complete = complete, ip.data = ip.data,
             est.data = est.data)
@@ -522,6 +523,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
         invisible(lapply(seq_along(plot.data), function(i) {
           complete <- plot.data[[i]]$complete
+          last.obs <- nrow(complete)
           ip.data <- plot.data[[i]]$ip.data
           est.data <- plot.data[[i]]$est.data
 
@@ -538,7 +540,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
           points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
 
-          last.obs <- nrow(complete)
           segments(complete[last.obs, "date"],
                    complete[last.obs, y.nm],
                    ip.data$date,
@@ -852,6 +853,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       }
 
       if (any(dat$in.progress)) {
+        est.ct <- packageRank:::inProgressEstimate(x, unit.observation)
+        names(est.ct) <- x$packages
+
         g <- lapply(x$packages, function(pkg) {
           pkg.data <- dat[dat$package == pkg, ]
           ip.sel <- pkg.data$in.progress == TRUE
@@ -859,14 +863,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           complete <- pkg.data[!ip.sel, ]
           last.obs <- nrow(complete)
 
-          obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-          est.ct <- round(ip.data$count * exp.days / obs.days)
-
           est.data <- ip.data
-          est.data$count <- est.ct
-          last.cumulative <- complete[nrow(complete), "cumulative"]
-          est.data$cumulative <- last.cumulative + est.ct
+          est.data$count <- est.ct[pkg]
+          last.cumulative <- complete[last.obs, "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct[pkg]
 
           list(ip.data = ip.data,
                complete = complete,

@@ -183,7 +183,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         ip.legend.location, points, smooth, se, f, span)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.y, package.version, dev.mode, r.version, same.xy)
+        span, log.y, package.version, dev.mode, r.version, same.xy, 
+        unit.observation)
     }
   }
 }
