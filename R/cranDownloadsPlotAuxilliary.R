@@ -168,3 +168,30 @@ packageLifeFilter <- function(out, packages, first.published) {
   })
   do.call(rbind, birth.data)
 }
+
+inProgressEstimate <- function(x, unit.observation) {
+  dat <- x$cranlogs.data
+  ip.data <- dat[dat$in.progress == TRUE, ]
+  
+  if (unit.observation == "year") {
+    yr <- format(x$last.obs.date, "%Y")
+    from <-  as.Date(paste0(yr, "-01-01"))
+    to <-  as.Date(paste0(yr, "-12-31"))
+    elapsed <- length(seq.Date(from = from, to = x$last.obs.date, by = "day"))
+    total <- length(seq.Date(from = from, to = to, by = "day"))
+  } else if (unit.observation == "month") {
+    yr <- format(x$last.obs.date, "%Y")
+    mo <- format(x$last.obs.date, "%m")
+    from <- as.Date(paste0(yr, "-", mo, "-01"))
+    end.of.month <- as.Date(paste0(yr, "-", as.numeric(mo) + 1, "-01")) - 1
+    elapsed <- length(seq.Date(from = from, to = x$last.obs.date, by = "day"))
+    total <- length(seq.Date(from = from, to = end.of.month, by = "day"))
+  } else if (unit.observation == "week") {
+    wk <- levels(cut(x$last.obs.date, breaks = "week", start.on.monday = FALSE))
+    sunday <- as.Date(wk)
+    elapsed <- length(seq.Date(from = sunday, to = x$last.obs.date, by = "day"))
+    total <- 7L
+  }
+
+  ip.data$count * total / elapsed
+}
