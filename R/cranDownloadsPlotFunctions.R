@@ -487,7 +487,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
 
       if (any(dat$in.progress)) {
-        est.ct <- packageRank:::inProgressEstimate(x, unit.observation)
+        est.ct <- inProgressEstimate(x, unit.observation)
         names(est.ct) <- x$packages
         
         plot.data <- lapply(x$package, function(pkg) {
@@ -853,7 +853,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       }
 
       if (any(dat$in.progress)) {
-        est.ct <- packageRank:::inProgressEstimate(x, unit.observation)
+        est.ct <- inProgressEstimate(x, unit.observation)
         names(est.ct) <- x$packages
 
         g <- lapply(x$packages, function(pkg) {
