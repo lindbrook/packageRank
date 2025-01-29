@@ -1739,7 +1739,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-  multi.plot) {
+  multi.plot, unit.observation) {
 
   dat <- x$cranlogs.data
   y.nm <- statistic
@@ -1786,24 +1786,25 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
   } else if (obs.ct > 1) {
     if (graphics == "base") {
-      pltfrm.col <- c("red", "dodgerblue", "black")
-      names(pltfrm.col) <- c("osx", "src", "win")
 
-      if (any(dat$in.progress)) {
-        pltfrm <- sort(unique(dat$platform))
+      pltfrm <- c("osx", "src", "win")
+      pltfrm.col <- c("red", "dodgerblue", "black")
+      names(pltfrm.col) <- pltfrm
+
+      if (any(dat$in.progress)) {        
+        est.ct <- inProgressEstimate(x, unit.observation)
+        names(est.ct) <- pltfrm
 
         p.data <- lapply(pltfrm, function(x) {
           pkg.dat <- dat[dat$platform == x, ]
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete <- pkg.dat[!ip.sel, ]
-          obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-          est.ct <- round(ip.data$count * exp.days / obs.days)
+          
           est.data <- ip.data
-          est.data$count <- est.ct
+          est.data$count <- est.ct[x]
           last.cumulative <- complete[nrow(complete), "cumulative"]
-          est.data$cumulative <- last.cumulative + est.ct
+          est.data$cumulative <- last.cumulative + est.ct[x]
           list(ip.data = ip.data, complete = complete,
             est.data = est.data)
         })
@@ -2140,21 +2141,23 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (any(dat$in.progress)) {
-        pltfrm <- sort(unique(dat$platform))
-        p.data <- lapply(seq_along(pltfrm), function(i) {
-          pkg.dat <- dat[dat$platform == pltfrm[i], ]
+        # pltfrm <- sort(unique(dat$platform))
+        pltfrm <- c("osx", "src", "win")
+
+        est.ct <- inProgressEstimate(x, unit.observation)
+        names(est.ct) <- pltfrm
+
+        p.data <- lapply(pltfrm, function(p) {
+          pkg.dat <- dat[dat$platform == p, ]
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
           complete <- pkg.dat[!ip.sel, ]
           last.obs <- nrow(complete)
-          obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-          est.ct <- round(ip.data$count * exp.days / obs.days)
-          est.data <- ip.data
-          est.data$count <- est.ct
 
-          last.cumulative <- complete[nrow(complete), "cumulative"]
-          est.data$cumulative <- last.cumulative + est.ct
+          est.data <- ip.data
+          est.data$count <- est.ct[p]
+          last.cumulative <- complete[last.obs, "cumulative"]
+          est.data$cumulative <- last.cumulative + est.ct[p]
 
           list(ip.data = ip.data,
                complete = complete,
