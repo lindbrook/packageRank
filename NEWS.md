@@ -1,3 +1,8 @@
+### packageRank 0.9.4.9002
+
+- fix plot.cranDownloads(unit.observation = "year"); add inProgressEstimate().
+
+
 ### packageRank 0.9.4.9001
 
 - show day of week in print.cranDistribution().
