@@ -168,22 +168,23 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   } else if ("R" %in% x$packages) {
     if (r.total) {
       rTotPlot(x, statistic, graphics, obs.ct, legend.location, points,
-        log.y, smooth, se, r.version, f, span)
+        log.y, smooth, se, r.version, f, span, unit.observation)
     } else {
       rPlot(x, statistic, graphics, obs.ct, legend.location,
         ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-        multi.plot)
+        multi.plot, unit.observation)
     }
   } else if (is.null(x$packages)) {
     cranPlot(x, statistic, graphics, obs.ct, points, log.y, smooth, se, f,
-      span, r.version)
+      span, r.version, unit.observation)
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,
-        ip.legend.location, points, smooth, se, f, span)
+        ip.legend.location, points, smooth, se, f, span, unit.observation)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.y, package.version, dev.mode, r.version, same.xy)
+        span, log.y, package.version, dev.mode, r.version, same.xy, 
+        unit.observation)
     }
   }
 }
