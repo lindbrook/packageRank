@@ -1090,7 +1090,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 }
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
-  legend.location, ip.legend.location, points, smooth, se, f, span) {
+  legend.location, ip.legend.location, points, smooth, se, f, span,
+  unit.observation) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -1136,6 +1137,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         ylim <- range(dat[, statistic])
 
         if (any(dat$in.progress)) {
+          est.ct <- inProgressEstimate(x, unit.observation)
+          names(est.ct) <- x$packages
+
           pkg.data <- lapply(x$package, function(pkg) {
             tmp <- dat[dat$package == pkg, ]
 
@@ -1153,15 +1157,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             complete <- tmp[tmp$in.progress == FALSE, ]
             last.obs <- nrow(complete)
 
-            obs.days <- as.numeric(format(last.obs.date , "%d"))
-            exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date,
-              "%d"))
-            est.ct <- round(ip.data$count * exp.days / obs.days)
-
             est.data <- ip.data
-            est.data$count <- est.ct
+            est.data$count <- est.ct[pkg]
             last.cumulative <- complete[nrow(complete), "cumulative"]
-            est.data$cumulative <- last.cumulative + est.ct
+            est.data$cumulative <- last.cumulative + est.ct[pkg]
 
             list(complete = complete, est.data = est.data, ip.data = ip.data)
           })
@@ -1512,6 +1511,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       }
 
       if (any(dat$in.progress)) {
+        est.ct <- inProgressEstimate(x, unit.observation)
+        names(est.ct) <- x$packages
+
         g <- lapply(x$packages, function(pkg) {
           pkg.data <- dat[dat$package == pkg, ]
           ip.sel <- pkg.data$in.progress == TRUE
@@ -1519,14 +1521,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           complete <- pkg.data[!ip.sel, ]
           last.obs <- nrow(complete)
 
-          obs.days <- as.numeric(format(last.obs.date , "%d"))
-          exp.days <- as.numeric(format(lastDayMonth(ip.data$date)$date, "%d"))
-          est.ct <- round(ip.data$count * exp.days / obs.days)
-
           est.data <- ip.data
-          est.data$count <- est.ct
+          est.data$count <- est.ct[pkg]
           last.cumulative <- complete[nrow(complete), "cumulative"]
-          est.data$cumulative <- last.cumulative + est.ct
+          est.data$cumulative <- last.cumulative + est.ct[pkg]
 
           list(ip.data = ip.data,
                complete = complete,

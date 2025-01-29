@@ -180,7 +180,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,
-        ip.legend.location, points, smooth, se, f, span)
+        ip.legend.location, points, smooth, se, f, span, unit.observation)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
         span, log.y, package.version, dev.mode, r.version, same.xy, 
