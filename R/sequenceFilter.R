@@ -53,6 +53,9 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
       seq.start <- which(candidates$ver == pkg.history$Version[1])
       seq.stop <- which(candidates$ver == pkg.history$Version[history.obs])
       
+      # match number of seq.start and number of seq.stop
+      seq.start <- seq.start[length(seq.stop)]
+      
       if (length(seq.start) != 0 & length(seq.stop) != 0) {
         seq.check <- vapply(seq_along(seq.start), function(i) {
           tmp <- candidates[seq.start[i]:seq.stop[i], ]
