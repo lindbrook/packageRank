@@ -4,7 +4,7 @@
 #' @param start.yr Numeric or Integer.
 #' @param end.yr Numeric or Integer.
 #' @note A way around Gateway Timeout (HTTP 504). This takes a while since it computes each year separately.s
-#' @export
+#' @noRd
 
 annualDownloads <- function(start.yr = 2013, end.yr = 2023) {
   dwnlds <- lapply(start.yr:end.yr, function(yr) {

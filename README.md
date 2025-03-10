@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.4.9003-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.4.9004-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -360,27 +360,6 @@ plot(cranDownloads(from = 2019, to = 2019))
 ```
 
 ![](man/figures/README-null_packages-1.png)<!-- -->
-
-Note that I sometimes get a “Gateway Timeout (HTTP 504)” error when
-using this function for long time periods. This may be due to traffic
-but alternatively could be related to [‘cranlogs’ issue
-\#56](https://github.com/r-hub/cranlogs/issues/56). As a workaround,
-`annualDownloads()` downloads the data for each year individually and
-then re-assembles them into a single data frame. This, of course, takes
-more time but seems to be more reliable.
-
-``` r
-plot(annualDownloads(start.yr = 2013, end.yr = 2023))
-```
-
-![](man/figures/README-annualDownloads-1.png)<!-- -->
-
-Note that in the plot above, three historical outlier days are
-highlighted: “2014-11-17”, “2018-10-21” and “2020-02-29”. The first was
-due to a disproportionate download of six packages: ‘BayHaz’, ‘clhs’,
-‘GPseq’, ‘OPI’, ‘YaleToolkit’ and ‘survsim’. The second date was due to
-downloads of ‘tidyverse’ (~700x the second place package
-’Rcpp\``'). The third is possibly related to some kind of scripting error that overlooked the fact that it was a leap day. You can validate this using`packageLog()\`.
 
 #### `packages = "R"`
 
