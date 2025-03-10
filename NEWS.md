@@ -1,3 +1,8 @@
+### packageRank 0.9.4.9004
+
+- set annualDownloads() internal.
+
+
 ### packageRank 0.9.4.9003
 
 - fix unmatached seq.start and seq.stop in removeSequences().

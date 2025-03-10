@@ -277,14 +277,6 @@ Note that for the sake of the plot, zero counts are replaced by ones so that the
 plot(cranDownloads(from = 2019, to = 2019))
 ```
 
-Note that I sometimes get a "Gateway Timeout (HTTP 504)" error when using this function for long time periods. This may be due to traffic but alternatively could be related to ['cranlogs' issue #56](https://github.com/r-hub/cranlogs/issues/56). As a workaround, `annualDownloads()` downloads the data for each year individually and then re-assembles them into a single data frame. This, of course, takes more time but seems to be more reliable.
-
-```{r annualDownloads}
-plot(annualDownloads(start.yr = 2013, end.yr = 2023))
-```
-
-Note that in the plot above, three historical outlier days are highlighted: "2014-11-17", "2018-10-21" and "2020-02-29". The first was due to a disproportionate download of six packages: 'BayHaz', 'clhs', 'GPseq', 'OPI', 'YaleToolkit' and 'survsim'. The second date was due to downloads of 'tidyverse' (~700x the second place package 'Rcpp``'). The third is possibly related to some kind of scripting error that overlooked the fact that it was a leap day. You can validate this using `packageLog()`.
-
 #### `packages = "R"`
 
 `cranlogs::cran_download(packages = "R")` computes the total number of downloads of the R application (note that you can only use "R" or a vector of packages names, not both!). You can plot these data by using:
