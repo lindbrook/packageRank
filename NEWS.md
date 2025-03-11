@@ -10,7 +10,7 @@
 
 ### packageRank 0.9.4.9003
 
-- fix unmatached seq.start and seq.stop in removeSequences().
+- fix unmatched seq.start and seq.stop in removeSequences().
 
 
 ### packageRank 0.9.4.9002
