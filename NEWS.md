@@ -1,3 +1,8 @@
+### packageRank 0.9.4.9005
+
+- fix rPlot() for log.y = TRUE and graphics = "ggplot2".
+
+
 ### packageRank 0.9.4.9004
 
 - set annualDownloads() internal.

@@ -2222,13 +2222,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
-        
-        if (log.y) {
-          p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", y.nm.case))
-        } else {
-          p <- p + ggplot2::ylab(y.nm.case)
-        }
 
         p <- p + ggplot2::theme_bw() +
                  ggplot2::ggtitle("R Application Downloads") +
@@ -2420,16 +2413,16 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         
         if (points) p <- p + ggplot2::geom_point()
         
-        if (log.y) {
-          p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", y.nm.case))
-        } else {
-          p <- p + ggplot2::ylab(y.nm.case)
-        }
-        
         if (!multi.plot) {
           p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
+      }
+
+      if (log.y) {
+        p <- p + ggplot2::scale_y_log10() + 
+          ggplot2::ylab(paste("log10", y.nm.case))
+      } else {
+        p <- p + ggplot2::ylab(y.nm.case)
       }
 
       if (smooth) {
