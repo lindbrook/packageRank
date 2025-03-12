@@ -1,31 +1,16 @@
-### packageRank 0.9.4.9005
+### packageRank 0.9.5
 
-- fix rPlot() for log.y = TRUE and graphics = "ggplot2".
-
-
-### packageRank 0.9.4.9004
+#### Function Changes
 
 - set annualDownloads() internal.
-
-
-### packageRank 0.9.4.9003
-
-- fix unmatched seq.start and seq.stop in removeSequences().
-
-
-### packageRank 0.9.4.9002
-
-- fix plot.cranDownloads(unit.observation = "year"); add inProgressEstimate().
-
-
-### packageRank 0.9.4.9001
-
 - show day of week in print.cranDistribution().
-
-
-### packageRank 0.9.4.9000
-
 - prioritize packageCRAN() over 'pkgsearch' results in packageHistory().
+
+#### Fixes
+
+- fix rPlot() for log.y = TRUE and graphics = "ggplot2".
+- fix unmatched seq.start and seq.stop in removeSequences().
+- fix plot.cranDownloads(unit.observation = "year").
 
 
 ### packageRank 0.9.4

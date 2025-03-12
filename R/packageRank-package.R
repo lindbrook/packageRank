@@ -5,13 +5,13 @@
 #'
 #' \itemize{
 #' \item Download counts via cranDownloads().
-#' \item Percentiles ranks  of download counts via packageRank() and packageLog().
+#' \item Percentile ranks of download counts via packageRank() and packageLog().
 #' \item Download count inflation filters.
 #' \item Availability of results via logInfo().
 #' \item Reverse lookup of counts, ranks and percentile ranks.
-#' \item Data fixes for early logs and a later instance of double/triple counting of R application downloads.
+#' \item Data fixes for logs and 'cranlogs' R package.
 #' \item Note Sunday and Wednesday spikes in Windows R Application Nov 2022 - Mar 2023.
-#' \item Country code top-level domains, memoization and internet connection timeout problem.
+#' \item Discuss country code top-level domains, memoization and internet connection timeout problem.
 #' }
 "_PACKAGE"
 
