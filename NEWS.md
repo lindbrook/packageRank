@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9001
+
+- fix rle() duplicates in removeSequences().
+
+
 ### packageRank 0.9.5.9000
 
 - set sequenceFilter(delta.time = 240).
