@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9000
+
+- set sequenceFilter(delta.time = 240).
+
+
 ### packageRank 0.9.5
 
 #### Function Changes
