@@ -22,10 +22,10 @@ sequenceFilter <- function(dat, p, ymd, delta.time = 240) {
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param dat Object.
 #' @param arch.pkg.history Object.
-#' @param delta.time Numeric. Time between package downloads (seconds).
+#' @param delta.time Numeric. Time between first and last package download (seconds).
 #' @noRd
 
-removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
+removeSequences <- function(dat, arch.pkg.history, delta.time) {
   pkg.history <- arch.pkg.history
   history.obs <- nrow(pkg.history)
   
@@ -50,6 +50,8 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
       
       # single instance sequences
       candidates <- rle.data[rle.data$length == 1, ]
+      candidates <- candidates[!duplicated(candidates$ver), ]
+
       seq.start <- which(candidates$ver == pkg.history$Version[1])
       seq.stop <- which(candidates$ver == pkg.history$Version[history.obs])
       
@@ -76,7 +78,6 @@ removeSequences <- function(dat, arch.pkg.history, delta.time = 10) {
               units = "sec")
             if (time.range.delta < time.window) obs.chk
           }))
-        
           obs.exclude <- row.names(dat[rle.exclude, ])
         }
       } 
