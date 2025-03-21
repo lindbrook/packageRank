@@ -7,10 +7,10 @@
 #' @param delta.time Numeric. Time between package downloads (seconds).
 #' @noRd
 
-sequenceFilter <- function(dat, packages, ymd, delta.time = 10) {
+sequenceFilter <- function(dat, p, ymd, delta.time = 240) {
   obs.versions <- unique(dat$version)
   if (length(obs.versions) > 1) {
-    history <- packageHistory(packages, check.package = FALSE)
+    history <- packageHistory(p, check.package = FALSE)
     sel <- history$Date <= ymd & history$Repository == "Archive"
     arch.pkg.history <- history[sel, ]
     removeSequences(dat, arch.pkg.history, delta.time = delta.time)
