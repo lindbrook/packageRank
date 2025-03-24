@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9002
+
+- re-enable/set packageLog(multi.core = FALSE).
+
+
 ### packageRank 0.9.5.9001
 
 - fix rle() duplicates in removeSequences().
