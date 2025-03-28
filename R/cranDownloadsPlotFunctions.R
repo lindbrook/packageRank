@@ -5,7 +5,7 @@
 # Plot functions for plot.cranDownloads() #
 
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
-  se, f, span, r.version, unit.observation) {
+  se, f, span, r.version, unit.observation, chatgpt, chatgpt.release) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -208,6 +208,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
 
       if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
+
+      if (chatgpt) {
+        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+          padj = 0.9, col.axis = "blue", col.ticks = "blue")
+      }
       
       title(main = "Total Package Downloads")
 
@@ -446,7 +451,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   se, f, span, log.y, package.version, dev.mode, r.version, same.xy,
-  unit.observation) {
+  unit.observation, chatgpt, chatgpt.release) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -801,6 +806,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
       }
 
+      if (chatgpt) {
+        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+          padj = 0.9, col.axis = "blue", col.ticks = "blue")
+      }
+
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
     }
 
@@ -1091,7 +1101,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span,
-  unit.observation) {
+  unit.observation, chatgpt, chatgpt.release) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -1454,6 +1464,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           }
         }
       }
+      if (chatgpt) {
+        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+          padj = 0.9, col.axis = "blue", col.ticks = "blue")
+      }
     }
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
@@ -1739,7 +1753,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-  multi.plot, unit.observation) {
+  multi.plot, unit.observation, chatgpt, chatgpt.release) {
 
   dat <- x$cranlogs.data
   y.nm <- statistic
@@ -2115,6 +2129,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           cex.axis = 2/3, padj = 0.9)
       }
 
+      if (chatgpt) {
+        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+          padj = 0.9, col.axis = "blue", col.ticks = "blue")
+      }
+
       title(main = "R Application Downloads")
 
     } else if (graphics == "ggplot2") {
@@ -2457,7 +2476,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 }
 
 rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
-  log.y, smooth, se, r.version, f, span, unit.observation) {
+  log.y, smooth, se, r.version, f, span, unit.observation, chatgpt, 
+  chatgpt.release) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -2699,6 +2719,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         r_v <- rversions::r_versions()
         axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
           cex.axis = 2/3, padj = 0.9)
+      }
+
+      if (chatgpt) {
+        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+          padj = 0.9, col.axis = "blue", col.ticks = "blue")
       }
 
       title(main = "Total R Application Downloads")

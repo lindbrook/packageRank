@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9003
+
+- add/set plot.cranDownloads(chatgpt = FALSE) for graphics = "base".
+
+
 ### packageRank 0.9.5.9002
 
 - re-enable/set packageLog(multi.core = FALSE).
