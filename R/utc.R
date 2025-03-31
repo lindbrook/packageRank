@@ -3,7 +3,7 @@
 #' @export
 
 utc <- function() {
-  as.POSIXlt(as.numeric(Sys.time()), origin = "1970-01-01", tz = "GMT")
+  as.POSIXlt(as.numeric(Sys.time()), origin = "1970-01-01", tz = "UTC")
 }
 
 #' Compute Coordinated Universal Time (UTC/GMT) for Specified Local Time.
@@ -19,7 +19,7 @@ utc0 <- function(date = "2020-01-01", time = "12:00:00", tz = "Europe/Vienna") {
     stop('Invalid date or format "yyyy-mm-dd".', call. = FALSE)
   }
   x <- dateTime(date = local.date, time = time, tz = tz)
-  as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = "GMT")
+  as.POSIXlt(as.numeric(x), origin = "1970-01-01", tz = "UTC")
 }
 
 #' Compute Current Time in Selected Time Zone.

@@ -55,7 +55,7 @@ available_log <- function(local.date, tz, upload.time, warning.msg) {
 
   current.date_time <- Sys.time()
   current.utc <- as.POSIXlt(as.numeric(current.date_time),
-    origin = "1970-01-01", tz = "GMT")
+    origin = "1970-01-01", tz = "UTC")
 
   delta.days <- difftime(current.utc, effective.utc, units = "days")
 

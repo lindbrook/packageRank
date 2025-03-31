@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9005
+
+- replace "GMT" with "UTC".
+
+
 ### packageRank 0.9.5.9004
 
 - add exception in packageLog() for packages that don't survive ipFilter().
