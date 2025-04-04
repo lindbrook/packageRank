@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9009
+
+- compute date-time for packages before use of sequenceFilter().
+
+
 ### packageRank 0.9.5.9008
 
 - use fasttime::fastPOSIXct() in dateTime().
