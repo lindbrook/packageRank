@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9007
+ 
+ - replace as.POSIXlt() with as.POSIXct() in utc.R functions.
+
+
 ### packageRank 0.9.5.9006
 
 - make rLog() internal.
