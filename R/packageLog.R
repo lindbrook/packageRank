@@ -56,9 +56,11 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     pkg.data <- cran_log[cran_log$package == p, ]
     if (nrow(pkg.data) != 0) {
       if (small.filter) pkg.data <- smallFilter(pkg.data)
-      if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
-      if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
+
       pkg.data$date.time <- dateTime(pkg.data$date, pkg.data$time)
+      if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
+      
+      if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
       pkg.data <- pkg.data[order(pkg.data$date.time), ]
       pkg.data$date.time <- NULL
     }

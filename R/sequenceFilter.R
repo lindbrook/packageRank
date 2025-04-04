@@ -36,7 +36,6 @@ removeSequences <- function(dat, arch.pkg.history, delta.time) {
 
     if (version.seq) {
       version.id <- seq_along(pkg.history$Version)
-      dat$date.time <- dateTime(dat$date, dat$time)
       dat <- dat[order(dat$date.time), ]
       
       runs <- rle(dat$version)
@@ -71,7 +70,6 @@ removeSequences <- function(dat, arch.pkg.history, delta.time) {
             start.stop <- rle.data[seq.tmp.obs, ]
             obs.chk <- unique(unlist(start.stop[, c("start", "stop")]))
             tmp <- dat[obs.chk, ]
-            tmp$date.time <- dateTime(tmp$date, tmp$time)
             time.range <- range(tmp$date.time)
             time.window <- delta.time * nrow(tmp)
             time.range.delta <- difftime(time.range[2], time.range[1],
@@ -92,7 +90,6 @@ removeSequences <- function(dat, arch.pkg.history, delta.time) {
         candidate <- candidate[candidate$version %in% pkg.history$Version, ]
         all.archive.vers <- all(pkg.history$Version %in% candidate$version)
         
-        candidate$date.time <- dateTime(candidate$date, candidate$time)
         candidate <- candidate[order(candidate$date.time), ]
         
         seq.start <- candidate[candidate$version == first.pkg.version, ]
