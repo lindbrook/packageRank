@@ -2,7 +2,7 @@
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses last available log.
-#' @export
+#' @noRd
 
 rLog <- function(date = NULL) {
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)

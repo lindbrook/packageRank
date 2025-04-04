@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9006
+
+- make rLog() internal.
+
+
 ### packageRank 0.9.5.9005
 
 - replace "GMT" with "UTC".
