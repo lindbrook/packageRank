@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9008
+
+- use fasttime::fastPOSIXct() in dateTime().
+
+
 ### packageRank 0.9.5.9007
  
  - replace as.POSIXlt() with as.POSIXct() in utc.R functions.

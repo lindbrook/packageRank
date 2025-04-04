@@ -7,5 +7,5 @@
 #' @noRd
 
 dateTime <- function(date = "2021-01-01", time = "09:00", tz = "UTC") {
-  as.POSIXct(paste(date, time), tz = tz)
+  fasttime::fastPOSIXct(paste(date, time), tz = tz)
 }
