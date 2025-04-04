@@ -21,7 +21,7 @@ cranDownloadsA <- function(packages = NULL, when = NULL, from = NULL,
   
   utc.date.time <- utc()
   utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
-  upload.utc <- dateTime(utc.date, time = "17:00", tz = "UTC")
+  upload.utc <- dateTime(utc.date, "17:00")
   today.log <- as.Date(format(upload.utc, "%Y-%m-%d")) - 1
   clogs <- try(cranlogs::cran_downloads(from = today.log, to = today.log),
     silent = TRUE)

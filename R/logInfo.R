@@ -13,7 +13,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   utc.date.time <- utc()
   utc.date <- as.Date(format(utc.date.time, "%Y-%m-%d"))
 
-  upload.utc <- dateTime(utc.date, time = upload.time, tz = "UTC")
+  upload.utc <- dateTime(utc.date, upload.time, tz = "UTC")
   upload.date <- as.Date(format(upload.utc, "%Y-%m-%d"))
  
   today.log <- utc.date - 1
