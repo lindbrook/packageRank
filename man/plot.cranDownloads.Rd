@@ -32,9 +32,9 @@
 
 \item{span}{Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).}
 
-\item{package.version}{Logical. Add latest package release dates.}
+\item{package.version}{Logical or "line". Add package release dates and vertical lines.}
 
-\item{r.version}{Logical. Add R release dates.}
+\item{r.version}{Logical or "line". Add R release dates and vertical lines.}
 
 \item{population.plot}{Logical. Plot population plot.}
 

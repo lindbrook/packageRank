@@ -55,8 +55,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param se Logical. Works only with graphics = "ggplot2".
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
-#' @param package.version Logical. Add latest package release dates.
-#' @param r.version Logical. Add R release dates.
+#' @param package.version Logical or "line". Add package release dates and vertical lines.
+#' @param r.version Logical or "line". Add R release dates and vertical lines.
 #' @param population.plot Logical. Plot population plot.
 #' @param population.seed Numeric. Seed for sample in population plot.
 #' @param multi.plot Logical.
@@ -133,7 +133,13 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (!graphics %in% c("base", "ggplot2")) {
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
-
+  if (!is.logical(package.version) & !package.version == "line") {
+    stop('package.version must be TRUE/FALSE or "line".', call. = FALSE)
+  }
+  if (is.logical(r.version) & r.version == "line") {
+    stop('r.version must be TRUE/FALSE or "line".', call. = FALSE)
+  }
+  
   if (unit.observation %in% c("week", "month", "year")) {
     if (is.null(x$packages)) {
       x$first.obs.date <- x$cranlogs.data[1, "date"]
