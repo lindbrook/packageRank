@@ -228,10 +228,12 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
       }
 
-      if (r.version) {
+      if (isTRUE(r.version) | r.version == "line") {
         r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
+        r_date <- as.Date(r_v$date)
+        axis(3, at = r_date, labels = paste("R", r_v$version), cex.axis = 2/3,
+          padj = 0.9)
+        if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
       if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
@@ -587,17 +589,28 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
             col.ticks = "red")
 
-          if (package.version) {
-            if (dev.mode) p_v <- packageHistory0(est.data$package)
-            else p_v <- packageHistory(est.data$package, check.package = FALSE)
+          if (isTRUE(package.version) | package.version == "line") {
+            if (dev.mode) {
+              p_v <- packageHistory0(current.wk.est$package)
+            } else {
+              p_v <- packageHistory(current.wk.est$package,
+                check.package = FALSE)
+            }
+            
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
+            
+            if (package.version == "line") {
+              abline(v = p_v$Date, col = "red", lty = "dotted")
+            }        
           }
 
-          if (r.version) {
+          if (isTRUE(r.version) | r.version == "line") {
             r_v <- rversions::r_versions()
-            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+            r_date <- as.Date(r_v$date)
+            axis(3, at = r_date, labels = paste("R", r_v$version), 
               cex.axis = 2/3, padj = 0.9)
+            if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
           if (smooth) {
@@ -755,18 +768,28 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               col.axis = "red", col.ticks = "red")
           }
 
-          if (package.version) {
-            if (dev.mode) p_v <- packageHistory0(current.wk.est$package)
-            else p_v <- packageHistory(current.wk.est$package, 
-              check.package = FALSE)
+          if (isTRUE(package.version) | package.version == "line") {
+            if (dev.mode) {
+              p_v <- packageHistory0(current.wk.est$package)
+            } else {
+              p_v <- packageHistory(current.wk.est$package,
+                check.package = FALSE)
+            }
+            
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
+            
+            if (package.version == "line") {
+              abline(v = p_v$Date, col = "red", lty = "dotted")
+            }        
           }
 
-          if (r.version) {
+          if (isTRUE(r.version) | r.version == "line") {
             r_v <- rversions::r_versions()
-            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+            r_date <- as.Date(r_v$date)
+            axis(3, at = r_date, labels = paste("R", r_v$version), 
               cex.axis = 2/3, padj = 0.9)
+            if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
           if (smooth) {
@@ -829,17 +852,28 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             }
           }
 
-          if (package.version) {
-            if (dev.mode) p_v <- packageHistory0(pkg)
-            else p_v <- packageHistory(pkg, check.package = FALSE)
+          if (isTRUE(package.version) | package.version == "line") {
+            if (dev.mode) {
+              p_v <- packageHistory0(current.wk.est$package)
+            } else {
+              p_v <- packageHistory(current.wk.est$package,
+                check.package = FALSE)
+            }
+            
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
+            
+            if (package.version == "line") {
+              abline(v = p_v$Date, col = "red", lty = "dotted")
+            }        
           }
 
-          if (r.version) {
+          if (isTRUE(r.version) | r.version == "line") {
             r_v <- rversions::r_versions()
-            axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+            r_date <- as.Date(r_v$date)
+            axis(3, at = r_date, labels = paste("R", r_v$version), 
               cex.axis = 2/3, padj = 0.9)
+            if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
           if (smooth) {
@@ -2241,10 +2275,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           wk1.backdate)
       }
 
-      if (r.version) {
+      if (isTRUE(r.version) | r.version == "line") {
         r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
+        r_date <- as.Date(r_v$date)
+        axis(3, at = r_date, labels = paste("R", r_v$version), 
           cex.axis = 2/3, padj = 0.9)
+        if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
       if (chatgpt) {
@@ -2860,10 +2896,12 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         addRTotPlotSmoother(dat, complete, f, span, statistic, wk1.backdate)
       }
 
-      if (r.version) {
+      if (isTRUE(r.version) | r.version == "line") {
         r_v <- rversions::r_versions()
-        axis(3, at = as.Date(r_v$date), labels = paste("R", r_v$version),
-          cex.axis = 2/3, padj = 0.9)
+        r_date <- as.Date(r_v$date)
+        axis(3, at = r_date, labels = paste("R", r_v$version), cex.axis = 2/3,
+          padj = 0.9)
+        if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
       if (chatgpt) {

@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9012
+
+- allow package.version = "line" and r.version = "line" in plot.cranDownloads().
+
+
 ### packageRank 0.9.5.9011
 
 - set legend(bg = NULL) in plot.cranDownloads() functions.
