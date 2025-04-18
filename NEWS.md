@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9011
+
+- set legend(bg = NULL) in plot.cranDownloads() functions.
+
+
 ### packageRank 0.9.5.9010
 
 - add/set plot.cranDownloads(show.weekend = FALSE).
