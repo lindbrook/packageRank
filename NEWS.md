@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9010
+
+- add/set plot.cranDownloads(show.weekend = FALSE).
+
+
 ### packageRank 0.9.5.9009
 
 - compute date-time for packages before use of sequenceFilter().
