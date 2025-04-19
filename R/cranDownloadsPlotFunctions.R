@@ -590,13 +590,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             col.ticks = "red")
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) {
-              p_v <- packageHistory0(current.wk.est$package)
-            } else {
-              p_v <- packageHistory(current.wk.est$package,
-                check.package = FALSE)
-            }
-            
+            if (dev.mode) p_v <- packageHistory0(x$package[i])
+            else p_v <- packageHistory(x$package[i], check.package = FALSE)
+                                
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
             
@@ -769,13 +765,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) {
-              p_v <- packageHistory0(current.wk.est$package)
-            } else {
-              p_v <- packageHistory(current.wk.est$package,
-                check.package = FALSE)
-            }
-            
+            if (dev.mode) p_v <- packageHistory0(x$package[i])
+            else p_v <- packageHistory(x$package[i], check.package = FALSE)
+                        
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
             
@@ -853,12 +845,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) {
-              p_v <- packageHistory0(current.wk.est$package)
-            } else {
-              p_v <- packageHistory(current.wk.est$package,
-                check.package = FALSE)
-            }
+            if (dev.mode) p_v <- packageHistory0(pkg)
+            else p_v <- packageHistory(pkg, check.package = FALSE)
             
             axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
               padj = 0.9, col.axis = "red", col.ticks = "red")
