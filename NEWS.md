@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9013
+
+- fix packageHistory() with multiple packages in singlePlot().
+
+
 ### packageRank 0.9.5.9012
 
 - allow package.version = "line" and r.version = "line" in plot.cranDownloads().
