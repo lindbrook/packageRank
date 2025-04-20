@@ -2245,16 +2245,18 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                  pch = rep(16, 8),
                  bg = NULL,
                  cex = 2/3,
-                 title = "Platform",
-                 lwd = 1)
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
         } else {
           legend(x = legend.location,
                  legend = c("win", "mac", "src"),
                  col = c("black", "red", "dodgerblue"),
                  bg = NULL,
                  cex = 2/3,
-                 title = "Platform",
-                 lwd = 1)
+                 title = NULL,
+                 lwd = 1,
+                 bty = "n")
         }
       }
 

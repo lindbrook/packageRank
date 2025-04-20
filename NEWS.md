@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9014
+
+- remove legend box and title for rPlot(unit.observation = "day").
+
+
 ### packageRank 0.9.5.9013
 
 - fix packageHistory() with multiple packages in singlePlot().
