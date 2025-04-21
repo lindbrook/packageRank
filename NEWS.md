@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9015
+
+- allow chatgpt = "line" in plot.cranDownloads().
+
+
 ### packageRank 0.9.5.9014
 
 - remove legend box and title for rPlot(unit.observation = "day").

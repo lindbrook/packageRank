@@ -238,9 +238,12 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
       if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
 
-      if (chatgpt) {
+      if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
+        if (chatgpt == "line") {
+          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+        }
       }
       
       title(main = "Total Package Downloads")
@@ -881,9 +884,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
       }
 
-      if (chatgpt) {
+      if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
+        if (chatgpt == "line") {
+          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+        }
       }
 
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
@@ -1567,9 +1573,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           }
         }
       }
-      if (chatgpt) {
+      
+      if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
+        if (chatgpt == "line") {
+          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+        }
       }
     }
   } else if (graphics == "ggplot2") {
@@ -2273,9 +2283,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
-      if (chatgpt) {
+      if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
+        if (chatgpt == "line") {
+          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+        }
       }
 
       title(main = "R Application Downloads")
@@ -2894,9 +2907,12 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
-      if (chatgpt) {
+      if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
+        if (chatgpt == "line") {
+          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+        }
       }
 
       title(main = "Total R Application Downloads")

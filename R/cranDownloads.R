@@ -66,7 +66,7 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param unit.observation Character. "year", "month", "week", or "day".
-#' @param chatgpt Logical. Show intitial availabbility date of ChatGPT.
+#' @param chatgpt Logical or "line". Add intitial availability date and vertical line for ChatGPT.
 #' @param show.weekend Logical. Highlight weekends with unit.observation = "day".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param ... Additional plotting parameters.
@@ -133,11 +133,14 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (!graphics %in% c("base", "ggplot2")) {
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
-  if (!is.logical(package.version) & !package.version == "line") {
+  if (!is.logical(package.version) & package.version != "line") {
     stop('package.version must be TRUE/FALSE or "line".', call. = FALSE)
   }
-  if (is.logical(r.version) & r.version == "line") {
+  if (!is.logical(r.version) & r.version != "line") {
     stop('r.version must be TRUE/FALSE or "line".', call. = FALSE)
+  }
+  if (!is.logical(chatgpt) & chatgpt != "line") {
+    stop('chatgpt must be TRUE/FALSE or "line".', call. = FALSE)
   }
   
   if (unit.observation %in% c("week", "month", "year")) {
