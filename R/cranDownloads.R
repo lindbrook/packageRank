@@ -133,10 +133,10 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   if (!graphics %in% c("base", "ggplot2")) {
     stop('graphics must be "base" or "ggplot2"', call. = FALSE)
   }
-  if (!is.logical(package.version) & !package.version == "line") {
+  if (!is.logical(package.version) & package.version != "line") {
     stop('package.version must be TRUE/FALSE or "line".', call. = FALSE)
   }
-  if (is.logical(r.version) & r.version == "line") {
+  if (!is.logical(r.version) & r.version != "line") {
     stop('r.version must be TRUE/FALSE or "line".', call. = FALSE)
   }
   
