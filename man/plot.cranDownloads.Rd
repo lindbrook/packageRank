@@ -54,7 +54,7 @@
 
 \item{unit.observation}{Character. "year", "month", "week", or "day".}
 
-\item{chatgpt}{Logical. Show intitial availabbility date of ChatGPT.}
+\item{chatgpt}{Logical or "line". Add intitial availability date and vertical line for ChatGPT.}
 
 \item{show.weekend}{Logical. Highlight weekends with unit.observation = "day".}
 
