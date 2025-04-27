@@ -6,7 +6,7 @@
 
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   se, f, span, r.version, unit.observation, chatgpt, chatgpt.release, 
-  show.weekend) {
+  weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -193,11 +193,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             col.ticks = "red")
         }
       } else {
-        weekend <- weekdays(dat$date) %in% c("Saturday", "Sunday")
+        wknd <- weekdays(dat$date) %in% c("Saturday", "Sunday")
       
-        if (any(weekend)) {
-          wk.end <- dat[weekend, ]
-          wk.day <- dat[!weekend, ]
+        if (any(wknd)) {
+          wk.end <- dat[wknd, ]
+          wk.day <- dat[!wknd, ]
         }
     
         if (log.y) {
@@ -210,10 +210,10 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (type == "o") {
           points(wk.day$date, wk.day[, y.nm], pch = 16)
-          if (!show.weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
+          if (!weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
         }
 
-        if (show.weekend) {
+        if (weekend) {
           if (!is.null(x$when)) {
             if (x$when %in% c("last-week", "last-month")) {
               points(wk.end$date, wk.end[, y.nm], pch = 1)
@@ -483,7 +483,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   se, f, span, log.y, package.version, dev.mode, r.version, same.xy,
-  unit.observation, chatgpt, chatgpt.release, show.weekend) {
+  unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -812,11 +812,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           pkg.dat <- dat[dat$package == pkg, ]
           type <- ifelse(points, "o", "l")
 
-          weekend <- weekdays(pkg.dat$date) %in% c("Saturday", "Sunday")
+          wknd <- weekdays(pkg.dat$date) %in% c("Saturday", "Sunday")
       
-          if (any(weekend)) {
-            wk.end <- pkg.dat[weekend, ]
-            wk.day <- pkg.dat[!weekend, ]
+          if (any(wknd)) {
+            wk.end <- pkg.dat[wknd, ]
+            wk.day <- pkg.dat[!wknd, ]
           }
 
           if (log.y) {
@@ -830,10 +830,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (type == "o") {
             points(wk.day$date, wk.day[, y.nm], pch = 16)
-            if (!show.weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
+            if (!weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
           }
 
-          if (show.weekend) {
+          if (weekend) {
             if (!is.null(x$when)) {
               if (x$when %in% c("last-week", "last-month")) {
                 points(wk.end$date, wk.end[, y.nm], pch = 1)
@@ -1182,7 +1182,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span,
-  unit.observation, chatgpt, chatgpt.release, show.weekend) {
+  unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -1501,23 +1501,23 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             tmp <- dat[dat$package == x$packages[i], ]
             lines(tmp$date, tmp[, statistic], col = cbPalette[i])
 
-            weekend <- weekdays(tmp$date) %in% c("Saturday", "Sunday")
+            wknd <- weekdays(tmp$date) %in% c("Saturday", "Sunday")
       
-            if (any(weekend)) {
-              wk.end <- tmp[weekend, ]
-              wk.day <- tmp[!weekend, ]
+            if (any(wknd)) {
+              wk.end <- tmp[wknd, ]
+              wk.day <- tmp[!wknd, ]
             }
 
             if (type == "o") {
               points(wk.day$date, wk.day[, statistic], col = cbPalette[i], 
                 pch = 16)
-              if (!show.weekend) {
+              if (!weekend) {
                 points(wk.end$date, wk.end[, statistic], col = cbPalette[i],
                   pch = 16)
               }
             }
 
-            if (show.weekend) {
+            if (weekend) {
               if (!is.null(x$when)) {
                 if (x$when %in% c("last-week", "last-month")) {
                   points(wk.end$date, wk.end[, statistic], col = cbPalette[i],
@@ -1866,7 +1866,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-  multi.plot, unit.observation, chatgpt, chatgpt.release, show.weekend) {
+  multi.plot, unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   y.nm <- statistic
@@ -2180,11 +2180,11 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                bty = "n")
 
       } else {
-        weekend <- weekdays(dat$date) %in% c("Saturday", "Sunday")
+        wknd <- weekdays(dat$date) %in% c("Saturday", "Sunday")
       
-        if (any(weekend)) {
-          wk.end <- dat[weekend, ]
-          wk.day <- dat[!weekend, ]
+        if (any(wknd)) {
+          wk.end <- dat[wknd, ]
+          wk.day <- dat[!wknd, ]
         }
 
         if (log.y) {
@@ -2214,7 +2214,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             points(wk.day[sel, "date"], wk.day[sel, statistic], 
               col = pltfrm.col[i], pch = 16)
           
-            if (!show.weekend) {
+            if (!weekend) {
               sel <- wk.end$platform == pltfrm[i]
               points(wk.end[sel, "date"], wk.end[sel, statistic], 
                 col = pltfrm.col[i], pch = 16)
@@ -2222,7 +2222,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           }))
         }
 
-        if (show.weekend) {
+        if (weekend) {
           if (!is.null(x$when)) {
             if (x$when %in% c("last-week", "last-month")) {
               invisible(lapply(seq_along(pltfrm), function(i) {
@@ -2634,7 +2634,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
 rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
   log.y, smooth, se, r.version, f, span, unit.observation, chatgpt, 
-  chatgpt.release, show.weekend) {
+  chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -2860,11 +2860,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             col.axis = "red", col.ticks = "red")
         }
       } else {
-        weekend <- weekdays(dat$date) %in% c("Saturday", "Sunday")
+        wknd <- weekdays(dat$date) %in% c("Saturday", "Sunday")
       
-        if (any(weekend)) {
-          wk.end <- dat[weekend, ]
-          wk.day <- dat[!weekend, ]
+        if (any(wknd)) {
+          wk.end <- dat[wknd, ]
+          wk.day <- dat[!wknd, ]
         }
 
         if (log.y) {
@@ -2877,10 +2877,10 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
         if (type == "o") {
           points(wk.day$date, wk.day[, statistic], pch = 16)
-          if (!show.weekend) points(wk.end$date, wk.end[, statistic], pch = 16)
+          if (!weekend) points(wk.end$date, wk.end[, statistic], pch = 16)
         }
 
-        if (show.weekend) {
+        if (weekend) {
           if (!is.null(x$when)) {
             if (x$when %in% c("last-week", "last-month")) {
               points(wk.end$date, wk.end[, statistic], pch = 1)
