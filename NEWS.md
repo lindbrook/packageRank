@@ -1,3 +1,8 @@
+### packageRank 0.9.5.9016
+
+- rename argument 'show.weekend' to 'weekend' in plot.cranDownloads().
+
+
 ### packageRank 0.9.5.9015
 
 - allow chatgpt = "line" in plot.cranDownloads().

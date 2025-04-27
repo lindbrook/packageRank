@@ -10,7 +10,7 @@
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
   ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
-  unit.observation = "day", chatgpt = FALSE, show.weekend = FALSE,
+  unit.observation = "day", chatgpt = FALSE, weekend = FALSE,
   multi.core = FALSE, ...)
 }
 \arguments{
@@ -56,7 +56,7 @@
 
 \item{chatgpt}{Logical or "line". Add intitial availability date and vertical line for ChatGPT.}
 
-\item{show.weekend}{Logical. Highlight weekends with unit.observation = "day".}
+\item{weekend}{Logical. Highlight weekends (pch = 1) when unit.observation = "day".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.}
 
