@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.5.9016-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.5.9017-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -810,7 +810,7 @@ The “medium” entry is the first observation (99,622 bytes). The full
 download is the second entry (4,161,948 bytes). The “small” entry is the
 last observation (536 bytes). At a minimum, what makes a triplet a
 triplet (or a pair a pair) is that all members share system
-configuration (e.g. IP address, etc.) and have identical or adjacent
+configuration (e.g. IP address, etc.) and have identical or adjacent
 time stamps.
 
 To deal with the inflationary effect of “small” entries, I filter out

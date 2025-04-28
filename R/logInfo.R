@@ -17,7 +17,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   upload.date <- as.Date(format(upload.utc, "%Y-%m-%d"))
  
   today.log <- utc.date - 1
-  today.upload <- fasttime::fastPOSIXct(upload.utc, tz = tz)
+  today.upload <- as.POSIXlt(upload.utc, tz = tz)
   
   year <- format(today.log, "%Y")
   rstudio.url <- "http://cran-logs.rstudio.com/"
