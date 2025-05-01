@@ -1,91 +1,30 @@
-### packageRank 0.9.5.9017
+### packageRank 0.9.6
 
-- restore as.POSIXlt() in logInfo().
-
-
-### packageRank 0.9.5.9016
+#### Function Changes
 
 - rename argument 'show.weekend' to 'weekend' in plot.cranDownloads().
+- use fasttime::fastPOSIXct() in dateTime().
+- replace as.POSIXlt() with as.POSIXct() in utc.R functions.
+- make rLog() internal.
+- replace "GMT" with "UTC".
+- re-enable/set packageLog(multi.core = FALSE).
+- set sequenceFilter(delta.time = 240).
 
-
-### packageRank 0.9.5.9015
-
-- allow chatgpt = "line" in plot.cranDownloads().
-
-
-### packageRank 0.9.5.9014
+#### Graphic/Plot Changes (base graphics)
 
 - remove legend box and title for rPlot(unit.observation = "day").
+- set legend(bg = NULL) in plot.cranDownloads() functions.
+- allow package.version = "line" and r.version = "line" in plot.cranDownloads().
+- add/set plot.cranDownloads(chatgpt = FALSE) for graphics = "base".
+- allow chatgpt = "line" in plot.cranDownloads().
+- add/set plot.cranDownloads(weekend = FALSE).
 
-
-### packageRank 0.9.5.9013
+#### Fixes
 
 - fix packageHistory() with multiple packages in singlePlot().
-
-
-### packageRank 0.9.5.9012
-
-- allow package.version = "line" and r.version = "line" in plot.cranDownloads().
-
-
-### packageRank 0.9.5.9011
-
-- set legend(bg = NULL) in plot.cranDownloads() functions.
-
-
-### packageRank 0.9.5.9010
-
-- add/set plot.cranDownloads(show.weekend = FALSE).
-
-
-### packageRank 0.9.5.9009
-
 - compute date-time for packages before use of sequenceFilter().
-
-
-### packageRank 0.9.5.9008
-
-- use fasttime::fastPOSIXct() in dateTime().
-
-
-### packageRank 0.9.5.9007
- 
- - replace as.POSIXlt() with as.POSIXct() in utc.R functions.
-
-
-### packageRank 0.9.5.9006
-
-- make rLog() internal.
-
-
-### packageRank 0.9.5.9005
-
-- replace "GMT" with "UTC".
-
-
-### packageRank 0.9.5.9004
-
 - add exception in packageLog() for packages that don't survive ipFilter().
-
-
-### packageRank 0.9.5.9003
-
-- add/set plot.cranDownloads(chatgpt = FALSE) for graphics = "base".
-
-
-### packageRank 0.9.5.9002
-
-- re-enable/set packageLog(multi.core = FALSE).
-
-
-### packageRank 0.9.5.9001
-
 - fix rle() duplicates in removeSequences().
-
-
-### packageRank 0.9.5.9000
-
-- set sequenceFilter(delta.time = 240).
 
 
 ### packageRank 0.9.5
