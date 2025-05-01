@@ -320,20 +320,42 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   span = 0.33)
 ```
 
-#### package and R release dates
+#### package, R and ChatGPT release dates (base graphics)
 
-To annotate a graph with a package's release dates (base graphics only):
+To annotate a graph with a package's release dates:
 
 ```{r pkg_release_date}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
-  package.version = TRUE)
+  package.version = TRUE, unit.observation = "week")
 ```
 
 To annotate a graph with R release dates:
 
 ```{r r_release_date}
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
-  r.version = TRUE)
+  r.version = TRUE, unit.observation = "week")
+```
+
+To annotate a graph with ChatGPT release date, 2022-11-30:
+
+```{r chatgpt_release_date}
+plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
+  chatgpt = TRUE, r.total = TRUE, unit.observation = "week")
+```
+
+If you pass "line" to the package.version, r.version or chatgpt argument, a vertical line will be drawn on the plot:
+
+```{r vertical_date_line}
+plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+  package.version = "line", unit.observation = "week")
+```
+
+#### weekends (base graphics)
+
+With unit.observation = "day", you can highlight weekends with an empty circle by setting weekend = TRUE:
+
+```{r r_weekend}
+plot(cranDownloads(packages = "rstan", from = "2024-06", to = "2024-06"), weekend = TRUE)
 ```
 
 #### plot growth curves (cumulative download counts)

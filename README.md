@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.5.9017-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -421,13 +421,13 @@ plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
   span = 0.33)
 ```
 
-#### package and R release dates
+#### package, R and ChatGPT release dates (base graphics)
 
-To annotate a graph with a package’s release dates (base graphics only):
+To annotate a graph with a package’s release dates:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
-  package.version = TRUE)
+  package.version = TRUE, unit.observation = "week")
 ```
 
 ![](man/figures/README-pkg_release_date-1.png)<!-- -->
@@ -436,10 +436,40 @@ To annotate a graph with R release dates:
 
 ``` r
 plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
-  r.version = TRUE)
+  r.version = TRUE, unit.observation = "week")
 ```
 
 ![](man/figures/README-r_release_date-1.png)<!-- -->
+
+To annotate a graph with ChatGPT release date, 2022-11-30:
+
+``` r
+plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
+  chatgpt = TRUE, r.total = TRUE, unit.observation = "week")
+```
+
+![](man/figures/README-chatgpt_release_date-1.png)<!-- -->
+
+If you pass “line” to the package.version, r.version or chatgpt
+argument, a vertical line will be drawn on the plot:
+
+``` r
+plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+  package.version = "line", unit.observation = "week")
+```
+
+![](man/figures/README-vertical_date_line-1.png)<!-- -->
+
+#### weekends (base graphics)
+
+With unit.observation = “day”, you can highlight weekends with an empty
+circle by setting weekend = TRUE:
+
+``` r
+plot(cranDownloads(packages = "rstan", from = "2024-06", to = "2024-06"), weekend = TRUE)
+```
+
+![](man/figures/README-r_weekend-1.png)<!-- -->
 
 #### plot growth curves (cumulative download counts)
 
@@ -810,7 +840,7 @@ The “medium” entry is the first observation (99,622 bytes). The full
 download is the second entry (4,161,948 bytes). The “small” entry is the
 last observation (536 bytes). At a minimum, what makes a triplet a
 triplet (or a pair a pair) is that all members share system
-configuration (e.g. IP address, etc.) and have identical or adjacent
+configuration (e.g. IP address, etc.) and have identical or adjacent
 time stamps.
 
 To deal with the inflationary effect of “small” entries, I filter out
