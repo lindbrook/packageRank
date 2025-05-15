@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9001
+
+- fix singlePlot() for plot.cranDownloads(chatgpt).
+
+
 ### packageRank 0.9.6.9000
 
 - use pkgsearch::cran_package_history()$`crandb_file_date` for 
