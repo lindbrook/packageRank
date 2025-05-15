@@ -612,6 +612,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
+          if (isTRUE(chatgpt) | chatgpt == "line") {
+            axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+              padj = 0.9, col.axis = "blue", col.ticks = "blue")
+            if (chatgpt == "line") {
+              abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+            }
+          }
+
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
@@ -787,6 +795,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
+          if (isTRUE(chatgpt) | chatgpt == "line") {
+            axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+              padj = 0.9, col.axis = "blue", col.ticks = "blue")
+            if (chatgpt == "line") {
+              abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+            }
+          }
+
           if (smooth) {
             addSinglePlotSmoother(x, complete, current.wk, f, span,
               wk1.backdate, y.nm)
@@ -867,6 +883,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
+          if (isTRUE(chatgpt) | chatgpt == "line") {
+            axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
+              padj = 0.9, col.axis = "blue", col.ticks = "blue")
+            if (chatgpt == "line") {
+              abline(v = chatgpt.release, col = "blue", lty = "dotted")  
+            }
+          }
+
           if (smooth) {
             if (nrow(pkg.dat) > 7) {
               smooth.data <- stats::loess(pkg.dat[, y.nm] ~
@@ -882,14 +906,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
           title(main = pkg)
         }))
-      }
-
-      if (isTRUE(chatgpt) | chatgpt == "line") {
-        axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
-          padj = 0.9, col.axis = "blue", col.ticks = "blue")
-        if (chatgpt == "line") {
-          abline(v = chatgpt.release, col = "blue", lty = "dotted")  
-        }
       }
 
       if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
