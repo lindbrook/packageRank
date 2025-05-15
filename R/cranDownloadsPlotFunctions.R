@@ -593,15 +593,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             col.ticks = "red")
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) p_v <- packageHistory0(x$package[i])
-            else p_v <- packageHistory(x$package[i], check.package = FALSE)
-                                
-            axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-              padj = 0.9, col.axis = "red", col.ticks = "red")
+            p_v <- pkgsearch::cran_package_history(x$package[i])
+            p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+            axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
             
             if (package.version == "line") {
-              abline(v = p_v$Date, col = "red", lty = "dotted")
-            }        
+              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+            }
           }
 
           if (isTRUE(r.version) | r.version == "line") {
@@ -768,15 +768,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) p_v <- packageHistory0(x$package[i])
-            else p_v <- packageHistory(x$package[i], check.package = FALSE)
-                        
-            axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-              padj = 0.9, col.axis = "red", col.ticks = "red")
-            
+            p_v <- pkgsearch::cran_package_history(x$package[i])
+            p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+            axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
+
             if (package.version == "line") {
-              abline(v = p_v$Date, col = "red", lty = "dotted")
-            }        
+              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+            } 
           }
 
           if (isTRUE(r.version) | r.version == "line") {
@@ -848,15 +848,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(package.version) | package.version == "line") {
-            if (dev.mode) p_v <- packageHistory0(pkg)
-            else p_v <- packageHistory(pkg, check.package = FALSE)
-            
-            axis(3, at = p_v$Date, labels = p_v$Version, cex.axis = 2/3,
-              padj = 0.9, col.axis = "red", col.ticks = "red")
-            
+            p_v <- pkgsearch::cran_package_history(pkg)
+            p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+            axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
+
             if (package.version == "line") {
-              abline(v = p_v$Date, col = "red", lty = "dotted")
-            }        
+              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+            }
           }
 
           if (isTRUE(r.version) | r.version == "line") {

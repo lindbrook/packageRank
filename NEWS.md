@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9000
+
+- use pkgsearch::cran_package_history()$`crandb_file_date` for 
+  plot.cranDownloads(package.version).
+
+
 ### packageRank 0.9.6
 
 #### Function Changes
