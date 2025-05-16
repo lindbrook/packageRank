@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9002
+
+- clean transform_pkgsearch() in packageHistory().
+
+
 ### packageRank 0.9.6.9001
 
 - fix singlePlot() for plot.cranDownloads(chatgpt).
