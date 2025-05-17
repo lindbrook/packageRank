@@ -94,18 +94,14 @@ transform_pkgsearch <- function(history) {
     if ("Repository" %in% colnames(x)) {
       tmp <- data.frame(x[, vars])
       row.names(tmp) <- NULL
-      splt <- strsplit(tmp$crandb_file_date, " ")
-      dts <- vapply(splt, function(x) x[1], character(1L))
-      tmp$Date <- as.Date(dts)
+      tmp$Date <- as.Date(tmp$crandb_file_date)
       tmp$crandb_file_date <- NULL
       if (nrow(tmp) > 1) tmp[-nrow(tmp), "Repository"] <- "Archive"
       tmp <- tmp[, vars0]
     } else {
       tmp <- data.frame(x[, vars[-length(vars)]])
       row.names(tmp) <- NULL
-      splt <- strsplit(tmp$crandb_file_date, " ")
-      dts <- vapply(splt, function(x) x[1], character(1L))
-      tmp$Date <- as.Date(dts)
+      tmp$Date <- as.Date(tmp$crandb_file_date)
       tmp$crandb_file_date <- NULL
       tmp$Repository <- "Archive"
     }
