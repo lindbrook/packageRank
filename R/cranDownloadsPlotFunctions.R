@@ -938,7 +938,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ggplot2::theme_bw() +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank()) +
-          ggplot2::facet_wrap(vars(.data$date))
+          ggplot2::facet_wrap(ggplot2::vars(.data$date))
 
     } else if (obs.ct > 1) {
       if (log.y) {
@@ -1627,7 +1627,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         ggplot2::theme_bw() +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                        panel.grid.minor = ggplot2::element_blank()) +
-        ggplot2::facet_wrap(vars(.data$date))
+        ggplot2::facet_wrap(ggplot2::vars(.data$date))
         
     } else if (obs.ct > 1) {
       if (log.y) {

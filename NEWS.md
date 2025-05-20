@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9004
+
+- specify package function with ggplot2::.
+
+
 ### packageRank 0.9.6.9003
 
 - archive annualDownloads().
