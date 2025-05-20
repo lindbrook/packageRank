@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9003
+
+- archive annualDownloads().
+
+
 ### packageRank 0.9.6.9002
 
 - clean transform_pkgsearch() in packageHistory().
