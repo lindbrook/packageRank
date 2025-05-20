@@ -1,7 +1,7 @@
 Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentile Ranks
-Version: 0.9.6.9004
+Version: 0.9.6.9005
 Date: 2025-05-20
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
@@ -25,6 +25,7 @@ Imports:
     ggplot2,
     ISOcodes,
     memoise,
+    patchwork,
     pkgsearch,
     R.utils,
     RCurl,

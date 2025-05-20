@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9005
+
+- add annualPlot() prototype.
+
+
 ### packageRank 0.9.6.9004
 
 - specify package function with ggplot2::.
