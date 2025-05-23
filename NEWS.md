@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9006
+
+- add/set annualPlot(pro.mode = FALSE, sunday.week = TRUE).
+- fix overflow weeks.
+
+
 ### packageRank 0.9.6.9005
 
 - add annualPlot() prototype.

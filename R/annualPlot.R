@@ -4,11 +4,13 @@
 #' @param from  Numeric or Integer Year.
 #' @param to Numeric or Integer Year.
 #' @param check.package Logical. Validate and "spell check" package.
+#' @param pro.mode Logical
+#' @param sunday.week Logical.TRUE: week starts on Sunday. FALSE: week starts on Monday.
 #' @export
 #' @note Adapted from Vesuvius plot at https://github.com/nrennie/tidytuesday/blob/main/2025/2025-05-13/20250513.R
 
 annualPlot <- function(package = "packageRank", from = 2019, to = 2024, 
-  check.package = TRUE) {
+  check.package = TRUE, pro.mode = FALSE, sunday.week = TRUE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
@@ -16,19 +18,51 @@ annualPlot <- function(package = "packageRank", from = 2019, to = 2024,
 
   if (!is.null(package)) {
     if (!"R" %in% package) {
-      if (check.package) {
-        package <- checkPackage(package)
-        title <- paste0("'", package, "' ", ttl)
-      }
+      if (check.package) package <- checkPackage(package)
+      title <- paste0("'", package, "' ", ttl)
     } else title <- paste("R", ttl)
   } else title <- paste("CRAN Package", ttl)
 
-  pkg.daily <- cranDownloads(package, from = from, to = to, pro.mode = TRUE)
+  if (pro.mode) {
+    pkg.daily <- cranDownloads(package, from = from, to = to, pro.mode = TRUE)
+  } else {
+    pkg.daily <- cranDownloads(package, from = from, to = to)
+  }
 
-  tmp <- pkg.daily$cranlogs.data
-  tmp$week <- as.numeric(format(tmp$date, format = "%V"))
-  tmp$year <- as.numeric(format(tmp$date, format = "%Y"))
-
+  dat <- pkg.daily$cranlogs.data
+  dat$cumulative <- NULL
+  dat$year <- as.numeric(format(dat$date, format = "%Y"))
+  
+  if (sunday.week) {
+    dat$week <- as.numeric(format(dat$date, format = "%U"))  
+  } else {
+    dat$week <- as.numeric(format(dat$date, format = "%W"))  
+  }
+  
+  obs.yr <- unique(dat$year)
+  
+  overflow <- lapply(obs.yr, function(yr) dat[dat$year == yr & dat$week == 0, ])
+  data.ok <- lapply(obs.yr, function(yr) dat[dat$year == yr & dat$week != 0, ])
+  
+  names(overflow) <- obs.yr
+  names(data.ok) <- obs.yr
+  
+  fix.yr <- obs.yr[-length(obs.yr)]
+  
+  overflow.data <- lapply(fix.yr, function(yr) {
+    tmp <- overflow[[paste(yr + 1)]]
+    if (nrow(tmp) > 0) {
+      tmp$year <- tmp$year - 1
+      tmp$week <- 52L
+      rbind(data.ok[[paste(yr)]], tmp)   
+    } else data.ok[[paste(yr)]]
+  })
+    
+  data.ok <- c(overflow.data, data.ok[length(data.ok)])
+  names(data.ok) <- obs.yr
+  
+  tmp <- do.call(rbind, data.ok)
+  
   week <- tapply(tmp$count, paste0(tmp$year, "-", tmp$week), sum)
   annual <- tapply(tmp$count, tmp$year, sum)
 
