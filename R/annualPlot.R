@@ -69,10 +69,6 @@ annualPlot <- function(package = "packageRank", from = 2019, to = 2024,
   week.med <- tapply(tmp$count, paste0(tmp$year, "-", tmp$week), stats::median)
   annual.med <- tapply(tmp$count, tmp$year, stats::median)
 
-  yr <- vapply(strsplit(names(week), "-"), function(x) {
-    as.integer(x[1])
-  }, integer(1L))
-
   yr.wk <- do.call(rbind, strsplit(names(week), "-"))
   yr.wk <- as.data.frame(yr.wk)
   yr.wk <- data.frame(year = as.numeric(yr.wk$V1), week = as.numeric(yr.wk$V2),
@@ -97,7 +93,7 @@ annualPlot <- function(package = "packageRank", from = 2019, to = 2024,
              fill = "transparent", 
              linewidth = 0.5) +
     ggplot2::scale_fill_distiller(palette = "YlOrBr", direction = 1) +
-    ggplot2::scale_y_reverse(breaks = c(1, 14, 27, 40),
+    ggplot2::scale_y_reverse(breaks = seq(from = 1, to = 52, by = 13),
                              labels = c("Jan", "Apr", "Jul", "Oct")) +
     ggplot2::facet_wrap(ggplot2::vars(.data$year), nrow = 1, 
       strip.position = "top") +
