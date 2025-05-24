@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9007
+
+- use seq() and clean code in annualPlot().
+
+
 ### packageRank 0.9.6.9006
 
 - add/set annualPlot(pro.mode = FALSE, sunday.week = TRUE).
