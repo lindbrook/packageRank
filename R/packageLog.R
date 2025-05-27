@@ -8,6 +8,7 @@
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
 #' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param version.filter Logical. TRUE selects only most recent version.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
@@ -16,8 +17,8 @@
 
 packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE, 
-  small.filter = FALSE, memoization = TRUE, check.package = TRUE,
-  multi.core = FALSE) {
+  small.filter = FALSE, version.filter = FALSE, memoization = TRUE, 
+  check.package = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)
@@ -48,6 +49,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     small.filter <- TRUE
     sequence.filter <- TRUE
     size.filter <- TRUE
+    version.filter <- TRUE
   }
   
   if (ip.filter) cran_log <- ipFilter(cran_log)
@@ -61,6 +63,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
       
       if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
+      if (version.filter) pkg.data <- versionFilter(pkg.data, p)
       pkg.data <- pkg.data[order(pkg.data$date.time), ]
       pkg.data$date.time <- NULL
     }
