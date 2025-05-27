@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9008
+
+- add/set packageLog(version.filter = FALSE).
+
+
 ### packageRank 0.9.6.9007
 
 - use seq() and clean code in annualPlot().
