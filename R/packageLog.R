@@ -52,7 +52,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     version.filter <- TRUE
   }
   
-  if (ip.filter) cran_log <- ipFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = FALSE)
   
   out <- parallel::mclapply(packages, function(p) {
     pkg.data <- cran_log[cran_log$package == p, ]
