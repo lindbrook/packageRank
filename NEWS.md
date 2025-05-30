@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9009
+
+- set ipFilter(multi.core = FALSE) in packageLog().
+
+
 ### packageRank 0.9.6.9008
 
 - add/set packageLog(version.filter = FALSE).
