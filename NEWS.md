@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9010
+
+- move package log data out of filter loop in packageLog().
+
+
 ### packageRank 0.9.6.9009
 
 - set ipFilter(multi.core = FALSE) in packageLog().

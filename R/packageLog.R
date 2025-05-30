@@ -54,20 +54,24 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = FALSE)
   
-  out <- parallel::mclapply(packages, function(p) {
-    pkg.data <- cran_log[cran_log$package == p, ]
-    if (nrow(pkg.data) != 0) {
-      if (small.filter) pkg.data <- smallFilter(pkg.data)
-
-      pkg.data$date.time <- dateTime(pkg.data$date, pkg.data$time)
-      if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
+  pkg.data <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+  
+  out <- parallel::mclapply(seq_along(pkg.data), function(i) { 
+    p.dat <- pkg.data[[i]]
+    p <- packages[i]
+    
+    if (nrow(p.dat) != 0) {
+      if (small.filter) p.dat <- smallFilter(p.dat)
       
-      if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
-      if (version.filter) pkg.data <- versionFilter(pkg.data, p)
-      pkg.data <- pkg.data[order(pkg.data$date.time), ]
-      pkg.data$date.time <- NULL
+      p.dat$date.time <- dateTime(p.dat$date, p.dat$time)
+      if (sequence.filter) p.dat <- sequenceFilter(p.dat, p, ymd)
+      
+      if (size.filter) p.dat <- sizeFilter(p.dat, p)
+      if (version.filter) p.dat <- versionFilter(p.dat, p)
+      p.dat <- p.dat[order(p.dat$date.time), ]
+      p.dat$date.time <- NULL
     }
-    pkg.data
+    p.dat
   }, mc.cores = cores)
   
   names(out) <- packages
