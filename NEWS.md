@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9011
+
+- add/set logInfo(check.days = 7) and amend 'cranlogs' check.
+
+
 ### packageRank 0.9.6.9010
 
 - move package log data out of filter loop in packageLog().
