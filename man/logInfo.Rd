@@ -4,7 +4,8 @@
 \alias{logInfo}
 \title{Compute Availability, Date, Time of "Today's" Log.}
 \usage{
-logInfo(details = FALSE, tz = Sys.timezone(), upload.time = "17:00")
+logInfo(details = FALSE, tz = Sys.timezone(), upload.time = "17:00",
+  check.days = 7)
 }
 \arguments{
 \item{details}{Logical. Check available logs and results.}
@@ -12,6 +13,8 @@ logInfo(details = FALSE, tz = Sys.timezone(), upload.time = "17:00")
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 
 \item{upload.time}{Character. UTC upload time for logs "hh:mm" or "hh:mm:ss".}
+
+\item{check.days}{Numeric or Integer. Number of days back to check.}
 }
 \description{
 Also checks availability of Posit/RStudio logs and 'cranlogs' data.
