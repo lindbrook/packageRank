@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9012
+
+- add/set annualPlot(to = NULL) to compute current year.
+
+
 ### packageRank 0.9.6.9011
 
 - add/set logInfo(check.days = 7) and amend 'cranlogs' check.
