@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9013
+
+- remove computation of sequenceFilter() from packageLog(all.filters = TRUE).
+
+
 ### packageRank 0.9.6.9012
 
 - add/set annualPlot(to = NULL) to compute current year.
