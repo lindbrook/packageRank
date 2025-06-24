@@ -47,7 +47,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
-    sequence.filter <- TRUE
     size.filter <- TRUE
     version.filter <- TRUE
   }
