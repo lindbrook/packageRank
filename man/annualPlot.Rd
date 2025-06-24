@@ -4,7 +4,7 @@
 \alias{annualPlot}
 \title{Download plot with annual and weekly data.}
 \usage{
-annualPlot(package = "packageRank", from = 2019, to = 2024,
+annualPlot(package = "packageRank", from = 2019, to = NULL,
   check.package = TRUE, pro.mode = FALSE, sunday.week = TRUE)
 }
 \arguments{
