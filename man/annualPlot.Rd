@@ -10,15 +10,15 @@ annualPlot(package = "packageRank", from = 2019, to = NULL,
 \arguments{
 \item{package}{Character Package name, "R" (for R application) or NULL (for total CRAN package downloads).}
 
-\item{from}{Numeric or Integer Year.}
+\item{from}{Numeric or Integer Year. "yyyy".}
 
-\item{to}{Numeric or Integer Year.}
+\item{to}{Numeric or Integer. Year. "yyyy"; NULL uses current year.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
 
-\item{pro.mode}{Logical}
+\item{pro.mode}{Logical.}
 
-\item{sunday.week}{Logical.TRUE: week starts on Sunday. FALSE: week starts on Monday.}
+\item{sunday.week}{Logical. TRUE: week starts on Sunday. FALSE: week starts on Monday.}
 }
 \description{
 Download plot with annual and weekly data.

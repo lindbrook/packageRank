@@ -1,11 +1,11 @@
 #' Download plot with annual and weekly data.
 #'
 #' @param package Character Package name, "R" (for R application) or NULL (for total CRAN package downloads). 
-#' @param from  Numeric or Integer Year.
-#' @param to Numeric or Integer Year.
+#' @param from  Numeric or Integer Year. "yyyy".
+#' @param to Numeric or Integer. Year. "yyyy"; NULL uses current year.
 #' @param check.package Logical. Validate and "spell check" package.
-#' @param pro.mode Logical
-#' @param sunday.week Logical.TRUE: week starts on Sunday. FALSE: week starts on Monday.
+#' @param pro.mode Logical.
+#' @param sunday.week Logical. TRUE: week starts on Sunday. FALSE: week starts on Monday.
 #' @export
 #' @note Adapted from Vesuvius plot at https://github.com/nrennie/tidytuesday/blob/main/2025/2025-05-13/20250513.R
 
