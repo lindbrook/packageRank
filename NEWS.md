@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9014
+
+- use format() instead of as.POSIXlt() in fetchCranLog().
+
+
 ### packageRank 0.9.6.9013
 
 - remove computation of sequenceFilter() from packageLog(all.filters = TRUE).

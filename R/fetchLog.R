@@ -5,8 +5,8 @@
 #' @param dev.mode Logical. Use Base R code.
 #' @noRd
 
-fetchCranLog <- function(date, memoization = FALSE, dev.mode = FALSE) {
-  year <- as.POSIXlt(date)$year + 1900
+fetchCranLog <- function(date, memoization = TRUE, dev.mode = FALSE) {
+  year <- as.numeric(format(date, format = "%Y"))
   rstudio.url <- "http://cran-logs.rstudio.com/"
   log.url <- paste0(rstudio.url, year, '/', date, ".csv.gz")
 
