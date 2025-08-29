@@ -29,10 +29,10 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     cores <- multiCore(multi.core)
   }
   
-  file.url.date <- logDate(date)
-  cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
+  log.date <- logDate(date)
+  cran_log <- fetchCranLog(date = log.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
-  ymd <- rev_fixDate_2012(file.url.date)
+  ymd <- rev_fixDate_2012(log.date)
 
   unobs.pkgs <- !packages %in% cran_log$package
   if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
