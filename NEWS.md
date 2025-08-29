@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9015
+
+- set cachem::cache_mem(max_size = 1.5 * 1024 * 1024^2) for memoise().
+
+
 ### packageRank 0.9.6.9014
 
 - use format() instead of as.POSIXlt() in fetchCranLog().
