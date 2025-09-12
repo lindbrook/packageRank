@@ -35,13 +35,27 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
   pro.mode = FALSE) {
 
   if (pro.mode) {
-    cranDownloadsB(packages = packages, when = when, from = from, to = to,
-      fix.cranlogs = fix.cranlogs)
+    out <- cranDownloadsB(packages = packages, when = when, from = from,
+      to = to, fix.cranlogs = fix.cranlogs)
   } else {
-    cranDownloadsA(packages = packages, when = when, from = from, to = to, 
-      check.package = check.package, dev.mode = dev.mode, 
+    out <- cranDownloadsA(packages = packages, when = when, from = from, 
+      to = to,  check.package = check.package, dev.mode = dev.mode, 
       fix.cranlogs = fix.cranlogs)
   }
+  
+  missing.date <- c(seq.Date("2025-08-25", "2025-08-26"), 
+                    seq.Date("2025-08-29", "2025-09-02"))
+
+  missing <- missing.date %in% out$cranlogs.data$date
+
+  if (any(missing)) {
+    if (all(missing)) {
+      message(c("Missing: ", paste(missing.date, collapse = ", ")))
+    } else if (any(missing)) {
+      message(c("Missing: ", paste(missing.date[missing], collapse = ", ")))
+    }
+  }
+  out
 }
 
 #' Plot method for cranDownloads().
