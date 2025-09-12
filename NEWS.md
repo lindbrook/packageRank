@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9016
+
+- Note missing Posit CRAN logs: 8/25-8/26 and  8/29-9/02 in cranDownloads().
+
+
 ### packageRank 0.9.6.9015
 
 - set cachem::cache_mem(max_size = 1.5 * 1024 * 1024^2) for memoise().

@@ -142,7 +142,23 @@ cranDownloadsA <- function(packages = NULL, when = NULL, from = NULL,
     if (is.null(argmnts$packages)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
     } else if ("R" %in% argmnts$packages) {
+      missing.date <- c(seq.Date("2025-08-25", "2025-08-26"), 
+                        seq.Date("2025-08-29", "2025-09-02"))
+      
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
+      obs.dates <- unique(cranlogs.data$date)
+      missing <- !missing.date %in% obs.dates
+      
+      if (any(missing)) {
+        r.history <- packageHistory("R")
+        missing.date <- missing.date[missing]
+        m.date <- rep(missing.date, length(missing.date))
+        m.vr <- rep(r.history[nrow(r.history), "Version"], length(m.date))
+        m.os <- rep( unique(cranlogs.data$os), length(m.date))
+        tmp <- data.frame(date = m.date, version = m.vr, os = m.os, count = 0)
+        cranlogs.data <- rbind(cranlogs.data, tmp)
+      }
+      
       count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
         cranlogs.data$os), sum)
       cumulative <- apply(count, 2, cumsum)
