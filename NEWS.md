@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9017
+
+- add/use packageRank::missing.dates.
+- fix cranDownloads("R") for missing dates.
+
+
 ### packageRank 0.9.6.9016
 
 - Note missing Posit CRAN logs: 8/25-8/26 and  8/29-9/02 in cranDownloads().
