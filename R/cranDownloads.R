@@ -43,16 +43,15 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
       fix.cranlogs = fix.cranlogs)
   }
   
-  missing.date <- c(seq.Date("2025-08-25", "2025-08-26"), 
-                    seq.Date("2025-08-29", "2025-09-02"))
-
-  missing <- missing.date %in% out$cranlogs.data$date
+  missing <- packageRank::missing.dates %in% out$cranlogs.data$date
 
   if (any(missing)) {
     if (all(missing)) {
-      message(c("Missing: ", paste(missing.date, collapse = ", ")))
+      message(c("Missing: ", paste(packageRank::missing.dates,
+        collapse = ", ")))
     } else if (any(missing)) {
-      message(c("Missing: ", paste(missing.date[missing], collapse = ", ")))
+      message(c("Missing: ", paste(packageRank::missing.dates[missing],
+        collapse = ", ")))
     }
   }
   out
