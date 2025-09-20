@@ -121,9 +121,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         call. = FALSE)
     }
     if (x$when == "last-month" & unit.observation == "month" &
-      graphics == "ggplot2") {
-        msg1 <- 'With when = "last-month" and graphics = "ggplot2", only'
-        msg2 <- 'unit.observation = "month" is not available.'
+        graphics == "ggplot2") {
+      msg1 <- 'With when = "last-month" and graphics = "ggplot2", only'
+      msg2 <- 'unit.observation = "month" is not available.'
       stop(paste(msg1, msg2), call. = FALSE)
     }
   }
