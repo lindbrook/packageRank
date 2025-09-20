@@ -1,6 +1,13 @@
+### packageRank 0.9.6.9020
+
+- exclude missing.dates from addRPlotSmoother() and addRTotPlotSmoother().
+- archive addSmoother(), smoothWeekData(), addSinglePlotSmoother() and 
+  addMultiPlotSmoother().
+
+
 ### packageRank 0.9.6.9019
 
-- exclude missing.dates from smoothers.
+- exclude missing.dates from smoothers in cranDownloadsPlotFunctions.R.
 
 
 ### packageRank 0.9.6.9018

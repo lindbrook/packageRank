@@ -30,6 +30,9 @@ addRPlotSmoother <- function(x, complete, f, span, pltfrm, pltfrm.col,
       }
     }))
   } else {
+    if (any(packageRank::missing.dates %in% dat$date)) {
+      dat <- dat[!dat$date %in% packageRank::missing.dates, ]
+    }
     invisible(lapply(seq_along(pltfrm), function(i) {
       tmp <- dat[dat$platform == pltfrm[i], ]
       if (nrow(tmp) > 7) {
@@ -81,6 +84,10 @@ addRTotPlotSmoother <- function(dat, complete, f, span, statistic,
       title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
     }
   } else {
+    if (any(packageRank::missing.dates %in% dat$date)) {
+      dat <- dat[!dat$date %in% packageRank::missing.dates, ]
+    }
+
     if (nrow(dat) > 7) {
       smooth.data <- stats::loess(dat[, statistic] ~
         as.numeric(dat$date), span = span)
