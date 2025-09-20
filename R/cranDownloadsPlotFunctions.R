@@ -92,6 +92,19 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         axis(4, at = ip.data[, y.nm], labels = "obs")
         axis(4, at = est.data[, y.nm], labels = "est", col.axis = "red",
           col.ticks = "red")
+
+        if (smooth) {
+          if (nrow(dat) > 7) {
+            smooth.data <- stats::loess(complete[, y.nm] ~ 
+              as.numeric(complete$date), span = span)
+            x.date <- as.Date(smooth.data$x)
+            lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+          } else if (nrow(dat) <= 7) {
+            smooth.data <- stats::lowess(complete$date, complete[, y.nm], f = f)
+            lines(smooth.data, col = "blue", lwd = 1.25)
+          }
+        }
+
       } else if (any(dat$partial)) { # unit.observation = "week"
         unit.date <- dat$date
 
@@ -192,9 +205,29 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           axis(4, at = current.wk.est[, y.nm], labels = "est", col.axis = "red",
             col.ticks = "red")
         }
+
+        if (smooth) {
+          tmp <- rbind(wk1.backdate, complete)
+                    
+          if (weekdays(last.obs.date) == "Saturday") {
+            tmp <- rbind(tmp, current.wk)
+          }
+          
+          if (nrow(tmp) > 7) {
+            smooth.data <- stats::loess(tmp[, y.nm] ~ as.numeric(tmp$date),
+              span = span)
+            x.date <- as.Date(smooth.data$x)
+            lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+          } else if (nrow(tmp) <= 7){
+            smooth.data <- stats::lowess(tmp$date, tmp[, y.nm], f = f)
+            lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+              col = "blue", lwd = 1.25)
+          }
+        }
+
       } else {
         wknd <- weekdays(dat$date) %in% c("Saturday", "Sunday")
-      
+
         if (any(wknd)) {
           wk.end <- dat[wknd, ]
           wk.day <- dat[!wknd, ]
@@ -226,6 +259,23 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             }
           }
         }
+
+        if (smooth) {
+          if (any(packageRank::missing.dates %in% dat$date) ) {
+            sel <- !dat$date %in% packageRank::missing.dates
+            smooth.data <- dat[sel, ]
+          } else smooth.data <- dat
+          
+          if (nrow(smooth.data) > 7) {
+            smooth.data <- stats::loess(smooth.data[, y.nm] ~
+              as.numeric(smooth.data$date), span = span)
+            x.date <- as.Date(smooth.data$x)
+            lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)  
+          } else if (nrow(smooth.data) <= 7) {
+            lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+              col = "blue", lwd = 1.25)
+          }
+        }
       }
 
       if (isTRUE(r.version) | r.version == "line") {
@@ -236,8 +286,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
-      if (smooth) addSmoother(x, complete, current.wk, f, span, wk1, y.nm)
-
       if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
@@ -247,6 +295,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
       
       title(main = "Total Package Downloads")
+
+      if (smooth) {
+        if (nrow(dat) > 7) {
+          title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+        } else if (nrow(dat) <= 7) {
+          title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
+        }
+      }
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
@@ -309,15 +365,19 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             smooth.data <- complete
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
-          
           } else if (any(dat$partial)) {
             smooth.data <- rbind(wk1.backdate, complete)
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
-              formula = "y ~ x", se = se, span = span)
-          
+              formula = "y ~ x", se = se, span = span)      
           } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-              se = se, span = span)
+            if (any(packageRank::missing.dates %in% dat$date)) {
+              smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+              p <- p + ggplot2::geom_smooth(data = smooth.data, 
+                method = "loess", formula = "y ~ x",  se = se, span = span)
+            } else {
+              p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+                se = se, span = span)
+            }
           }
         }
 
@@ -446,8 +506,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
           } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-              se = se, span = span)
+            if (any(packageRank::missing.dates %in% dat$date)) {
+              smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+              p <- p + ggplot2::geom_smooth(data = smooth.data, 
+                method = "loess", formula = "y ~ x",  se = se, span = span)
+            } else {
+              p <- p + ggplot2::geom_smooth(method = "loess", 
+                formula = "y ~ x", se = se, span = span)
+            }
           }
         }
       } else {
@@ -463,8 +529,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
         
         if (smooth) {
-          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span) 
+          if (any(packageRank::missing.dates %in% dat$date)) {
+            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
+              formula = "y ~ x",  se = se, span = span)
+          } else {
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+              se = se, span = span)
+          }
         }
       }
 
@@ -605,8 +677,17 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (smooth) {
-            addSinglePlotSmoother(x, complete, current.wk, f, span,
-              wk1.backdate, y.nm)
+            smooth.data <- complete
+            
+            if (nrow(smooth.data) > 7) {
+              smooth.data <- stats::loess(smooth.data[, y.nm] ~
+                as.numeric(smooth.data$date), span = span)
+              x.date <- as.Date(smooth.data$x)
+              lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+            } else if (nrow(smooth.data) <= 7) {
+              lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+                col = "blue", lwd = 1.25)
+            }
           }
           
           title(main = est.data$package)
@@ -777,8 +858,22 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (smooth) {
-            addSinglePlotSmoother(x, complete, current.wk, f, span,
-              wk1.backdate, y.nm)
+            tmp <- rbind(wk1.backdate, complete)
+            
+            if (weekdays(last.obs.date) == "Saturday") {
+              tmp <- rbind(tmp, current.wk)
+            }
+            
+            if (nrow(tmp) > 7) {
+              smooth.data <- stats::loess(tmp[, y.nm] ~ as.numeric(tmp$date),
+                span = span)
+              x.date <- as.Date(smooth.data$x)
+              lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
+            } else if (nrow(tmp) <= 7){
+              smooth.data <- stats::lowess(tmp$date, tmp[, y.nm], f = f)
+              lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
+                col = "blue", lwd = 1.25)
+            }
           }
 
           title(main = wk1.backdate$package)
@@ -855,19 +950,32 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (smooth) {
-            if (nrow(pkg.dat) > 7) {
-              smooth.data <- stats::loess(pkg.dat[, y.nm] ~
-                as.numeric(pkg.dat$date), span = span)
-              x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+            
+            if (any(packageRank::missing.dates %in% pkg.dat$date) ) {
+              sel <- !pkg.dat$date %in% packageRank::missing.dates
+              smooth.data <- pkg.dat[sel, ]
+            }
+            
+            if (nrow(smooth.data) > 7) {
+              smooth.data <- stats::loess(smooth.data[, y.nm] ~
+                as.numeric(smooth.data$date), span = span)
+              x.date <- as.Date(smooth.data$x)
               lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
-              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
-            } else {
-              lines(stats::lowess(pkg.dat$date, pkg.dat[, y.nm], f = f),
+            } else if (nrow(smooth.data) <= 7) {
+              lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
                 col = "blue", lwd = 1.25)
+            }
+          }
+          
+          title(main = pkg)
+
+          if (smooth) {
+            if (nrow(dat) > 7) {
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+            } else if (nrow(dat) <= 7) {
               title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
             }
           }
-          title(main = pkg)
         }))
       }
 
@@ -1112,7 +1220,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           smooth.data <- complete
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
-        
         } else if (any(dat$partial)) {
           smooth.data <- rbind(complete, wk1.backdate.seg)
           
@@ -1124,8 +1231,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             formula = "y ~ x", se = se, span = span)
         
         } else {
-          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span)
+          if (any(packageRank::missing.dates %in% dat$date)) {
+            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess", 
+              formula = "y ~ x",  se = se, span = span)
+          } else {
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+              se = se, span = span)  
+          }
         }
       }
 
@@ -1242,8 +1355,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             }
 
             if (smooth) {
-              addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
-                statistic, vars, NULL)
+              smooth.data <- complete
+              if (nrow(smooth.data) > 7) {
+                smooth.data <- stats::loess(smooth.data[, statistic] ~
+                  as.numeric(smooth.data$date), span = span)
+                x.date <- as.Date(smooth.data$x)
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else if (nrow(smooth.data) <= 7) {
+                lines(stats::lowess(smooth.data$date, smooth.data[, statistic], 
+                  f = f), col = cbPalette[i])
+              }
             }
           }))
 
@@ -1399,8 +1520,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
              }
 
             if (smooth) {
-              addMultiPlotSmoother(i, x, complete, cbPalette, f, span,
-                statistic, vars, wk1.backdate)
+              tmp <- rbind(wk1.backdate, complete)
+
+              if (weekdays(last.obs.date) == "Saturday") {
+                tmp <- rbind(tmp, current.wk)
+              }
+
+              if (nrow(tmp) > 7) {
+                smooth.data <- stats::loess(tmp[, statistic] ~
+                  as.numeric(tmp$date), span = span)
+                x.date <- as.Date(smooth.data$x)
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else if (nrow(tmp) <= 7) {
+                smooth.data <- stats::lowess(tmp$date, tmp[, statistic], f = f)
+                lines(smooth.data$x, smooth.data$y, col = cbPalette[i])
+              }
             }
           }))
 
@@ -1460,8 +1594,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             }
 
             if (smooth) {
-              addMultiPlotSmoother(i, x, NULL, cbPalette, f, span,
-                statistic, vars, NULL)
+              if (any(packageRank::missing.dates %in% dat$date) ) {
+                sel <- !dat$date %in% packageRank::missing.dates
+                smooth.data <- dat[sel, ]
+              }
+
+              if (nrow(smooth.data) > 7) {
+                smooth.data <- stats::loess(smooth.data[, statistic] ~ 
+                  as.numeric(smooth.data$date), span = span)
+                x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
+                lines(x.date, smooth.data$fitted, col = cbPalette[i])
+              } else if (nrow(smooth.data) <= 7) {
+                sel <- smooth.data$package == x$packages[i]
+                lines(stats::lowess(smooth.data[sel, vars], f = f),
+                  col = cbPalette[i])
+              }
             }
           }))
         }
@@ -1493,7 +1640,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         if (smooth) {
           if (nrow(dat) > 7) {
             title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
-          } else {
+          } else if (nrow(dat) <= 7) {
             title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
           }
         }
@@ -1742,7 +1889,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           smooth.data <- complete
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
-        
         } else if (any(dat$partial)) {
           smooth.data <- rbind(complete, wk1.backdate)
           if (weekdays(last.obs.date) == "Saturday") {
@@ -1753,8 +1899,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             formula = "y ~ x", se = se, span = span)
         
         } else {
-          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span)
+          if (any(packageRank::missing.dates %in% dat$date)) {
+            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+            p <- p + ggplot2::geom_smooth(data = smooth.data, 
+              method = "loess", formula = "y ~ x",  se = se, span = span)
+          } else {
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+              se = se, span = span)
+          }
         }
       }
       
@@ -2520,8 +2672,14 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span)
+          if (any(packageRank::missing.dates %in% dat$date)) {
+            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+            p <- p + ggplot2::geom_smooth(data = smooth.data, 
+              method = "loess", formula = "y ~ x",  se = se, span = span)
+          } else {
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+              se = se, span = span)
+          }
         }
       }
 
@@ -3004,8 +3162,14 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-            se = se, span = span)
+          if (any(packageRank::missing.dates %in% dat$date)) {
+            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
+            p <- p + ggplot2::geom_smooth(data = smooth.data, 
+              method = "loess", formula = "y ~ x",  se = se, span = span)
+          } else {
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+              se = se, span = span)
+          }
         }
       }
 

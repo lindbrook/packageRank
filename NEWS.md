@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9019
+
+- exclude missing.dates from smoothers.
+
+
 ### packageRank 0.9.6.9018
 
 - move/amend fix for log(0) to plot.cranDownloads().
