@@ -501,13 +501,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   if (graphics == "base") {
     if (obs.ct == 1) {
       if (log.y) {
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
         dotchart(log10(dat[, y.nm]), labels = dat$package,
           xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
@@ -529,15 +522,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-
-          if (any(pkg.dat$count == 0)) {
-            zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
-            pkg.dat[pkg.dat$count == 0, "count"] <- 1
-            for (p in zero.ct.pkg) {
-              pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
-                "count"])
-            }
-          }
 
           ip.sel <- pkg.dat$in.progress == TRUE
           ip.data <- pkg.dat[ip.sel, ]
@@ -631,17 +615,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       } else if (any(dat$partial)) { # unit.observation = "week"
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
-
-          if (log.y) {
-            if (any(pkg.dat$count == 0)) {
-              zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
-              pkg.dat[pkg.dat$count == 0, "count"] <- 1
-              for (p in zero.ct.pkg) {
-                pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
-                  "count"])
-              }
-            }
-          }
 
           unit.date <- pkg.dat$date
 
@@ -812,16 +785,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
 
       } else {
-        if (log.y) {
-          if (any(dat$count == 0)) {
-            zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-            dat[dat$count == 0, "count"] <- 1
-            for (p in zero.ct.pkg) {
-              dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-            }
-          }
-        }
-
         ylim <- range(dat[, y.nm])
 
         invisible(lapply(x$package, function(pkg) {
@@ -914,14 +877,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
       if (log.y) {
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
-
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
         p <- ggplot2::ggplot(data = dat, 
@@ -941,16 +896,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ggplot2::facet_wrap(ggplot2::vars(.data$date))
 
     } else if (obs.ct > 1) {
-      if (log.y) {
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
-      }
-
       if (statistic == "count") {
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data$date, y = .data$count))
@@ -1213,13 +1158,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   if (graphics == "base") {
     if (obs.ct == 1) {
       if (log.y) {
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
         dotchart(log10(dat[, statistic]), labels = dat$package,
           xlab = paste("log10", y.nm.case), main = paste(ttl, unique(dat$date)))
       } else {
@@ -1249,16 +1187,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           pkg.data <- lapply(x$package, function(pkg) {
             tmp <- dat[dat$package == pkg, ]
-
-            if (log.y) {
-              if (any(tmp$count == 0)) {
-                zero.ct.pkg <- unique(tmp[tmp$count == 0, "package"])
-                tmp[tmp$count == 0, "count"] <- 1
-                for (p in zero.ct.pkg) {
-                  tmp$cumulative <- cumsum(tmp[tmp$package == p, "count"])
-                }
-              }
-            }
 
             ip.data <- tmp[tmp$in.progress == TRUE, ]
             complete <- tmp[tmp$in.progress == FALSE, ]
@@ -1331,18 +1259,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         } else if (any(dat$partial)) {
           plot.data <- lapply(x$package, function(pkg) {
             pkg.dat <- dat[dat$package == pkg, ]
-
-            if (log.y) {
-              if (any(pkg.dat$count == 0)) {
-                zero.ct.pkg <- unique(pkg.dat[pkg.dat$count == 0, "package"])
-                pkg.dat[pkg.dat$count == 0, "count"] <- 1
-                for (p in zero.ct.pkg) {
-                  pkg.dat$cumulative <- cumsum(pkg.dat[pkg.dat$package == p,
-                    "count"])
-                }
-              }
-            }
-
             unit.date <- pkg.dat$date
 
             wk1.start <- pkg.dat$date[1]
@@ -1499,13 +1415,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
         } else {
           if (log.y) {
-            if (any(dat$count == 0)) {
-              zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-              dat[dat$count == 0, "count"] <- 1
-              for (p in zero.ct.pkg) {
-                dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-              }
-            }
             plot(dat[, vars], pch = NA, log = "y", xlim = xlim, ylim = ylim,
               main = ttl, xlab = "Date", ylab = paste("log10", y.nm.case))
           } else {
@@ -1601,15 +1510,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   } else if (graphics == "ggplot2") {
     if (obs.ct == 1) {
       if (log.y) {
-        # p + scale_x_log10() doesn't work!
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
-
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
         p <- ggplot2::ggplot(data = dat, 
@@ -1630,16 +1530,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         ggplot2::facet_wrap(ggplot2::vars(.data$date))
         
     } else if (obs.ct > 1) {
-      if (log.y) {
-        if (any(dat$count == 0)) {
-          zero.ct.pkg <- unique(dat[dat$count == 0, "package"])
-          dat[dat$count == 0, "count"] <- 1
-          for (p in zero.ct.pkg) {
-            dat$cumulative <- cumsum(dat[dat$package == p, "count"])
-          }
-        }
-      }
-      
       if (statistic == "count") {
         p <- ggplot2::ggplot(data = dat, 
                 ggplot2::aes(x = .data$date, y = .data$count, 

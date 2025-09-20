@@ -121,9 +121,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         call. = FALSE)
     }
     if (x$when == "last-month" & unit.observation == "month" &
-      graphics == "ggplot2") {
-        msg1 <- 'With when = "last-month" and graphics = "ggplot2", only'
-        msg2 <- 'unit.observation = "month" is not available.'
+        graphics == "ggplot2") {
+      msg1 <- 'With when = "last-month" and graphics = "ggplot2", only'
+      msg2 <- 'unit.observation = "month" is not available.'
       stop(paste(msg1, msg2), call. = FALSE)
     }
   }
@@ -182,6 +182,13 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
 
   obs.ct <- length(unique(x$cranlogs.data$date))
 
+  # Recode 0s to 1s when logarithm of count used
+  if (isTRUE(log.y)) {
+    fix.zero.log <- unit.observation == "day" & 
+                    x$cranlogs.data$count == 0
+    if (any(fix.zero.log)) x$cranlogs.data[fix.zero.log, "count"] <- 1L
+  }
+  
   if (points == "auto") {
     points <- ifelse(obs.ct <= 45, TRUE, FALSE)
   } else if (is.logical(points) == FALSE) {
