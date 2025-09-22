@@ -23,10 +23,10 @@ missingDatesPolygons <- function(ylim, log.y = FALSE, col = "lightgray",
   xs2 <- c(rep(packageRank::missing.dates[3], 2),
            rep(packageRank::missing.dates[7], 2))
 
-  polygon(x = xs1, y = c(y1, y2), border = NA,
-          col = grDevices::adjustcolor(col, alpha.f = alpha.f))
-  polygon(x = xs2, y = c(y1, y2), border = NA,
-          col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+  graphics::polygon(x = xs1, y = c(y1, y2), border = NA,
+    col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+  graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+    col = grDevices::adjustcolor(col, alpha.f = alpha.f))
   
   null.set <- expression(symbol("\306"))
 
