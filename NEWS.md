@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9024
+
+- amend data type in fetchCranLog(): Character to Date.
+
+
 ### packageRank 0.9.6.9023
 
 - add missing dates discussion to README.

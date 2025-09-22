@@ -1,6 +1,6 @@
 #' Fetch CRAN Logs.
 #'
-#' @param date Character. Date. yyyy-mm-dd.
+#' @param date Date. yyyy-mm-dd.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param dev.mode Logical. Use Base R code.
 #' @noRd
