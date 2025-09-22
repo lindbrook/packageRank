@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9021
+
+- add missingDatesPolygons().
+
+
 ### packageRank 0.9.6.9020
 
 - exclude missing.dates from addRPlotSmoother() and addRTotPlotSmoother().
