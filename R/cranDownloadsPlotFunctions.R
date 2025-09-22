@@ -678,7 +678,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
           if (smooth) {
             smooth.data <- complete
-            
             if (nrow(smooth.data) > 7) {
               smooth.data <- stats::loess(smooth.data[, y.nm] ~
                 as.numeric(smooth.data$date), span = span)
