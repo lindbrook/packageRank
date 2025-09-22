@@ -2820,7 +2820,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim)
+        missingDatesPolygons(ylim, log.y = log.y)
 
         points(ip.data[, vars], col = "black", pch = 0)
         points(est.data[, vars], col = "red", pch = 1)
@@ -2912,7 +2912,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim)
+        missingDatesPolygons(ylim, log.y = log.y)
 
         if (weekdays(x$from) == "Sunday") {
           points(wk1.partial[, vars], pch = 16)
@@ -2968,7 +2968,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             pch = NA)
         }
 
-        missingDatesPolygons(ylim)
+        missingDatesPolygons(ylim, log.y = log.y)
 
         if (type == "o") {
           points(wk.day$date, wk.day[, statistic], pch = 16)

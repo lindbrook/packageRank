@@ -1,3 +1,10 @@
+### packageRank 0.9.6.9022
+
+- fix missingDatesPolygons() in rTotPlot().
+- use missingDatesPolygons(ylim, log.y = log.y).
+- use graphics::polygon for RStudio R CMD check.
+
+
 ### packageRank 0.9.6.9021
 
 - add missingDatesPolygons().
