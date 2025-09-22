@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9023
+
+- add missing dates discussion to README.
+
+
 ### packageRank 0.9.6.9022
 
 - fix missingDatesPolygons() in rTotPlot().
