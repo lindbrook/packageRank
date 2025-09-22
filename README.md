@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9022-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9023-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -35,13 +35,18 @@ You can read more about the package in the sections below:
   percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles)
   discusses `queryCount()`, `queryRank()`, `queryPercentile()` and
   `cranDistribution()`.
-- [VI Data Fixes](#vi---data-fixes) discusses two problems with download
-  counts. The first involves issues with logs collected between the end
-  of 2012 and the beginning of 2013. This is fixed in `fixDate_2012()`
-  and `fixCranlogs()`. The second is an issue with
+- [VI Data Fixes](#vi---data-fixes) discusses three problems with
+  download counts. The first involves issues with logs collected between
+  the end of 2012 and the beginning of 2013. This is fixed in
+  `fixDate_2012()` and `fixCranlogs()`. The second is an issue with
   [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
   or triples the number of R application download counts between
-  2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`.
+  2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`. The
+  third is the apparent loss of 7 download logs from late August, early
+  September 2025. When any of those dates are passed to
+  `cranDownloads()`, the function sends a message to the console,
+  graphically annotates plots to highlight the dates and ignores those
+  dates when plotting splines.
 - [VII Data Note](#vii---data-note) discusses the spike in the download
   of the Windows version of the R application on Sundays and Wednesdays
   between 06 November 2022 and 19 March 2023.
@@ -369,6 +374,7 @@ vector of packages names, not both!). You can plot these data by using:
 
 ``` r
 plot(cranDownloads(packages = "R", from = 2019, to = 2019))
+> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 ```
 
 ![](man/figures/README-r_downloads-1.png)<!-- -->
@@ -446,6 +452,7 @@ To annotate a graph with ChatGPT release date, 2022-11-30:
 ``` r
 plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
   chatgpt = TRUE, r.total = TRUE, unit.observation = "week")
+> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 ```
 
 ![](man/figures/README-chatgpt_release_date-1.png)<!-- -->
@@ -1306,7 +1313,7 @@ plot(cranDistribution())
 ### VI - data fixes
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) fixes
-two data problems.
+three data problems.
 
 The first data problem involves logs collected between late 2012 and the
 beginning of 2013. It’s a bit complicated. To understand it, we need to
@@ -1380,12 +1387,40 @@ counts based on the underlying logs:
 Details and code for replication can be found in issue
 [\#69](https://github.com/r-hub/cranlogs/issues/69).
 [`fixRCranlogs()`](https://github.com/lindbrook/packageRank/blob/master/R/fixRCranlogs.R)
-corrects the problem
-
-Note that there was a similar issue for package download counts around
-the same period but that is now fixed in
+corrects the problem. Note that there was a similar issue for package
+download counts around the same period but that is now fixed in
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs). For details,
 see issue [\#68](https://github.com/r-hub/cranlogs/issues/68)
+
+The third problem is the apparent loss (i.e., zero downloads for the R
+application and for all packages) for 7 logs in 2025: 8/25-8/26 and
+8/29-9/02. For what it’s worth, both gaps were preceeded by two
+unusually large sets of downloads: Sun 8/24 (14,521,256) and Wed 8/27 &
+Thu 8/28 (16,860,505 and 16,477,023). These outliers are approximately
+twice the size of “typical” counts (see graph below).
+
+As a “fix” for the missing data, which are stored as a vector of dates
+in cholera::missing.date, I did the following. First, when a missing
+date is included, `cranDownloads()` prints a message in the console:
+
+    Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
+
+Second, when plotting `cranDownloads()` two gray polygons to highlight
+those dates are added to the graph and are labelled with a “⌀” (empty
+set) on the top axis (currently base R graphics only). Third, smoothers
+ignore these missing dates.
+
+The graph below, which plots the *total* number of downloads recorded by
+the Posit/RStudio mirror from Sat 7/05 through Sun 9/14 (weekends are
+represented by open circles), shows the magnitude of the outliers and
+the two graphical fixes.
+
+``` r
+plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, weekend = TRUE)
+> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
+```
+
+![](man/figures/README-missing-1.png)<!-- -->
 
 ### VII - data note
 
@@ -1404,6 +1439,7 @@ of R.
 
 ``` r
 plot(cranDownloads("R", from = "2022-10-06", to = "2023-04-14"))
+> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
   padj = 0.9)
 axis(3, at = as.Date("2023-03-19"), labels = "2023-03-19", cex.axis = 2/3, 
@@ -1424,6 +1460,8 @@ dotted lines with the data before and after. If a Sunday or Wednesday is
 orders-of-magnitude unusual, I plot that day with a filled rather than
 an empty circle. Only Windows, the final two graphs below, earn this
 distinction.
+
+    > Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 
 ![](man/figures/README-sundays_mac-1.png)<!-- -->![](man/figures/README-sundays_mac-2.png)<!-- -->
 

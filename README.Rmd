@@ -27,7 +27,7 @@ You can read more about the package in the sections below:
 * [III Inflation Filters](#iii---inflation-filters) describes four filter functions that remove software and behavioral artifacts that inflate _nominal_ download counts. This functionality is available in `packageRank()` and `packageLog()`.
 * [IV Availability of Results](#iv---availability-of-results) discusses when results become available, how to use `logInfo()` to check the availability of results, and the effect of time zones.
 * [V Reverse lookup of counts, ranks and percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles) discusses `queryCount()`, `queryRank()`, `queryPercentile()` and `cranDistribution()`.
-* [VI Data Fixes](#vi---data-fixes) discusses two problems with download counts. The first involves issues with logs collected between the end of 2012 and the beginning of 2013. This is fixed in `fixDate_2012()` and `fixCranlogs()`. The second is an issue with ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) that doubles or triples the number of R application download counts between 2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`.
+* [VI Data Fixes](#vi---data-fixes) discusses three problems with download counts. The first involves issues with logs collected between the end of 2012 and the beginning of 2013. This is fixed in `fixDate_2012()` and `fixCranlogs()`. The second is an issue with ['cranlogs'](https://CRAN.R-project.org/package=cranlogs) that doubles or triples the number of R application download counts between 2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`. The third is the apparent loss of 7 download logs from late August, early September 2025. When any of those dates are passed to `cranDownloads()`, the function sends a message to the console, graphically annotates plots to highlight the dates and ignores those dates when plotting splines.
 * [VII Data Note](#vii---data-note) discusses the spike in the download of the Windows version of the R application on Sundays and Wednesdays between 06 November 2022 and 19 March 2023.
 * [VIII et cetera](#viii---et-cetera) discusses country code top-level domains (e.g., `countryPackage()` and `packageCountry()`), the use of memoization and the internet connection time out problem. 
 
@@ -984,7 +984,7 @@ plot(cranDistribution(date = "2024-08-01"))
 
 ### VI - data fixes
 
-['packageRank'](https://CRAN.R-project.org/package=packageRank) fixes two data problems. 
+['packageRank'](https://CRAN.R-project.org/package=packageRank) fixes three data problems. 
 
 The first data problem involves logs collected between late 2012 and the beginning of 2013. It's a bit complicated. To understand it, we need to be know that the Posit/RStudio download logs are stored as separate files with a name/URL that embeds the log's date:
 
@@ -1019,16 +1019,29 @@ src   1.000801          2          3          2          2          1
 win   1.000000          2          3          2          2          1
 ```
 
-Details and code for replication can be found in issue [#69](https://github.com/r-hub/cranlogs/issues/69). [`fixRCranlogs()`](https://github.com/lindbrook/packageRank/blob/master/R/fixRCranlogs.R) corrects the problem
+Details and code for replication can be found in issue [#69](https://github.com/r-hub/cranlogs/issues/69). [`fixRCranlogs()`](https://github.com/lindbrook/packageRank/blob/master/R/fixRCranlogs.R) corrects the problem. Note that there was a similar issue for package download counts around the same period but that is now fixed in ['cranlogs'](https://CRAN.R-project.org/package=cranlogs). For details, see issue [#68](https://github.com/r-hub/cranlogs/issues/68)
 
-Note that there was a similar issue for package download counts around the same period but that is now fixed in ['cranlogs'](https://CRAN.R-project.org/package=cranlogs). For details, see issue [#68](https://github.com/r-hub/cranlogs/issues/68)
+The third problem is the apparent loss (i.e., zero downloads for the R application and for all packages) for 7 logs in 2025: 8/25-8/26 and 8/29-9/02. For what it's worth, both gaps were preceeded by two unusually large sets of downloads: Sun 8/24 (14,521,256) and Wed 8/27 & Thu 8/28 (16,860,505 and 16,477,023). These outliers are approximately twice the size of "typical" counts (see graph below).
 
+As a "fix" for the missing data, which are stored as a vector of dates in cholera::missing.date, I did the following. First, when a missing date is included, `cranDownloads()` prints a message in the console:
+
+```
+Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
+```
+
+Second, when plotting `cranDownloads()` two gray polygons to highlight those dates are added to the graph and are labelled with a "⌀" (empty set) on the top axis (currently base R graphics only). Third, smoothers ignore these missing dates.
+
+The graph below, which plots the _total_ number of downloads recorded by the Posit/RStudio mirror from Sat 7/05 through Sun 9/14 (weekends are represented by open circles), shows the magnitude of the outliers and the two graphical fixes.
+
+```{r missing}
+plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, weekend = TRUE)
+```
 
 ### VII - data note
 
 #### R Windows Sunday and Wednesday download spikes (06 Nov 2022 - 19 March 2023)
 
-The graph above for [R downloads](#packages--r) shows the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can see the typical pattern of mid-week peaks and weekend troughs. 
+The graph above for [R downloads](#packages--r) shows the daily downloads of the R application broken down by platform (Mac, Source, Windows). In it, you can see the typical pattern of mid-week peaks and weekend troughs.
 
 Between 06 November 2022 and 19 March 2023, this pattern was broken. On Sundays (06 November 2022 - 19 March 2023) and Wednesdays (18 January 2023 - 15 March 2023), there were noticeable, repeated orders-of-magnitude spikes in the daily downloads of the Windows version of R. 
 
