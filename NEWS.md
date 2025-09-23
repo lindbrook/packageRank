@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9028
+
+- amend fix for missing dates in cranDownloads("R").
+
+
 ### packageRank 0.9.6.9027
 
 - compute ylim for missingDatesPolygons() in rTotPlot() w/ 
@@ -6,7 +11,7 @@
 
 ### packageRank 0.9.6.9026
 
-- fix missing data in cranDownloads("R").
+- fix missing dates in cranDownloads("R").
 
 
 ### packageRank 0.9.6.9025

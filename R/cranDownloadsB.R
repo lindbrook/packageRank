@@ -61,8 +61,11 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
     } else if ("R" %in% argmnts$packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
-      obs.dates <- unique(cranlogs.data$date)
-      missing <- packageRank::missing.dates %in% obs.dates
+       
+      ## restore zeroes becuase cranlogs::cran_downloads("R") drops them ##
+      date.range <- range(cranlogs.data$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
       
       if (any(missing)) {
         r.history <- packageHistory("R", check.package = FALSE)
