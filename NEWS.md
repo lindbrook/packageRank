@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9027
+
+- compute ylim for missingDatesPolygons() in rTotPlot() w/ 
+  unit.observation = day.
+
+
 ### packageRank 0.9.6.9026
 
 - fix missing data in cranDownloads("R").
