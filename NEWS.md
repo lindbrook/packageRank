@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9026
+
+- fix missing data in cranDownloads("R").
+
+
 ### packageRank 0.9.6.9025
 
 - fix singlePlot() and multiPlot() w/o missing data with unit.observation = day
