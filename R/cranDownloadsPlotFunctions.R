@@ -2967,6 +2967,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             pch = NA)
         }
 
+        ylim <- range(dat[, statistic])
         missingDatesPolygons(ylim, log.y = log.y)
 
         if (type == "o") {
