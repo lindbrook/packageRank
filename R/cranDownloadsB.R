@@ -62,7 +62,7 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
     } else if ("R" %in% argmnts$packages) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       obs.dates <- unique(cranlogs.data$date)
-      missing <- !packageRank::missing.dates %in% obs.dates
+      missing <- packageRank::missing.dates %in% obs.dates
       
       if (any(missing)) {
         r.history <- packageHistory("R", check.package = FALSE)
