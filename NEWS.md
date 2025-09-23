@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9025
+
+- fix singlePlot() and multiPlot() w/o missing data with unit.observation = day
+  & smooth = TRUE.
+
+
 ### packageRank 0.9.6.9024
 
 - amend data type in fetchCranLog(): Character to Date.

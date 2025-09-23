@@ -962,11 +962,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (smooth) {
-            
             if (any(packageRank::missing.dates %in% pkg.dat$date) ) {
               sel <- !pkg.dat$date %in% packageRank::missing.dates
               smooth.data <- pkg.dat[sel, ]
-            }
+            } else smooth.data <- pkg.dat
             
             if (nrow(smooth.data) > 7) {
               smooth.data <- stats::loess(smooth.data[, y.nm] ~
@@ -1615,7 +1614,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               if (any(packageRank::missing.dates %in% dat$date) ) {
                 sel <- !dat$date %in% packageRank::missing.dates
                 smooth.data <- dat[sel, ]
-              }
+              } else smooth.data <- dat
 
               if (nrow(smooth.data) > 7) {
                 smooth.data <- stats::loess(smooth.data[, statistic] ~ 
