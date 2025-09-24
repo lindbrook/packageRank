@@ -1951,9 +1951,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             values = c(8, 0, 1))
 
         if (weekdays(last.obs.date) == "Saturday") {
-          p <- p +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
-            ggplot2::geom_point(data = current.wk)
+          p <- p + ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+                   ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
             ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
@@ -1967,9 +1966,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         }
 
         if (weekdays(x$from) == "Sunday") {
-          p <- p +
-            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
-            ggplot2::geom_point(data = wk1.partial)
+          p <- p + ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+                   ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
             ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
@@ -2475,8 +2473,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       if (statistic == "count") {
         if (multi.plot) {
           p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, y = .data$count,
-                   colour = .data$platform))
+                 ggplot2::aes(x = .data$date, 
+                              y = .data$count,
+                              colour = .data$platform))
         } else {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, y = .data$count)) +
@@ -2485,8 +2484,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       } else if (statistic == "cumulative") {
         if (multi.plot) {
           p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, y = .data$cumulative, 
-                   colour = .data$platform))
+                 ggplot2::aes(x = .data$date,
+                              y = .data$cumulative, 
+                              colour = .data$platform))
         } else {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, y = .data$cumulative)) +
@@ -2526,7 +2526,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (any(dat$in.progress)) {
-        # pltfrm <- sort(unique(dat$platform))
         pltfrm <- c("osx", "src", "win")
 
         est.ct <- inProgressEstimate(x, unit.observation)
@@ -2734,9 +2733,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (weekdays(last.obs.date) == "Saturday") {
-          p <- p +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
-            ggplot2::geom_point(data = current.wk)
+          p <- p + ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3) +
+                   ggplot2::geom_point(data = current.wk)
         } else {
           if (multi.plot) {
             p <- p +
@@ -2764,9 +2762,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
 
         if (weekdays(x$from) == "Sunday") {
-          p <- p +
-            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
-            ggplot2::geom_point(data = wk1.partial)
+          p <- p + ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3) +
+                   ggplot2::geom_point(data = wk1.partial)
         } else {
           if (multi.plot) {
             p <- p +
