@@ -106,7 +106,8 @@ downloadsCountry <- function(month_cran_log, multi.core = FALSE) {
 plotDownloadsCountry <- function() {
   dat <- packageRank::blog.data$download.country
   dat$downloads <- dat$downloads / 10^6
-  ggplot2::ggplot(data = dat, ggplot2::aes(x = .data$id, y = .data$downloads, label = .data$country)) +
+  ggplot2::ggplot(data = dat, ggplot2::aes(x = .data$id, y = .data$downloads,
+      label = .data$country)) +
     ggplot2::geom_line() +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
