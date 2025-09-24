@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9030-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9031-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -46,7 +46,7 @@ You can read more about the package in the sections below:
   September 2025. When any of those dates are passed to
   `cranDownloads()`, the function sends a message to the console,
   graphically annotates plots to highlight the dates and ignores those
-  dates when plotting splines.
+  dates when plotting smoothers.
 - [VII Data Note](#vii---data-note) discusses the spike in the download
   of the Windows version of the R application on Sundays and Wednesdays
   between 06 November 2022 and 19 March 2023.

@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9031
+
+- fix typo in README.
+
+
 ### packageRank 0.9.6.9030
 
 - amend/update importFrom.R.
