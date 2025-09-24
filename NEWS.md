@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9030
+
+- amend/update importFrom.R.
+
+
 ### packageRank 0.9.6.9029
 
 - use ggplot::labs().
