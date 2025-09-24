@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9031-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.6.9032-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute and visualize package download counts and percentile ranks
 
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
@@ -1407,8 +1407,7 @@ date is included, `cranDownloads()` prints a message in the console:
 
 Second, when plotting `cranDownloads()` two gray polygons to highlight
 those dates are added to the graph and are labelled with a “⌀” (empty
-set) on the top axis (currently base R graphics only). Third, smoothers
-ignore these missing dates.
+set) on the top axis. Third, smoothers ignore these missing dates.
 
 The graph below, which plots the *total* number of downloads recorded by
 the Posit/RStudio mirror from Sat 7/05 through Sun 9/14 (weekends are

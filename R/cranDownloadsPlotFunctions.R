@@ -320,6 +320,37 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
+      ## missing.dates polygons ##
+
+      date.range <- range(dat$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
+
+      if (any(missing)) {
+        # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+        ymin <- ifelse(log.y, 0, -Inf)
+
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[1], 
+                                   xmax = packageRank::missing.dates[2], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[3], 
+                                   xmax = packageRank::missing.dates[7], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        brks <- c(mean(packageRank::missing.dates[1:2]),
+                  packageRank::missing.dates[5])
+        
+        labs <- rep(expression(symbol("\306")), 2)
+        
+        p <- p + ggplot2::scale_x_date(sec.axis = 
+          ggplot2::dup_axis(name = NULL, breaks = brks, labels = labs))
+      }
+
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
         ip.data <- dat[ip.sel, ]
@@ -1023,6 +1054,37 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
+      ## missing.dates polygons ##
+
+      date.range <- range(dat$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
+
+      if (any(missing)) {
+        # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+        ymin <- ifelse(log.y, 0, -Inf)
+
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[1], 
+                                   xmax = packageRank::missing.dates[2], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[3], 
+                                   xmax = packageRank::missing.dates[7], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        brks <- c(mean(packageRank::missing.dates[1:2]),
+                  packageRank::missing.dates[5])
+        
+        labs <- rep(expression(symbol("\306")), 2)
+        
+        p <- p + ggplot2::scale_x_date(sec.axis = 
+          ggplot2::dup_axis(name = NULL, breaks = brks, labels = labs))
+      }
+
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
         names(est.ct) <- x$packages
@@ -1707,6 +1769,36 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                  colour = .data$package)) + 
              ggplot2::labs(title = "Cumulative Package Downloads")
       }
+
+      ## missing.dates polygons ##
+
+      date.range <- range(dat$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
+
+      if (any(missing)) {
+        # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+        ymin <- ifelse(log.y, 0, -Inf)
+
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[1], 
+                                   xmax = packageRank::missing.dates[2], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[3], 
+                                   xmax = packageRank::missing.dates[7], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        brks <- c(mean(packageRank::missing.dates[1:2]),
+                  packageRank::missing.dates[5])
+        
+        labs <- rep(expression(symbol("\306")), 2)
+        
+        p <- p + ggplot2::scale_x_date(sec.axis = 
+          ggplot2::dup_axis(name = NULL, breaks = brks, labels = labs))
       }
 
       if (any(dat$in.progress)) {
@@ -2402,6 +2494,37 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
       }
 
+      ## missing.dates polygons ##
+
+      date.range <- range(dat$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
+
+      if (any(missing)) {
+        # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+        ymin <- ifelse(log.y, 0, -Inf)
+
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[1], 
+                                   xmax = packageRank::missing.dates[2], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[3], 
+                                   xmax = packageRank::missing.dates[7], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        brks <- c(mean(packageRank::missing.dates[1:2]),
+                  packageRank::missing.dates[5])
+        
+        labs <- rep(expression(symbol("\306")), 2)
+        
+        p <- p + ggplot2::scale_x_date(sec.axis = 
+          ggplot2::dup_axis(name = NULL, breaks = brks, labels = labs))
+      }
+
       if (any(dat$in.progress)) {
         # pltfrm <- sort(unique(dat$platform))
         pltfrm <- c("osx", "src", "win")
@@ -2783,6 +2906,36 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
              ggplot2::geom_point(size = 2) + 
              ggplot2::labs(y = NULL)
       }
+
+      ## missing.dates polygons ##
+
+      date.range <- range(dat$date)
+      exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+      missing <- packageRank::missing.dates %in% exp.dates
+
+      if (any(missing)) {
+        # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+        ymin <- ifelse(log.y, 0, -Inf)
+
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[1], 
+                                   xmax = packageRank::missing.dates[2], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        p <- p + ggplot2::annotate(geom = "rect", 
+                                   xmin = packageRank::missing.dates[3], 
+                                   xmax = packageRank::missing.dates[7], 
+                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   fill = "lightgray", alpha = 0.5)
+        
+        brks <- c(mean(packageRank::missing.dates[1:2]),
+                  packageRank::missing.dates[5])
+        
+        labs <- rep(expression(symbol("\306")), 2)
+        
+        p <- p + ggplot2::scale_x_date(sec.axis = 
+          ggplot2::dup_axis(name = NULL, breaks = brks, labels = labs))
       }
 
       ttl <- paste("R Application Downloads:", unique(dat$date))
