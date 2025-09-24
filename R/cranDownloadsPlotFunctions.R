@@ -32,17 +32,19 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
-             ggplot2::xlab(paste("log10", y.nm.case))
+             ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
-             ggplot2::xlab(y.nm.case)  
+             ggplot2::labs(x = y.nm.case)
       }
 
-      p + ggplot2::geom_point(size = 2) + 
-          ggplot2::ylab(NULL) +
+      ttl <- paste("R Package Downloads:", unique(dat$date))
+
+      p + ggplot2::geom_point(size = 2) +
+          ggplot2::labs(y = NULL) +
           ggplot2::theme_bw() +
-          ggplot2::ggtitle(paste("R Package Downloads:", unique(dat$date))) +
+          ggplot2::labs(title = ttl) +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
                          plot.title = ggplot2::element_text(hjust = 0.5))
@@ -364,8 +366,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         if (points) p <- p + ggplot2::geom_point(data = complete)
         
         if (log.y) {
-          p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", y.nm.case))
+          p <- p + ggplot2::scale_y_log10() +
+                   ggplot2::labs(y = paste("log10", y.nm.case))
         }
         
         if (smooth) {
@@ -498,7 +500,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", y.nm.case))
+                   ggplot2::labs(y = paste("log10", y.nm.case))
         }
 
         if (smooth) {
@@ -531,9 +533,9 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         
         if (log.y) {
           p <- p + ggplot2::scale_y_log10() + 
-                   ggplot2::ylab(paste("log10", y.nm.case))
+                   ggplot2::labs(y = paste("log10", y.nm.case))
         } else {
-          p <- p + ggplot2::ylab(y.nm.case)
+          p <- p + ggplot2::labs(y = y.nm.case)
         }
         
         if (smooth) {
@@ -549,8 +551,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
 
       p <- p + ggplot2::theme_bw() +
-               ggplot2::xlab("Date") +
-               ggplot2::ggtitle("Total Package Downloads") +
+               ggplot2::labs(x = "Date") +
+               ggplot2::labs(title = "Total Package Downloads") +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank(),
@@ -999,16 +1001,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
-             ggplot2::xlab(paste("log10", y.nm.case))
+               ggplot2::aes(x = .data[[statistic]], 
+                            y = .data$package)) +
+             ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
-             ggplot2::xlab(y.nm.case)
+               ggplot2::aes(x = .data[[statistic]], 
+                            y = .data$package)) +
+             ggplot2::labs(x = y.nm.case)
       }
 
       p + ggplot2::geom_point(size = 1.5) +
-          ggplot2::ylab(NULL) +
+          ggplot2::labs(y = NULL) +
           ggplot2::theme_bw() +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank()) +
@@ -1221,9 +1225,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-                 ggplot2::ylab(paste("log10", y.nm.case))
+                 ggplot2::labs(y = paste("log10", y.nm.case))
       } else {
-        p <- p + ggplot2::ylab(y.nm.case)
+        p <- p + ggplot2::labs(y = y.nm.case)
       }
       
       if (smooth) {
@@ -1253,8 +1257,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }
       }
 
-      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
-               ggplot2::xlab("Date") +
+      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package),
+                 nrow = 2) +
+               ggplot2::labs(x = "Date") +
                ggplot2::theme_bw() +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
@@ -1678,11 +1683,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         dat$cumulative <- log10(dat$cumulative)
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
-             ggplot2::xlab(paste("log10", y.nm.case))
+             ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
-             ggplot2::xlab(y.nm.case)
+             ggplot2::labs(x = y.nm.case)
       }
 
       p + ggplot2::geom_point(size = 2) + 
@@ -1698,13 +1703,14 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         p <- ggplot2::ggplot(data = dat, 
                 ggplot2::aes(x = .data$date, y = .data$count, 
                   colour = .data$package)) + 
-             ggplot2::ggtitle("Package Download Counts")
+             ggplot2::labs(title = "Package Download Counts")
       
       } else if (statistic == "cumulative") {
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data$date, y = .data$cumulative, 
-                colour = .data$package)) + 
-             ggplot2::ggtitle("Cumulative Package Downloads")
+                 colour = .data$package)) + 
+             ggplot2::labs(title = "Cumulative Package Downloads")
+      }
       }
 
       if (any(dat$in.progress)) {
@@ -1896,9 +1902,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-                 ggplot2::ylab(paste("log10", y.nm.case))
+                 ggplot2::labs(y = paste("log10", y.nm.case))
       } else {
-        p <- p + ggplot2::ylab(y.nm.case)
+        p <- p + ggplot2::labs(y = y.nm.case)
       }
 
       if (smooth) {
@@ -1928,7 +1934,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       }
       
       p <- p + ggplot2::theme_bw() +
-               ggplot2::xlab("Date") +
+               ggplot2::labs(x = "Date") +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank(),
@@ -1966,21 +1972,23 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         dat$cumulative <- log10(dat$cumulative)
         
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
-             ggplot2::xlab(paste("log10", y.nm.case))
+               ggplot2::aes(x = .data[[statistic]], 
+                            y = .data$platform)) +
+             ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
         p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
-             ggplot2::xlab(y.nm.case)
+               ggplot2::aes(x = .data[[statistic]], 
+                            y = .data$platform)) +
+             ggplot2::labs(x = y.nm.case)
              
       }
 
       ttl <- paste("R Application Downloads:", unique(dat$date))
       
       p + ggplot2::geom_point(size = 2) +
-          ggplot2::ylab(NULL) +
+          ggplot2::labs(y = NULL) +
           ggplot2::theme_bw() +
-          ggplot2::ggtitle(ttl) +
+          ggplot2::labs(title = ttl) +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
                          plot.title = ggplot2::element_text(hjust = 0.5))
@@ -2482,7 +2490,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
         p <- p + ggplot2::theme_bw() +
-                 ggplot2::ggtitle("R Application Downloads") +
+                 ggplot2::labs(title = "R Application Downloads") +
                  ggplot2::theme(legend.position = "bottom",
                                 panel.grid.major = ggplot2::element_blank(),
                                 panel.grid.minor = ggplot2::element_blank(),
@@ -2678,9 +2686,9 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-          ggplot2::ylab(paste("log10", y.nm.case))
+                 ggplot2::labs(y = paste("log10", y.nm.case))
       } else {
-        p <- p + ggplot2::ylab(y.nm.case)
+        p <- p + ggplot2::labs(y = y.nm.case)
       }
 
       if (smooth) {
@@ -2708,8 +2716,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       p <- p + ggplot2::theme_bw() +
-               ggplot2::xlab("Date") +
-               ggplot2::ggtitle("Total R Application Downloads") +
+               ggplot2::labs(x = "Date") +
+               ggplot2::labs(title = "Total R Application Downloads") +
                ggplot2::theme(legend.position = "bottom",
                               panel.grid.major = ggplot2::element_blank(),
                               panel.grid.minor = ggplot2::element_blank(),
@@ -2770,20 +2778,21 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
              ggplot2::geom_point(size = 2) + 
-             ggplot2::xlab(paste("log10", y.nm.case)) + 
-             ggplot2::ylab(NULL)
+             ggplot2::labs(x = paste("log10", y.nm.case)) + 
+             ggplot2::labs(y = NULL)
       
       } else {
         p <- ggplot2::ggplot(data = dat, 
                ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
              ggplot2::geom_point(size = 2) + 
-             ggplot2::ylab(NULL)
+             ggplot2::labs(y = NULL)
+      }
       }
 
       ttl <- paste("R Application Downloads:", unique(dat$date))
 
       p + ggplot2::theme_bw() +
-          ggplot2::ggtitle(ttl) +
+          ggplot2::labs(title = ttl) +
           ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
                          plot.title = ggplot2::element_text(hjust = 0.5))
@@ -3178,9 +3187,9 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
       if (log.y) {
         p <- p + ggplot2::scale_y_log10() + 
-                 ggplot2::ylab(paste("log10", y.nm.case))
+                 ggplot2::labs(y = paste("log10", y.nm.case))
       } else {
-        p <- p + ggplot2::ylab(y.nm.case)
+        p <- p + ggplot2::labs(y = y.nm.case)
       }
 
       if (smooth) {
@@ -3205,8 +3214,8 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       }
 
       p <- p + ggplot2::theme_bw() +
-               ggplot2::xlab("Date") +
-               ggplot2::ggtitle("Total R Application Downloads") +
+               ggplot2::labs(x = "Date") +
+               ggplot2::labs(title = "Total R Application Downloads") +
                ggplot2::theme(legend.position = "bottom",
                                panel.grid.major = ggplot2::element_blank(),
                                panel.grid.minor = ggplot2::element_blank(),

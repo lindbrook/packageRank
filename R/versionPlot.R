@@ -35,8 +35,8 @@ versionPlot <- function() {
     # geom_vline(xintercept) --> geom_vline(aes(xintercept))
     ggplot2::geom_vline(aes(xintercept = 99.5), col = "black", 
       linetype = "dashed") +
-    ggplot2::xlab("Sample Package ID") +
-    ggplot2::ylab("Percent") +
+    ggplot2::labs(x ="Sample Package ID") +
+    ggplot2::labs(y = "Percent") +
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
@@ -44,5 +44,5 @@ versionPlot <- function() {
                    plot.title = ggplot2::element_text(hjust = 0.5)) +
     ggplot2::scale_y_continuous(breaks = c(0, 50, 100), limits = c(-10, 110)) +
     ggplot2::scale_x_continuous(breaks = 100) +
-    ggplot2::ggtitle(paste(titleA, titleB))
+    ggplot2::labs(title = paste(titleA, titleB))
 }

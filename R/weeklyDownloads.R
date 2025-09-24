@@ -79,20 +79,20 @@ plot.weeklyDownloads <- function(x, statistic = "percent", aggregation = "day",
           y = .data$count)) +
         ggplot2::facet_wrap(ggplot2::vars(.data$week.id), nrow = nrow, 
           scales = "free_y") +
-        ggplot2::ggtitle("Daily Count of Weekly CRAN Downloads")
+        ggplot2::labs(title = "Daily Count of Weekly CRAN Downloads")
     } else if (statistic == "percent") {
       p <- ggplot2::ggplot(data = x, ggplot2::aes(x = .data$day.id, 
           y = .data$percent)) +
         ggplot2::facet_wrap(ggplot2::vars(.data$week.id), nrow = nrow) +
-        ggplot2::ggtitle("Percent of Weekly CRAN Downloads")
+        ggplot2::labs(title = "Percent of Weekly CRAN Downloads")
     } else stop('statistic must be "count" or "percent".')
 
     p + ggplot2::geom_line() +
       ggplot2::geom_point() +
       ggplot2::scale_x_continuous(breaks = c(2, 4, 6),
                                   labels = days[c(2, 4, 6)]) +
-      ggplot2::xlab("Day") +
-      ggplot2::ylab(tools::toTitleCase(statistic)) +
+      ggplot2::labs(x = "Day") +
+      ggplot2::labs(y = tools::toTitleCase(statistic)) +
       ggplot2::theme_bw() +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                      panel.grid.minor = ggplot2::element_blank(),
