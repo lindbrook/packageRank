@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9032
+
+- add 'ggplot2' missing dates polygons.
+
+
 ### packageRank 0.9.6.9031
 
 - fix typo in README.
