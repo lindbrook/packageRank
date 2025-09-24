@@ -269,8 +269,8 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
           ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
             colour = "white", size = label.size, label = xlabel, 
             nudge_y = ylabel.nudge) +
-       ggplot2::xlab("Rank") +
-       ggplot2::ylab("Count") +
+       ggplot2::labs(x = "Rank") +
+       ggplot2::labs(y = "Count") +
        ggplot2::facet_wrap(ggplot2::vars(.data$id), nrow = 2) +
        ggplot2::theme_bw() +
        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),

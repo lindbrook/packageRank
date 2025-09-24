@@ -674,8 +674,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
           linetype = "dotted") +
         ggplot2::geom_point(data = est.data, shape = 1) +
         ggplot2::geom_point(data = ip.data, shape = 0) +
-        ggplot2::xlab("Date") +
-        ggplot2::ylab(ylab) +
+        ggplot2::labs(x = "Date") +
+        ggplot2::labs(y = ylab) +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                        panel.grid.minor = ggplot2::element_blank())
 
@@ -708,8 +708,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
         ggplot2::geom_point(data = est.data, col = "red") +
         ggplot2::geom_point(data = ip.data, shape = 0) +
         ggplot2::facet_wrap(ggplot2::vars(.data$packages), nrow = 2) +
-        ggplot2::xlab("Date") +
-        ggplot2::ylab(ylab) +
+        ggplot2::labs(x = "Date") +
+        ggplot2::labs(y = ylab) +
         ggplot2::theme_bw() +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                        panel.grid.minor = ggplot2::element_blank())
@@ -745,8 +745,8 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
     p <- p + ggplot2::geom_line(size = 0.5) +
-             ggplot2::xlab("Date") +
-             ggplot2::ylab(ylab) +
+             ggplot2::labs(x = "Date") +
+             ggplot2::labs(y = ylab) +
              ggplot2::theme_bw() +
              ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                             panel.grid.minor = ggplot2::element_blank())

@@ -117,7 +117,7 @@ populationPlot <- function(x, graphics = NULL, log.y = TRUE, smooth = TRUE,
          ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                         panel.grid.minor = ggplot2::element_blank()) +
          ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
-         ggplot2::ylab("log 10 count")
+         ggplot2::labs(y = "log 10 count")
 
     cran.smpl.lst <- rep(list(cran.smpl), length(packages))
 

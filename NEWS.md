@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9029
+
+- use ggplot::labs().
+
+
 ### packageRank 0.9.6.9028
 
 - amend fix for missing dates in cranDownloads("R").

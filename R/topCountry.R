@@ -66,8 +66,8 @@ plotTopCountryCodes <- function(dataset = "october", second.place = FALSE) {
     sugrrants::facet_calendar(~ as.Date(date), week_start = 7) +
     ggplot2::scale_x_continuous(limits = c(0.5, max(dat$id) + 0.5)) +
     ggplot2::scale_y_continuous(breaks = c(0, 1, 2), limits = c(0, 3)) +
-    ggplot2::xlab("Rank") +
-    ggplot2::ylab("Downloads (millions)")
+    ggplot2::labs(x = "Rank") +
+    ggplot2::labs(y = "Downloads (millions)")
 }
 
 #' Compute Downloads by Country Code.
@@ -120,6 +120,6 @@ plotDownloadsCountry <- function() {
     ggplot2::geom_point(size = 0.5) +
     ggplot2::scale_x_continuous(breaks = c(0, 100, 200)) +
     ggplot2::scale_y_continuous(breaks = c(0, 1, 2), limits = c(-0.25, 2.75)) +
-    ggplot2::xlab("Rank") +
-    ggplot2::ylab("Downloads (millions)")
+    ggplot2::labs(x = "Rank") +
+    ggplot2::labs(y = "Downloads (millions)")
 }
