@@ -333,13 +333,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[1], 
                                    xmax = packageRank::missing.dates[2], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[3], 
                                    xmax = packageRank::missing.dates[7], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         brks <- c(mean(packageRank::missing.dates[1:2]),
@@ -1067,13 +1067,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[1], 
                                    xmax = packageRank::missing.dates[2], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[3], 
                                    xmax = packageRank::missing.dates[7], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         brks <- c(mean(packageRank::missing.dates[1:2]),
@@ -1783,13 +1783,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[1], 
                                    xmax = packageRank::missing.dates[2], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[3], 
                                    xmax = packageRank::missing.dates[7], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         brks <- c(mean(packageRank::missing.dates[1:2]),
@@ -2507,13 +2507,13 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[1], 
                                    xmax = packageRank::missing.dates[2], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[3], 
                                    xmax = packageRank::missing.dates[7], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         brks <- c(mean(packageRank::missing.dates[1:2]),
@@ -2917,13 +2917,13 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[1], 
                                    xmax = packageRank::missing.dates[2], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         p <- p + ggplot2::annotate(geom = "rect", 
                                    xmin = packageRank::missing.dates[3], 
                                    xmax = packageRank::missing.dates[7], 
-                                   ymin = ymin, ymax = Inf, color = "lightgray",
+                                   ymin = ymin, ymax = Inf, color = NA,
                                    fill = "lightgray", alpha = 0.5)
         
         brks <- c(mean(packageRank::missing.dates[1:2]),
