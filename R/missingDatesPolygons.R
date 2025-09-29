@@ -1,6 +1,6 @@
 #' Polygon for missing log dates.
 #'
-#' Seven days: 8/25-26, 8/29-9/02.
+#' Seven days: 8/25-26, 8/29-9/02 in 2025.
 #' @param ylim Numeric. Vector of plot ylim.
 #' @param log.y Logical. Logarithm of statistic.
 #' @param col Character. Color.
