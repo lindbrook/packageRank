@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9035
+
+- add/restore 'graphics' functions to NAMESPACE.
+
+
 ### packageRank 0.9.6.9034
 
 - set ggplot2::annotate(color = NA) for missing dates polygons.

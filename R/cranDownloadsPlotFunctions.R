@@ -1,5 +1,9 @@
 # Plot functions for plot.cranDownloads() #
 
+#' @importFrom graphics abline axis barplot dotchart legend lines mtext par points segments text title
+
+utils::globalVariables(".data")
+
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   se, f, span, r.version, unit.observation, chatgpt, chatgpt.release, 
   weekend) {
