@@ -15,6 +15,12 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   y.nm <- statistic
   y.nm.case <- tools::toTitleCase(statistic)
 
+  if (isTRUE(r.version) | r.version == "line") {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- paste("R", rvers.data$version)
+  }
+
   if (obs.ct == 1) {
     if (graphics == "base") {
       if (log.y) {
@@ -289,10 +295,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
 
       if (isTRUE(r.version) | r.version == "line") {
-        r_v <- rversions::r_versions()
-        r_date <- as.Date(r_v$date)
-        axis(3, at = r_date, labels = paste("R", r_v$version), cex.axis = 2/3,
-          padj = 0.9)
+        axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
@@ -605,6 +608,12 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
   y.nm <- statistic
   y.nm.case <- tools::toTitleCase(statistic)
 
+  if (isTRUE(r.version) | r.version == "line") {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- paste("R", rvers.data$version)
+  }
+
   if (statistic == "count") {
     ttl <- "Package Download Counts"
   } else if (statistic == "cumulative") {
@@ -703,10 +712,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(r.version) | r.version == "line") {
-            r_v <- rversions::r_versions()
-            r_date <- as.Date(r_v$date)
-            axis(3, at = r_date, labels = paste("R", r_v$version), 
-              cex.axis = 2/3, padj = 0.9)
+            axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
@@ -885,10 +891,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(r.version) | r.version == "line") {
-            r_v <- rversions::r_versions()
-            r_date <- as.Date(r_v$date)
-            axis(3, at = r_date, labels = paste("R", r_v$version), 
-              cex.axis = 2/3, padj = 0.9)
+            axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
@@ -979,10 +982,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (isTRUE(r.version) | r.version == "line") {
-            r_v <- rversions::r_versions()
-            r_date <- as.Date(r_v$date)
-            axis(3, at = r_date, labels = paste("R", r_v$version), 
-              cex.axis = 2/3, padj = 0.9)
+            axis(3, at = r_date, labels  = r_v, cex.axis = 2/3, padj = 0.9)
             if (r.version == "line") abline(v = r_date, lty = "dotted")
           }
 
@@ -1344,6 +1344,12 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
     ttl <- "Package Download Counts"
   } else if (statistic == "cumulative") {
     ttl <- "Cumulative Package Downloads"
+  }
+
+  if (isTRUE(r.version) | r.version == "line") {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- paste("R", rvers.data$version)
   }
 
   if (graphics == "base") {
@@ -2045,6 +2051,12 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
   last.obs.date <- x$last.obs.date
   type <- ifelse(points, "o", "l")
 
+  if (isTRUE(r.version) | r.version == "line") {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- paste("R", rvers.data$version)
+  }
+
   if (obs.ct == 1) {
     if (graphics == "base") {
       if (log.y) {
@@ -2456,10 +2468,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       if (isTRUE(r.version) | r.version == "line") {
-        r_v <- rversions::r_versions()
-        r_date <- as.Date(r_v$date)
-        axis(3, at = r_date, labels = paste("R", r_v$version), 
-          cex.axis = 2/3, padj = 0.9)
+        axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
@@ -2856,6 +2865,12 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
   last.obs.date <- x$last.obs.date
   ct <- tapply(dat$count, dat$date, sum)
 
+  if (isTRUE(r.version) | r.version == "line") {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- paste("R", rvers.data$version)
+  }
+
   if (any(dat$in.progress)) {
     dat <- data.frame(date = unique(dat$date),
                       count = ct,
@@ -3154,10 +3169,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       }
 
       if (isTRUE(r.version) | r.version == "line") {
-        r_v <- rversions::r_versions()
-        r_date <- as.Date(r_v$date)
-        axis(3, at = r_date, labels = paste("R", r_v$version), cex.axis = 2/3,
-          padj = 0.9)
+        axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
         if (r.version == "line") abline(v = r_date, lty = "dotted")
       }
 
