@@ -1,6 +1,6 @@
 #' Polygon for missing log dates.
 #'
-#' Seven days: 8/25-26, 8/29-9/02.
+#' Seven days: 8/25-26, 8/29-9/02 in 2025.
 #' @param ylim Numeric. Vector of plot ylim.
 #' @param log.y Logical. Logarithm of statistic.
 #' @param col Character. Color.
@@ -34,4 +34,24 @@ missingDatesPolygons <- function(ylim, log.y = FALSE, col = "lightgray",
     labels = null.set, cex.axis = 2/3, padj = 0.9)
   axis(3, at = mean(as.numeric(packageRank::missing.dates[3:7])),
     labels = null.set, cex.axis = 2/3, padj = 0.9)
+}
+
+#' 'ggplot2' rectangle annotation layer for missing log dates.
+#'
+#' Seven days: 8/25-26, 8/29-9/02 in 2025.
+#' @param p Object. 'ggplot2' plot object. 
+#' @param ymin Numeric. For edge to edge polygons; 0 for y.log = TRUE, -Inf for y.log = FALSE.
+#' @noRd
+
+gg_missingDatesPolygons <- function(p, ymin) {
+  p + ggplot2::annotate(geom = "rect", 
+                        xmin = packageRank::missing.dates[1], 
+                        xmax = packageRank::missing.dates[2], 
+                        ymin = ymin, ymax = Inf, color = NA,
+                        fill = "gray", alpha = 0.5) +
+      ggplot2::annotate(geom = "rect", 
+                         xmin = packageRank::missing.dates[3], 
+                         xmax = packageRank::missing.dates[7], 
+                         ymin = ymin, ymax = Inf, color = NA,
+                         fill = "gray", alpha = 0.5)
 }
