@@ -1334,7 +1334,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span,
-  unit.observation, chatgpt, chatgpt.release, weekend) {
+  r.version, unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
