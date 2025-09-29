@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9041
+
+- set plot.cranDownloads(chatgpt = "line").
+
+
 ### packageRank 0.9.6.9040
 
 - amend prototype 'ggplot2' top-axis annotation code.
