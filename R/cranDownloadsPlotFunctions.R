@@ -403,6 +403,13 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           
           brk <- r_date
           lbl <- r_v
+        
+        } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+                   (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+
+          brk <- c(mean(packageRank::missing.dates[1:2]),
+                   packageRank::missing.dates[5])
+          lbl <- rep(expression(symbol("\306")), 2)
         }
       }
 
@@ -1195,6 +1202,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           
           brk <- r_date
           lbl <- r_v
+        
+        } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+                   (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+
+          brk <- c(mean(packageRank::missing.dates[1:2]),
+                   packageRank::missing.dates[5])
+          lbl <- rep(expression(symbol("\306")), 2)
         }
       }
 
@@ -1978,6 +1992,13 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           
           brk <- r_date
           lbl <- r_v
+        
+        } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+                   (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+
+          brk <- c(mean(packageRank::missing.dates[1:2]),
+                   packageRank::missing.dates[5])
+          lbl <- rep(expression(symbol("\306")), 2)
         }
       }
 
@@ -2766,6 +2787,13 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           
           brk <- r_date
           lbl <- r_v
+        
+        } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+                   (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+
+          brk <- c(mean(packageRank::missing.dates[1:2]),
+                   packageRank::missing.dates[5])
+          lbl <- rep(expression(symbol("\306")), 2)
         }
       }
 
@@ -3481,6 +3509,13 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           
           brk <- r_date
           lbl <- r_v
+        
+        } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+                   (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+
+          brk <- c(mean(packageRank::missing.dates[1:2]),
+                   packageRank::missing.dates[5])
+          lbl <- rep(expression(symbol("\306")), 2)
         }
       }
 
