@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9037
+
+- conditionally pre-compute 'rversions' data.
+
+
 ### packageRank 0.9.6.9036
 
 - add multiPlot(r.version).
