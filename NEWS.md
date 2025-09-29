@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9036
+
+- add multiPlot(r.version).
+
+
 ### packageRank 0.9.6.9035
 
 - add/restore 'graphics' functions to NAMESPACE.
