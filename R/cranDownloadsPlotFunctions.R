@@ -1,5 +1,7 @@
 # Plot functions for plot.cranDownloads() #
 
+utils::globalVariables(".data")
+
 cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
   se, f, span, r.version, unit.observation, chatgpt, chatgpt.release, 
   weekend) {
