@@ -1,0 +1,88 @@
+#' Annotate top axis (side = 3) with ChatGPT relase, R version, and missing.dates and add missing dates polygons.
+#' @noRd
+
+gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
+  chatgpt.release) {
+
+  date.range <- range(dat$date)
+  exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+  obs.chatgpt <- chatgpt.release %in% exp.dates
+  obs.missing <- packageRank::missing.dates %in% exp.dates
+
+  if (isTRUE(r.version) | isTRUE(r.version == "line")) {  
+    rvers.data <- rversions::r_versions()
+    r_date <- as.Date(rvers.data$date)
+    r_v <- rvers.data$version
+    sel <- r_date %in% exp.dates
+    obs.r <- any(sel)
+    r_v <- paste("R", r_v[sel])
+    r_date <- r_date[sel]
+  } else if (isFALSE(r.version) | isFALSE(r.version == "line")) {
+    r_v <- NULL
+    r_date <- NULL
+    obs.r <- FALSE
+  }
+  
+  if (any(obs.missing)) {
+    # https://stackoverflow.com/questions/70370189/annotating-a-rectangle-in-r-with-ggplot2-for-a-graph-in-log-scale
+    ymin <- ifelse(log.y, 0, -Inf)
+    p <- gg_missingDatesPolygons(p, ymin)
+
+    null.set <- expression(symbol("\306"))
+
+    if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+        (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- c(chatgpt.release,
+               mean(packageRank::missing.dates[1:2]),
+               packageRank::missing.dates[5],
+               r_date)
+      lbl <- c("ChatGPT", rep(null.set, 2), r_v)
+    } else if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+               (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+      brk <- c(chatgpt.release,
+               mean(packageRank::missing.dates[1:2]),
+               packageRank::missing.dates[5])
+      lbl <- c("ChatGPT", rep(null.set, 2))
+    } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) &
+               (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- c(mean(packageRank::missing.dates[1:2]),
+               packageRank::missing.dates[5],
+               r_date)
+      lbl <- c(rep(null.set, 2), r_v)
+    } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) |
+               (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+      brk <- c(mean(packageRank::missing.dates[1:2]),
+               packageRank::missing.dates[5])
+      lbl <- rep(null.set, 2)
+    }
+  } else {
+    if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+        (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- c(chatgpt.release, r_date)
+      lbl <- c("ChatGPT", r_v)
+    } else if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+               (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+      brk <- chatgpt.release
+      lbl <- "ChatGPT"
+    } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) & 
+               (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- r_date
+      lbl <- r_v
+    }
+  }
+
+  p <- p + ggplot2::scale_x_date(sec.axis =
+             ggplot2::dup_axis(name = NULL, breaks = brk, labels = lbl))
+
+  if (obs.chatgpt & chatgpt == "line") {
+    p <- p + ggplot2::geom_vline(xintercept = chatgpt.release, 
+      colour = "blue", linetype = "solid", linewidth = 0.125)
+  }
+
+  if (obs.r & r.version == "line") {
+    p <- p + ggplot2::geom_vline(xintercept = r_date, 
+      colour = "gray", linetype = "solid", linewidth = 0.125)
+  }
+
+  p
+}
