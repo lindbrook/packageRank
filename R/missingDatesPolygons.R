@@ -50,8 +50,8 @@ gg_missingDatesPolygons <- function(p, ymin) {
                         ymin = ymin, ymax = Inf, color = NA,
                         fill = "gray", alpha = 0.5) +
       ggplot2::annotate(geom = "rect", 
-                         xmin = packageRank::missing.dates[3], 
-                         xmax = packageRank::missing.dates[7], 
-                         ymin = ymin, ymax = Inf, color = NA,
-                         fill = "gray", alpha = 0.5)
+                        xmin = packageRank::missing.dates[3], 
+                        xmax = packageRank::missing.dates[7], 
+                        ymin = ymin, ymax = Inf, color = NA,
+                        fill = "gray", alpha = 0.5)
 }

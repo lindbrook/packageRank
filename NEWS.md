@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9042
+
+- add/use gg_axis.annotation_polygon(): top-axis annotation.
+
+
 ### packageRank 0.9.6.9041
 
 - set plot.cranDownloads(chatgpt = "line").
