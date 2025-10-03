@@ -56,6 +56,21 @@ gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
       lbl <- rep(null.set, 2)
     }
     
+  } else if (all(obs.missing == FALSE)) {
+    if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+        (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- c(chatgpt.release, r_date)
+      lbl <- c("ChatGPT", r_v)
+    } else if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
+               (isFALSE(r.version) | isFALSE(r.version == "line"))) {
+      brk <- chatgpt.release
+      lbl <- "ChatGPT"
+    } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) & 
+               (isTRUE(r.version) | isTRUE(r.version == "line"))) {
+      brk <- r_date
+      lbl <- r_v
+    }
+  
   } else if (any(obs.missing == FALSE)) {
     missingA <- obs.missing[1:2]
     missingB <- obs.missing[3:7]
@@ -113,20 +128,6 @@ gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
       }
       brk <- c(brkA, brkB)
       lbl <- rep(null.set, 2)
-    }
-  } else if (all(obs.missing == FALSE)) {
-    if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
-        (isTRUE(r.version) | isTRUE(r.version == "line"))) {
-      brk <- c(chatgpt.release, r_date)
-      lbl <- c("ChatGPT", r_v)
-    } else if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &
-               (isFALSE(r.version) | isFALSE(r.version == "line"))) {
-      brk <- chatgpt.release
-      lbl <- "ChatGPT"
-    } else if ((isFALSE(chatgpt) | isFALSE(chatgpt == "line")) & 
-               (isTRUE(r.version) | isTRUE(r.version == "line"))) {
-      brk <- r_date
-      lbl <- r_v
     }
   }
 
