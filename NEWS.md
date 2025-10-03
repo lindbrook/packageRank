@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9044
+
+- fix gg_axis.annotation_polygon().
+
+
 ### packageRank 0.9.6.9043
 
 - add variably sized missing dates polygons.
