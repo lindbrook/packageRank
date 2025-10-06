@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9045
+
+- fix cranDownloads("R") for packageRank::missing.dates.
+
+
 ### packageRank 0.9.6.9044
 
 - fix gg_axis.annotation_polygon().
