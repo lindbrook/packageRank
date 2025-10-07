@@ -1,13 +1,14 @@
 #' Polygon for missing log dates.
 #'
 #' Seven days: 8/25-26, 8/29-9/02 in 2025.
+#' @param dat Object. Computed cranDownloads() data.
 #' @param ylim Numeric. Vector of plot ylim.
 #' @param log.y Logical. Logarithm of statistic.
 #' @param col Character. Color.
 #' @param alpha.f Numeric. Alpha level transparency.
 #' @noRd
 
-missingDatesPolygons <- function(ylim, log.y = FALSE, col = "lightgray", 
+missingDatesPolygons <- function(dat, ylim, log.y = FALSE, col = "lightgray", 
   alpha.f = 0.5) {
     
   if (log.y) {
@@ -18,22 +19,126 @@ missingDatesPolygons <- function(ylim, log.y = FALSE, col = "lightgray",
     y2 <- rev(y1)
   }
 
-  xs1 <- c(rep(packageRank::missing.dates[1], 2),
-           rep(packageRank::missing.dates[2], 2))
-  xs2 <- c(rep(packageRank::missing.dates[3], 2),
-           rep(packageRank::missing.dates[7], 2))
-
-  graphics::polygon(x = xs1, y = c(y1, y2), border = NA,
-    col = grDevices::adjustcolor(col, alpha.f = alpha.f))
-  graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
-    col = grDevices::adjustcolor(col, alpha.f = alpha.f))
-  
   null.set <- expression(symbol("\306"))
+  date.range <- range(dat$date)
+  exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
+  obs.missing <- packageRank::missing.dates %in% exp.dates
 
-  axis(3, at = mean(as.numeric(packageRank::missing.dates[1:2])),
-    labels = null.set, cex.axis = 2/3, padj = 0.9)
-  axis(3, at = mean(as.numeric(packageRank::missing.dates[3:7])),
-    labels = null.set, cex.axis = 2/3, padj = 0.9)
+  if (all(obs.missing)) {
+    xs1 <- c(rep(packageRank::missing.dates[1], 2),
+             rep(packageRank::missing.dates[2], 2))
+    xs2 <- c(rep(packageRank::missing.dates[3], 2),
+             rep(packageRank::missing.dates[7], 2))
+    graphics::polygon(x = xs1, y = c(y1, y2), border = NA,
+      col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+    graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+      col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+    axis(3, at = mean(as.numeric(packageRank::missing.dates[1:2])),
+      labels = null.set, cex.axis = 2/3, padj = 0.9)
+    axis(3, at = mean(as.numeric(packageRank::missing.dates[3:7])),
+      labels = null.set, cex.axis = 2/3, padj = 0.9)
+  
+  } else if (any(obs.missing == FALSE)) {
+    missingA <- obs.missing[1:2]
+    missingB <- obs.missing[3:7]
+
+    if (all(missingA) & all(missingB == FALSE)) {
+      xs1 <- c(rep(packageRank::missing.dates[1], 2),
+               rep(packageRank::missing.dates[2], 2))
+      graphics::polygon(x = xs1, y = c(y1, y2), border = NA,
+        col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+      at1 <- mean(packageRank::missing.dates[1:2])
+      axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
+    
+    } else if (all(missingA == FALSE) & all(missingB)) {
+      xs2 <- c(rep(packageRank::missing.dates[3], 2),
+               rep(packageRank::missing.dates[7], 2))
+      graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+        col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+      at2 <- packageRank::missing.dates[5]
+      axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+
+
+    } else if (all(missingA) & any(missingB == FALSE)) {
+      xs1 <- c(rep(packageRank::missing.dates[1], 2),
+               rep(packageRank::missing.dates[2], 2))
+      graphics::polygon(x = xs1, y = c(y1, y2), border = NA,
+        col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+      at1 <- mean(packageRank::missing.dates[1:2])
+      axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
+
+      if (sum(missingB) > 1) {
+        xs.trimmed <- packageRank::missing.dates[3:7][missingB]
+        xs2 <- c(rep(xs.trimmed[1], 2),
+                 rep(xs.trimmed[length(xs.trimmed)], 2))
+        at2 <- mean(xs.trimmed)
+        graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+          col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      } else if (sum(missingB) == 1) {
+        at2 <- packageRank::missing.dates[3:7][missingB]
+        abline(v = at2, col = col)
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+
+    } else if (any(missingA == FALSE) & all(missingB)) {
+      if (sum(missingA) == 1) {
+        at1 <- packageRank::missing.dates[1:2][missingA]
+        abline(v = at1, col = col)
+        axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+      
+      xs2 <- c(rep(packageRank::missing.dates[3], 2),
+               rep(packageRank::missing.dates[7], 2))
+      graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+        col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+      at2 <- packageRank::missing.dates[5]
+      axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+
+    } else if (all(missingA == FALSE) & any(missingB == FALSE)) {
+      if (sum(missingB) > 1) {
+        xs.trimmed <- packageRank::missing.dates[3:7][missingB]
+        xs2 <- c(rep(xs.trimmed[1], 2),
+                 rep(xs.trimmed[length(xs.trimmed)], 2))
+        at2 <- mean(xs.trimmed)
+        graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+          col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      } else if (sum(missingB) == 1) {
+        at2 <- packageRank::missing.dates[3:7][missingB]
+        abline(v = at2, col = col)
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+
+    } else if (any(missingA == FALSE) & all(missingB == FALSE)) {
+      if (sum(missingA) == 1) {
+        at1 <- packageRank::missing.dates[1:2][missingA]
+        abline(v = at2, col = col)
+        axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+
+    } else if (any(missingA == FALSE) & any(missingB == FALSE)) {
+      if (sum(missingA) == 1) {
+        at1 <- packageRank::missing.dates[1:2][missingA]
+        abline(v = at1, col = col)
+        axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+
+      if (sum(missingB) > 1) {
+        xs.trimmed <- packageRank::missing.dates[3:7][missingB]
+        xs2 <- c(rep(xs.trimmed[1], 2),
+                 rep(xs.trimmed[length(xs.trimmed)], 2))
+        at2 <- mean(xs.trimmed)
+        graphics::polygon(x = xs2, y = c(y1, y2), border = NA,
+          col = grDevices::adjustcolor(col, alpha.f = alpha.f))
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      } else if (sum(missingB) == 1) {
+        at2 <- packageRank::missing.dates[3:7][missingB]
+        abline(v = at2, col = col)
+        axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
+      }
+    }
+  }
 }
 
 #' 'ggplot2' rectangle annotation layer for missing log dates.

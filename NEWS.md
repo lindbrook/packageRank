@@ -1,3 +1,9 @@
+### packageRank 0.9.6.9047
+
+- add variable missing date polygons to missingDatesPolygons().
+- add missingDatesPolygons(dat).
+
+
 ### packageRank 0.9.6.9046
 
 - fix plot.cranDownloads(weekend = TRUE).
