@@ -83,7 +83,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
         points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
@@ -177,7 +177,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (weekdays(x$from) == "Sunday") {
           points(wk1.partial$date, wk1.partial[, y.nm], pch = 16)
@@ -255,7 +255,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ylab = y.nm.case, pch = NA)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
         
         if (type == "o") {
           if (weekend) {
@@ -654,7 +654,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
           points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
@@ -812,7 +812,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           if (weekdays(x$from) == "Sunday") {
             points(wk1.partial[, c("date", y.nm)], pch = 16)
@@ -923,7 +923,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = NA)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           if (type == "o") {
             if (weekend) {
@@ -1359,7 +1359,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               xlab = "Date", ylab = y.nm.case)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           invisible(lapply(seq_along(pkg.data), function(i) {
             complete <- pkg.data[[i]]$complete
@@ -1497,7 +1497,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                xlab = "Date", ylab = y.nm.case)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           invisible(lapply(seq_along(plot.data), function(i) {
             pkg.dat <- plot.data[[i]]$pkg.dat
@@ -1594,7 +1594,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               xlab = "Date", ylab = y.nm.case)
           }
 
-          missingDatesPolygons(ylim, log.y = log.y)
+          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           invisible(lapply(seq_along(x$packages), function(i) {
             tmp <- dat[dat$package == x$packages[i], ]
@@ -2058,7 +2058,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             ylab = y.nm.case, ylim = ylim)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (points) {
           invisible(lapply(seq_along(complete), function(i) {
@@ -2208,7 +2208,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             ylab = y.nm.case, ylim = ylim)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (points) {
           invisible(lapply(seq_along(complete), function(i) {
@@ -2310,7 +2310,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                pch = NA, ylim = ylim, xlab = "Date", ylab = y.nm.case)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
@@ -2855,7 +2855,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         points(ip.data[, vars], col = "black", pch = 0)
         points(est.data[, vars], col = "red", pch = 1)
@@ -2947,7 +2947,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (weekdays(x$from) == "Sunday") {
           points(wk1.partial[, vars], pch = 16)
@@ -3004,7 +3004,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         }
 
         ylim <- range(dat[, statistic])
-        missingDatesPolygons(ylim, log.y = log.y)
+        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (type == "o") {
           if (weekend) {

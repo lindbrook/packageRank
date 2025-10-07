@@ -1,13 +1,14 @@
 #' Polygon for missing log dates.
 #'
 #' Seven days: 8/25-26, 8/29-9/02 in 2025.
+#' @param dat Object. Computed cranDownloads() data.
 #' @param ylim Numeric. Vector of plot ylim.
 #' @param log.y Logical. Logarithm of statistic.
 #' @param col Character. Color.
 #' @param alpha.f Numeric. Alpha level transparency.
 #' @noRd
 
-missingDatesPolygons <- function(ylim, log.y = FALSE, col = "lightgray", 
+missingDatesPolygons <- function(dat, ylim, log.y = FALSE, col = "lightgray", 
   alpha.f = 0.5) {
     
   if (log.y) {
