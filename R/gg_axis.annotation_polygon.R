@@ -99,22 +99,22 @@ gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
       } else {
         brkA <- packageRank::missing.dates[1:2][missingA]
       }
-      brk <- c(brkA, mean(packageRank::missing.dates[5]))
+      brk <- c(brkA, packageRank::missing.dates[5])
       lbl <- rep(null.set, 2)
-     } else if (all(missingA == FALSE) & any(missingB == FALSE)) {
-        if (all(missingB)) {
-          brk <- packageRank::missing.dates[5]
-        } else {
-          brk <- mean(packageRank::missing.dates[3:7][missingB])
-        }
-        lbl <- null.set
-      } else if (any(missingA == FALSE) & all(missingB == FALSE)) {
-        if (all(missingA)) {
-          brk <- mean(packageRank::missing.dates[1:2])
-        } else {
-          brk <- packageRank::missing.dates[1:2][missingA]
-        }
-        lbl <- null.set
+    } else if (all(missingA == FALSE) & any(missingB == FALSE)) {
+      if (all(missingB)) {
+        brk <- packageRank::missing.dates[5]
+      } else {
+        brk <- mean(packageRank::missing.dates[3:7][missingB])
+      }
+      lbl <- null.set
+    } else if (any(missingA == FALSE) & all(missingB == FALSE)) {
+      if (all(missingA)) {
+        brk <- mean(packageRank::missing.dates[1:2])
+      } else {
+        brk <- packageRank::missing.dates[1:2][missingA]
+      }
+      lbl <- null.set
     } else if (any(missingA == FALSE) & any(missingB == FALSE)) {
       if (all(missingA)) {
         brkA <- mean(packageRank::missing.dates[1:2])
