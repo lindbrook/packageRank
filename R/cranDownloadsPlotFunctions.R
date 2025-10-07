@@ -258,8 +258,11 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         missingDatesPolygons(ylim, log.y = log.y)
         
         if (type == "o") {
-          points(wk.day$date, wk.day[, y.nm], pch = 16)
-          if (!weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
+          if (weekend) {
+            points(wk.day$date, wk.day[, y.nm], pch = 16)
+          } else {
+            points(dat$date, dat[, y.nm], pch = 16)
+          }
         }
 
         if (weekend) {
@@ -923,8 +926,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           missingDatesPolygons(ylim, log.y = log.y)
 
           if (type == "o") {
-            points(wk.day$date, wk.day[, y.nm], pch = 16)
-            if (!weekend) points(wk.end$date, wk.end[, y.nm], pch = 16)
+            if (weekend) {
+              points(wk.day$date, wk.day[, y.nm], pch = 16)
+            } else {
+              points(dat$date, dat[, y.nm], pch = 16)
+            }
           }
 
           if (weekend) {
@@ -1602,11 +1608,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             }
 
             if (type == "o") {
-              points(wk.day$date, wk.day[, statistic], col = cbPalette[i], 
-                pch = 16)
-              if (!weekend) {
-                points(wk.end$date, wk.end[, statistic], col = cbPalette[i],
-                  pch = 16)
+              if (weekend) {
+                points(wk.day$date, wk.day[, statistic], pch = 16)
+              } else {
+                points(dat$date, dat[, statistic], pch = 16)
               }
             }
 
@@ -2318,13 +2323,13 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 
         if (type == "o") {
           invisible(lapply(seq_along(pltfrm), function(i) {
-            sel <- wk.day$platform == pltfrm[i]
-            points(wk.day[sel, "date"], wk.day[sel, statistic], 
-              col = pltfrm.col[i], pch = 16)
-          
-            if (!weekend) {
-              sel <- wk.end$platform == pltfrm[i]
-              points(wk.end[sel, "date"], wk.end[sel, statistic], 
+            if (weekend) {
+              sel <- wk.day$platform == pltfrm[i]
+              points(wk.day[sel, "date"], wk.day[sel, statistic], 
+                col = pltfrm.col[i], pch = 16)
+            } else {
+              sel <- dat$platform == pltfrm[i]
+              points(dat[sel, "date"], dat[sel, statistic], 
                 col = pltfrm.col[i], pch = 16)
             }
           }))
@@ -3002,8 +3007,11 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         missingDatesPolygons(ylim, log.y = log.y)
 
         if (type == "o") {
-          points(wk.day$date, wk.day[, statistic], pch = 16)
-          if (!weekend) points(wk.end$date, wk.end[, statistic], pch = 16)
+          if (weekend) {
+            points(wk.day$date, wk.day[, statistic], pch = 16)
+          } else {
+            points(dat$date, dat[, statistic], pch = 16)
+          }
         }
 
         if (weekend) {

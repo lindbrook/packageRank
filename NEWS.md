@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9046
+
+- fix plot.cranDownloads(weekend = TRUE).
+
+
 ### packageRank 0.9.6.9045
 
 - fix cranDownloads("R") for packageRank::missing.dates.
