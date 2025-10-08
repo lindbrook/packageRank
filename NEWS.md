@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9048
+
+- fix 'at' error in missingDatesPolygons().
+
+
 ### packageRank 0.9.6.9047
 
 - add variable missing date polygons to missingDatesPolygons().

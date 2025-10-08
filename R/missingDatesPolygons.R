@@ -113,7 +113,7 @@ missingDatesPolygons <- function(dat, ylim, log.y = FALSE, col = "lightgray",
     } else if (any(missingA == FALSE) & all(missingB == FALSE)) {
       if (sum(missingA) == 1) {
         at1 <- packageRank::missing.dates[1:2][missingA]
-        abline(v = at2, col = col)
+        abline(v = at1, col = col)
         axis(3, at = at1, labels = null.set, cex.axis = 2/3, padj = 0.9)
       }
 
