@@ -929,7 +929,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             if (weekend) {
               points(wk.day$date, wk.day[, y.nm], pch = 16)
             } else {
-              points(dat$date, dat[, y.nm], pch = 16)
+              points(pkg.dat$date, pkg.dat[, y.nm], pch = 16)
             }
           }
 
@@ -1609,9 +1609,10 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (type == "o") {
               if (weekend) {
-                points(wk.day$date, wk.day[, statistic], pch = 16)
+                points(wk.day$date, wk.day[, statistic], col = cbPalette[i],
+                  pch = 16)
               } else {
-                points(dat$date, dat[, statistic], pch = 16)
+                points(tmp$date, tmp[, statistic], col = cbPalette[i], pch = 16)
               }
             }
 
@@ -1634,8 +1635,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
             if (smooth) {
               if (any(packageRank::missing.dates %in% dat$date) ) {
-                sel <- !dat$date %in% packageRank::missing.dates
-                smooth.data <- dat[sel, ]
+                smooth.data <- tmp[!tmp$date %in% packageRank::missing.dates, ]
               } else smooth.data <- dat
 
               if (nrow(smooth.data) > 7) {

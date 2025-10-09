@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9049
+
+- fix data for points() in singlePlot() and multiPlot().
+
+
 ### packageRank 0.9.6.9048
 
 - fix 'at' error in missingDatesPolygons().
