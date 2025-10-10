@@ -42,7 +42,7 @@ You can read more about the package in the sections below:
   [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
   or triples the number of R application download counts between
   2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`. The
-  third is the apparent loss of 7 download logs from late August, early
+  third is the apparent loss of 7 download logs between late August and early
   September 2025. When any of those dates are passed to
   `cranDownloads()`, the function sends a message to the console,
   graphically annotates plots to highlight the dates and ignores those
