@@ -66,7 +66,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       if (sequence.filter) p.dat <- sequenceFilter(p.dat, p, ymd)
       
       if (size.filter) p.dat <- sizeFilter(p.dat, p)
-      if (version.filter) p.dat <- versionFilter(p.dat, p)
+      if (version.filter) p.dat <- versionFilter(p.dat, p, ymd)
       p.dat <- p.dat[order(p.dat$date.time), ]
       p.dat$date.time <- NULL
     }
