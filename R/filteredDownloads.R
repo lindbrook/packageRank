@@ -10,7 +10,6 @@
 #' @param size.filter Logical.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
 filteredDownloads <- function(packages = "HistData", date = NULL,
@@ -19,9 +18,6 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   memoization = TRUE, multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
