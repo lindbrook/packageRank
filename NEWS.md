@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9050
+
+- add date argument to versionFilter().
+
+
 ### packageRank 0.9.6.9049
 
 - fix data for points() in singlePlot() and multiPlot().
