@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9052
+
+- add smoother subtitle to singlePlot(unit.observation != "day").
+
+
 ### packageRank 0.9.6.9051
 
 - amend/update filters in filteredDownloads() and packageCountry().

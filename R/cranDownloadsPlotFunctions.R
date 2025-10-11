@@ -713,6 +713,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
           
           title(main = est.data$package)
+
+          if (smooth) {
+            if (nrow(dat) > 7) {
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+            } else if (nrow(dat) <= 7) {
+              title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
+            }
+          }
         }))
 
       } else if (any(dat$partial)) { # unit.observation = "week"
@@ -898,6 +906,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           title(main = wk1.backdate$package)
+
+          if (smooth) {
+            if (nrow(dat) > 7) {
+              title(sub = paste("loess span =", round(span, 2)), cex.sub = 0.9)
+            } else if (nrow(dat) <= 7) {
+              title(sub = paste("lowess f =", round(f, 2)), cex.sub = 0.9)
+            }
+          }
         }))
 
       } else {
