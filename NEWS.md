@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9051
+
+- amend/update filters in filteredDownloads() and packageCountry().
+
+
 ### packageRank 0.9.6.9050
 
 - add date argument to versionFilter().
