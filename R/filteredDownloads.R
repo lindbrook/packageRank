@@ -5,23 +5,20 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param version.filter Logical. TRUE selects only most recent version.
 #' @param check.package Logical. Validate and "spell check" package.
 #' @param memoization Logical. Use memoization when downloading logs.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
 filteredDownloads <- function(packages = "HistData", date = NULL,
-  all.filters = TRUE, ip.filter = FALSE, small.filter = FALSE, 
-  sequence.filter = FALSE, size.filter = FALSE, check.package = TRUE, 
-  memoization = TRUE, multi.core = FALSE) {
+  all.filters = TRUE, ip.filter = FALSE, sequence.filter = FALSE, 
+  size.filter = FALSE, small.filter = FALSE, version.filter = FALSE,
+  check.package = TRUE, memoization = TRUE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   if (check.package) packages <- checkPackage(packages)
   file.url.date <- logDate(date)
@@ -33,15 +30,16 @@ filteredDownloads <- function(packages = "HistData", date = NULL,
   if (is.data.frame(cran_log)) ct <- nrow(cran_log)
   else ct <- vapply(cran_log, nrow, integer(1L))
   
-  individual.filter <- (ip.filter | small.filter | sequence.filter | 
-                        size.filter) & all.filters
+  individual.filter <- all.filters & (ip.filter | size.filter | small.filter | 
+    version.filter)
   
   if (individual.filter) all.filters <- FALSE
 
   f.cran_log <- packageLog(packages = packages, date = ymd,
-    all.filters = all.filters, ip.filter = ip.filter,
-    small.filter = small.filter, sequence.filter = sequence.filter, 
-    size.filter = size.filter, memoization = memoization, check.package = FALSE)
+    all.filters = all.filters, ip.filter = ip.filter, 
+    sequence.filter = sequence.filter, size.filter = size.filter,
+    small.filter = small.filter, version.filter = version.filter,
+    memoization = memoization, check.package = FALSE)
 
   if (is.data.frame(f.cran_log)) f.ct <- nrow(f.cran_log)
   else f.ct <- vapply(f.cran_log, nrow, integer(1L))
