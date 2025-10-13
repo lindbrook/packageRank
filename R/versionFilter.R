@@ -7,12 +7,12 @@
 #' @noRd
 
 versionFilter <- function(dat, packages, ymd) {
-  cran <- packageCRAN(packages)
-  if (!is.null(cran) & ymd >= cran$Date) {
-    ver <- cran$Version
+  history <- packageHistory(packages, check.package = FALSE)
+  ver.test <- history$Date <= ymd
+  if (length(ver.test) == 1) {
+    ver <- history[ver.test, "Version"]
   } else {
-    arch <- packageArchive(packages)
-    ver <- arch[max(which(arch$Date <= ymd)), "Version"]
+    ver <- history[max(which(ver.test)), "Version"]
   }
   dat[dat$version == ver, ]
 }

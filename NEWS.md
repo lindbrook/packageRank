@@ -1,3 +1,8 @@
+### packageRank 0.9.6.9053
+
+- add packageHistory() version of versionFilter().
+
+
 ### packageRank 0.9.6.9052
 
 - add smoother subtitle to singlePlot(unit.observation != "day").
