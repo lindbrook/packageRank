@@ -1,3 +1,10 @@
+### packageRank 0.9.6.9054
+
+- amend/update filters in countryDistribution(), countryPackage() and 
+  ipPackage().
+- all.filters = TRUE only enables IP and small filters.
+ 
+
 ### packageRank 0.9.6.9053
 
 - add packageHistory() version of versionFilter().

@@ -5,8 +5,9 @@
 \title{Tabulate a country's package downloads.}
 \usage{
 countryPackage(country = "HK", date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE,
-  size.filter = FALSE, sort.count = TRUE, memoization = TRUE)
+  ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
+  small.filter = FALSE, version.filter = FALSE, sort.count = TRUE,
+  memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{country}{Character. country abbreviation.}
@@ -17,19 +18,23 @@ countryPackage(country = "HK", date = NULL, all.filters = FALSE,
 
 \item{ip.filter}{Logical.}
 
+\item{sequence.filter}{Logical.}
+
+\item{size.filter}{Logical.}
+
 \item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
 
-\item{sequence.filter}{Logical. Set to FALSE.}
-
-\item{size.filter}{Logical. Set to FALSE.}
+\item{version.filter}{Logical. TRUE selects only most recent version.}
 
 \item{sort.count}{Logical. Sort by download count.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 }
 \note{
-"US" outlier 10 min with all filters!
+all.filters = TRUE only enables IP and small filters. "US" outlier 10 min with all filters!
 }

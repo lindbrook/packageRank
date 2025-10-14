@@ -5,8 +5,8 @@
 \title{Tabulate package downloads by country.}
 \usage{
 countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
-  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  memoization = TRUE, multi.core = FALSE)
+  sequence.filter = FALSE, size.filter = FALSE, small.filter = FALSE,
+  version.filter = FALSE, memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
@@ -15,11 +15,13 @@ countryDistribution(date = NULL, all.filters = FALSE, ip.filter = FALSE,
 
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
-
 \item{sequence.filter}{Logical.}
 
 \item{size.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
+
+\item{version.filter}{Logical. TRUE selects only most recent version.}
 
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
@@ -30,4 +32,7 @@ An R data frame.
 }
 \description{
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
+}
+\note{
+all.filters = TRUE only enables IP and small filters.
 }
