@@ -11,6 +11,6 @@ An object of class \code{Date} of length 7.
 missing.dates
 }
 \description{
-August 25-26, 29-31 2025; Septembber 1-2, 2025. 7 days.
+August 25-26, 29-31 2025; September 1-2, 2025. 7 days.
 }
 \keyword{datasets}

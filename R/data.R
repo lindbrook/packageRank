@@ -90,7 +90,7 @@
 
 #' Missing/NA Posit/RStudio logs.
 #'
-#' August 25-26, 29-31 2025; Septembber 1-2, 2025. 7 days.
+#' August 25-26, 29-31 2025; September 1-2, 2025. 7 days.
 #'
 #' @docType data
 "missing.dates"

@@ -1406,7 +1406,7 @@ date is included, `cranDownloads()` prints a message in the console:
     Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 
 Second, when plotting `cranDownloads()` two gray polygons to highlight
-those dates are added to the graph and are labelled with a “⌀” (empty
+those dates are added to the graph and are labeled with a “⌀” (empty
 set) on the top axis. Third, smoothers ignore these missing dates.
 
 The graph below, which plots the *total* number of downloads recorded by
