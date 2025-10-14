@@ -5,8 +5,9 @@
 \title{Tabulate an IP's package downloads.}
 \usage{
 ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
-  small.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
-  sort.count = TRUE, memoization = TRUE, multi.core = FALSE)
+  sequence.filter = FALSE, size.filter = FALSE, small.filter = FALSE,
+  version.filter = FALSE, sort.count = TRUE, memoization = TRUE,
+  multi.core = FALSE)
 }
 \arguments{
 \item{ip}{Numeric. ip_id. Positive integer.}
@@ -17,11 +18,13 @@ ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
 
 \item{ip.filter}{Logical.}
 
-\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
-
 \item{sequence.filter}{Logical.}
 
 \item{size.filter}{Logical.}
+
+\item{small.filter}{Logical. TRUE filters out downloads less than 1000 bytes.}
+
+\item{version.filter}{Logical. TRUE selects only most recent version.}
 
 \item{sort.count}{Logical. Sort by download count.}
 
@@ -33,5 +36,5 @@ ipPackage(ip = 10, date = NULL, all.filters = FALSE, ip.filter = FALSE,
 From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
 }
 \note{
-ip = 10 is a tw top-level domain on 2020-07-09.
+all.filters = TRUE only enables IP and small filters. ip = 10 is a tw top-level domain on 2020-07-09.
 }

@@ -5,18 +5,20 @@
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
-#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
 #' @param sequence.filter Logical.
 #' @param size.filter Logical.
+#' @param small.filter Logical. TRUE filters out downloads less than 1000 bytes.
+#' @param version.filter Logical. TRUE selects only most recent version.
 #' @param sort.count Logical. Sort by download count.
 #' @param memoization Logical. Use memoization when downloading logs.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
-#' @note ip = 10 is a tw top-level domain on 2020-07-09.
+#' @note all.filters = TRUE only enables IP and small filters. ip = 10 is a tw top-level domain on 2020-07-09.
 #' @export
 
 ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
-  ip.filter = FALSE, small.filter = FALSE, sequence.filter = FALSE, 
-  size.filter = FALSE, sort.count = TRUE, memoization = TRUE, 
+  ip.filter = FALSE, sequence.filter = FALSE, 
+  size.filter = FALSE, small.filter = FALSE, version.filter = FALSE,
+  sort.count = TRUE, memoization = TRUE, 
   multi.core = FALSE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
@@ -40,8 +42,6 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   if (all.filters) {
     ip.filter = TRUE
     small.filter = TRUE
-    sequence.filter = TRUE
-    size.filter = TRUE
   }
   
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
@@ -50,22 +50,22 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
     stop("IP filtered out.")
   } else {
     cran_log <- cran_log[cran_log$ip_id == ip, ]
-    pkgs <- unique(cran_log$package)
+    if (small.filter) cran_log <- smallFilter(cran_log)
     
-    out <- parallel::mclapply(pkgs, function(p) {
-      pkg.data <- cran_log[cran_log$package == p, ]
-      if (small.filter) pkg.data <- smallFilter(pkg.data)
-      
-      pkg.data$date.time <- dateTime(pkg.data$date, pkg.data$time) 
-      if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)  
-      
-      if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
-      pkg.data <- pkg.data[order(pkg.data$date.time), ]
-      pkg.data$date.time <- NULL
-      pkg.data
-    }, mc.cores = cores)
-    
-    cran_log <- do.call(rbind, out)
+    if (sequence.filter | size.filter | version.filter) {
+      pkgs <- unique(cran_log$package)
+      out <- parallel::mclapply(pkgs, function(p) {
+        pkg.data <- cran_log[cran_log$package == p, ]
+        pkg.data$date.time <- dateTime(pkg.data$date, pkg.data$time)
+        if (sequence.filter) pkg.data <- sequenceFilter(pkg.data, p, ymd)
+        if (size.filter) pkg.data <- sizeFilter(pkg.data, p)
+        if (version.filter) pkg.data <- versionFilter(pkg.data, p, ymd)
+        pkg.data <- pkg.data[order(pkg.data$date.time), ]
+        pkg.data$date.time <- NULL
+        pkg.data
+      }, mc.cores = cores)
+      cran_log <- do.call(rbind, out)
+    }
   }
   
  if (nrow(cran_log) > 0) {
