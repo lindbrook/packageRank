@@ -1,288 +1,43 @@
-### packageRank 0.9.6.9054
+### packageRank 0.9.7
 
-- amend/update filters in countryDistribution(), countryPackage() and 
-  ipPackage().
-- all.filters = TRUE only enables IP and small filters.
- 
+#### Data
 
-### packageRank 0.9.6.9053
+- add packageRank::missing.dates: 8/25-8/26 and 8/29-9/02 in 2025.
 
+
+#### Function Changes
+
+- amend data type in fetchCranLog(): Character to Date.
+- archive addSmoother(), smoothWeekData(), addSinglePlotSmoother() and 
+  addMultiPlotSmoother().
+- set cachem::cache_mem(max_size = 1.5 * 1024 * 1024^2) for memoise().
+- remove computation of sequenceFilter() from packageLog(all.filters = TRUE).
+- add/set logInfo(check.days = 7) and amend 'cranlogs' check.
+- set ipFilter(multi.core = FALSE) in packageLog().
+- add/set packageLog(version.filter = FALSE).
+- use pkgsearch::cran_package_history()$`crandb_file_date` for 
+  plot.cranDownloads(package.version).
+- use ggplot::labs().
+- add date argument to versionFilter().
+- amend/update filters in filteredDownloads(), packageCountry(), 
+  countryDistribution(), countryPackage() and ipPackage(); all.filters = TRUE 
+  only enables IP and small filters.
 - add packageHistory() version of versionFilter().
 
 
-### packageRank 0.9.6.9052
+#### Graphic/Plot Changes 
 
-- add smoother subtitle to singlePlot(unit.observation != "day").
-
-
-### packageRank 0.9.6.9051
-
-- amend/update filters in filteredDownloads() and packageCountry().
-
-
-### packageRank 0.9.6.9050
-
-- add date argument to versionFilter().
-
-
-### packageRank 0.9.6.9049
-
-- fix data for points() in singlePlot() and multiPlot().
-
-
-### packageRank 0.9.6.9048
-
-- fix 'at' error in missingDatesPolygons().
-
-
-### packageRank 0.9.6.9047
-
-- add variable missing date polygons to missingDatesPolygons().
-- add missingDatesPolygons(dat).
-
-
-### packageRank 0.9.6.9046
-
-- fix plot.cranDownloads(weekend = TRUE).
-
-
-### packageRank 0.9.6.9045
-
-- fix cranDownloads("R") for packageRank::missing.dates.
-
-
-### packageRank 0.9.6.9044
-
-- fix gg_axis.annotation_polygon().
-
-
-### packageRank 0.9.6.9043
-
-- add variably sized missing dates polygons.
-
-
-### packageRank 0.9.6.9042
-
-- add/use gg_axis.annotation_polygon(): top-axis annotation.
-
-
-### packageRank 0.9.6.9041
-
+- enable 'chatgpt' and 'r.version' arguments in 
+  plot.cranDownloads(graphics = "ggplot2")
+- add variable-sized polygons for packageRank::missing.dates.
+- add missingDatesPolygons() and gg_axis.annotation_polygon().
+- add annualPlot()
 - set plot.cranDownloads(chatgpt = "line").
 
+#### Fixes
 
-### packageRank 0.9.6.9040
-
-- amend prototype 'ggplot2' top-axis annotation code.
-
-
-### packageRank 0.9.6.9039
-
-- add prototype 'ggplot2' top-axis annotation code.
-
-
-### packageRank 0.9.6.9038
-
-- add gg_missingDatesPolygons().
-
-
-### packageRank 0.9.6.9037
-
-- conditionally pre-compute 'rversions' data.
-
-
-### packageRank 0.9.6.9036
-
-- add multiPlot(r.version).
-
-
-### packageRank 0.9.6.9035
-
-- add/restore 'graphics' functions to NAMESPACE.
-
-
-### packageRank 0.9.6.9034
-
-- set ggplot2::annotate(color = NA) for missing dates polygons.
-
-
-### packageRank 0.9.6.9033
-
-- format ggplot2 code.
-
-
-### packageRank 0.9.6.9032
-
-- add 'ggplot2' missing dates polygons.
-
-
-### packageRank 0.9.6.9031
-
-- fix typo in README.
-
-
-### packageRank 0.9.6.9030
-
-- amend/update importFrom.R.
-
-
-### packageRank 0.9.6.9029
-
-- use ggplot::labs().
-
-
-### packageRank 0.9.6.9028
-
-- amend fix for missing dates in cranDownloads("R").
-
-
-### packageRank 0.9.6.9027
-
-- compute ylim for missingDatesPolygons() in rTotPlot() w/ 
-  unit.observation = day.
-
-
-### packageRank 0.9.6.9026
-
-- fix missing dates in cranDownloads("R").
-
-
-### packageRank 0.9.6.9025
-
-- fix singlePlot() and multiPlot() w/o missing data with unit.observation = day
-  & smooth = TRUE.
-
-
-### packageRank 0.9.6.9024
-
-- amend data type in fetchCranLog(): Character to Date.
-
-
-### packageRank 0.9.6.9023
-
-- add missing dates discussion to README.
-
-
-### packageRank 0.9.6.9022
-
-- fix missingDatesPolygons() in rTotPlot().
-- use missingDatesPolygons(ylim, log.y = log.y).
-- use graphics::polygon for RStudio R CMD check.
-
-
-### packageRank 0.9.6.9021
-
-- add missingDatesPolygons().
-
-
-### packageRank 0.9.6.9020
-
-- exclude missing.dates from addRPlotSmoother() and addRTotPlotSmoother().
-- archive addSmoother(), smoothWeekData(), addSinglePlotSmoother() and 
-  addMultiPlotSmoother().
-
-
-### packageRank 0.9.6.9019
-
-- exclude missing.dates from smoothers in cranDownloadsPlotFunctions.R.
-
-
-### packageRank 0.9.6.9018
-
-- move/amend fix for log(0) to plot.cranDownloads().
-
-
-### packageRank 0.9.6.9017
-
-- add/use packageRank::missing.dates.
-- fix cranDownloads("R") for missing dates.
-
-
-### packageRank 0.9.6.9016
-
-- note missing Posit CRAN logs: 8/25-8/26 and  8/29-9/02 in cranDownloads().
-
-
-### packageRank 0.9.6.9015
-
-- set cachem::cache_mem(max_size = 1.5 * 1024 * 1024^2) for memoise().
-
-
-### packageRank 0.9.6.9014
-
-- use format() instead of as.POSIXlt() in fetchCranLog().
-
-
-### packageRank 0.9.6.9013
-
-- remove computation of sequenceFilter() from packageLog(all.filters = TRUE).
-
-
-### packageRank 0.9.6.9012
-
-- add/set annualPlot(to = NULL) to compute current year.
-
-
-### packageRank 0.9.6.9011
-
-- add/set logInfo(check.days = 7) and amend 'cranlogs' check.
-
-
-### packageRank 0.9.6.9010
-
-- move package log data out of filter loop in packageLog().
-
-
-### packageRank 0.9.6.9009
-
-- set ipFilter(multi.core = FALSE) in packageLog().
-
-
-### packageRank 0.9.6.9008
-
-- add/set packageLog(version.filter = FALSE).
-
-
-### packageRank 0.9.6.9007
-
-- use seq() and clean code in annualPlot().
-
-
-### packageRank 0.9.6.9006
-
-- add/set annualPlot(pro.mode = FALSE, sunday.week = TRUE).
-- fix overflow weeks.
-
-
-### packageRank 0.9.6.9005
-
-- add annualPlot() prototype.
-
-
-### packageRank 0.9.6.9004
-
-- specify package function with ggplot2::.
-
-
-### packageRank 0.9.6.9003
-
-- archive annualDownloads().
-
-
-### packageRank 0.9.6.9002
-
-- clean transform_pkgsearch() in packageHistory().
-
-
-### packageRank 0.9.6.9001
-
-- fix singlePlot() for plot.cranDownloads(chatgpt).
-
-
-### packageRank 0.9.6.9000
-
-- use pkgsearch::cran_package_history()$`crandb_file_date` for 
-  plot.cranDownloads(package.version).
+- fix plot.cranDownloads(weekend = TRUE).
+- add smoother subtitle to singlePlot(unit.observation != "day").
 
 
 ### packageRank 0.9.6

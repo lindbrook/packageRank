@@ -12,6 +12,7 @@
 #' \item Data fixes for logs and 'cranlogs' R package.
 #' \item Note Sunday and Wednesday spikes in Windows R Application Nov 2022 - Mar 2023.
 #' \item Discuss country code top-level domains, memoization and internet connection timeout problem.
+#' \item Graphical fix for missing logs: August 25-26, 29-31 2025; September 1-2, 2025.
 #' }
 "_PACKAGE"
 
