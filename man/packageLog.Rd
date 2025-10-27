@@ -7,7 +7,7 @@
 packageLog(packages = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
   small.filter = FALSE, version.filter = FALSE, memoization = TRUE,
-  check.package = TRUE, multi.core = FALSE)
+  check.package = TRUE)
 }
 \arguments{
 \item{packages}{Character. Vector of package name(s).}
@@ -29,8 +29,6 @@ packageLog(packages = "cholera", date = NULL, all.filters = FALSE,
 \item{memoization}{Logical. Use memoization when downloading logs.}
 
 \item{check.package}{Logical. Validate and "spell check" package.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 }
 \value{
 An R data frame.

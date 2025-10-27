@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9000
+
+- remove parallel code from packageLog().
+
+
 ### packageRank 0.9.7
 
 #### Data
