@@ -75,7 +75,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   
   names(out) <- packages
   
-  pkgs.survived <- vapply(out, function(x) x[1, "package"], character(1L))
+  pkgs.survived <- names(vapply(out, nrow, integer(1L)) > 0)
   pkg.not_survived <- setdiff(packages, pkgs.survived)
   
   if (length(pkg.not_survived) > 0) {
