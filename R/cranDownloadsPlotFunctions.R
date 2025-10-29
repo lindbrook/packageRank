@@ -2072,8 +2072,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 }
 
 rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
-  ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-  multi.plot, unit.observation, chatgpt, chatgpt.release, weekend) {
+  ip.legend.location, points, log.y, smooth, se, axis.package, 
+  axis.package.version, r.version, f, span, multi.plot, unit.observation,
+  chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   y.nm <- statistic
@@ -2497,6 +2498,29 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           wk1.backdate)
       }
 
+      if (!is.null(axis.package)) {
+        if (length(axis.package) == 1) {
+          axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
+          if (is.character(axis.pkg)) {
+            p_v <- pkgsearch::cran_package_history(axis.pkg)
+            p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+            
+            axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+              cex.axis = 2/3, padj = 0.9, col.axis = "orchid1",
+              col.ticks = "orchid1" )
+            
+            axis(1, at = p_v$`crandb_file_date`, padj = -1.75,
+              labels = rep(axis.pkg, nrow(p_v)), cex.axis = 2/3, 
+              col.axis = "orchid1" , col.ticks = "orchid1")
+            
+            if (axis.package.version == "line") {
+              abline(v = p_v$`crandb_file_date`, col = "orchid1", 
+                lty = "dotted")
+            }
+          }
+        } else message("Use only 1 package with axis.package.")
+      }
+
       if (isTRUE(r.version) | r.version == "line") {
         axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
         if (r.version == "line") abline(v = r_date, lty = "dotted")
@@ -2860,8 +2884,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
 }
 
 rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
-  log.y, smooth, se, r.version, f, span, unit.observation, chatgpt, 
-  chatgpt.release, weekend) {
+  log.y, smooth, se, axis.package, axis.package.version, r.version, f, span, 
+  unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -3140,6 +3164,29 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
       if (smooth) {
         addRTotPlotSmoother(dat, complete, f, span, statistic, wk1.backdate)
+      }
+
+      if (!is.null(axis.package)) {
+        if (length(axis.package) == 1) {
+          axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
+          if (is.character(axis.pkg)) {
+            p_v <- pkgsearch::cran_package_history(axis.pkg)
+            p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+            
+            axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+              cex.axis = 2/3, padj = 0.9, col.axis = "orchid1",
+              col.ticks = "orchid1" )
+            
+            axis(1, at = p_v$`crandb_file_date`, padj = -1.75,
+              labels = rep(axis.pkg, nrow(p_v)), cex.axis = 2/3, 
+              col.axis = "orchid1" , col.ticks = "orchid1")
+            
+            if (axis.package.version == "line") {
+              abline(v = p_v$`crandb_file_date`, col = "orchid1", 
+                lty = "dotted")
+            }
+          }
+        } else message("Use only 1 package with axis.package.")
       }
 
       if (isTRUE(r.version) | r.version == "line") {
