@@ -704,7 +704,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                 
                 if (axis.package.version == "line") {
                   abline(v = p_v$`crandb_file_date`, col = "orchid1", 
-                    lty = "orchid1")
+                    lty = "dotted")
                 }
               }
             } else message("Use only 1 package with axis.package.")
