@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9002
+
+- add cranPlot(axis.package, axis.package.version).
+
+
 ### packageRank 0.9.7.9001
 
 - amend/add singlePlot(axis.package, axis.package.version).
