@@ -1,7 +1,13 @@
+### packageRank 0.9.7.9004
+
+- fix multiPlot(r.version = TRUE, graphics = "base").
+
+
 ### packageRank 0.9.7.9003
 
 - add rPlot(axis.package, axis.package.version) and 
   rTotPlot(axis.package, axis.package.version).
+
 
 ### packageRank 0.9.7.9002
 
