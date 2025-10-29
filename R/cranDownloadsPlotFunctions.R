@@ -1794,6 +1794,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         }
       }
       
+      if (isTRUE(r.version) | r.version == "line") {
+        axis(3, at = r_date, labels = r_v, cex.axis = 2/3, padj = 0.9)
+        if (r.version == "line") abline(v = r_date, lty = "dotted")
+      }
+          
       if (isTRUE(chatgpt) | chatgpt == "line") {
         axis(3, at = chatgpt.release, labels = "ChatGPT", cex.axis = 0.6, 
           padj = 0.9, col.axis = "blue", col.ticks = "blue")
