@@ -573,8 +573,9 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 }
 
 singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
-  se, f, span, log.y, package.version, dev.mode, r.version, same.xy,
-  unit.observation, chatgpt, chatgpt.release, weekend) {
+  se, f, span, log.y, package.version, axis.package, axis.package.version,
+  dev.mode, r.version, same.xy, unit.observation, chatgpt, chatgpt.release,
+  weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -679,11 +680,34 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
             axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
+              cex.axis = 2/3, padj = 0.9)
             
             if (package.version == "line") {
-              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+              abline(v = p_v$`crandb_file_date`, lty = "dotted")
             }
+          }
+
+          if (!is.null(axis.package)) {
+            if (length(axis.package) == 1) {
+              axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
+              if (is.character(axis.pkg)) {
+                p_v <- pkgsearch::cran_package_history(axis.pkg)
+                p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+                
+                axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                  cex.axis = 2/3, padj = 0.9, col.axis = "orchid1",
+                  col.ticks = "orchid1" )
+                
+                axis(1, at = p_v$`crandb_file_date`, padj = -1.75,
+                  labels = rep(axis.pkg, nrow(p_v)), cex.axis = 2/3, 
+                  col.axis = "orchid1" , col.ticks = "orchid1")
+                
+                if (axis.package.version == "line") {
+                  abline(v = p_v$`crandb_file_date`, col = "orchid1", 
+                    lty = "orchid1")
+                }
+              }
+            } else message("Use only 1 package with axis.package.")
           }
 
           if (isTRUE(r.version) | r.version == "line") {
@@ -866,11 +890,34 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
             axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
+              cex.axis = 2/3, padj = 0.9)
 
             if (package.version == "line") {
-              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+              abline(v = p_v$`crandb_file_date`, lty = "dotted")
             } 
+          }
+
+          if (!is.null(axis.package)) {
+            if (length(axis.package) == 1) {
+              axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
+              if (is.character(axis.pkg)) {
+                p_v <- pkgsearch::cran_package_history(axis.pkg)
+                p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+                
+                axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                  cex.axis = 2/3, padj = 0.9, col.axis = "orchid1",
+                  col.ticks = "orchid1")
+                
+                axis(1, at = p_v$`crandb_file_date`, padj = -1.75,
+                  labels = rep(axis.pkg, nrow(p_v)), cex.axis = 2/3,
+                  col.axis = "orchid1", col.ticks = "orchid1")
+                
+                if (axis.package.version == "line") {
+                  abline(v = p_v$`crandb_file_date`, col = "orchid1",
+                    lty = "dotted")
+                }
+              }
+            } else message("Use only 1 package with axis.package.")
           }
 
           if (isTRUE(r.version) | r.version == "line") {
@@ -968,11 +1015,34 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
             axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-              cex.axis = 2/3, padj = 0.9, col.axis = "red", col.ticks = "red")
+              cex.axis = 2/3, padj = 0.9)
 
             if (package.version == "line") {
-              abline(v = p_v$`crandb_file_date`, col = "red", lty = "dotted")
+              abline(v = p_v$`crandb_file_date`, lty = "dotted")
             }
+          }
+
+          if (!is.null(axis.package)) {
+            if (length(axis.package) == 1) {
+              axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
+              if (is.character(axis.pkg)) {
+                p_v <- pkgsearch::cran_package_history(axis.pkg)
+                p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+                
+                axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                  cex.axis = 2/3, padj = 0.9, col.axis = "orchid1",
+                  col.ticks = "orchid1")
+                
+                axis(1, at = p_v$`crandb_file_date`, padj = -1.75,
+                  labels = rep(axis.pkg, nrow(p_v)), cex.axis = 2/3, 
+                  col.axis = "orchid1", col.ticks = "orchid1")
+                
+                if (axis.package.version == "line") {
+                  abline(v = p_v$`crandb_file_date`, col = "orchid1",
+                    lty = "dotted")
+                }
+              }
+            } else message("Use only 1 package with axis.package.")
           }
 
           if (isTRUE(r.version) | r.version == "line") {
