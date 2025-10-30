@@ -69,6 +69,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param f Numeric. smoother window for stats::lowess(). For graphics = "base" only; c.f. stats::lowess(f)
 #' @param span Numeric. Smoothing parameter for geom_smooth(); c.f. stats::loess(span).
 #' @param package.version Logical or "line". Add package release dates and vertical lines.
+#' @param axis.package Character. Add one additional package version to axis.
+#' @param axis.package.version Logical or "line". Add package release dates and vertical lines.
 #' @param r.version Logical or "line". Add R release dates and vertical lines.
 #' @param population.plot Logical. Plot population plot.
 #' @param population.seed Numeric. Seed for sample in population plot.
@@ -95,7 +97,8 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 
 plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   points = "auto", log.y = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
-  span = 3/4, package.version = FALSE, r.version = FALSE,
+  span = 3/4, package.version = FALSE, axis.package = NULL, 
+  axis.package.version = FALSE, r.version = FALSE,
   population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
   ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
@@ -201,25 +204,29 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   } else if ("R" %in% x$packages) {
     if (r.total) {
       rTotPlot(x, statistic, graphics, obs.ct, legend.location, points,
-        log.y, smooth, se, r.version, f, span, unit.observation, chatgpt,
-        chatgpt.release, weekend)
+        log.y, smooth, se, axis.package, axis.package.version, r.version, f, 
+        span, unit.observation, chatgpt, chatgpt.release, weekend)
     } else {
       rPlot(x, statistic, graphics, obs.ct, legend.location,
-        ip.legend.location, points, log.y, smooth, se, r.version, f, span,
-        multi.plot, unit.observation, chatgpt, chatgpt.release, weekend)
+        ip.legend.location, points, log.y, smooth, se, axis.package, 
+        axis.package.version, r.version, f, span, multi.plot, unit.observation, 
+        chatgpt, chatgpt.release, weekend)
     }
   } else if (is.null(x$packages)) {
     cranPlot(x, statistic, graphics, obs.ct, points, log.y, smooth, se, f,
-      span, r.version, unit.observation, chatgpt, chatgpt.release, weekend)
+      span, axis.package, axis.package.version, r.version, unit.observation,
+      chatgpt, chatgpt.release, weekend)
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,
-        ip.legend.location, points, smooth, se, f, span, r.version,
-        unit.observation, chatgpt, chatgpt.release, weekend)
+        ip.legend.location, points, smooth, se, f, span, axis.package, 
+        axis.package.version, r.version, unit.observation, chatgpt, 
+        chatgpt.release, weekend)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
-        span, log.y, package.version, dev.mode, r.version, same.xy, 
-        unit.observation, chatgpt, chatgpt.release, weekend)
+        span, log.y, package.version, axis.package, axis.package.version, 
+        dev.mode, r.version, same.xy, unit.observation, chatgpt, 
+        chatgpt.release, weekend)
     }
   }
 }
