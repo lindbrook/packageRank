@@ -336,12 +336,14 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
   r.version = TRUE, unit.observation = "week")
 ```
 
-To annotate a graph with ChatGPT release date, 2022-11-30:
+By default, graphs that include ChatGPT's release date, 2022-11-30, will be annotated:
 
 ```{r chatgpt_release_date}
 plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
-  chatgpt = TRUE, r.total = TRUE, unit.observation = "week")
+  r.total = TRUE, unit.observation = "week")
 ```
+
+Set plot.cranDownloads(chatgpt = FALSE) to exclude the annotation.
 
 If you pass "line" to the package.version, r.version or chatgpt argument, a vertical line will be drawn on the plot:
 

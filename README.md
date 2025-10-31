@@ -447,15 +447,18 @@ plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
 
 ![](man/figures/README-r_release_date-1.png)<!-- -->
 
-To annotate a graph with ChatGPT release date, 2022-11-30:
+By default, graphs that include ChatGPT's release date, 2022-11-30, will be 
+annotated:
 
 ``` r
 plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
-  chatgpt = TRUE, r.total = TRUE, unit.observation = "week")
+  r.total = TRUE, unit.observation = "week")
 > Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 ```
 
 ![](man/figures/README-chatgpt_release_date-1.png)<!-- -->
+
+Set plot.cranDownloads(chatgpt = FALSE) to exclude the annotation.
 
 If you pass “line” to the package.version, r.version or chatgpt
 argument, a vertical line will be drawn on the plot:
