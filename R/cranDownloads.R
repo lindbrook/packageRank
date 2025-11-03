@@ -219,9 +219,9 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   } else {
     if (multi.plot) {
       multiPlot(x, statistic, graphics, obs.ct, log.y, legend.location,
-        ip.legend.location, points, smooth, se, f, span, axis.package, 
-        axis.package.version, r.version, unit.observation, chatgpt, 
-        chatgpt.release, weekend)
+        ip.legend.location, points, smooth, se, f, span, package.version,
+        axis.package, axis.package.version, r.version, unit.observation,
+        chatgpt, chatgpt.release, weekend)
     } else {
       singlePlot(x, statistic, graphics, obs.ct, points, smooth, se, f,
         span, log.y, package.version, axis.package, axis.package.version, 
