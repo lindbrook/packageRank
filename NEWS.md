@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9007
+
+- add multiPlot(package.version).
+
+
 ### packageRank 0.9.7.9006
 
 - add/set plot.cranDownloads(axis.package = NULL, axis.package.version = FALSE).

@@ -1393,8 +1393,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
 multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
   legend.location, ip.legend.location, points, smooth, se, f, span,
-  axis.package, axis.package.version, r.version, unit.observation, chatgpt,
-  chatgpt.release, weekend) {
+  package.version, axis.package, axis.package.version, r.version,
+  unit.observation, chatgpt, chatgpt.release, weekend) {
 
   dat <- x$cranlogs.data
   last.obs.date <- x$last.obs.date
@@ -1510,6 +1510,20 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               } else if (nrow(smooth.data) <= 7) {
                 lines(stats::lowess(smooth.data$date, smooth.data[, statistic], 
                   f = f), col = cbPalette[i])
+              }
+            }
+
+            if (isTRUE(package.version) | package.version == "line") {
+              p_v <- pkgsearch::cran_package_history(x$package[i])
+              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                cex.axis = 2/3, col.axis = cbPalette[i], 
+                col.ticks = cbPalette[i], padj = 0.9)
+              
+              if (package.version == "line") {
+                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+                  lty = "dotted")
               }
             }
           }))
@@ -1684,6 +1698,20 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                 lines(smooth.data$x, smooth.data$y, col = cbPalette[i])
               }
             }
+
+            if (isTRUE(package.version) | package.version == "line") {
+              p_v <- pkgsearch::cran_package_history(x$package[i])
+              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                cex.axis = 2/3, col.axis = cbPalette[i], 
+                col.ticks = cbPalette[i], padj = 0.9)
+              
+              if (package.version == "line") {
+                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+                  lty = "dotted")
+              }
+            }
           }))
 
           legend(x = ip.legend.location,
@@ -1757,6 +1785,20 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                 sel <- smooth.data$package == x$packages[i]
                 lines(stats::lowess(smooth.data[sel, vars], f = f),
                   col = cbPalette[i])
+              }
+            }
+
+            if (isTRUE(package.version) | package.version == "line") {
+              p_v <- pkgsearch::cran_package_history(x$package[i])
+              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+
+              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+                cex.axis = 2/3, col.axis = cbPalette[i], 
+                col.ticks = cbPalette[i], padj = 0.9)
+              
+              if (package.version == "line") {
+                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+                  lty = "dotted")
               }
             }
           }))
