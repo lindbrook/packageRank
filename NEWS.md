@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9008
+
+- enable singlePlot(package.version = TRUE, graphics = "ggplot2").
+
+
 ### packageRank 0.9.7.9007
 
 - add multiPlot(package.version).
