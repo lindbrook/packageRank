@@ -1534,19 +1534,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               }
             }
 
-            if (isTRUE(package.version) | package.version == "line") {
-              p_v <- pkgsearch::cran_package_history(x$package[i])
-              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+            # if (isTRUE(package.version) | package.version == "line") {
+            #   p_v <- pkgsearch::cran_package_history(x$package[i])
+            #   p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
-              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-                cex.axis = 2/3, col.axis = cbPalette[i], 
-                col.ticks = cbPalette[i], padj = 0.9)
+            #   axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+            #     cex.axis = 2/3, col.axis = cbPalette[i], 
+            #     col.ticks = cbPalette[i], padj = 0.9)
               
-              if (package.version == "line") {
-                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
-                  lty = "dotted")
-              }
-            }
+            #   if (package.version == "line") {
+            #     abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+            #       lty = "dotted")
+            #   }
+            # }
           }))
 
           legend(x = ip.legend.location,
@@ -1720,19 +1720,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               }
             }
 
-            if (isTRUE(package.version) | package.version == "line") {
-              p_v <- pkgsearch::cran_package_history(x$package[i])
-              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+            # if (isTRUE(package.version) | package.version == "line") {
+            #   p_v <- pkgsearch::cran_package_history(x$package[i])
+            #   p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
-              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-                cex.axis = 2/3, col.axis = cbPalette[i], 
-                col.ticks = cbPalette[i], padj = 0.9)
+            #   axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+            #     cex.axis = 2/3, col.axis = cbPalette[i], 
+            #     col.ticks = cbPalette[i], padj = 0.9)
               
-              if (package.version == "line") {
-                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
-                  lty = "dotted")
-              }
-            }
+            #   if (package.version == "line") {
+            #     abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+            #       lty = "dotted")
+            #   }
+            # }
           }))
 
           legend(x = ip.legend.location,
@@ -1809,19 +1809,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               }
             }
 
-            if (isTRUE(package.version) | package.version == "line") {
-              p_v <- pkgsearch::cran_package_history(x$package[i])
-              p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
+            # if (isTRUE(package.version) | package.version == "line") {
+            #   p_v <- pkgsearch::cran_package_history(x$package[i])
+            #   p_v$`crandb_file_date` <- as.Date(p_v$`crandb_file_date`)
 
-              axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
-                cex.axis = 2/3, col.axis = cbPalette[i], 
-                col.ticks = cbPalette[i], padj = 0.9)
+            #   axis(3, at = p_v$`crandb_file_date`, labels = p_v$Version,
+            #     cex.axis = 2/3, col.axis = cbPalette[i], 
+            #     col.ticks = cbPalette[i], padj = 0.9)
               
-              if (package.version == "line") {
-                abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
-                  lty = "dotted")
-              }
-            }
+            #   if (package.version == "line") {
+            #     abline(v = p_v$`crandb_file_date`, col = cbPalette[i],
+            #       lty = "dotted")
+            #   }
+            # }
           }))
         }
 
@@ -1932,6 +1932,27 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
         chatgpt.release)
+
+      # if (package.version) {
+      #   exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
+      #     by = "day")
+      #   pkg.history <- packageHistory(x$packages, check.package = FALSE)
+
+      #   if (length(x$packages) > 1) {
+      #     pkg.history <- do.call(rbind, lapply(pkg.history, function(x) {
+      #       x[x$Date %in% exp.dates, c("Package", "Version", "Date")]
+      #     }))
+      #     row.names(pkg.history) <- NULL
+      #   }
+        
+      #   vars <- c("Package", "Version", "Date")
+      #   pkg.history <- pkg.history[pkg.history$Date %in% exp.dates, vars]
+      #   names(pkg.history) <- tolower(names(pkg.history))
+
+      #   p <- p + 
+      #     ggplot2::geom_vline(data = pkg.history, 
+      #       ggplot2::aes(colour = .data$package, xintercept = .data$date))
+      # }
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
