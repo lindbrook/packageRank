@@ -2,7 +2,7 @@
 #' @noRd
 
 gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
-  chatgpt.release) {
+  chatgpt.release, axis.package, axis.package.version) {
 
   null.set <- expression(symbol("\306"))
   date.range <- range(dat$date)
