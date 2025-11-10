@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9011
+
+- amend gg_axis.annotation_polygon().
+
+
 ### packageRank 0.9.7.9010
 
 - add gg_axis.annotation_polygon(axis.package, axis.package.version).
