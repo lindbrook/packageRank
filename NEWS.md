@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9010
+
+- add gg_axis.annotation_polygon(axis.package, axis.package.version).
+
+
 ### packageRank 0.9.7.9009
 
 - disable multiPlot(package.version) for "base" and "gglot2".

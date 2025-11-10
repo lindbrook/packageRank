@@ -354,7 +354,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
       }
       
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release)
+        chatgpt.release, axis.package, axis.package.version)
       
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
@@ -1146,7 +1146,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release)
+        chatgpt.release, axis.package, axis.package.version)
 
       if (package.version) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
@@ -1931,7 +1931,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release)
+        chatgpt.release, axis.package, axis.package.version)
 
       # if (package.version) {
       #   exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
@@ -2675,7 +2675,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release)
+        chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         pltfrm <- c("osx", "src", "win")
@@ -3327,7 +3327,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release)
+        chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
