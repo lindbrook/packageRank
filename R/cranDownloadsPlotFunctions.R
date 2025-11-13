@@ -1158,10 +1158,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             x[x$Date %in% exp.dates, c("Package", "Version", "Date")]
           }))
           row.names(pkg.history) <- NULL
+        } else {
+          vars <- c("Package", "Version", "Date")
+          pkg.history <- pkg.history[pkg.history$Date %in% exp.dates, vars]
         }
         
-        vars <- c("Package", "Version", "Date")
-        pkg.history <- pkg.history[pkg.history$Date %in% exp.dates, vars]
         names(pkg.history) <- tolower(names(pkg.history))
 
         p <- p + 
