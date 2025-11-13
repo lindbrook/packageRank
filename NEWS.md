@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9012
+
+- set geom_vline(colour = "black") in singlePlot(package.version = TRUE).
+
+
 ### packageRank 0.9.7.9011
 
 - amend gg_axis.annotation_polygon().
