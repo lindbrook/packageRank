@@ -611,6 +611,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     rvers.data <- rversions::r_versions()
     r_date <- as.Date(rvers.data$date)
     r_v <- paste("R", rvers.data$version)
+  } else {
+    r_date <- NULL
+    r_v <- NULL
   }
 
   if (statistic == "count") {
