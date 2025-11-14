@@ -1,8 +1,8 @@
 #' Annotate top axis (side = 3) with ChatGPT relase, R version, and missing.dates and add missing dates polygons.
 #' @noRd
 
-gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
-  chatgpt.release, axis.package, axis.package.version) {
+gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version, 
+  r_date, r_v, chatgpt.release, axis.package, axis.package.version) {
 
   null.set <- expression(symbol("\306"))
   date.range <- range(dat$date)
@@ -13,52 +13,30 @@ gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
   missing.breaks <- c(mean(packageRank::missing.dates[1:2]), 
                       packageRank::missing.dates[5])
 
-  if (isTRUE(r.version) | isTRUE(r.version == "line")) {  
-    rvers.data <- rversions::r_versions()
-    r_date <- as.Date(rvers.data$date)
-    r_v <- rvers.data$version
+  if (isTRUE(r.version) | isTRUE(r.version == "line")) {
     sel <- r_date %in% exp.dates
     if (any(sel)) {
-      r_v <- paste("R", r_v[sel])
+      r_v <- r_v[sel]
       r_date <- r_date[sel]
-      obs.r <- TRUE  
-    } else {
-      r_v <- NULL
-      r_date <- NULL
-      obs.r <- FALSE
+      obs.r <- TRUE
     }
-  } else if (isFALSE(r.version) | isFALSE(r.version == "line")) {
-    r_v <- NULL
-    r_date <- NULL
-    obs.r <- FALSE
-  } 
+  } else obs.r <- FALSE
 
   axis.pkg.test <- is.character(axis.package) & length(axis.package) == 1
 
-  if (axis.pkg.test) {
-    axis.pkg <- try(checkPackage(axis.package), silent = TRUE)
-    if (!inherits(axis.pkg, "try-error")) {
-      pkgsearch.data <- pkgsearch::cran_package_history(axis.pkg)
-      p_date <- as.Date(pkgsearch.data$`crandb_file_date`)
-      sel <- p_date %in% exp.dates
-      if (any(sel)) {
-        p_date <- p_date[sel]
-        p_v <- pkgsearch.data$Version[sel]
-        obs.p <- TRUE   
-      } else {
-        p_date <- NULL
-        p_v <- NULL
-        obs.p <- FALSE
-      }
-    } else {
-      p_date <- NULL
-      p_v <- NULL
-      obs.p <- FALSE
-    }
-  } else {
+  if (isFALSE(axis.pkg.test)) {
     p_date <- NULL
     p_v <- NULL
     obs.p <- FALSE
+  } else {
+    pkgsearch.data <- pkgsearch::cran_package_history(axis.package)
+    p_date <- as.Date(pkgsearch.data$`crandb_file_date`)
+    sel <- p_date %in% exp.dates
+    if (any(sel)) {
+      p_date <- p_date[sel]
+      p_v <- pkgsearch.data$Version[sel]
+      obs.p <- TRUE   
+    }
   }
 
   if ((isTRUE(chatgpt) | isTRUE(chatgpt == "line")) &

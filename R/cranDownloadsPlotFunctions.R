@@ -353,8 +353,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
       
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
       
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
@@ -1148,8 +1148,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (isTRUE(package.version) |  isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
@@ -1934,6 +1934,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
              ggplot2::labs(title = "Cumulative Package Downloads")
       }
 
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
@@ -2655,8 +2657,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         pltfrm <- c("osx", "src", "win")
@@ -3307,8 +3309,8 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
