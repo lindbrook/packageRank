@@ -353,8 +353,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
       
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
       
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
@@ -611,6 +611,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
     rvers.data <- rversions::r_versions()
     r_date <- as.Date(rvers.data$date)
     r_v <- paste("R", rvers.data$version)
+  } else {
+    r_date <- NULL
+    r_v <- NULL
   }
 
   if (statistic == "count") {
@@ -1145,10 +1148,10 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
-      if (package.version) {
+      if (isTRUE(package.version) |  isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
           by = "day")
         pkg.history <- packageHistory(x$packages, check.package = FALSE)
@@ -1931,29 +1934,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
              ggplot2::labs(title = "Cumulative Package Downloads")
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
-
-      # if (package.version) {
-      #   exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
-      #     by = "day")
-      #   pkg.history <- packageHistory(x$packages, check.package = FALSE)
-
-      #   if (length(x$packages) > 1) {
-      #     pkg.history <- do.call(rbind, lapply(pkg.history, function(x) {
-      #       x[x$Date %in% exp.dates, c("Package", "Version", "Date")]
-      #     }))
-      #     row.names(pkg.history) <- NULL
-      #   }
-        
-      #   vars <- c("Package", "Version", "Date")
-      #   pkg.history <- pkg.history[pkg.history$Date %in% exp.dates, vars]
-      #   names(pkg.history) <- tolower(names(pkg.history))
-
-      #   p <- p + 
-      #     ggplot2::geom_vline(data = pkg.history, 
-      #       ggplot2::aes(colour = .data$package, xintercept = .data$date))
-      # }
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
@@ -2675,8 +2657,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         }
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         pltfrm <- c("osx", "src", "win")
@@ -3327,8 +3309,8 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
                ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
-      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version,
-        chatgpt.release, axis.package, axis.package.version)
+      p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
+        r_v, chatgpt.release, axis.package, axis.package.version)
 
       if (any(dat$in.progress)) {
         ip.sel <- dat$in.progress == TRUE
