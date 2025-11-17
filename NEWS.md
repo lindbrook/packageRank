@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9014
+
+- enable package.version for singlePlot(graphics = "ggplot2").
+
+
 ### packageRank 0.9.7.9013
 
 - add gg_axis.annotation_polygon(r_date, r_v) and clean code.

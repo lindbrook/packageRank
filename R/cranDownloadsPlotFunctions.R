@@ -1151,7 +1151,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
         r_v, chatgpt.release, axis.package, axis.package.version)
 
-      if (isTRUE(package.version) |  isTRUE(package.version == "line")) {
+      if (isTRUE(package.version) | isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
           by = "day")
         pkg.history <- packageHistory(x$packages, check.package = FALSE)
@@ -1168,9 +1168,14 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         
         names(pkg.history) <- tolower(names(pkg.history))
         
-        p <- p +
-          ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
-            ggplot2::aes(xintercept = .data$date))
+        p <- p + ggplot2::geom_label(data = pkg.history, 
+                   ggplot2::aes(x = .data$date, y = Inf, label = .data$version),
+                     size = 2.5, vjust = "top")
+
+        if (package.version == "line") {
+          p <- p + ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
+                     ggplot2::aes(xintercept = .data$date))
+        }
       }
 
       if (any(dat$in.progress)) {
