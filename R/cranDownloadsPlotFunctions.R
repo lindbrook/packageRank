@@ -1151,7 +1151,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
         r_v, chatgpt.release, axis.package, axis.package.version)
 
-      if (isTRUE(package.version) |  isTRUE(package.version == "line")) {
+      if (isTRUE(package.version) | isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
           by = "day")
         pkg.history <- packageHistory(x$packages, check.package = FALSE)
