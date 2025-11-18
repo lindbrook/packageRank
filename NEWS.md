@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9015
+
+- enable multiPlot(package.version) for "base" and "gglot2".
+
+
 ### packageRank 0.9.7.9014
 
 - enable package.version for singlePlot(graphics = "ggplot2").
