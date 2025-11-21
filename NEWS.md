@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9018
+
+- integrate packageDistribution() into cranDistribution().
+
+
 ### packageRank 0.9.7.9017
 
 - move query*() to query.R.
