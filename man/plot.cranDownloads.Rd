@@ -7,9 +7,8 @@
 \method{plot}{cranDownloads}(x, statistic = "count", graphics = "auto",
   points = "auto", log.y = FALSE, smooth = FALSE, se = FALSE,
   f = 1/3, span = 3/4, package.version = FALSE, axis.package = NULL,
-  axis.package.version = FALSE, r.version = FALSE,
-  population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
-  multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
+  axis.package.version = FALSE, r.version = FALSE, multi.plot = FALSE,
+  same.xy = TRUE, legend.location = "topleft",
   ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
   unit.observation = "day", chatgpt = "line", weekend = FALSE,
   multi.core = FALSE, ...)
@@ -40,10 +39,6 @@
 \item{axis.package.version}{Logical or "line". Add package release dates and vertical lines.}
 
 \item{r.version}{Logical or "line". Add R release dates and vertical lines.}
-
-\item{population.plot}{Logical. Plot population plot.}
-
-\item{population.seed}{Numeric. Seed for sample in population plot.}
 
 \item{multi.plot}{Logical.}
 
