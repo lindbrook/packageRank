@@ -72,8 +72,6 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @param axis.package Character. Add one additional package version to axis.
 #' @param axis.package.version Logical or "line". Add package release dates and vertical lines.
 #' @param r.version Logical or "line". Add R release dates and vertical lines.
-#' @param population.plot Logical. Plot population plot.
-#' @param population.seed Numeric. Seed for sample in population plot.
 #' @param multi.plot Logical.
 #' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.location Character.
@@ -99,7 +97,6 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   points = "auto", log.y = FALSE, smooth = FALSE, se = FALSE, f = 1/3,
   span = 3/4, package.version = FALSE, axis.package = NULL, 
   axis.package.version = FALSE, r.version = FALSE,
-  population.plot = FALSE, population.seed = as.numeric(Sys.Date()),
   multi.plot = FALSE, same.xy = TRUE, legend.location = "topleft",
   ip.legend.location = "topright", r.total = FALSE, dev.mode = FALSE,
   unit.observation = "day", chatgpt = "line", weekend = FALSE, 
@@ -198,10 +195,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
   }
 
-  if (population.plot) {
-     populationPlot(x, graphics = graphics, f = f, span = span,
-       population.seed = population.seed)
-  } else if ("R" %in% x$packages) {
+  if ("R" %in% x$packages) {
     if (r.total) {
       rTotPlot(x, statistic, graphics, obs.ct, legend.location, points,
         log.y, smooth, se, axis.package, axis.package.version, r.version, f, 
