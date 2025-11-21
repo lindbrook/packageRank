@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9017
+
+- move query*() to query.R.
+
+
 ### packageRank 0.9.7.9016
 
 - archive populationPlot().
