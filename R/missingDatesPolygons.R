@@ -147,6 +147,7 @@ missingDatesPolygons <- function(dat, ylim, log.y = FALSE, col = "lightgray",
 #' @param p Object. 'ggplot2' plot object. 
 #' @param ymin Numeric. For edge to edge polygons; 0 for y.log = TRUE, -Inf for y.log = FALSE.
 #' @param polygon.adjustment Object. R list of djustements for missing polygons.
+#' @importFrom ggplot2 annotate
 #' @noRd
 
 gg_missingDatesPolygons <- function(p, ymin, polygon.adjustment = NULL) {

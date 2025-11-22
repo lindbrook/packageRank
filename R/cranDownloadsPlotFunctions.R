@@ -1,6 +1,8 @@
 # Plot functions for plot.cranDownloads() #
 
 #' @importFrom graphics abline axis barplot dotchart legend lines mtext par points segments text title
+#' @importFrom ggplot2 aes element_blank element_text facet_wrap geom_hline geom_label geom_line geom_point geom_smooth geom_vline ggplot labs scale_color_manual scale_linetype_manual scale_shape_manual scale_y_log10 theme theme_bw vars
+#' @importFrom pkgsearch cran_package_history
 
 utils::globalVariables(".data")
 
