@@ -1965,7 +1965,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
         if (package.version == "line") {
           p <- p + ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
-                     ggplot2::aes(xintercept = .data$date))
+                     ggplot2::aes(xintercept = .data$date, 
+                                  colour = .data$package))
         }
       }
 
