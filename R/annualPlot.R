@@ -7,6 +7,8 @@
 #' @param pro.mode Logical.
 #' @param sunday.week Logical. TRUE: week starts on Sunday. FALSE: week starts on Monday.
 #' @export
+#' @importFrom ggplot2 coord_cartesian geom_raster geom_tile margin scale_fill_distiller scale_y_discrete scale_y_reverse
+#' @importFrom patchwork plot_layout plot_annotation wrap_plots
 #' @note Adapted from Vesuvius plot at https://github.com/nrennie/tidytuesday/blob/main/2025/2025-05-13/20250513.R
 
 annualPlot <- function(package = "packageRank", from = 2019, to = NULL,

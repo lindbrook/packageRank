@@ -1,4 +1,5 @@
 #' Annotate top axis (side = 3) with ChatGPT relase, R version, and missing.dates and add missing dates polygons.
+#' @importFrom ggplot2 dup_axis scale_x_date 
 #' @noRd
 
 gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version, 

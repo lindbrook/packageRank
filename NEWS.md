@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9020
+
+- amend importFrom and NAMESPACE.
+
+
 ### packageRank 0.9.7.9019
 
 - color lines in plot.cranDownloads(graphics = "ggplot2",

@@ -89,6 +89,7 @@ expectedVersionCount <- function(histories, pkg, dates) {
 #' Plot method for packageVersionPercent().
 #' @param x An object of class "packageVersionPercent".
 #' @param ... Additional plotting parameters.
+#' @importFrom ggplot2 scale_x_continuous scale_y_continuous
 #' @export
 
 plot.packageVersionPercent <- function(x, ...) {

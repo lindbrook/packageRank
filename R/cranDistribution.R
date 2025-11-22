@@ -85,7 +85,7 @@ package_distribution <- function(package, ymd, all.filters, ip.filter,
 #' Plot method for packageDistribution().
 #' @param x An object of class "packageDistribution" created by \code{packageDistribution()}.
 #' @param ... Additional plotting parameters.
-#' @importFrom ggplot2 aes element_blank geom_line geom_point geom_smooth ggplot scale_y_log10
+#' @importFrom ggplot2 aes element_blank facet_wrap geom_label geom_line geom_point geom_segment geom_smooth geom_vline ggplot labs scale_x_log10 theme theme_bw
 #' @export
 
 plot.packageDistribution <- function(x, ...) {
