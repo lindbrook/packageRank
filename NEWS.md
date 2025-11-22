@@ -1,3 +1,9 @@
+### packageRank 0.9.7.9019
+
+- color lines in plot.cranDownloads(graphics = "ggplot2",
+  package.version = "line").
+
+
 ### packageRank 0.9.7.9018
 
 - integrate packageDistribution() into cranDistribution().
