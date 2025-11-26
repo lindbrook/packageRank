@@ -1961,15 +1961,15 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         
         names(pkg.history) <- tolower(names(pkg.history))
         
-        p <- p + ggplot2::geom_label(data = pkg.history, 
-                   ggplot2::aes(x = .data$date, y = Inf, label = .data$version),
-                     size = 2.5, vjust = "top")
-
         if (package.version == "line") {
           p <- p + ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
                      ggplot2::aes(xintercept = .data$date, 
                                   colour = .data$package))
         }
+
+        p <- p + ggplot2::geom_label(data = pkg.history,
+                   ggplot2::aes(x = .data$date, y = Inf, label = .data$version),
+                     size = 2.5, vjust = "top")
       }
 
       if (any(dat$in.progress)) {
