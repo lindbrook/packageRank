@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9023
+
+- plot line before label in multiPlot(graphics = "ggplot2", package.version).
+
+
 ### packageRank 0.9.7.9022
 
 - change 'num.rank' to 'rank' in queryRank().
