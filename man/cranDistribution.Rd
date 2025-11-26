@@ -4,12 +4,12 @@
 \alias{cranDistribution}
 \title{CRAN distribution (prototype).}
 \usage{
-cranDistribution(package = NULL, date = NULL, all.filters = FALSE,
+cranDistribution(packages = NULL, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
   check.package = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{package}{Character. Vector of package name(s). NULL for all downloads, all of CRAN}
+\item{packages}{Character. Vector of package name(s). NULL for all downloads, all of CRAN}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
