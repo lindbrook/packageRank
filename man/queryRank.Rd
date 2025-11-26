@@ -4,12 +4,12 @@
 \alias{queryRank}
 \title{Rank query.}
 \usage{
-queryRank(num.rank = 1, rank.ties = FALSE, date = NULL,
+queryRank(rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
   memoization = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{num.rank}{Numeric or Integer.}
+\item{rank}{Numeric or Integer.}
 
 \item{rank.ties}{Logical. TRUE uses ties. FALSE does not.}
 

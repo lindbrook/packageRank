@@ -127,7 +127,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
 
 #' Rank query.
 #'
-#' @param num.rank Numeric or Integer.
+#' @param rank Numeric or Integer.
 #' @param rank.ties Logical. TRUE uses ties. FALSE does not.
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
@@ -138,7 +138,7 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
 #' @return An R data frame.
 #' @export
 
-queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL, 
+queryRank <- function(rank = 1, rank.ties = FALSE, date = NULL, 
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
@@ -148,9 +148,9 @@ queryRank <- function(num.rank = 1, rank.ties = FALSE, date = NULL,
   
   tmp <- x$data
   tie <- ifelse(rank.ties, "rank",  "nominal.rank")
-  rank.test <- any(tmp[, tie] %in% num.rank)
+  rank.test <- any(tmp[, tie] %in% rank)
   if (!rank.test) stop("Rank not observed.", call. = FALSE)
-  else out <- tmp[tmp[, tie] %in% num.rank, ]
+  else out <- tmp[tmp[, tie] %in% rank, ]
   rownames(out) <- NULL
   out
 }
