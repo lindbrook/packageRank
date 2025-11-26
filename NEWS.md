@@ -1,3 +1,10 @@
+### packageRank 0.9.7.9021
+
+- change argument to cranDistribution(packages).
+- change 'size' to geom_vline(linewidth).
+- set geom_label(size = 2.5).
+
+
 ### packageRank 0.9.7.9020
 
 - amend importFrom and NAMESPACE.
