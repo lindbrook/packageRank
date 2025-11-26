@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9022
+
+- change 'num.rank' to 'rank' in queryRank().
+
+
 ### packageRank 0.9.7.9021
 
 - change argument to cranDistribution(packages).
