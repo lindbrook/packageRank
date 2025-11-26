@@ -116,7 +116,7 @@ plot.packageDistribution <- function(x, ...) {
       ggplot2::geom_vline(data = p.data, colour = "red", linetype = "dotted",
         linewidth = 0.5, ggplot2::aes(xintercept = .data$count)) +
       ggplot2::geom_label(data = l.data, aes(x = .data$x, y = .data$y),
-        fill = geom.col, colour = "white", size = 2.75, label = pkg.ct$count) +
+        fill = geom.col, colour = "white", size = 2.5, label = pkg.ct$count) +
       ggplot2::scale_x_log10() +
       ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
       ggplot2::labs(x = "Downloads") +
