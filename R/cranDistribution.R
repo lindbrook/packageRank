@@ -114,7 +114,7 @@ plot.packageDistribution <- function(x, ...) {
       ggplot2::geom_segment(linewidth = 1/3,
         ggplot2::aes(x = .data$x, xend = .data$x, y = 0, yend = .data$y)) +
       ggplot2::geom_vline(data = p.data, colour = "red", linetype = "dotted",
-        size = 0.5, ggplot2::aes(xintercept = .data$count)) +
+        linewidth = 0.5, ggplot2::aes(xintercept = .data$count)) +
       ggplot2::geom_label(data = l.data, aes(x = .data$x, y = .data$y),
         fill = geom.col, colour = "white", size = 2.75, label = pkg.ct$count) +
       ggplot2::scale_x_log10() +
