@@ -58,7 +58,6 @@ missingDatesPolygons <- function(dat, ylim, log.y = FALSE, col = "lightgray",
       at2 <- packageRank::missing.dates[5]
       axis(3, at = at2, labels = null.set, cex.axis = 2/3, padj = 0.9)
 
-
     } else if (all(missingA) & any(missingB == FALSE)) {
       xs1 <- c(rep(packageRank::missing.dates[1], 2),
                rep(packageRank::missing.dates[2], 2))
