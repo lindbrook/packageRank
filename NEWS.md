@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9025
+
+- fix subtitle in plot.cranDistribution().
+
+
 ### packageRank 0.9.7.9024
 
 - add data check and stop() to queryPercentile() and queryRank().
