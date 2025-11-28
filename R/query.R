@@ -97,6 +97,18 @@ queryPercentile <- function(percentile = 50, lo = NULL, hi = NULL,
   date = NULL, all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
+  if (percentile < 0 | percentile > 100) {
+    stop('percentile must be in [0, 100].', call. = FALSE)
+  }
+
+  if (!is.null(lo)) {
+    if (lo < 0 | lo > 100) stop('lo must be in [0, 100].', call. = FALSE)
+  }
+  
+  if (!is.null(hi)) {
+    if (hi < 0 | hi > 100) stop('hi must be in [0, 100].', call. = FALSE)
+  }
+
   x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
@@ -142,10 +154,16 @@ queryRank <- function(rank = 1, rank.ties = FALSE, date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, multi.core = FALSE) {
   
+  if (rank < 1) stop("rank must be > 0.", call. = FALSE)
+
   x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
   
+  if (rank > nrow(x$data)) {
+    stop("rank must be in [1, ", nrow(x$data), "].", call. = FALSE)
+  }
+
   tmp <- x$data
   tie <- ifelse(rank.ties, "rank",  "nominal.rank")
   rank.test <- any(tmp[, tie] %in% rank)

@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9024
+
+- add data check and stop() to queryPercentile() and queryRank().
+
+
 ### packageRank 0.9.7.9023
 
 - plot line before label in multiPlot(graphics = "ggplot2", package.version).
