@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9027
+
+- fix inProgressEstimate(unit.observation = "month") for December.
+
+
 ### packageRank 0.9.7.9026
 
 - plot line before label in singlePlot(graphics = "ggplot2", package.version).
