@@ -183,7 +183,11 @@ inProgressEstimate <- function(x, unit.observation) {
     yr <- format(x$last.obs.date, "%Y")
     mo <- format(x$last.obs.date, "%m")
     from <- as.Date(paste0(yr, "-", mo, "-01"))
-    end.of.month <- as.Date(paste0(yr, "-", as.numeric(mo) + 1, "-01")) - 1
+    if (mo == "12") {
+      end.of.month <- as.Date(paste0(as.numeric(yr) + 1, "-01-01")) - 1
+    } else {
+      end.of.month <- as.Date(paste0(yr, "-", as.numeric(mo) + 1, "-01")) - 1  
+    }
     elapsed <- length(seq.Date(from = from, to = x$last.obs.date, by = "day"))
     total <- length(seq.Date(from = from, to = end.of.month, by = "day"))
   } else if (unit.observation == "week") {
