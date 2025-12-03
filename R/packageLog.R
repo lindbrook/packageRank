@@ -76,6 +76,6 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       collapse = ", "), ".")
   }
   
-  if (length(packages) == 1) out[[1]]
-  else out
+  class(out) <- c(class(out), "packageLog")
+  out
 }
