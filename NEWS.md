@@ -1,7 +1,7 @@
 ### packageRank 0.9.7.9028
 
 - add plot.packageLog() and print.packageLog() prototypes.
-- set output of packageLog() as R list.
+- set output of packageLog() as list of class 'packageLog'.
 
 
 ### packageRank 0.9.7.9027
