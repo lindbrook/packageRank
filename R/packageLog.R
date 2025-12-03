@@ -76,6 +76,68 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
       collapse = ", "), ".")
   }
   
-  if (length(packages) == 1) out[[1]]
-  else out
+  class(out) <- c(class(out), "packageLog")
+  out
+}
+
+#' Plot method for packageLog().
+#'
+#' @param x Object.
+#' @param type Character. "1D" or "2D".
+#' @param unit.observation Character. "second", "minute", or "hour".
+#' @param ... Additional parameters.
+#' @export
+
+plot.packageLog <- function(x, type = "1D", unit.observation = "second", ...) {
+  if (length(x) > 1) grDevices::devAskNewPage(ask = TRUE)
+  invisible(lapply(x, function(pkg) logPlot(pkg, type, unit.observation)))
+  if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
+}
+
+logPlot <- function(pkg, type, unit.observation) {
+  pkg.date <- unique(pkg$date)
+  obs.time <- dateTime(pkg$date, pkg$time)
+  x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
+  x.tick <- c(dateTime(pkg.date, x.time), dateTime(pkg.date + 1, x.time[1]))
+  
+  if (unit.observation == "minute") {
+    obs.minute <- format(obs.time, format = "%H:%M")
+    obs.time <- dateTime(pkg$date, obs.minute)
+  } else if (unit.observation == "hour") {
+    obs.hour <- format(obs.time, format = "%H")
+    obs.time <- dateTime(pkg$date, obs.hour)
+  }
+  
+  unique.time <- unique(obs.time)
+  
+  if (type == "1D") {
+    plot(unique.time, rep(1, length(unique.time)), pch = 0, xaxt = "n",
+      yaxt = "n", xlab = "Hour", ylab = NA, xlim = range(x.tick))
+  } else if (type == "2D") {
+    ct <- c(table(obs.time))
+    if (unit.observation == "hour") {
+      plot(unique.time, ct, pch = 0, cex = 0.75, xaxt = "n", xlab = "24-Hour", 
+        ylab = "Count", xlim = range(x.tick), type = "o")  
+    } else if (unit.observation == "minute") {
+      plot(unique.time, ct, pch = 0, cex = 0.75, xaxt = "n", xlab = "24-Hour", 
+        ylab = "Count", xlim = range(x.tick), type = "l")
+    } else if (unit.observation == "second") {
+      plot(unique.time, ct, pch = NA, type = "h", xaxt = "n", xlab = "24-Hour", 
+        ylab = "Count", xlim = range(x.tick))
+    }
+  }
+  
+  axis(1, at = x.tick, labels = format(x.tick, "%H"))
+  title(main = paste(unique(pkg$package), "@", pkg.date))
+  title(sub = paste0("unit of observation: ", unit.observation), cex.sub = 0.9)
+}
+
+#' Print method for packageLog().
+#' @param x object.
+#' @param ... Additional parameters.
+#' @export
+
+print.packageLog <- function(x, ...) {
+  attr(x, "class") <- NULL
+  print.default(x, ...)
 }
