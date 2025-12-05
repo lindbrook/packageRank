@@ -89,6 +89,7 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 #' @export
 
 plot.packageLog <- function(x, type = "1D", unit.observation = "second", ...) {
+  x <- x[vapply(x, nrow, integer(1L)) != 0]
   if (length(x) > 1) grDevices::devAskNewPage(ask = TRUE)
   invisible(lapply(x, function(pkg) logPlot(pkg, type, unit.observation)))
   if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
