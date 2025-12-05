@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9030
+
+- set type = "o" in logPlot(type = "2D", unit.observation = "minute").
+
+
 ### packageRank 0.9.7.9029
 
 - filter out packages with zero observations in plot.packageLog().

@@ -120,8 +120,8 @@ logPlot <- function(pkg, type, unit.observation) {
       plot(unique.time, ct, pch = 0, cex = 0.75, xaxt = "n", xlab = "24-Hour", 
         ylab = "Count", xlim = range(x.tick), type = "o")  
     } else if (unit.observation == "minute") {
-      plot(unique.time, ct, pch = 0, cex = 0.75, xaxt = "n", xlab = "24-Hour", 
-        ylab = "Count", xlim = range(x.tick), type = "l")
+      plot(unique.time, ct, pch = 0, cex = 0.5, xaxt = "n", xlab = "24-Hour", 
+        ylab = "Count", xlim = range(x.tick), type = "o")
     } else if (unit.observation == "second") {
       plot(unique.time, ct, pch = NA, type = "h", xaxt = "n", xlab = "24-Hour", 
         ylab = "Count", xlim = range(x.tick))
