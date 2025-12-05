@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9029
+
+- filter out packages with zero observations in plot.packageLog().
+
+
 ### packageRank 0.9.7.9028
 
 - add plot.packageLog() and print.packageLog() prototypes.
