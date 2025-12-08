@@ -5,7 +5,7 @@
 \title{Plot method for packageLog().}
 \usage{
 \method{plot}{packageLog}(x, type = "1D", time.unit = "second",
-  points = TRUE, same.xy = TRUE, ...)
+  smooth = FALSE, points = TRUE, same.xy = TRUE, ...)
 }
 \arguments{
 \item{x}{Object.}
@@ -14,9 +14,11 @@
 
 \item{time.unit}{Character. "second", "minute", or "hour".}
 
+\item{smooth}{Logical. Add smoother.}
+
 \item{points}{Logical. For "hour" and "minute" in 2D plots.}
 
-\item{same.xy}{Logical. Use same scale for multiple packages.}
+\item{same.xy}{Logical. Use same scale for multiple packages for type = "2D".}
 
 \item{...}{Additional parameters.}
 }
