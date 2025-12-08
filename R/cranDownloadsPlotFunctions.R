@@ -291,7 +291,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             smooth.data <- stats::loess(smooth.data[, y.nm] ~
               as.numeric(smooth.data$date), span = span)
             x.date <- as.Date(smooth.data$x)
-            lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)  
+            lines(x.date, smooth.data$fitted, col = "blue", lwd = 1.25)
           } else if (nrow(smooth.data) <= 7) {
             lines(stats::lowess(smooth.data$date, smooth.data[, y.nm], f = f),
               col = "blue", lwd = 1.25)
