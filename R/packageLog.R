@@ -85,13 +85,14 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 #' @param x Object.
 #' @param type Character. "1D" or "2D".
 #' @param time.unit Character. "second", "minute", or "hour".
+#' @param smooth Logical. Add smoother.
 #' @param points Logical. For "hour" and "minute" in 2D plots.
 #' @param same.xy Logical. Use same scale for multiple packages for type = "2D".
 #' @param ... Additional parameters.
 #' @export
 
 plot.packageLog <- function(x, type = "1D", time.unit = "second", 
-  points = TRUE, same.xy = TRUE, ...) {
+  smooth = FALSE, points = TRUE, same.xy = TRUE, ...) {
 
   x <- x[vapply(x, nrow, integer(1L)) != 0]
   log.date <- unique(x[[1]]$date)
@@ -133,20 +134,26 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
   
   invisible(lapply(names(plot.data), function(nm) {
     logPlot(plot.data[[nm]], type, time.unit, points,
-      log.date, x.tick, ylim, nm)
+      log.date, x.tick, ylim, nm, smooth)
   }))
   
   if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
 }
 
-logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm) {
+logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
+  smooth) {
+  
   if (type == "1D") {
     plot(pkg$time, rep(1, nrow(pkg)), pch = 0, xaxt = "n", yaxt = "n",
       xlab = "24-Hour Clock", ylab = NA, xlim = range(x.tick))
-  } else if (type == "2D") {  
+  } else if (type == "2D") {
     plot(pkg$time, pkg$count, xaxt = "n", xlab = "24-Hour Clock",
       ylab = "Count", ylim = ylim, type = "l")
     if (points) points(pkg$time, pkg$count, pch = 0, cex = 0.75)
+    if (smooth) {
+      smooth.data <- stats::loess(pkg$count ~ as.numeric(pkg$time))
+      lines(pkg$time, smooth.data$fitted, col = "blue", lwd = 1.25)  
+    }
   }
   
   axis(1, at = x.tick, labels = format(x.tick, "%H"))

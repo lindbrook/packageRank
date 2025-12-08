@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9032
+
+- add/set plot.packageLog(smooth = FALSE).
+
+
 ### packageRank 0.9.7.9031
 
 - add/set plot.packageLog(points = TRUE, same.xy = TRUE, time.unit = "second").
