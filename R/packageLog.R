@@ -84,53 +84,74 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
 #'
 #' @param x Object.
 #' @param type Character. "1D" or "2D".
-#' @param unit.observation Character. "second", "minute", or "hour".
+#' @param time.unit Character. "second", "minute", or "hour".
+#' @param points Logical. For "hour" and "minute" in 2D plots.
+#' @param same.xy Logical. Use same scale for multiple packages for type = "2D".
 #' @param ... Additional parameters.
 #' @export
 
-plot.packageLog <- function(x, type = "1D", unit.observation = "second", ...) {
+plot.packageLog <- function(x, type = "1D", time.unit = "second", 
+  points = TRUE, same.xy = TRUE, ...) {
+
   x <- x[vapply(x, nrow, integer(1L)) != 0]
+  log.date <- unique(x[[1]]$date)
+  x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
+  x.tick <- c(dateTime(log.date, x.time), dateTime(log.date + 1, x.time[1]))
+  
+  obs.time <- lapply(x, function(pkg) dateTime(pkg$date, pkg$time))
+  
+  plot.data <- lapply(obs.time, function(t) {
+    if (time.unit == "second") {
+      data.frame(time = unique(t),
+                 count = c(table(t)), 
+                 row.names = NULL)
+    } else if (time.unit == "minute") {
+      obs.minute <- format(t, format = "%H:%M")
+      tab.minute <- table(obs.minute)
+      data.frame(time = dateTime(log.date, names(tab.minute)),
+                 count = c(tab.minute),
+                 row.names = NULL)
+    } else if (time.unit == "hour") {
+      obs.hour <- format(t, format = "%H")
+      tab.hour <- table(obs.hour)
+      data.frame(time = dateTime(log.date, names(tab.hour)),
+                 count = c(tab.hour),
+                 row.names = NULL)
+    }
+  })
+  
+  if (type == "2D") {
+    if (same.xy) {
+      cts <- vapply(plot.data, function(dat) max(dat$count), integer(1L))
+      ylim <- c(0, max(cts))
+    } else {
+      ylim <- NULL
+    }    
+  }
+  
   if (length(x) > 1) grDevices::devAskNewPage(ask = TRUE)
-  invisible(lapply(x, function(pkg) logPlot(pkg, type, unit.observation)))
+  
+  invisible(lapply(names(plot.data), function(nm) {
+    logPlot(plot.data[[nm]], type, time.unit, points,
+      log.date, x.tick, ylim, nm)
+  }))
+  
   if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
 }
 
-logPlot <- function(pkg, type, unit.observation) {
-  pkg.date <- unique(pkg$date)
-  obs.time <- dateTime(pkg$date, pkg$time)
-  x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
-  x.tick <- c(dateTime(pkg.date, x.time), dateTime(pkg.date + 1, x.time[1]))
-  
-  if (unit.observation == "minute") {
-    obs.minute <- format(obs.time, format = "%H:%M")
-    obs.time <- dateTime(pkg$date, obs.minute)
-  } else if (unit.observation == "hour") {
-    obs.hour <- format(obs.time, format = "%H")
-    obs.time <- dateTime(pkg$date, obs.hour)
-  }
-  
-  unique.time <- unique(obs.time)
-  
+logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm) {
   if (type == "1D") {
-    plot(unique.time, rep(1, length(unique.time)), pch = 0, xaxt = "n",
-      yaxt = "n", xlab = "Hour", ylab = NA, xlim = range(x.tick))
-  } else if (type == "2D") {
-    ct <- c(table(obs.time))
-    if (unit.observation == "hour") {
-      plot(unique.time, ct, pch = 0, cex = 0.75, xaxt = "n", xlab = "24-Hour", 
-        ylab = "Count", xlim = range(x.tick), type = "o")  
-    } else if (unit.observation == "minute") {
-      plot(unique.time, ct, pch = 0, cex = 0.5, xaxt = "n", xlab = "24-Hour", 
-        ylab = "Count", xlim = range(x.tick), type = "o")
-    } else if (unit.observation == "second") {
-      plot(unique.time, ct, pch = NA, type = "h", xaxt = "n", xlab = "24-Hour", 
-        ylab = "Count", xlim = range(x.tick))
-    }
+    plot(pkg$time, rep(1, nrow(pkg)), pch = 0, xaxt = "n", yaxt = "n",
+      xlab = "24-Hour Clock", ylab = NA, xlim = range(x.tick))
+  } else if (type == "2D") {  
+    plot(pkg$time, pkg$count, xaxt = "n", xlab = "24-Hour Clock",
+      ylab = "Count", ylim = ylim, type = "l")
+    if (points) points(pkg$time, pkg$count, pch = 0, cex = 0.75)
   }
   
   axis(1, at = x.tick, labels = format(x.tick, "%H"))
-  title(main = paste(unique(pkg$package), "@", pkg.date))
-  title(sub = paste0("unit of observation: ", unit.observation), cex.sub = 0.9)
+  title(main = paste(nm, "@", log.date))
+  title(sub = paste0("time.unit: ", time.unit), cex.sub = 0.9)
 }
 
 #' Print method for packageLog().

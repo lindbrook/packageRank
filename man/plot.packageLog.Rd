@@ -4,14 +4,19 @@
 \alias{plot.packageLog}
 \title{Plot method for packageLog().}
 \usage{
-\method{plot}{packageLog}(x, type = "1D", unit.observation = "second", ...)
+\method{plot}{packageLog}(x, type = "1D", time.unit = "second",
+  points = TRUE, same.xy = TRUE, ...)
 }
 \arguments{
 \item{x}{Object.}
 
 \item{type}{Character. "1D" or "2D".}
 
-\item{unit.observation}{Character. "second", "minute", or "hour".}
+\item{time.unit}{Character. "second", "minute", or "hour".}
+
+\item{points}{Logical. For "hour" and "minute" in 2D plots.}
+
+\item{same.xy}{Logical. Use same scale for multiple packages.}
 
 \item{...}{Additional parameters.}
 }
