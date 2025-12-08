@@ -1,3 +1,10 @@
+### packageRank 0.9.7.9031
+
+- add/set plot.packageLog(points = TRUE, same.xy = TRUE, time.unit = "second").
+- change plot.packageLog(unit.observation) to plot.packageLog(time.unit).
+- set min ylim to 0 for plot.packageLog(type = "2D").
+
+
 ### packageRank 0.9.7.9030
 
 - set type = "o" in logPlot(type = "2D", unit.observation = "minute").
