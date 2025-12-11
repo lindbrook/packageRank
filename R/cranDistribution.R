@@ -119,7 +119,7 @@ plot.packageDistribution <- function(x, ...) {
         fill = geom.col, colour = "white", size = 2.5, label = pkg.ct$count) +
       ggplot2::scale_x_log10() +
       ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
-      ggplot2::labs(x = "Downloads") +
+      ggplot2::labs(x = "log10 Downloads") +
       ggplot2::labs(y = "Frequency") +
       ggplot2::theme_bw() +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
