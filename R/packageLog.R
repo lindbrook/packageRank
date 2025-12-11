@@ -145,9 +145,9 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
   
   if (type == "1D") {
     plot(pkg$time, rep(1, nrow(pkg)), pch = 0, xaxt = "n", yaxt = "n",
-      xlab = "24-Hour Clock", ylab = NA, xlim = range(x.tick))
+      xlab = "UTC 24-Hour Clock", ylab = NA, xlim = range(x.tick))
   } else if (type == "2D") {
-    plot(pkg$time, pkg$count, xaxt = "n", xlab = "24-Hour Clock",
+    plot(pkg$time, pkg$count, xaxt = "n", xlab = "UTC 24-Hour Clock",
       ylab = "Count", ylim = ylim, type = "l")
     if (points) points(pkg$time, pkg$count, pch = 0, cex = 0.75)
     if (smooth) {
