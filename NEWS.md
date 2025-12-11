@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9035
+
+- amend xlab in plot.packageLog().
+
+
 ### packageRank 0.9.7.9034
 
 - fix y labels in plot.packageRank().
