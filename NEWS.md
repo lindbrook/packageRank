@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9034
+
+- fix y labels in plot.packageRank().
+
+
 ### packageRank 0.9.7.9033
 
 - fix ggplot2 xlab in plot.packageDistribution().

@@ -122,7 +122,7 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
 
 basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
   if (log.y) {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10(Count)",
+    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10 Count",
       log = "y")
   } else {
     plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Count")
@@ -270,7 +270,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
             colour = "white", size = label.size, label = xlabel, 
             nudge_y = ylabel.nudge) +
        ggplot2::labs(x = "Rank") +
-       ggplot2::labs(y = "Count") +
+       ggplot2::labs(y = "log10 Count") +
        ggplot2::facet_wrap(ggplot2::vars(.data$id), nrow = 2) +
        ggplot2::theme_bw() +
        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
