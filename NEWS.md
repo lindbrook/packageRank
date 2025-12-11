@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9033
+
+- fix ggplot2 xlab in plot.packageDistribution().
+
+
 ### packageRank 0.9.7.9032
 
 - add/set plot.packageLog(smooth = FALSE).
