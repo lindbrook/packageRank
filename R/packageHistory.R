@@ -11,18 +11,17 @@ packageHistory <- function(package = "cholera", check.package = TRUE) {
   package0 <- package
   
   if ("R" %in% package) {
-    pkg.idx <- seq_along(package0)
-    r.position <- which(package0 == "R")
-    pkg.idx <- pkg.idx[pkg.idx != r.position]
-    
-    r_v <- rversions::r_versions()
+    r_v <- as.data.frame(rversions::r_versions())
     names(r_v) <- tools::toTitleCase(names(r_v))
     r_v$Date <- as.Date(r_v$Date)
-    nms <- names(r_v)
+    nms <- names(r_v)[names(r_v) != "Semver"]
     r_v$Package <- "R"
     r_v <- list(r_v[, c("Package", nms)])
     names(r_v) <- "R"
     
+    pkg.idx <- seq_along(package0)
+    r.position <- which(package0 == "R")
+    pkg.idx <- pkg.idx[pkg.idx != r.position]
     package <- package0[-r.position]
   }
 

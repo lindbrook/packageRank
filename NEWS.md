@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9036
+
+- fix output of packageHistory("R").
+
+
 ### packageRank 0.9.7.9035
 
 - amend xlab in plot.packageLog().
