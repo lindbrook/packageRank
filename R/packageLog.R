@@ -157,7 +157,8 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
   }
   
   axis(1, at = x.tick, labels = format(x.tick, "%H"))
-  title(main = paste(nm, "@", log.date))
+  day <- weekdays(log.date, abbreviate = TRUE)
+  title(main = paste0(nm, " @ ", log.date, " (", day, ")"))
   title(sub = paste0("time.unit: ", time.unit), cex.sub = 0.9)
 }
 
