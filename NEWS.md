@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9037
+
+- fix cranDownloads("R", when).
+
+
 ### packageRank 0.9.7.9036
 
 - fix output of packageHistory("R").
