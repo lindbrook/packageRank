@@ -85,7 +85,7 @@ cranDownloadsA <- function(packages = NULL, when = NULL, from = NULL,
     } else {
       stop('"when" must be "last-day", "last-week" or "last-month".',
         call. = FALSE)
-      }
+    }
   } else if (is.null(when) & !is.null(from)) {
     start.date <- resolveDate(from, type = "from")
     if ("R" %in% packages) {
@@ -145,7 +145,8 @@ cranDownloadsA <- function(packages = NULL, when = NULL, from = NULL,
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
       
       ## restore zeroes because cranlogs::cran_downloads("R") drops them ##
-      argmts.dates <- seq.Date(from = argmnts$from, to = argmnts$to, by = "day")
+      argmts.dates <- seq.Date(from = min(cranlogs.data$date),
+        to = max(cranlogs.data$date), by = "day")
       missing <- packageRank::missing.dates %in% argmts.dates
 
       if (any(missing)) {
