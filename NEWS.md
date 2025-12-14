@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9038
+
+- add day of week to title in plot.packageLog().
+
+
 ### packageRank 0.9.7.9037
 
 - fix cranDownloads("R", when).
