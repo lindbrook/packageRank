@@ -19,6 +19,17 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   small.filter = FALSE, version.filter = FALSE, memoization = TRUE, 
   check.package = TRUE) {
 
+  if ("R" %in% packages) {
+    if (length(packages) == 1) {
+      if (packages == "R") {
+        stop('packageLog("R") currently does not work.', call. = FALSE)
+      }
+    } else {
+      packages <- packages[packages != "R"]
+      message('Note: packageLog("R") currently does not work.')
+    }
+  }
+  
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   if (check.package) packages <- checkPackage(packages)
   
