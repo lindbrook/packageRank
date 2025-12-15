@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9039
+
+- add temp stop() for packageLog("R").
+
+
 ### packageRank 0.9.7.9038
 
 - add day of week to title in plot.packageLog().
