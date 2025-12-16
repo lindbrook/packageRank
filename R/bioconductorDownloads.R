@@ -1,6 +1,6 @@
 #' Annual/monthly package downloads from Bioconductor.
 #'
-#' @param packages Character. Vector of package names.
+#' @param package Character. Vector of package names.
 #' @param when \code{"last-year"}, or \code{"year-to-date"} or \code{"ytd"}.
 #' @param from Start date as \code{yyyy-mm} or \code{yyyy}.
 #' @param to End date as \code{yyyy-mm} or \code{yyyy}.
@@ -12,33 +12,33 @@
 #' bioconductorDownloads()
 #'
 #' # entire history
-#' bioconductorDownloads(packages = "clusterProfiler")
+#' bioconductorDownloads(package = "clusterProfiler")
 #'
 #' # year-to-date
-#' bioconductorDownloads(packages = "clusterProfiler", when = "ytd")
-#' bioconductorDownloads(packages = "clusterProfiler", when = "year-to-date")
+#' bioconductorDownloads(package = "clusterProfiler", when = "ytd")
+#' bioconductorDownloads(package = "clusterProfiler", when = "year-to-date")
 #'
 #' # last 12 months
-#' bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
+#' bioconductorDownloads(package = "clusterProfiler", when = "last-year")
 #'
 #' # from 2015 to current year
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2015)
+#' bioconductorDownloads(package = "clusterProfiler", from = 2015)
 #'
 #' # 2010 through 2015 (yearly)
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015,
+#' bioconductorDownloads(package = "clusterProfiler", from = 2010, to = 2015,
 #'   unit.observation = "year")
 #'
 #' # selected year (yearly)
-#' bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
+#' bioconductorDownloads(package = "clusterProfiler", from = 2015, to = 2015)
 #'
 #' # selected year (monthly)
-#' bioconductorDownloads(packages = "clusterProfiler", from = "2015-01", to = "2015-12")
+#' bioconductorDownloads(package = "clusterProfiler", from = "2015-01", to = "2015-12")
 #'
 #' # June 2014 through March 2015
-#' bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
+#' bioconductorDownloads(package = "clusterProfiler", from = "2014-06", to = "2015-03")
 #' }
 
-bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
+bioconductorDownloads <- function(package = NULL, from = NULL, to = NULL,
   when = NULL, unit.observation = "month") {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
@@ -52,19 +52,19 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
   current.yr <- as.numeric(format(current.date, "%Y"))
   current.mo <- as.numeric(format(current.date, "%m"))
 
-  if (is.null(packages)) {
-    dat <- list(bioc_download(packages, from, to, when, current.date,
+  if (is.null(package)) {
+    dat <- list(bioc_download(package, from, to, when, current.date,
       current.yr, current.mo, unit.observation))
   } else {
-    if (length(packages) > 1) {
-      dat <- lapply(packages, function(p) {
+    if (length(package) > 1) {
+      dat <- lapply(package, function(p) {
         bioc_download(p, from, to, when, current.date, current.yr, current.mo,
           unit.observation)
       })
-      names(dat) <- packages
+      names(dat) <- package
 
-    } else if (length(packages) == 1) {
-      dat <- list(bioc_download(packages, from, to, when, current.date,
+    } else if (length(package) == 1) {
+      dat <- list(bioc_download(package, from, to, when, current.date,
         current.yr, current.mo, unit.observation))
     }
   }
@@ -75,7 +75,7 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
     x
   })
 
-  out <- list(data = dat, packages = packages, current.date = current.date,
+  out <- list(data = dat, package = package, current.date = current.date,
     current.yr = current.yr, current.mo = current.mo,
     unit.observation = unit.observation)
   class(out) <- "bioconductorDownloads"
@@ -103,10 +103,10 @@ bioconductorDownloads <- function(packages = NULL, from = NULL, to = NULL,
 #' @examples
 #' \dontrun{
 #' plot(bioconductorDownloads())
-#' plot(bioconductorDownloads(packages = "graph"))
-#' plot(bioconductorDownloads(packages = "graph", from = 2010, to = 2015))
-#' plot(bioconductorDownloads(packages = "graph", from = "2014-06", to = "2015-03"))
-#' plot(bioconductorDownloads(packages = c("graph", "IRanges", "S4Vectors"), from = 2018))
+#' plot(bioconductorDownloads(package = "graph"))
+#' plot(bioconductorDownloads(package = "graph", from = 2010, to = 2015))
+#' plot(bioconductorDownloads(package = "graph", from = "2014-06", to = "2015-03"))
+#' plot(bioconductorDownloads(package = c("graph", "IRanges", "S4Vectors"), from = 2018))
 #' }
 
 plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
@@ -136,9 +136,9 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   }
 
   if (is.null(graphics)) {
-    if (is.null(x$packages)) {
+    if (is.null(x$package)) {
       graphics <- "base"
-    } else if (length(x$packages) == 1) {
+    } else if (length(x$package) == 1) {
       graphics <- "base"
     } else graphics <- "ggplot2"
   } else {
@@ -147,10 +147,10 @@ plot.bioconductorDownloads <- function(x, graphics = NULL, count = "download",
   }
 
   if (graphics == "base") {
-    if (is.null(x$packages) | length(x$packages) == 1) {
+    if (is.null(x$package) | length(x$package) == 1) {
       bioc_plot(x, graphics, count, points, smooth, f, log.y,
         obs.in.progress, r.version, same.xy, cumulative)
-    } else if (length(x$packages) > 1) {
+    } else if (length(x$package) > 1) {
       if (multi.plot) {
         bioc_plot_multi(x, count, points, smooth, f, log.y,
           obs.in.progress, r.version, legend.loc, cumulative)
@@ -196,14 +196,14 @@ summary.bioconductorDownloads <- function(object, ...) {
   }
 }
 
-bioc_download <- function(packages, from, to, when, current.date, current.yr,
+bioc_download <- function(package, from, to, when, current.date, current.yr,
   current.mo, unit.observation) {
 
-  if (is.null(packages)) {
+  if (is.null(package)) {
     url <- "https://bioconductor.org/packages/stats/bioc/bioc_stats.tab"
   } else {
-    url <- paste0("https://bioconductor.org/packages/stats/bioc/", packages,
-      "/", packages, "_stats.tab", collapse = "")
+    url <- paste0("https://bioconductor.org/packages/stats/bioc/", package,
+      "/", package, "_stats.tab", collapse = "")
   }
 
   bioc.data <- as.data.frame(mfetchLog(url))
@@ -316,7 +316,7 @@ bioc_download <- function(packages, from, to, when, current.date, current.yr,
     }
   }
   row.names(dat) <- NULL
-  if (is.null(packages) == FALSE) dat$packages <- packages
+  if (is.null(package) == FALSE) dat$package <- package
   dat <- dat[order(dat$date), ]
   dat[dat$date <= current.date, ]
 }
@@ -408,7 +408,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.y,
       axis(4, at = ip.data[, y.var], labels = "obs")
       axis(4, at = est.data[, y.var], labels = "est", col.axis = "red",
         col.ticks = "red")
-      title(main = x$packages[i])
+      title(main = x$package[i])
 
       if (smooth) {
         smooth.data <- rbind(complete.data, est.data)
@@ -453,11 +453,11 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.y,
           cex.axis = 2/3, padj = 0.9)
       }
 
-      title(main = x$packages[i])
+      title(main = x$package[i])
     }))
   }
 
-  if (is.null(x$packages)) title(main = "All Packages")
+  if (is.null(x$package)) title(main = "All Packages")
 }
 
 bioc_plot_multi <- function(x, count, points, smooth, f, log.y,
@@ -564,11 +564,11 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.y,
         ylab = ylab, xlim = xlim, ylim = ylim)
     }
 
-    invisible(lapply(seq_along(x$packages), function(i) {
-      tmp <- dat[dat$package == x$packages[i], ]
+    invisible(lapply(seq_along(x$package), function(i) {
+      tmp <- dat[dat$package == x$package[i], ]
       lines(tmp$date, tmp[, y.var], type = type, col = cbPalette[i])
       if (smooth) {
-        lines(stats::lowess(dat[dat$package == x$packages[i], vars],
+        lines(stats::lowess(dat[dat$package == x$package[i], vars],
           f = f), col = cbPalette[i])
       }
     }))
@@ -580,9 +580,9 @@ bioc_plot_multi <- function(x, count, points, smooth, f, log.y,
       cex.axis = 2/3, padj = 0.9)
   }
 
-  id <- seq_along(x$packages)
+  id <- seq_along(x$package)
   legend(x = legend.loc,
-         legend = x$packages,
+         legend = x$package,
          col = cbPalette[id],
          pch = c(1, token[id]),
          bg = "white",
@@ -646,24 +646,24 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, 
                               y = .data$cumulative_Nb_of_downloads, 
-                              colour = .data$packages))
+                              colour = .data$package))
         } else if (count == "ip") {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date,
                               y = .data$cumulative_Nb_of_distinct_IPs, 
-                              colour = .data$packages))
+                              colour = .data$package))
         }
       } else {
         if (count == "download") {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, 
                               y = .data$Nb_of_downloads,
-                              colour = .data$packages)) 
+                              colour = .data$package)) 
         } else if (count == "ip") {
           p <- ggplot2::ggplot(data = dat, 
                  ggplot2::aes(x = .data$date, 
-                              y =.data$Nb_of_distinct_IPs,
-                              colour = .data$packages)) 
+                              y = .data$Nb_of_distinct_IPs,
+                              colour = .data$package)) 
         }
       }
 
@@ -706,7 +706,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
           linetype = "dotted") +
         ggplot2::geom_point(data = est.data, col = "red") +
         ggplot2::geom_point(data = ip.data, shape = 0) +
-        ggplot2::facet_wrap(ggplot2::vars(.data$packages), nrow = 2) +
+        ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
         ggplot2::labs(x = "Date") +
         ggplot2::labs(y = ylab) +
         ggplot2::theme_bw() +
@@ -751,7 +751,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
                             panel.grid.minor = ggplot2::element_blank())
 
     if (isFALSE(multi.plot)) {
-      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$packages), ncol = 2) 
+      p <- p + ggplot2::facet_wrap(ggplot2::vars(.data$package), ncol = 2) 
     }
 
     if (points) p <- p + ggplot2::geom_point()
