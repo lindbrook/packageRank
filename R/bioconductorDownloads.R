@@ -744,7 +744,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
       }
     }
 
-    p <- p + ggplot2::geom_line(size = 0.5) +
+    p <- p + ggplot2::geom_line(linewidth = 0.5) +
              ggplot2::labs(x = "Date") +
              ggplot2::labs(y = ylab) +
              ggplot2::theme_bw() +
