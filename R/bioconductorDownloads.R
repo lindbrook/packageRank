@@ -436,11 +436,10 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.y,
       dat <- x$data[[i]]
 
       if (log.y) {
-        plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
-          ylab = paste0("log10(", ylab, ")"), log = "y")
+        plot(dat$date, dat[, y.var], type = type, xlab = "Year",
+          ylab = paste0("log10 ", ylab), log = "y")
       } else {
-        plot(dat[, x.var], dat[, y.var], type = type, xlab = "Year",
-          ylab = ylab)
+        plot(dat$date, dat[, y.var], type = type, xlab = "Year", ylab = ylab)
       }
 
       if (points) points(dat$date, dat[, y.var])
