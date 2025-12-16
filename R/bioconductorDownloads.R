@@ -335,7 +335,7 @@ bioc_plot <- function(x, graphics, count, points, smooth, f, log.y,
       y.var <- "Nb_of_downloads"
     }
   } else if (count == "ip") {
-    ylab <- "Unique IP Addresses"
+    ylab <- "Unique IP Count"
     if (cumulative) {
       y.var <- "cumulative_Nb_of_distinct_IPs"
     } else {
@@ -607,7 +607,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
       y.var <- "Nb_of_downloads"
     }
   } else if (count == "ip") {
-    ylab <- "Unique IP Addresses"
+    ylab <- "Unique IP Count"
     if (cumulative) {
       y.var <- "cumulative_Nb_of_distinct_IPs"
     } else {
