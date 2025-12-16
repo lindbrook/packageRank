@@ -716,7 +716,7 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
     if (points) p <- p + ggplot2::geom_point(data = complete.data)
-    if (log.y) p <- p + ggplot2::scale_y_log10()
+
     if (smooth) {
       smooth.data <- rbind(complete.data, est.data)
       p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
@@ -756,11 +756,15 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     }
 
     if (points) p <- p + ggplot2::geom_point()
-    if (log.y) p <- p + ggplot2::scale_y_log10()
+    
     if (smooth) {
       p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
         se = se, span = span)
     }
+  }
+
+  if (log.y) {
+    p <- p + ggplot2::scale_y_log10() + ggplot2::labs(y = paste("log10", ylab))
   }
 
   p
