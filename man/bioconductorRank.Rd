@@ -4,11 +4,11 @@
 \alias{bioconductorRank}
 \title{Package download counts and rank percentiles.}
 \usage{
-bioconductorRank(packages = "monocle", date = "2019-01",
+bioconductorRank(package = "monocle", date = "2019-01",
   count = "download")
 }
 \arguments{
-\item{packages}{Character. Vector of package name(s).}
+\item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. yyyy-mm}
 
@@ -22,6 +22,6 @@ From bioconductor
 }
 \examples{
 \dontrun{
-bioconductorRank(packages = "cicero", date = "2019-09")
+bioconductorRank(package = "cicero", date = "2019-09")
 }
 }

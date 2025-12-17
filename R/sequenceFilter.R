@@ -1,7 +1,7 @@
 #' Filter downloads of full-sized sequential versions (prototype).
 #'
 #' @param dat Object.
-#' @param packages Object. An R vector of package names.
+#' @param package Object. An R vector of package names.
 #' @param ymd Date. Log date.
 #' @param cores Numeric. Number of cores to use.
 #' @param delta.time Numeric. Time between package downloads (seconds).

@@ -6,7 +6,7 @@
 #' @export
 
 countsRanks <- function(package = "cholera", size.filter = FALSE) {
-  Downloads <- summary(cranDownloads(packages = package, from = "2020-03-01",
+  Downloads <- summary(cranDownloads(package = package, from = "2020-03-01",
     to = "2020-03-07", check.package = FALSE))$count
   Date <- seq(as.Date("2020-03-01"), as.Date("2020-03-07"), by = "day")
 

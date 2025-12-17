@@ -31,7 +31,7 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 
 #' Query package name.
 #'
-#' @param packages Character..
+#' @param package Character..
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -42,39 +42,39 @@ queryCount <- function(count = 1, date = NULL, all.filters = FALSE,
 #' @return An R data frame.
 #' @export
 
-queryPackage <- function(packages = "packageRank", date = NULL, 
+queryPackage <- function(package = "packageRank", date = NULL, 
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE, 
   memoization = TRUE, check.package = TRUE, multi.core = FALSE) {
   
-  if (check.package) packages <- checkPackage(packages)
+  if (check.package) package <- checkPackage(package)
   
   x <- cranDistribution(date = date, all.filters = all.filters,
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
-  unobs.pkgs <- !packages %in% x$data$package
-  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+  unobs.pkgs <- !package %in% x$data$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(package[unobs.pkgs], collapse = ", ")
 
   if (all(unobs.pkgs)) {
     stop("No downloads for ", pkg.msg, " on ", x$date, ".", call. = FALSE)
   } else if (any(unobs.pkgs)) {
     message("No downloads for ", pkg.msg, " on ", x$date, ".")
-    packages <- packages[!unobs.pkgs]
+    package <- package[!unobs.pkgs]
   }
   
   tmp <- x$data
   
-  if (all(!packages %in% tmp$package)) {
+  if (all(!package %in% tmp$package)) {
     stop("Package(s) not observed. Check spelling.", call. = FALSE)
-  } else if (any(!packages %in% tmp$package)) {
-    message("No downloads for ", paste(packages[!packages %in% tmp$package], 
+  } else if (any(!package %in% tmp$package)) {
+    message("No downloads for ", paste(package[!package %in% tmp$package], 
       collapse = ", "), ".")
-    out <- tmp[tmp$package %in% packages, ]
-  } else if (all(packages %in% tmp$package)) {
-    out <- tmp[tmp$package %in% packages, ]
+    out <- tmp[tmp$package %in% package, ]
+  } else if (all(package %in% tmp$package)) {
+    out <- tmp[tmp$package %in% package, ]
   }
 
-  out <- out[match(packages, out$package), ]
+  out <- out[match(package, out$package), ]
   rownames(out) <- NULL
   out
 }

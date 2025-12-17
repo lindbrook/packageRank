@@ -4,12 +4,12 @@
 \alias{packageRank}
 \title{Package download counts and rank percentiles.}
 \usage{
-packageRank(packages = "packageRank", date = NULL, all.filters = FALSE,
+packageRank(package = "packageRank", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
   check.package = TRUE, rank.ties = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{packages}{Character. Vector of package name(s).}
+\item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 
@@ -35,7 +35,7 @@ From Posit/RStudio's CRAN Mirror (CDN) http://cran-logs.rstudio.com/
 }
 \examples{
 \dontrun{
-packageRank(packages = "cholera", date = "2020-01-01")
-packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
+packageRank(package = "cholera", date = "2020-01-01")
+packageRank(package = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 }
 }

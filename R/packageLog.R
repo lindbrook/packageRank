@@ -1,7 +1,7 @@
 #' Get Package Download Logs.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -14,38 +14,38 @@
 #' @return An R data frame.
 #' @export
 
-packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
+packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE, 
   small.filter = FALSE, version.filter = FALSE, memoization = TRUE, 
   check.package = TRUE) {
 
-  if ("R" %in% packages) {
-    if (length(packages) == 1) {
-      if (packages == "R") {
+  if ("R" %in% package) {
+    if (length(package) == 1) {
+      if (package == "R") {
         stop('packageLog("R") currently does not work.', call. = FALSE)
       }
     } else {
-      packages <- packages[packages != "R"]
+      package <- package[package != "R"]
       message('Note: packageLog("R") currently does not work.')
     }
   }
   
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
-  if (check.package) packages <- checkPackage(packages)
+  if (check.package) package <- checkPackage(package)
   
   log.date <- logDate(date)
   cran_log <- fetchCranLog(date = log.date, memoization = memoization)
   cran_log <- cleanLog(cran_log)
   ymd <- rev_fixDate_2012(log.date)
 
-  unobs.pkgs <- !packages %in% cran_log$package
-  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+  unobs.pkgs <- !package %in% cran_log$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(package[unobs.pkgs], collapse = ", ")
 
   if (all(unobs.pkgs)) {
     stop("No downloads for ", pkg.msg, " on ", ymd, ".", call. = FALSE)
   } else if (any(unobs.pkgs)) {
     message("No downloads for ", pkg.msg, " on ", ymd, ".")
-    packages <- packages[!unobs.pkgs]
+    package <- package[!unobs.pkgs]
   }
 
   if (all.filters) {
@@ -57,11 +57,11 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
   
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = FALSE)
   
-  pkg.data <- lapply(packages, function(p) cran_log[cran_log$package == p, ])
+  pkg.data <- lapply(package, function(p) cran_log[cran_log$package == p, ])
   
   out <- lapply(seq_along(pkg.data), function(i) { 
     p.dat <- pkg.data[[i]]
-    p <- packages[i]
+    p <- package[i]
     
     if (nrow(p.dat) != 0) {
       if (small.filter) p.dat <- smallFilter(p.dat)
@@ -77,10 +77,10 @@ packageLog <- function(packages = "cholera", date = NULL, all.filters = FALSE,
     p.dat
   })
   
-  names(out) <- packages
+  names(out) <- package
   
   pkgs.survived <- names(vapply(out, nrow, integer(1L)) > 0)
-  pkg.not_survived <- setdiff(packages, pkgs.survived)
+  pkg.not_survived <- setdiff(package, pkgs.survived)
   
   if (length(pkg.not_survived) > 0) {
     message("No filtered downloads for ", paste(pkg.not_survived, 

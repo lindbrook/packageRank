@@ -23,7 +23,7 @@ Plot method for packageRank() and packageRank0().
 }
 \examples{
 \dontrun{
-plot(packageRank(packages = "HistData", date = "2020-01-01"))
-plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01"))
+plot(packageRank(package = "HistData", date = "2020-01-01"))
+plot(packageRank(package = c("h2o", "Rcpp", "rstan"), date = "2020-01-01"))
 }
 }

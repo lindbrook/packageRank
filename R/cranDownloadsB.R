@@ -1,10 +1,10 @@
 #' Daily package downloads from the RStudio CRAN mirror.
 #'
 #' Enhanced implementation of cranlogs::cran_downloads().
-#' @param packages A character vector, the packages to query,
+#' @param package A character vector, the packages to query,
 #'   or \code{NULL} for a sum of downloads for all packages.
 #'   Alternatively, it can also be \code{"R"}, to query downloads
-#'   of R itself. \code{"R"} cannot be mixed with packages.
+#'   of R itself. \code{"R"} cannot be mixed with package.
 #' @param when \code{last-day}, \code{last-week} or \code{last-month}.
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
@@ -12,22 +12,22 @@
 #' @param fix.cranlogs Logical. Use RStudio logs to fix 8 dates with duplicated data in 'cranlogs' results.
 #' @noRd
 
-cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
+cranDownloadsB <- function(package = NULL, when = NULL, from = NULL, to = NULL,
   fix.cranlogs = TRUE) {
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
  
-  if (length(packages) > 1) {
-    if ("R" %in% packages) {
+  if (length(package) > 1) {
+    if ("R" %in% package) {
       stop("R downloads cannot be mixed with package downloads.", call. = FALSE)
     }
   }
 
   if (is.null(when) & is.null(from) & is.null(to)) {
-    argmnts <- list(packages = packages, when = "last-day")
+    argmnts <- list(package = package, when = "last-day")
   } else if (!is.null(when) & is.null(from) & is.null(to)) {
     if (when %in% c("last-day", "last-week", "last-month")) {
-      argmnts <- list(packages = packages, when = when)
+      argmnts <- list(package = package, when = when)
     } else {
       stop('"when" must be "last-day", "last-week" or "last-month".',
         call. = FALSE)
@@ -42,7 +42,7 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
     if (start.date > end.date) {
       stop('"from" must be <= "to".', call. = FALSE)
     }
-    argmnts <- list(packages = packages, from = start.date, to = end.date)
+    argmnts <- list(package = package, from = start.date, to = end.date)
   } else if (is.null(when) & !is.null(to)) {
     end.date <- resolveDate(to, type = "to")
     if (is.null(from)) {
@@ -52,14 +52,14 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
     } else {
       start.date <- resolveDate(from, type = "from") 
     }
-    argmnts <- list(packages = packages, from = start.date, to = end.date)
+    argmnts <- list(package = package, from = start.date, to = end.date)
   }
 
   if (exists("argmnts")) {
     cranlogs.data <- do.call(cranlogs::cran_downloads, argmnts)
-    if (is.null(argmnts$packages)) {
+    if (is.null(argmnts$package)) {
       cranlogs.data$cumulative <- cumsum(cranlogs.data$count)
-    } else if ("R" %in% argmnts$packages) {
+    } else if ("R" %in% argmnts$package) {
       cranlogs.data <- cranlogs.data[cranlogs.data$os != "NA", ]
        
       ## restore zeroes because cranlogs::cran_downloads("R") drops them ##
@@ -86,14 +86,14 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
       cranlogs.data <- data.frame(date = dts, count = c(count),
         cumulative = c(cumulative), platform = plt, row.names = NULL)
     } else {
-      if (any(duplicated(packages))) {
-        grp <- seq_along(packages)
+      if (any(duplicated(package))) {
+        grp <- seq_along(package)
         cranlogs.data$grp <- rep(grp, each = length(unique(cranlogs.data$date)))
         cumulative <- unlist(lapply(grp, function(g) {
           cumsum(cranlogs.data[cranlogs.data$grp == g, "count"])
         }))
       } else {
-        cumulative <- unlist(lapply(packages, function(pkg) {
+        cumulative <- unlist(lapply(package, function(pkg) {
           cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
         }))
       }
@@ -102,11 +102,11 @@ cranDownloadsB <- function(packages = NULL, when = NULL, from = NULL, to = NULL,
       sel <- (ncol(cranlogs.data) - 1):ncol(cranlogs.data)
       names(cranlogs.data)[sel] <- c("cumulative", "package")
     }
-    out <- list(packages = packages, cranlogs.data = cranlogs.data,
+    out <- list(package = package, cranlogs.data = cranlogs.data,
       when = argmnts$when, from = argmnts$from, to = argmnts$to)
   } 
 
-  if ("R" %in% packages) if (fix.cranlogs) out <- fixRCranlogs(out)
+  if ("R" %in% package) if (fix.cranlogs) out <- fixRCranlogs(out)
   else if (fix.cranlogs) out <- fixCranlogs(out)
   
   class(out) <- "cranDownloads"

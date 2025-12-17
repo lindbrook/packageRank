@@ -1,10 +1,10 @@
 #' Daily package downloads from the RStudio CRAN mirror.
 #'
 #' Enhanced implementation of cranlogs::cran_downloads().
-#' @param packages A character vector, the packages to query,
+#' @param package A character vector, the packages to query,
 #'   or \code{NULL} for a sum of downloads for all packages.
 #'   Alternatively, it can also be \code{"R"}, to query downloads
-#'   of R itself. \code{"R"} cannot be mixed with packages.
+#'   of R itself. \code{"R"} cannot be mixed with package.
 #' @param when \code{last-day}, \code{last-week} or \code{last-month}.
 #'   If this is given, then \code{from} and \code{to} are ignored.
 #' @param from Start date as \code{yyyy-mm-dd}, \code{yyyy-mm} or \code{yyyy}.
@@ -16,29 +16,29 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' cranDownloads(packages = "HistData")
-#' cranDownloads(packages = "HistData", when = "last-week")
-#' cranDownloads(packages = "HistData", when = "last-month")
+#' cranDownloads(package = "HistData")
+#' cranDownloads(package = "HistData", when = "last-week")
+#' cranDownloads(package = "HistData", when = "last-month")
 #'
 #' # January 7 - 31, 2019
-#' cranDownloads(packages = "HistData", from = "2019-01-07", to = "2019-01-31")
+#' cranDownloads(package = "HistData", from = "2019-01-07", to = "2019-01-31")
 #'
 #' # February through March 2019
-#' cranDownloads(packages = "HistData", from = "2019-02", to = "2019-03")
+#' cranDownloads(package = "HistData", from = "2019-02", to = "2019-03")
 #'
 #' # 2024 year-to-date
-#' cranDownloads(packages = "HistData", from = 2024)
+#' cranDownloads(package = "HistData", from = 2024)
 #' }
 
-cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
+cranDownloads <- function(package = NULL, when = NULL, from = NULL,
   to = NULL, check.package = TRUE, dev.mode = FALSE, fix.cranlogs = TRUE,
   pro.mode = FALSE) {
 
   if (pro.mode) {
-    out <- cranDownloadsB(packages = packages, when = when, from = from,
+    out <- cranDownloadsB(package = package, when = when, from = from,
       to = to, fix.cranlogs = fix.cranlogs)
   } else {
-    out <- cranDownloadsA(packages = packages, when = when, from = from, 
+    out <- cranDownloadsA(package = package, when = when, from = from, 
       to = to,  check.package = check.package, dev.mode = dev.mode, 
       fix.cranlogs = fix.cranlogs)
   }
@@ -87,10 +87,10 @@ cranDownloads <- function(packages = NULL, when = NULL, from = NULL,
 #' @export
 #' @examples
 #' \dontrun{
-#' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table")))
-#' plot(cranDownloads(packages = c("Rcpp", "rlang", "data.table"), when = "last-month"))
-#' plot(cranDownloads(packages = "R", from = "2020-01-01", to = "2020-01-01"))
-#' plot(cranDownloads(packages = "R", from = 2020))
+#' plot(cranDownloads(package = c("Rcpp", "rlang", "data.table")))
+#' plot(cranDownloads(package = c("Rcpp", "rlang", "data.table"), when = "last-month"))
+#' plot(cranDownloads(package = "R", from = "2020-01-01", to = "2020-01-01"))
+#' plot(cranDownloads(package = "R", from = 2020))
 #' }
 
 plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
@@ -106,11 +106,11 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   chatgpt.release <- as.Date("2022-11-30")
 
   if (graphics == "auto") {
-    if (is.null(x$packages)) {
+    if (is.null(x$package)) {
       graphics <- "base"
-    } else if (length(x$packages) == 1) {
+    } else if (length(x$package) == 1) {
       graphics <- "base"
-    } else if (length(x$packages) > 1) {
+    } else if (length(x$package) > 1) {
       graphics <- "ggplot2"
     }
   }
@@ -157,13 +157,13 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
   }
   
   if (unit.observation %in% c("week", "month", "year")) {
-    if (is.null(x$packages)) {
+    if (is.null(x$package)) {
       x$first.obs.date <- x$cranlogs.data[1, "date"]
     } else {
-      if ("R" %in% x$packages) {
+      if ("R" %in% x$package) {
         x$first.obs.date <- x$cranlogs.data[1, "date"]
       } else {
-        x$first.obs.date <- do.call(c, lapply(x$packages, function(pkg) {
+        x$first.obs.date <- do.call(c, lapply(x$package, function(pkg) {
           tmp <- x$cranlogs.data[x$cranlogs.data$package == pkg, ]
           tmp[1, "date"]
         }))
@@ -195,7 +195,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
     stop('points must be "auto", TRUE, or FALSE.', call. = FALSE)
   }
 
-  if ("R" %in% x$packages) {
+  if ("R" %in% x$package) {
     if (r.total) {
       rTotPlot(x, statistic, graphics, obs.ct, legend.location, points,
         log.y, smooth, se, axis.package, axis.package.version, r.version, f, 
@@ -206,7 +206,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
         axis.package.version, r.version, f, span, multi.plot, unit.observation, 
         chatgpt, chatgpt.release, weekend)
     }
-  } else if (is.null(x$packages)) {
+  } else if (is.null(x$package)) {
     cranPlot(x, statistic, graphics, obs.ct, points, log.y, smooth, se, f,
       span, axis.package, axis.package.version, r.version, unit.observation,
       chatgpt, chatgpt.release, weekend)
