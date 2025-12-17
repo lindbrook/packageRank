@@ -9,8 +9,8 @@
 fixCranlogs <- function(out) {
   err.date <- as.Date(names(packageRank::rstudio.logs))
   
-  if (!is.null(out$packages)) {
-    error.test <- lapply(out$packages, function(p) {
+  if (!is.null(out$package)) {
+    error.test <- lapply(out$package, function(p) {
       dat <- out$cranlogs.data
       err.date %in% dat[dat$package == p, "date"]
     })
@@ -22,14 +22,14 @@ fixCranlogs <- function(out) {
           sel <- as.Date(names(packageRank::rstudio.logs)) %in% dates.to.fix
           correct.logs <- packageRank::rstudio.logs[sel]
           logs <- lapply(correct.logs, cleanLog)
-          sel <- out$cranlogs.data$package == out$packages[i]
+          sel <- out$cranlogs.data$package == out$package[i]
           dat <- out$cranlogs.data[sel, ]
           data.fix <- dat[dat$date %in% dates.to.fix, ]
           data.fix$count <- vapply(logs, function(x) {
-            nrow(x[x$package == out$packages[i], ])
+            nrow(x[x$package == out$package[i], ])
           }, integer(1L))
           
-          sel <- out$cranlogs.data$package == out$packages[i] &
+          sel <- out$cranlogs.data$package == out$package[i] &
             out$cranlogs.data$date %in% dates.to.fix
           out$cranlogs.data[sel, ] <- data.fix
           

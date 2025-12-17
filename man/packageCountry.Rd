@@ -4,14 +4,14 @@
 \alias{packageCountry}
 \title{Package download counts by country.}
 \usage{
-packageCountry(packages = "cholera", date = NULL, all.filters = FALSE,
+packageCountry(package = "cholera", date = NULL, all.filters = FALSE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
   small.filter = FALSE, version.filter = FALSE, sort = TRUE,
   na.rm = FALSE, memoization = TRUE, check.package = TRUE,
   multi.core = FALSE)
 }
 \arguments{
-\item{packages}{Character. Vector of package name(s).}
+\item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 

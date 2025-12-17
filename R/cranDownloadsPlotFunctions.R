@@ -640,11 +640,11 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         xlim <- NULL
       }
 
-      if (length(x$packages) > 1) grDevices::devAskNewPage(ask = TRUE)
+      if (length(x$package) > 1) grDevices::devAskNewPage(ask = TRUE)
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
-        names(est.ct) <- x$packages
+        names(est.ct) <- x$package
         
         plot.data <- lapply(x$package, function(pkg) {
           pkg.dat <- dat[dat$package == pkg, ]
@@ -1115,7 +1115,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         }))
       }
 
-      if (length(x$packages) > 1) grDevices::devAskNewPage(ask = FALSE)
+      if (length(x$package) > 1) grDevices::devAskNewPage(ask = FALSE)
     }
 
   } else if (graphics == "ggplot2") {
@@ -1156,9 +1156,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (isTRUE(package.version) | isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
           by = "day")
-        pkg.history <- packageHistory(x$packages, check.package = FALSE)
+        pkg.history <- packageHistory(x$package, check.package = FALSE)
 
-        if (length(x$packages) > 1) {
+        if (length(x$package) > 1) {
           pkg.history <- do.call(rbind, lapply(pkg.history, function(x) {
             x[x$Date %in% exp.dates, c("Package", "Version", "Date")]
           }))
@@ -1182,9 +1182,9 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
-        names(est.ct) <- x$packages
+        names(est.ct) <- x$package
 
-        g <- lapply(x$packages, function(pkg) {
+        g <- lapply(x$package, function(pkg) {
           pkg.data <- dat[dat$package == pkg, ]
           ip.sel <- pkg.data$in.progress == TRUE
           ip.data <- pkg.data[ip.sel, ]
@@ -1454,7 +1454,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
            main = paste(ttl, unique(dat$date)))
       }
     } else if (obs.ct > 1) {
-      if (length(x$packages) > 8) {
+      if (length(x$package) > 8) {
         stop('Use <= 8 packages when graphics = "base".', call. = FALSE)
       } else {
         # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
@@ -1472,7 +1472,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
         if (any(dat$in.progress)) {
           est.ct <- inProgressEstimate(x, unit.observation)
-          names(est.ct) <- x$packages
+          names(est.ct) <- x$package
 
           pkg.data <- lapply(x$package, function(pkg) {
             tmp <- dat[dat$package == pkg, ]
@@ -1766,8 +1766,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
           missingDatesPolygons(dat, ylim, log.y = log.y)
 
-          invisible(lapply(seq_along(x$packages), function(i) {
-            tmp <- dat[dat$package == x$packages[i], ]
+          invisible(lapply(seq_along(x$package), function(i) {
+            tmp <- dat[dat$package == x$package[i], ]
             lines(tmp$date, tmp[, statistic], col = cbPalette[i])
 
             wknd <- weekdays(tmp$date) %in% c("Saturday", "Sunday")
@@ -1814,7 +1814,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                 x.date <- as.Date(smooth.data$x, origin = "1970-01-01")
                 lines(x.date, smooth.data$fitted, col = cbPalette[i])
               } else if (nrow(smooth.data) <= 7) {
-                sel <- smooth.data$package == x$packages[i]
+                sel <- smooth.data$package == x$package[i]
                 lines(stats::lowess(smooth.data[sel, vars], f = f),
                   col = cbPalette[i])
               }
@@ -1836,11 +1836,11 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           }))
         }
 
-        id <- seq_along(x$packages)
+        id <- seq_along(x$package)
 
         if (points) {
           legend(x = legend.location,
-                 legend = x$packages,
+                 legend = x$package,
                  col = cbPalette[id],
                  pch = NA,
                  bg = NULL,
@@ -1850,7 +1850,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                  bty = "n")
         } else {
           legend(x = legend.location,
-               legend = x$packages,
+               legend = x$package,
                col = cbPalette[id],
                pch = NA,
                bg = NULL,
@@ -1920,7 +1920,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       }
 
       p + ggplot2::geom_point(size = 2) + 
-        ggplot2::geom_hline(yintercept = seq_along(x$packages), 
+        ggplot2::geom_hline(yintercept = seq_along(x$package), 
                             linetype = "dotted") +
         ggplot2::theme_bw() +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
@@ -1947,9 +1947,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       if (isTRUE(package.version) | isTRUE(package.version == "line")) {
         exp.dates <- seq.Date(from = min(dat$date), to = max(dat$date), 
           by = "day")
-        pkg.history <- packageHistory(x$packages, check.package = FALSE)
+        pkg.history <- packageHistory(x$package, check.package = FALSE)
 
-        if (length(x$packages) > 1) {
+        if (length(x$package) > 1) {
           pkg.history <- do.call(rbind, lapply(pkg.history, function(x) {
             x[x$Date %in% exp.dates, c("Package", "Version", "Date")]
           }))
@@ -1974,9 +1974,9 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
 
       if (any(dat$in.progress)) {
         est.ct <- inProgressEstimate(x, unit.observation)
-        names(est.ct) <- x$packages
+        names(est.ct) <- x$package
 
-        g <- lapply(x$packages, function(pkg) {
+        g <- lapply(x$package, function(pkg) {
           pkg.data <- dat[dat$package == pkg, ]
           ip.sel <- pkg.data$in.progress == TRUE
           ip.data <- pkg.data[ip.sel, ]
@@ -2378,7 +2378,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         wk1.start <- unit.date[1]
         wk1.end <- unit.date[2] - 1
         
-        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+        wk1 <- cranlogs::cran_downloads(x$package, from = wk1.start, 
           to = wk1.end)
         names(wk1)[names(wk1) == "os"] <- "platform"
         wk1 <- wk1[wk1$platform != "NA", ]
@@ -2796,7 +2796,7 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         wk1.start <- unit.date[1]
         wk1.end <- unit.date[2] - 1
 
-        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+        wk1 <- cranlogs::cran_downloads(x$package, from = wk1.start, 
           to = wk1.end)
         names(wk1)[names(wk1) == "os"] <- "platform"
         wk1 <- wk1[wk1$platform != "NA", ]
@@ -3146,7 +3146,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
 
-        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+        wk1 <- cranlogs::cran_downloads(x$package, from = wk1.start, 
           to = wk1.end)
         names(wk1)[names(wk1) == "os"] <- "platform"
         wk1 <- wk1[wk1$platform != "NA", ]
@@ -3394,7 +3394,7 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         wk1.start <- dat$date[1]
         wk1.end <- dat$date[2] - 1
 
-        wk1 <- cranlogs::cran_downloads(x$packages, from = wk1.start, 
+        wk1 <- cranlogs::cran_downloads(x$package, from = wk1.start, 
           to = wk1.end)
         names(wk1)[names(wk1) == "os"] <- "platform"
         wk1 <- wk1[wk1$platform != "NA", ]

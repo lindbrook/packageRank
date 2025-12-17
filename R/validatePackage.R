@@ -1,31 +1,31 @@
 #' Check for valid package names.
 #'
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @noRd
 
-validatePackage <- function(packages) {
-  check <- unlist(lapply(packages, function(x) {
+validatePackage <- function(package) {
+  check <- unlist(lapply(package, function(x) {
     class(try(pkgsearch::cran_package(x), silent = TRUE))
   }))
   
   if (any(check == "try-error")) {
-    out <- data.frame(package = packages, pkgsearch = check != "try-error")
+    out <- data.frame(package = package, pkgsearch = check != "try-error")
     if ("R" %in% out$package) {
       out[out$package == "R", "pkgsearch"] <- TRUE
     }
   } else {
-    out <- data.frame(package = packages, pkgsearch = TRUE)
+    out <- data.frame(package = package, pkgsearch = TRUE)
   }
   out
 }
 
 #' Check for valid package names (scrape CRAN).
 #'
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @param check.archive Logical. Include archive when validating package. This is computationally expensive because it scrapes https://cran.r-project.org/src/contrib/Archive/.
 #' @noRd
 
-validatePackage0 <- function(packages, check.archive = TRUE) {
+validatePackage0 <- function(package, check.archive = TRUE) {
   url <- "https://cloud.r-project.org/"
   cran <- as.data.frame(utils::available.packages(repos = url),
     stringsAsFactors = FALSE)
@@ -53,8 +53,8 @@ validatePackage0 <- function(packages, check.archive = TRUE) {
     pkgs <- c(pkgs, archive, "R")
   } else pkgs <- c(pkgs, "R")
 
-  if (any(packages %in% pkgs == FALSE)) {
-    list(invalid = packages[packages %in% pkgs == FALSE],
-         valid = packages[packages %in% pkgs])
+  if (any(package %in% pkgs == FALSE)) {
+    list(invalid = package[package %in% pkgs == FALSE],
+         valid = package[package %in% pkgs])
   }
 }

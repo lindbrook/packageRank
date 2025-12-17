@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9041
+
+- replace 'packages' argument/object with 'package' and fix typos.
+
+
 ### packageRank 0.9.7.9040
 
 - replace 'packages' argument/object with 'package' in bioconductorDownloads().

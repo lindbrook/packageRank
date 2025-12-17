@@ -4,13 +4,13 @@
 \alias{filteredDownloads}
 \title{Filtered package downloads from the RStudio CRAN mirror (prototype).}
 \usage{
-filteredDownloads(packages = "HistData", date = NULL, all.filters = TRUE,
+filteredDownloads(package = "HistData", date = NULL, all.filters = TRUE,
   ip.filter = FALSE, sequence.filter = FALSE, size.filter = FALSE,
   small.filter = FALSE, version.filter = FALSE, check.package = TRUE,
   memoization = TRUE)
 }
 \arguments{
-\item{packages}{Character. Vector of package name(s).}
+\item{package}{Character. Vector of package name(s).}
 
 \item{date}{Character. Date. "yyyy-mm-dd". NULL uses latest available log.}
 

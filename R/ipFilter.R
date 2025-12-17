@@ -71,13 +71,13 @@ greedyIP <- function(cran_log, centers = 2L, nstart = 25L) {
     length(unique(x))
   })
   
-  pkgs <- data.frame(ip = as.integer(names(pkgs)), packages = pkgs,
+  pkgs <- data.frame(ip = as.integer(names(pkgs)), package = pkgs,
     row.names = NULL)
 
-  p.classified <- kmeanClassifier("packages", pkgs, centers, nstart)
-  p.class.id <- tapply(p.classified$packages, p.classified$group, mean)
+  p.classified <- kmeanClassifier("package", pkgs, centers, nstart)
+  p.class.id <- tapply(p.classified$package, p.classified$group, mean)
   p.data <- p.classified[p.classified$group == which.max(p.class.id), ]
-  # p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$packages %in% p.data$packages, "ip"]
+  # p.ip <- ip.dwnld.ratio[ip.dwnld.ratio$package %in% p.data$package, "ip"]
   list(package.ip = p.data$ip)
 }
 
@@ -94,7 +94,7 @@ firstLetter <- function(x, case.sensitive = FALSE) {
   else tolower(substring(x, 1, 1))
 }
 
-kmeanClassifier <- function(var = "packages", ip.dwnld.ratio, centers = centers,
+kmeanClassifier <- function(var = "package", ip.dwnld.ratio, centers = centers,
   nstart = nstart, tol = 0.001) {
 
   # methodological convenience for stats::kmeans()

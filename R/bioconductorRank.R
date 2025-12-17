@@ -1,25 +1,25 @@
 #' Package download counts and rank percentiles.
 #'
 #' From bioconductor
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @param date Character. Date. yyyy-mm
 #' @param count Character. "ip" or "download".
 #' @return An R data frame.
 #' @export
 #' @examples
 #' \dontrun{
-#' bioconductorRank(packages = "cicero", date = "2019-09")
+#' bioconductorRank(package = "cicero", date = "2019-09")
 #' }
 
-bioconductorRank <- function(packages = "monocle", date = "2019-01",
+bioconductorRank <- function(package = "monocle", date = "2019-01",
   count = "download") {
   
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   
   pkg.url <- "https://bioconductor.org/packages/stats/bioc/bioc_pkg_stats.tab"
-  packages.stats <-  as.data.frame(mfetchLog(pkg.url))
+  package.stats <-  as.data.frame(mfetchLog(pkg.url))
   
-  dat <- packages.stats[packages.stats$Month != "all", ]
+  dat <- package.stats[package.stats$Month != "all", ]
   dat$month <- NA
   
   for (i in seq_along(month.abb)) {
@@ -46,36 +46,36 @@ bioconductorRank <- function(packages = "monocle", date = "2019-01",
   freqtab <- sort(ct, decreasing = TRUE)
   
   # packages in bin
-  packages.bin <- lapply(packages, function(nm) {
+  package.bin <- lapply(package, function(nm) {
     freqtab[freqtab %in% freqtab[nm]]
   })
   
   # offset: ties arbitrarily broken by alphabetical order
-  packages.bin.delta <- vapply(seq_along(packages.bin), function(i) {
-    which(names(packages.bin[[i]]) %in% packages[i])
+  package.bin.delta <- vapply(seq_along(package.bin), function(i) {
+    which(names(package.bin[[i]]) %in% package[i])
   }, numeric(1L))
   
-  nominal.rank <- lapply(seq_along(packages), function(i) {
-    sum(freqtab > freqtab[packages[i]]) + packages.bin.delta[i]
+  nominal.rank <- lapply(seq_along(package), function(i) {
+    sum(freqtab > freqtab[package[i]]) + package.bin.delta[i]
   })
   
-  tot.packagess <- length(freqtab)
+  tot.package <- length(freqtab)
   
-  packages.percentile <- vapply(packages, function(x) {
+  package.percentile <- vapply(package, function(x) {
     round(100 * mean(freqtab < freqtab[x]), 1)
   }, numeric(1L))
   
   dat <- data.frame(date = date,
-                    packages = packages,
-                    downloads = c(freqtab[packages]),
+                    package = package,
+                    downloads = c(freqtab[package]),
                     rank = unlist(nominal.rank),
-                    percentile = packages.percentile,
+                    percentile = package.percentile,
                     total.downloads = sum(ct),
-                    total.packages = tot.packagess,
+                    total.package = tot.package,
                     stringsAsFactors = FALSE,
                     row.names = NULL)
   
-  out <- list(packages = packages, date = date, package.data = dat,
+  out <- list(package = package, date = date, package.data = dat,
     freqtab = freqtab)
   class(out) <- "bioconductorRank"
   out
@@ -94,7 +94,7 @@ plot.bioconductorRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
   freqtab <- x$freqtab + 1
   package.data <- x$package.data
-  packages <- x$packages
+  package <- x$package
   date <- x$date
   y.max <- freqtab[1]
   q <- stats::quantile(freqtab)[2:4]
@@ -105,18 +105,18 @@ plot.bioconductorRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   }, numeric(1L))
   
   if (is.null(graphics)) {
-    if (length(packages) == 1) {
-      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
-    } else if (length(packages) > 1) {
+    if (length(package) == 1) {
+      basePlot(package, log.y, freqtab, iqr, package.data, y.max, date)
+    } else if (length(package) > 1) {
       ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
     } else stop("Error.")
   } else if (graphics == "base") {
-    if (length(packages) > 1) {
-      invisible(lapply(packages, function(pkg) {
+    if (length(package) > 1) {
+      invisible(lapply(package, function(pkg) {
         basePlot(pkg, log.y, freqtab, iqr, package.data, y.max, date)
       }))
     } else {
-      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
+      basePlot(package, log.y, freqtab, iqr, package.data, y.max, date)
     }
   } else if (graphics == "ggplot2") {
     ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
@@ -131,8 +131,8 @@ plot.bioconductorRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
 print.bioconductorRank <- function(x, ...) {
   dat <- x$package.data
   rank <- paste(format(dat$rank, big.mark = ","), "of",
-                format(dat$total.packages, big.mark = ","))
-  out <- data.frame(dat[, c("date", "packages", "downloads")], rank,
+                format(dat$total.package, big.mark = ","))
+  out <- data.frame(dat[, c("date", "package", "downloads")], rank,
     percentile = dat[, "percentile"], stringsAsFactors = FALSE,
     row.names = NULL)
   print(out)

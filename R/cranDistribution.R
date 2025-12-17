@@ -1,7 +1,7 @@
 #' CRAN distribution (prototype).
 #'
 #' From Posit's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param packages Character. Vector of package name(s). NULL for all downloads, all of CRAN
+#' @param package Character. Vector of package name(s). NULL for all downloads, all of CRAN
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -12,7 +12,7 @@
 #' @return An R data frame.
 #' @export
 
-cranDistribution <- function(packages = NULL, date = NULL, all.filters = FALSE, 
+cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE, 
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE, 
   check.package = TRUE, multi.core = FALSE) {
   
@@ -30,13 +30,13 @@ cranDistribution <- function(packages = NULL, date = NULL, all.filters = FALSE,
   cores <- multiCore(multi.core)
   if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
-  if (!is.null(packages)) {
-    if (check.package) packages <- checkPackage(packages)
+  if (!is.null(package)) {
+    if (check.package) package <- checkPackage(package)
 
-    if (all(!packages %in% cran_log$package)) {
-      stop('No downloads for ', packages, ' on ', ymd, ".", call. = FALSE)
+    if (all(!package %in% cran_log$package)) {
+      stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
     } else {
-      out <- package_distribution(packages, ymd, all.filters, ip.filter,
+      out <- package_distribution(package, ymd, all.filters, ip.filter,
         small.filter, cran_log, cores)
       class(out) <- "packageDistribution"
     }
@@ -63,7 +63,7 @@ cranDistribution <- function(packages = NULL, date = NULL, all.filters = FALSE,
   out
 }
 
-package_distribution <- function(packages, ymd, all.filters, ip.filter,
+package_distribution <- function(package, ymd, all.filters, ip.filter,
   small.filter, cran_log, cores) {
 
   if (all.filters) {
@@ -78,7 +78,7 @@ package_distribution <- function(packages, ymd, all.filters, ip.filter,
   cts <- sort(unique(freqtab))
   freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
   freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-  out <- list(package = packages, freq.dist = freq.dist, freqtab = freqtab,
+  out <- list(package = package, freq.dist = freq.dist, freqtab = freqtab,
     date = ymd)
 }
 

@@ -1,7 +1,7 @@
 #' Package download counts and rank percentiles.
 #'
 #' From Posit/RStudio's CRAN Mirror (CDN) http://cran-logs.rstudio.com/
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -14,33 +14,33 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' packageRank(packages = "cholera", date = "2020-01-01")
-#' packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
+#' packageRank(package = "cholera", date = "2020-01-01")
+#' packageRank(package = c("h2o", "Rcpp", "rstan"), date = "2020-01-01")
 #' }
 
-packageRank <- function(packages = "packageRank", date = NULL,
+packageRank <- function(package = "packageRank", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, small.filter = FALSE,
   memoization = TRUE, check.package = TRUE, rank.ties = TRUE, 
   multi.core = FALSE) {
 
-  if (check.package) packages <- checkPackage(packages)
+  if (check.package) package <- checkPackage(package)
 
   x <- cranDistribution(date = date, all.filters = all.filters, 
     ip.filter = ip.filter, small.filter = small.filter, 
     memoization = memoization, multi.core = multi.core)
 
-  unobs.pkgs <- !packages %in% x$data$package
-  if (any(unobs.pkgs)) pkg.msg <- paste(packages[unobs.pkgs], collapse = ", ")
+  unobs.pkgs <- !package %in% x$data$package
+  if (any(unobs.pkgs)) pkg.msg <- paste(package[unobs.pkgs], collapse = ", ")
 
   if (all(unobs.pkgs)) {
     stop("No downloads for ", pkg.msg, " on ", x$date, ".", call. = FALSE)
   } else if (any(unobs.pkgs)) {
     message("No downloads for ", pkg.msg, " on ", x$date, ".")
-    packages <- packages[!unobs.pkgs]
+    package <- package[!unobs.pkgs]
   }
   
-  tmp <- x$data[x$data$package %in% packages, ]
-  tmp <- tmp[match(packages, tmp$package), ]
+  tmp <- x$data[x$data$package %in% package, ]
+  tmp <- tmp[match(package, tmp$package), ]
   
   if (rank.ties) {
     rnk <- paste(format(tmp$rank, big.mark = ","), "of", 
@@ -53,7 +53,7 @@ packageRank <- function(packages = "packageRank", date = NULL,
   pkg.data <- data.frame(date = x$date, tmp[, c("package", "count")], 
     rank = rnk, percentile = tmp$percentile, row.names = NULL)
   
-  out <- list(packages = packages, date = x$date, package.data = pkg.data, 
+  out <- list(package = package, date = x$date, package.data = pkg.data, 
     cran.data = x$data)
   
   class(out) <- "packageRank"
@@ -69,8 +69,8 @@ packageRank <- function(packages = "packageRank", date = NULL,
 #' @export
 #' @examples
 #' \dontrun{
-#' plot(packageRank(packages = "HistData", date = "2020-01-01"))
-#' plot(packageRank(packages = c("h2o", "Rcpp", "rstan"), date = "2020-01-01"))
+#' plot(packageRank(package = "HistData", date = "2020-01-01"))
+#' plot(packageRank(package = c("h2o", "Rcpp", "rstan"), date = "2020-01-01"))
 #' }
 
 plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
@@ -79,7 +79,7 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   freqtab <- x$cran.data$count
   names(freqtab) <- x$cran.data$package
   package.data <- x$package.data
-  packages <- x$packages
+  package <- x$package
   date <- x$date
   y.max <- freqtab[1]
   q <- stats::quantile(freqtab)[2:4]
@@ -90,20 +90,20 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   }, numeric(1L))
 
   if (is.null(graphics)) {
-    if (length(packages) == 1) {
-      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
-    } else if (length(packages) > 1) {
+    if (length(package) == 1) {
+      basePlot(package, log.y, freqtab, iqr, package.data, y.max, date)
+    } else if (length(package) > 1) {
       ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
     } else stop("Error.")
   } else if (graphics == "base") {
-    if (length(packages) > 1) {
-      invisible(lapply(packages, function(pkg) {
+    if (length(package) > 1) {
+      invisible(lapply(package, function(pkg) {
         grDevices::devAskNewPage(ask = TRUE)
         basePlot(pkg, log.y, freqtab, iqr, package.data, y.max, date)
         grDevices::devAskNewPage(ask = FALSE)
       }))
     } else {
-      basePlot(packages, log.y, freqtab, iqr, package.data, y.max, date)
+      basePlot(package, log.y, freqtab, iqr, package.data, y.max, date)
     }
   } else if (graphics == "ggplot2") {
     ggPlot(x, log.y, freqtab, iqr, package.data, y.max, date)
@@ -182,21 +182,21 @@ basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
 
 ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
   package.data <- x$package.data
-  packages <- x$packages
+  package <- x$package
 
   if (inherits(date, "Date")) {
     day <- weekdays(as.Date(date), abbreviate = TRUE)
     id <- paste0(package.data$package, " @ ", date, " (", day, ")")
   } else {
-    id <- paste0(package.data$packags, " @ ", date)
+    id <- paste0(package.data$package, " @ ", date)
   }
 
   download.data <- data.frame(x = seq_along(freqtab),
                               y = freqtab,
-                              packages = names(freqtab),
+                              package = names(freqtab),
                               row.names = NULL)
 
-  download.lst <- rep(list(download.data), length(x$packages))
+  download.lst <- rep(list(download.data), length(x$package))
 
   for (i in seq_along(download.lst)) download.lst[[i]]$id <- id[i]
   
@@ -204,26 +204,26 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
   first <- cumsum(vapply(download.lst, nrow, numeric(1L))) - length(freqtab) + 1
   last <- sum(vapply(download.lst, nrow, numeric(1L)))
   iqr.labels <- c("75th", "50th", "25th")
-  iqr.data <- data.frame(x = rep(iqr, length(x$packages)),
+  iqr.data <- data.frame(x = rep(iqr, length(x$package)),
                          y = stats::quantile(freqtab, 0.995),
-                         label = rep(iqr.labels, length(x$packages)),
+                         label = rep(iqr.labels, length(x$package)),
                          id = rep(id, each = length(iqr)),
                          row.names = NULL)
 
-  point.data <- lapply(seq_along(packages), function(i) {
-    download.lst[[i]][download.lst[[i]]$packages %in% packages[i], ]
+  point.data <- lapply(seq_along(package), function(i) {
+    download.lst[[i]][download.lst[[i]]$package %in% package[i], ]
   })
 
   point.data <- do.call(rbind, point.data)
 
-  top.pkg <- paste(download.data[first, "packages"], "=",
+  top.pkg <- paste(download.data[first, "package"], "=",
     format(download.data[first, "y"], big.mark = ","))
   tot.dwnld <- paste("Total =", format(sum(freqtab), big.mark = ","))
 
   xlabel <- paste0(round(package.data$percentile, 2), "%")
   ylabel <- format(point.data$y, big.mark = ",")
 
-  if (length(packages) > 1) {
+  if (length(package) > 1) {
     label.size <- 2.5
     ylabel.nudge <- 0.75
   } else {

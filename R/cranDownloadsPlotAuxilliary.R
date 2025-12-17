@@ -4,7 +4,7 @@ aggregateData <- function(x, unit.observation, cores) {
   dat <- x$cranlogs.data
   if ("package" %in% names(dat) | "platform" %in% names(dat)) {
     if ("package" %in% names(dat)) {
-      grp <- x$packages
+      grp <- x$package
     } else if ("platform" %in% names(dat)) {
       grp <- unique(dat$platform)
     }
@@ -157,10 +157,10 @@ lastDayMonth <- function(dates) {
   }
 }
 
-packageLifeFilter <- function(out, packages, first.published) {
+packageLifeFilter <- function(out, package, first.published) {
   dat <- out$cranlogs.data
-  birth.data <- lapply(seq_along(packages), function(i) {
-    tmp <- dat[dat$package == packages[i], ]
+  birth.data <- lapply(seq_along(package), function(i) {
+    tmp <- dat[dat$package == package[i], ]
     if (any(tmp$date < first.published[i])) {
       tmp <- tmp[tmp$date >= first.published[i], ]
     }

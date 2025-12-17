@@ -1,7 +1,7 @@
 #' Package download counts by country.
 #'
 #' From RStudio's CRAN Mirror http://cran-logs.rstudio.com/
-#' @param packages Character. Vector of package name(s).
+#' @param package Character. Vector of package name(s).
 #' @param date Character. Date. "yyyy-mm-dd". NULL uses latest available log.
 #' @param all.filters Logical. Master switch for filters.
 #' @param ip.filter Logical.
@@ -16,7 +16,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @export
 
-packageCountry <- function(packages = "cholera", date = NULL,
+packageCountry <- function(package = "cholera", date = NULL,
   all.filters = FALSE, ip.filter = FALSE, sequence.filter = FALSE,
   size.filter = FALSE, small.filter = FALSE, version.filter = FALSE, 
   sort = TRUE, na.rm = FALSE, memoization = TRUE, check.package = TRUE, 
@@ -29,7 +29,7 @@ packageCountry <- function(packages = "cholera", date = NULL,
     version.filter <- TRUE
   }
 
-  p.log <- packageLog(packages = packages, date = date,
+  p.log <- packageLog(package = package, date = date,
     all.filters = all.filters, ip.filter = ip.filter, 
     sequence.filter = sequence.filter, size.filter = size.filter, 
     small.filter = small.filter, version.filter = version.filter,
