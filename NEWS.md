@@ -1,3 +1,11 @@
+### packageRank 0.9.7.9040
+
+- replace 'packages' argument/object with 'package' in bioconductorDownloads().
+- replace 'size' with 'linewidth' in ggplot2::geom_line().
+- fix plot() in bioc_plot().
+- fix ylabs in gg_bioc_plot(log.y = TRUE).
+
+
 ### packageRank 0.9.7.9039
 
 - add temp stop() for packageLog("R").

@@ -4,11 +4,11 @@
 \alias{bioconductorDownloads}
 \title{Annual/monthly package downloads from Bioconductor.}
 \usage{
-bioconductorDownloads(packages = NULL, from = NULL, to = NULL,
+bioconductorDownloads(package = NULL, from = NULL, to = NULL,
   when = NULL, unit.observation = "month")
 }
 \arguments{
-\item{packages}{Character. Vector of package names.}
+\item{package}{Character. Vector of package names.}
 
 \item{from}{Start date as \code{yyyy-mm} or \code{yyyy}.}
 
@@ -27,29 +27,29 @@ Annual/monthly package downloads from Bioconductor.
 bioconductorDownloads()
 
 # entire history
-bioconductorDownloads(packages = "clusterProfiler")
+bioconductorDownloads(package = "clusterProfiler")
 
 # year-to-date
-bioconductorDownloads(packages = "clusterProfiler", when = "ytd")
-bioconductorDownloads(packages = "clusterProfiler", when = "year-to-date")
+bioconductorDownloads(package = "clusterProfiler", when = "ytd")
+bioconductorDownloads(package = "clusterProfiler", when = "year-to-date")
 
 # last 12 months
-bioconductorDownloads(packages = "clusterProfiler", when = "last-year")
+bioconductorDownloads(package = "clusterProfiler", when = "last-year")
 
 # from 2015 to current year
-bioconductorDownloads(packages = "clusterProfiler", from = 2015)
+bioconductorDownloads(package = "clusterProfiler", from = 2015)
 
 # 2010 through 2015 (yearly)
-bioconductorDownloads(packages = "clusterProfiler", from = 2010, to = 2015,
+bioconductorDownloads(package = "clusterProfiler", from = 2010, to = 2015,
   unit.observation = "year")
 
 # selected year (yearly)
-bioconductorDownloads(packages = "clusterProfiler", from = 2015, to = 2015)
+bioconductorDownloads(package = "clusterProfiler", from = 2015, to = 2015)
 
 # selected year (monthly)
-bioconductorDownloads(packages = "clusterProfiler", from = "2015-01", to = "2015-12")
+bioconductorDownloads(package = "clusterProfiler", from = "2015-01", to = "2015-12")
 
 # June 2014 through March 2015
-bioconductorDownloads(packages = "clusterProfiler", from = "2014-06", to = "2015-03")
+bioconductorDownloads(package = "clusterProfiler", from = "2014-06", to = "2015-03")
 }
 }
