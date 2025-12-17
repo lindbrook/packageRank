@@ -1,6 +1,6 @@
 ### packageRank 0.9.7.9041
 
-- replace 'packages' argument/object with 'package' and fix typos.
+- replace 'packages' argument/object with 'package'.
 
 
 ### packageRank 0.9.7.9040
