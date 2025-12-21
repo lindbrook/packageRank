@@ -99,17 +99,31 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #' @param smooth Logical. Add smoother.
 #' @param points Logical. For "hour" and "minute" in 2D plots.
 #' @param same.xy Logical. Use same scale for multiple packages for type = "2D".
+#' @param local.timezone Logical or Character. TRUE for Sys.timezone(). See OlsonNames() for other time zones.
 #' @param ... Additional parameters.
 #' @export
 
-plot.packageLog <- function(x, type = "1D", time.unit = "second", 
-  smooth = FALSE, points = TRUE, same.xy = TRUE, ...) {
+plot.packageLog <- function(x, type = "1D", time.unit = "second",
+  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = FALSE, ...) {
 
   x <- x[vapply(x, nrow, integer(1L)) != 0]
   log.date <- unique(x[[1]]$date)
   x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
   x.tick <- c(dateTime(log.date, x.time), dateTime(log.date + 1, x.time[1]))
-  
+
+  if (isTRUE(local.timezone)) {
+    x2.tick <- as.POSIXct(x.tick, tz = Sys.timezone())
+  } else if (is.character(local.timezone)) {
+    if (local.timezone %in% OlsonNames()) {
+      x2.tick <- as.POSIXct(x.tick, tz = local.timezone)
+    } else {
+      message('Invalid time zone. See OlsonNames().')
+      x2.tick <- NA
+    }
+  } else if (isFALSE(local.timezone)) {
+    x2.tick <- NA
+  }
+
   obs.time <- lapply(x, function(pkg) dateTime(pkg$date, pkg$time))
   
   plot.data <- lapply(obs.time, function(t) {
@@ -145,21 +159,23 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
   
   invisible(lapply(names(plot.data), function(nm) {
     logPlot(plot.data[[nm]], type, time.unit, points,
-      log.date, x.tick, ylim, nm, smooth)
+      log.date, x.tick, ylim, nm, smooth, x2.tick)
   }))
   
   if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
 }
 
 logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
-  smooth) {
+  smooth, x2.tick) {
   
-  if (type == "1D") {
+  xlab <- "UTC 24-Hour Clock"
+ 
+  if (type == "1D") {    
     plot(pkg$time, rep(1, nrow(pkg)), pch = 0, xaxt = "n", yaxt = "n",
-      xlab = "UTC 24-Hour Clock", ylab = NA, xlim = range(x.tick))
+      xlab = xlab, ylab = NA, xlim = range(x.tick)) 
   } else if (type == "2D") {
-    plot(pkg$time, pkg$count, xaxt = "n", xlab = "UTC 24-Hour Clock",
-      ylab = "Count", ylim = ylim, type = "l")
+    plot(pkg$time, pkg$count, xaxt = "n", xlab = xlab, ylab = "Count", 
+      xlim = range(x.tick), ylim = ylim, type = "l")
     if (points) points(pkg$time, pkg$count, pch = 0, cex = 0.75)
     if (smooth) {
       smooth.data <- stats::loess(pkg$count ~ as.numeric(pkg$time))
@@ -168,6 +184,13 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
   }
   
   axis(1, at = x.tick, labels = format(x.tick, "%H"))
+  if (all(!is.na(x2.tick))) {
+    axis(3, at = x2.tick, labels = format(x2.tick, "%H"), cex.axis = 2/3,
+      col.axis = "red", col.ticks = "red", padj = 0.9)
+    other.timezone <- unique(format(x2.tick, format = "%Z"))
+    legend(x = "top", legend = other.timezone, col = "red", pch = NULL,
+      bty = "n", bg = "white", cex = 3/4, lwd = 1, title = NULL)
+  }
   day <- weekdays(log.date, abbreviate = TRUE)
   title(main = paste0(nm, " @ ", log.date, " (", day, ")"))
   title(sub = paste0("time.unit: ", time.unit), cex.sub = 0.9)
