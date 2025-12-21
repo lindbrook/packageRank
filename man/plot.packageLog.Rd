@@ -5,7 +5,8 @@
 \title{Plot method for packageLog().}
 \usage{
 \method{plot}{packageLog}(x, type = "1D", time.unit = "second",
-  smooth = FALSE, points = TRUE, same.xy = TRUE, ...)
+  smooth = FALSE, points = TRUE, same.xy = TRUE,
+  local.timezone = FALSE, ...)
 }
 \arguments{
 \item{x}{Object.}
@@ -19,6 +20,8 @@
 \item{points}{Logical. For "hour" and "minute" in 2D plots.}
 
 \item{same.xy}{Logical. Use same scale for multiple packages for type = "2D".}
+
+\item{local.timezone}{Logical or Character. TRUE for Sys.timezone(). See OlsonNames() for other time zones.}
 
 \item{...}{Additional parameters.}
 }

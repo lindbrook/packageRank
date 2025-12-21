@@ -1,3 +1,9 @@
+### packageRank 0.9.7.9042
+
+- add/set plot.packageLog(local.timezone = FALSE).
+- fix xlim in plot.packageLog(type = "2D").
+
+
 ### packageRank 0.9.7.9041
 
 - replace 'packages' argument/object with 'package'.
