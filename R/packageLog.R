@@ -158,8 +158,8 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
     plot(pkg$time, rep(1, nrow(pkg)), pch = 0, xaxt = "n", yaxt = "n",
       xlab = "UTC 24-Hour Clock", ylab = NA, xlim = range(x.tick))
   } else if (type == "2D") {
-    plot(pkg$time, pkg$count, xaxt = "n", xlab = "UTC 24-Hour Clock",
-      ylab = "Count", ylim = ylim, type = "l")
+    plot(pkg$time, pkg$count, xaxt = "n", xlab = xlab, ylab = "Count", 
+      xlim = range(x.tick), ylim = ylim, type = "l")
     if (points) points(pkg$time, pkg$count, pch = 0, cex = 0.75)
     if (smooth) {
       smooth.data <- stats::loess(pkg$count ~ as.numeric(pkg$time))
