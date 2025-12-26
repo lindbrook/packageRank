@@ -97,10 +97,8 @@ cranDownloadsB <- function(package = NULL, when = NULL, from = NULL, to = NULL,
           cumsum(cranlogs.data[cranlogs.data$package == pkg, "count"])
         }))
       }
-      cranlogs.data <- cbind(cranlogs.data[, c("date", "count")],
-        cumulative, cranlogs.data$package)
-      sel <- (ncol(cranlogs.data) - 1):ncol(cranlogs.data)
-      names(cranlogs.data)[sel] <- c("cumulative", "package")
+      cranlogs.data <- cbind(cranlogs.data[, c("date", "package", "count")],
+        cumulative)
     }
     out <- list(package = package, cranlogs.data = cranlogs.data,
       when = argmnts$when, from = argmnts$from, to = argmnts$to)
