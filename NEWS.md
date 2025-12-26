@@ -1,3 +1,7 @@
+### packageRank 0.9.7.9043
+
+- amend variable order in cranDownloads().
+
 ### packageRank 0.9.7.9042
 
 - add/set plot.packageLog(local.timezone = FALSE).
