@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9045
+
+- set plot.packageLog(local.timezone = TRUE).
+
+
 ### packageRank 0.9.7.9044
 
 - return data.frame for single package in print.packageLog().

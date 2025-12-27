@@ -5,8 +5,8 @@
 \title{Plot method for packageLog().}
 \usage{
 \method{plot}{packageLog}(x, type = "1D", time.unit = "second",
-  smooth = FALSE, points = TRUE, same.xy = TRUE,
-  local.timezone = FALSE, ...)
+  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{Object.}
