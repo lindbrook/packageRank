@@ -203,5 +203,9 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
 
 print.packageLog <- function(x, ...) {
   attr(x, "class") <- NULL
-  print.default(x, ...)
+  if (length(x) == 1) {
+    print(x[[1]])
+  } else {
+    print.default(x, ...)
+  }
 }
