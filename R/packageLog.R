@@ -104,7 +104,7 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #' @export
 
 plot.packageLog <- function(x, type = "1D", time.unit = "second",
-  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = FALSE, ...) {
+  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE, ...) {
 
   x <- x[vapply(x, nrow, integer(1L)) != 0]
   log.date <- unique(x[[1]]$date)
