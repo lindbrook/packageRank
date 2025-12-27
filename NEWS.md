@@ -1,6 +1,12 @@
+### packageRank 0.9.7.9044
+
+- return data.frame for single package in print.packageLog().
+
+
 ### packageRank 0.9.7.9043
 
 - amend variable order in cranDownloads().
+
 
 ### packageRank 0.9.7.9042
 
