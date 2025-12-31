@@ -138,7 +138,7 @@ plot_package_distribution <- function(lst) {
     axis(3, at = log10(pkg.ct), labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     abline(v = log10(pkg.ct), col = "red", lty = "dotted")
-    day <- weekdays(as.Date(lst$lste), abbreviate = TRUE)
+    day <- weekdays(as.Date(lst$date), abbreviate = TRUE)
     title(paste0(lst$package, " @ ", lst$date, " (", day, ")"))
   } else {
     abline(v = log10(freqtab[1]), col = "dodgerblue", lty = "dotted")
