@@ -28,58 +28,45 @@ cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L    
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  
+  freqtab <- sort(table(cran_log$package), decreasing = TRUE)
+  
+  pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
+    row.names = NULL)
 
+  cts <- sort(unique(freqtab))
+  freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
+  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
+  
+  rnk <- rank(pkg.data$count, ties.method = "min")
+  pkg.data$rank <- (max(rnk) + 1) - rnk
+  pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
+  
+  percentile <- parallel::mclapply(pkg.data$count, function(x) {
+    round(100 * mean(pkg.data$count < x), 1)
+  }, mc.cores = cores)
+  
+  pkg.data$percentile <- unlist(percentile)
+  
   if (!is.null(package)) {
     if (check.package) package <- checkPackage(package)
 
     if (all(!package %in% cran_log$package)) {
       stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
     } else {
-      out <- package_distribution(package, ymd, all.filters, ip.filter,
-        small.filter, cran_log, cores)
+      out <- list(date = ymd, package = package, freqtab = freqtab, 
+        freq.dist = freq.dist, unique.packages = length(freqtab),
+        data = pkg.data)
       class(out) <- "packageDistribution"
     }
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
-    if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-
-    freqtab <- sort(table(cran_log$package), decreasing = TRUE)
-    
-    pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
-      row.names = NULL)
-
-    rnk <- rank(pkg.data$count, ties.method = "min")
-    pkg.data$rank <- (max(rnk) + 1) - rnk
-    pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
-
-    pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
-      round(100 * mean(pkg.data$count < x), 1)
-    }, mc.cores = cores))
-    
     out <- list(date = ymd, unique.packages = length(freqtab), data = pkg.data)
     class(out) <- "cranDistribution"
   }
   out
-}
-
-package_distribution <- function(package, ymd, all.filters, ip.filter,
-  small.filter, cran_log, cores) {
-
-  if (all.filters) {
-    ip.filter <- TRUE
-    small.filter <- TRUE
-  }
-
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-  if (small.filter) cran_log <- smallFilter(cran_log)
-  
-  freqtab <- sort(table(cran_log$package), decreasing = TRUE)
-  cts <- sort(unique(freqtab))
-  freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
-  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-  out <- list(package = package, freq.dist = freq.dist, freqtab = freqtab,
-    date = ymd)
 }
 
 #' Plot method for packageDistribution().
