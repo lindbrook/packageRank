@@ -1,4 +1,4 @@
-#' CRAN distribution (prototype).
+#' CRAN distribution.
 #'
 #' From Posit's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param package Character. Vector of package name(s). NULL for all downloads, all of CRAN
@@ -22,64 +22,51 @@ cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE,
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   ymd <- rev_fixDate_2012(file.url.date)
 
-   if (all.filters) {
+  if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
   }
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L    
+  if (small.filter) cran_log <- smallFilter(cran_log)
+  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
+  
+  freqtab <- sort(table(cran_log$package), decreasing = TRUE)
+  
+  pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
+    row.names = NULL)
 
+  cts <- sort(unique(freqtab))
+  freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
+  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
+  
+  rnk <- rank(pkg.data$count, ties.method = "min")
+  pkg.data$rank <- (max(rnk) + 1) - rnk
+  pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
+  
+  percentile <- parallel::mclapply(pkg.data$count, function(x) {
+    round(100 * mean(pkg.data$count < x), 1)
+  }, mc.cores = cores)
+  
+  pkg.data$percentile <- unlist(percentile)
+  
   if (!is.null(package)) {
     if (check.package) package <- checkPackage(package)
 
     if (all(!package %in% cran_log$package)) {
       stop('No downloads for ', package, ' on ', ymd, ".", call. = FALSE)
     } else {
-      out <- package_distribution(package, ymd, all.filters, ip.filter,
-        small.filter, cran_log, cores)
+      out <- list(date = ymd, package = package, freqtab = freqtab, 
+        freq.dist = freq.dist, unique.packages = length(freqtab),
+        data = pkg.data)
       class(out) <- "packageDistribution"
     }
   } else {
-    if (small.filter) cran_log <- smallFilter(cran_log)
-    if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-
-    freqtab <- sort(table(cran_log$package), decreasing = TRUE)
-    
-    pkg.data <- data.frame(package = names(freqtab), count = c(freqtab), 
-      row.names = NULL)
-
-    rnk <- rank(pkg.data$count, ties.method = "min")
-    pkg.data$rank <- (max(rnk) + 1) - rnk
-    pkg.data$nominal.rank <- seq_len(nrow(pkg.data))
-
-    pkg.data$percentile <- unlist(parallel::mclapply(pkg.data$count, function(x) {
-      round(100 * mean(pkg.data$count < x), 1)
-    }, mc.cores = cores))
-    
     out <- list(date = ymd, unique.packages = length(freqtab), data = pkg.data)
     class(out) <- "cranDistribution"
   }
   out
-}
-
-package_distribution <- function(package, ymd, all.filters, ip.filter,
-  small.filter, cran_log, cores) {
-
-  if (all.filters) {
-    ip.filter <- TRUE
-    small.filter <- TRUE
-  }
-
-  if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
-  if (small.filter) cran_log <- smallFilter(cran_log)
-  
-  freqtab <- sort(table(cran_log$package), decreasing = TRUE)
-  cts <- sort(unique(freqtab))
-  freq <- vapply(cts, function(x) sum(freqtab == x), integer(1L))
-  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-  out <- list(package = package, freq.dist = freq.dist, freqtab = freqtab,
-    date = ymd)
 }
 
 #' Plot method for packageDistribution().
@@ -89,7 +76,7 @@ package_distribution <- function(package, ymd, all.filters, ip.filter,
 #' @export
 
 plot.packageDistribution <- function(x, ...) {
-  if (length(x$package) <= 1) {
+  if (length(x$package) == 1) {
     plot_package_distribution(x)
   } else if (length(x$package > 1)) {
     # ggplot doesn't like integers
@@ -127,16 +114,16 @@ plot.packageDistribution <- function(x, ...) {
   }
 }
 
-plot_package_distribution <- function(dat) {
-  freq.dist <- dat$freq.dist
-  xlim <- range(log10(dat$freq.dist$count))
-  ylim <- range(dat$freq.dist$frequency)
-  freqtab <- dat$freqtab
+plot_package_distribution <- function(lst) {
+  freq.dist <- lst$freq.dist
+  xlim <- range(log10(lst$freq.dist$count))
+  ylim <- range(lst$freq.dist$frequency)
+  freqtab <- lst$freqtab
 
   plot(log10(freq.dist$count), freq.dist$frequency, type = "h", 
     xlab = "Log10 Download Count", ylab = "Frequency", xlim = xlim, ylim = ylim)
-  if (!is.null(dat$package)) {
-    pkg.ct <- freqtab[names(freqtab) == dat$package]
+  if (!is.null(lst$package)) {
+    pkg.ct <- freqtab[names(freqtab) == lst$package]
     if (pkg.ct > 10000) {
       axis(1, at = log10(freqtab[1]), cex.axis = 0.8, col.axis = "dodgerblue",
         col.ticks = "dodgerblue", labels = paste(names(freqtab[1]), "=",
@@ -151,66 +138,74 @@ plot_package_distribution <- function(dat) {
     axis(3, at = log10(pkg.ct), labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     abline(v = log10(pkg.ct), col = "red", lty = "dotted")
-    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
-    title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
+    day <- weekdays(as.Date(lst$date), abbreviate = TRUE)
+    title(paste0(lst$package, " @ ", lst$date, " (", day, ")"))
   } else {
     abline(v = log10(freqtab[1]), col = "dodgerblue", lty = "dotted")
     axis(3, at = log10(freqtab[1]), cex.axis = 0.8, padj = 0.9,
       col.axis = "dodgerblue", col.ticks = "dodgerblue",
       labels = paste(names(freqtab[1]), "=",
       format(freqtab[1], big.mark = ",")))
-    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
-    title(paste0("Package Download Counts", " @ ", dat$date, " (", day, ")"))
+    day <- weekdays(as.Date(lst$date), abbreviate = TRUE)
+    title(paste0("Package Download Counts", " @ ", lst$date, " (", day, ")"))
   }
+
+  sub.ttl <- paste(
+    format(sum(lst$data$count), big.mark = ","), "total downloads;",
+    format(lst$unique.packages, big.mark = ","), "unique packages")
+  title(cex.sub = 0.9, sub = sub.ttl)
 }
 
 #' Print method for packageDistribution().
 #' @param x An object of class "packageDistribution" created by \code{packageDistribution()}
+#' @param top.n Numeric or Integer.
 #' @param ... Additional parameters.
 #' @export
 
-print.packageDistribution <- function(x, ...) {
-  print(x[c("package", "date")])
+print.packageDistribution <- function(x, top.n = 20, ...) {
+  pkg.ct <- format(x$unique.packages, big.mark = ",")
+  dwnld.ct <- format(sum(x$data$count), big.mark = ",")
+  print(list(date = paste(x$date, weekdays(x$date)),
+             unique.packages.downloaded = pkg.ct,
+             total.downloads = dwnld.ct,
+             top.n = head(x$data, top.n),
+             package.data = x$data[x$data$package == x$package, ]))
 }
 
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
-#' @param type Character. "histogram" or "count".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.cranDistribution <- function(x, type = "count", ...) {
+plot.cranDistribution <- function(x, ...) {
   day <- weekdays(as.Date(x$date), abbreviate = TRUE)
   ttl <- paste0("CRAN/Posit @ ", x$date, " (", day, ")")
   xlab <-  "Log10 Download Count"
-  if (type == "histogram") {
-    graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
-  } else if (type == "count") {
-    cts <- sort(unique(x$data$count))
-    freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
-    freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-    freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
-    xlim <- range(log10(freq.dist$count))
-    ylim <- range(freq.density)
-    plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
-      xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
-    avg <- mean(x$data$count)
-    avg.lab <- paste("avg =", round(avg, 1))
-    med <- stats::median(x$data$count)
-    med.lab <- paste("med =", round(med, 1))
-    max <- max(x$data$count)
-    max.lab <- paste("max =", format(max, big.mark = ","))
-    axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
-      col.axis = "blue", col.ticks = "blue")
-    axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
-      col.axis = "red", col.ticks = "red")
-    axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
-  } else stop('type must be "historgram" or "count"', call. = FALSE)
-    sub.ttl <- paste(
-      format(sum(x$data$count), big.mark = ","), "total downloads;",
-      format(x$unique.packages, big.mark = ","), "unique packages")
-    title(cex.sub = 0.9, sub = sub.ttl)
+
+  cts <- sort(unique(x$data$count))
+  freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
+  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
+  freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
+  xlim <- range(log10(freq.dist$count))
+  ylim <- range(freq.density)
+  plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
+    xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
+  avg <- mean(x$data$count)
+  avg.lab <- paste("avg =", round(avg, 1))
+  med <- stats::median(x$data$count)
+  med.lab <- paste("med =", round(med, 1))
+  max <- max(x$data$count)
+  max.lab <- paste("max =", format(max, big.mark = ","))
+  axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
+    col.axis = "blue", col.ticks = "blue")
+  axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
+    col.axis = "red", col.ticks = "red")
+  axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
+  sub.ttl <- paste(
+    format(sum(x$data$count), big.mark = ","), "total downloads;",
+    format(x$unique.packages, big.mark = ","), "unique packages")
+  title(cex.sub = 0.9, sub = sub.ttl)
 }
 
 #' Print method for cranDistribution().
@@ -228,7 +223,7 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
              top.n = head(x$data, top.n)))
 }
 
-#' Summary method for cranDistribution().
+#' Summary method for class "cranDistribution".
 #'
 #' Five number (+ mean) summary of download count distribution
 #' @param object An object of class "cranDistribution" created by \code{cranDistribution()}.
@@ -237,6 +232,20 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
 #' @export
 
 summary.cranDistribution <- function(object, ...) {
+  list(unique.packages.downloaded = object$unique.packages,
+       total.downloads = sum(object$data$count),
+       download.summary = summary(object$data$count))
+}
+
+#' Summary method for class "packageDistribution".
+#'
+#' Five number (+ mean) summary of download count distribution
+#' @param object An object of class "packageDistribution" created by \code{cranDistribution()}.
+#' @param ... Additional plotting parameters.
+#' @return A base R vector
+#' @export
+
+summary.packageDistribution <- function(object, ...) {
   list(unique.packages.downloaded = object$unique.packages,
        total.downloads = sum(object$data$count),
        download.summary = summary(object$data$count))

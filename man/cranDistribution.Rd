@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDistribution.R
 \name{cranDistribution}
 \alias{cranDistribution}
-\title{CRAN distribution (prototype).}
+\title{CRAN distribution.}
 \usage{
 cranDistribution(package = NULL, date = NULL, all.filters = FALSE,
   ip.filter = FALSE, small.filter = FALSE, memoization = TRUE,
