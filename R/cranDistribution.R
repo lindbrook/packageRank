@@ -22,7 +22,7 @@ cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE,
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)
   ymd <- rev_fixDate_2012(file.url.date)
 
-   if (all.filters) {
+  if (all.filters) {
     ip.filter <- TRUE
     small.filter <- TRUE
   }
