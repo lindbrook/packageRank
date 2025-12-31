@@ -228,7 +228,7 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
              top.n = head(x$data, top.n)))
 }
 
-#' Summary method for cranDistribution().
+#' Summary method for class "cranDistribution".
 #'
 #' Five number (+ mean) summary of download count distribution
 #' @param object An object of class "cranDistribution" created by \code{cranDistribution()}.

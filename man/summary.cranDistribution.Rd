@@ -2,7 +2,7 @@
 % Please edit documentation in R/cranDistribution.R
 \name{summary.cranDistribution}
 \alias{summary.cranDistribution}
-\title{Summary method for cranDistribution().}
+\title{Summary method for class "cranDistribution".}
 \usage{
 \method{summary}{cranDistribution}(object, ...)
 }
