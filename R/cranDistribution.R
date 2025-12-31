@@ -241,3 +241,17 @@ summary.cranDistribution <- function(object, ...) {
        total.downloads = sum(object$data$count),
        download.summary = summary(object$data$count))
 }
+
+#' Summary method for class "packageDistribution".
+#'
+#' Five number (+ mean) summary of download count distribution
+#' @param object An object of class "packageDistribution" created by \code{cranDistribution()}.
+#' @param ... Additional plotting parameters.
+#' @return A base R vector
+#' @export
+
+summary.packageDistribution <- function(object, ...) {
+  list(unique.packages.downloaded = object$unique.packages,
+       total.downloads = sum(object$data$count),
+       download.summary = summary(object$data$count))
+}
