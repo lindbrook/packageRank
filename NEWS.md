@@ -1,3 +1,11 @@
+### packageRank 0.9.7.9046
+
+- add summary.packageDistribution().
+- add/set print.packageDistribution(top.n = 20).
+- archive package_distribution().
+- clean/amend subtitles in plot.packageDistribution() & plot.cranDistribution().
+
+
 ### packageRank 0.9.7.9045
 
 - set plot.packageLog(local.timezone = TRUE).
