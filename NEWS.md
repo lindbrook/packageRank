@@ -4,6 +4,7 @@
 - add/set print.packageDistribution(top.n = 20).
 - archive package_distribution().
 - clean/amend subtitles in plot.packageDistribution() & plot.cranDistribution().
+- remove plot.cranDistribution(type).
 
 
 ### packageRank 0.9.7.9045

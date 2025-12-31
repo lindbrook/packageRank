@@ -1,4 +1,4 @@
-#' CRAN distribution (prototype).
+#' CRAN distribution.
 #'
 #' From Posit's CRAN Mirror http://cran-logs.rstudio.com/
 #' @param package Character. Vector of package name(s). NULL for all downloads, all of CRAN
@@ -174,41 +174,34 @@ print.packageDistribution <- function(x, top.n = 20, ...) {
 
 #' Plot method for cranDistribution().
 #' @param x An object of class "cranDistribution" created by \code{cranDistribution()}.
-#' @param type Character. "histogram" or "count".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.cranDistribution <- function(x, type = "count", ...) {
+plot.cranDistribution <- function(x, ...) {
   day <- weekdays(as.Date(x$date), abbreviate = TRUE)
   ttl <- paste0("CRAN/Posit @ ", x$date, " (", day, ")")
   xlab <-  "Log10 Download Count"
-  if (type == "histogram") {
-    graphics::hist(log10(x$data$count), main = ttl, xlab = xlab)
-  } else if (type == "count") {
-    cts <- sort(unique(x$data$count))
-    freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
-    freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
-    freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
-    xlim <- range(log10(freq.dist$count))
-    ylim <- range(freq.density)
-    plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
-      xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
-    avg <- mean(x$data$count)
-    avg.lab <- paste("avg =", round(avg, 1))
-    med <- stats::median(x$data$count)
-    med.lab <- paste("med =", round(med, 1))
-    max <- max(x$data$count)
-    max.lab <- paste("max =", format(max, big.mark = ","))
-    axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
-      col.axis = "blue", col.ticks = "blue")
-    axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
-      col.axis = "red", col.ticks = "red")
-    axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
-  } else {
-    stop('type must be "historgram" or "count"', call. = FALSE)
-  }
-  
+
+  cts <- sort(unique(x$data$count))
+  freq <- vapply(cts, function(ct) sum(x$data$count == ct), integer(1L))
+  freq.dist <- data.frame(count = cts, frequency = freq, row.names = NULL)
+  freq.density <- 100 * freq.dist$frequency / sum(freq.dist$frequency)
+  xlim <- range(log10(freq.dist$count))
+  ylim <- range(freq.density)
+  plot(log10(freq.dist$count), freq.density, type = "h", main = ttl,
+    xlab = xlab, ylab = "Percent", xlim = xlim, ylim = ylim)
+  avg <- mean(x$data$count)
+  avg.lab <- paste("avg =", round(avg, 1))
+  med <- stats::median(x$data$count)
+  med.lab <- paste("med =", round(med, 1))
+  max <- max(x$data$count)
+  max.lab <- paste("max =", format(max, big.mark = ","))
+  axis(3, at = log10(avg), cex.axis = 0.8, padj = 0.9, labels = avg.lab, 
+    col.axis = "blue", col.ticks = "blue")
+  axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
+    col.axis = "red", col.ticks = "red")
+  axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
   sub.ttl <- paste(
     format(sum(x$data$count), big.mark = ","), "total downloads;",
     format(x$unique.packages, big.mark = ","), "unique packages")
