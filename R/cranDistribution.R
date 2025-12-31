@@ -76,7 +76,7 @@ cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE,
 #' @export
 
 plot.packageDistribution <- function(x, ...) {
-  if (length(x$package) <= 1) {
+  if (length(x$package) == 1) {
     plot_package_distribution(x)
   } else if (length(x$package > 1)) {
     # ggplot doesn't like integers
@@ -114,16 +114,16 @@ plot.packageDistribution <- function(x, ...) {
   }
 }
 
-plot_package_distribution <- function(dat) {
-  freq.dist <- dat$freq.dist
-  xlim <- range(log10(dat$freq.dist$count))
-  ylim <- range(dat$freq.dist$frequency)
-  freqtab <- dat$freqtab
+plot_package_distribution <- function(lst) {
+  freq.dist <- lst$freq.dist
+  xlim <- range(log10(lst$freq.dist$count))
+  ylim <- range(lst$freq.dist$frequency)
+  freqtab <- lst$freqtab
 
   plot(log10(freq.dist$count), freq.dist$frequency, type = "h", 
     xlab = "Log10 Download Count", ylab = "Frequency", xlim = xlim, ylim = ylim)
-  if (!is.null(dat$package)) {
-    pkg.ct <- freqtab[names(freqtab) == dat$package]
+  if (!is.null(lst$package)) {
+    pkg.ct <- freqtab[names(freqtab) == lst$package]
     if (pkg.ct > 10000) {
       axis(1, at = log10(freqtab[1]), cex.axis = 0.8, col.axis = "dodgerblue",
         col.ticks = "dodgerblue", labels = paste(names(freqtab[1]), "=",
@@ -138,17 +138,22 @@ plot_package_distribution <- function(dat) {
     axis(3, at = log10(pkg.ct), labels = format(pkg.ct, big.mark = ","),
       cex.axis = 0.8, padj = 0.9, col.axis = "red", col.ticks = "red")
     abline(v = log10(pkg.ct), col = "red", lty = "dotted")
-    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
-    title(paste0(dat$package, " @ ", dat$date, " (", day, ")"))
+    day <- weekdays(as.Date(lst$lste), abbreviate = TRUE)
+    title(paste0(lst$package, " @ ", lst$date, " (", day, ")"))
   } else {
     abline(v = log10(freqtab[1]), col = "dodgerblue", lty = "dotted")
     axis(3, at = log10(freqtab[1]), cex.axis = 0.8, padj = 0.9,
       col.axis = "dodgerblue", col.ticks = "dodgerblue",
       labels = paste(names(freqtab[1]), "=",
       format(freqtab[1], big.mark = ",")))
-    day <- weekdays(as.Date(dat$date), abbreviate = TRUE)
-    title(paste0("Package Download Counts", " @ ", dat$date, " (", day, ")"))
+    day <- weekdays(as.Date(lst$date), abbreviate = TRUE)
+    title(paste0("Package Download Counts", " @ ", lst$date, " (", day, ")"))
   }
+
+  sub.ttl <- paste(
+    format(sum(lst$data$count), big.mark = ","), "total downloads;",
+    format(lst$unique.packages, big.mark = ","), "unique packages")
+  title(cex.sub = 0.9, sub = sub.ttl)
 }
 
 #' Print method for packageDistribution().
@@ -200,11 +205,14 @@ plot.cranDistribution <- function(x, type = "count", ...) {
     axis(3, at = log10(med), cex.axis = 0.8, padj = 0.9, labels = med.lab, 
       col.axis = "red", col.ticks = "red")
     axis(3, at = log10(max), cex.axis = 0.8, padj = 0.9, labels = max.lab)
-  } else stop('type must be "historgram" or "count"', call. = FALSE)
-    sub.ttl <- paste(
-      format(sum(x$data$count), big.mark = ","), "total downloads;",
-      format(x$unique.packages, big.mark = ","), "unique packages")
-    title(cex.sub = 0.9, sub = sub.ttl)
+  } else {
+    stop('type must be "historgram" or "count"', call. = FALSE)
+  }
+  
+  sub.ttl <- paste(
+    format(sum(x$data$count), big.mark = ","), "total downloads;",
+    format(x$unique.packages, big.mark = ","), "unique packages")
+  title(cex.sub = 0.9, sub = sub.ttl)
 }
 
 #' Print method for cranDistribution().
