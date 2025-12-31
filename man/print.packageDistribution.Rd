@@ -4,10 +4,12 @@
 \alias{print.packageDistribution}
 \title{Print method for packageDistribution().}
 \usage{
-\method{print}{packageDistribution}(x, ...)
+\method{print}{packageDistribution}(x, top.n = 20, ...)
 }
 \arguments{
 \item{x}{An object of class "packageDistribution" created by \code{packageDistribution()}}
+
+\item{top.n}{Numeric or Integer.}
 
 \item{...}{Additional parameters.}
 }

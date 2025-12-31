@@ -166,11 +166,18 @@ plot_package_distribution <- function(dat) {
 
 #' Print method for packageDistribution().
 #' @param x An object of class "packageDistribution" created by \code{packageDistribution()}
+#' @param top.n Numeric or Integer.
 #' @param ... Additional parameters.
 #' @export
 
-print.packageDistribution <- function(x, ...) {
-  print(x[c("package", "date")])
+print.packageDistribution <- function(x, top.n = 20, ...) {
+  pkg.ct <- format(x$unique.packages, big.mark = ",")
+  dwnld.ct <- format(sum(x$data$count), big.mark = ",")
+  print(list(date = paste(x$date, weekdays(x$date)),
+             unique.packages.downloaded = pkg.ct,
+             total.downloads = dwnld.ct,
+             top.n = head(x$data, top.n),
+             package.data = x$data[x$data$package == x$package, ]))
 }
 
 #' Plot method for cranDistribution().
