@@ -188,8 +188,10 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
     axis(3, at = x2.tick, labels = format(x2.tick, "%H"), cex.axis = 2/3,
       col.axis = "red", col.ticks = "red", padj = 0.9)
     other.timezone <- unique(format(x2.tick, format = "%Z"))
-    legend(x = "top", legend = other.timezone, col = "red", pch = NULL,
-      bty = "n", bg = "white", cex = 3/4, lwd = 1, title = NULL)
+    obs.days <- unique(format(x2.tick[-length(x2.tick)], format = "%m/%d"))
+    if (length(obs.days != 1)) obs.days <- paste(obs.days, collapse = "-")
+    legend(x = "top", legend = paste(obs.days, other.timezone), col = "red",
+      pch = NULL, bty = "n", bg = "white", cex = 3/4, lwd = 1, title = NULL)
   }
   day <- weekdays(log.date, abbreviate = TRUE)
   title(main = paste0(nm, " @ ", log.date, " (", day, ")"))
