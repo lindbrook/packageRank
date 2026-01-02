@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9047
+
+- add calendar date(s) to plot.packageLog(local.timezone = TRUE).
+
+
 ### packageRank 0.9.7.9046
 
 - add summary.packageDistribution().
