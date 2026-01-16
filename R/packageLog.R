@@ -189,7 +189,7 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
       col.axis = "red", col.ticks = "red", padj = 0.9)
     other.timezone <- unique(format(x2.tick, format = "%Z"))
     obs.days <- unique(format(x2.tick[-length(x2.tick)], format = "%m/%d"))
-    if (length(obs.days != 1)) obs.days <- paste(obs.days, collapse = "-")
+    if (length(obs.days != 1)) obs.days <- paste(obs.days, collapse = " - ")
     legend(x = "top", legend = paste(obs.days, other.timezone), col = "red",
       pch = NULL, bty = "n", bg = "white", cex = 3/4, lwd = 1, title = NULL)
   }
