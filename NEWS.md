@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9048
+
+- amend legend in plot.packageLog().
+
+
 ### packageRank 0.9.7.9047
 
 - add calendar date(s) to plot.packageLog(local.timezone = TRUE).
