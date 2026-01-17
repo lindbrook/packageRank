@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9049
+
+- set r.ver = "4.5" in cranPackageSize().
+
+
 ### packageRank 0.9.7.9048
 
 - amend legend in plot.packageLog().
