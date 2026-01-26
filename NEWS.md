@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9050
+
+- add current UTC to logInfo(details = TRUE).
+
+
 ### packageRank 0.9.7.9049
 
 - set r.ver = "4.5" in cranPackageSize().

@@ -99,11 +99,14 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
     note <- paste0("Posit/RStudio ", "(", logs.last.available, ")",
                    "; 'cranlogs' ", "(", cran.last.available, ")")
     
+    current.time <- paste0(format(Sys.time(), date.fmt), " -- ",
+                           format(utc.date.time, date.fmt))
+
     out <- list("Today's log/result" = today.log,
                 "Today's log on Posit/RStudio?" = log.status,
                 "Today's results on 'cranlogs'?" = cranlogs.status,
                 "Available log/result" = note,
-                "Current date-time" = paste0(format(Sys.time(), date.fmt)),
+                "Current date-time" = current.time,
                 status = status)
   }
   out
