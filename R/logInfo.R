@@ -97,7 +97,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
     }
     
     note <- paste0("Posit/RStudio ", "(", logs.last.available, ")",
-                   "; 'cranlogs' ", "(", cran.last.available, ").")
+                   "; 'cranlogs' ", "(", cran.last.available, ")")
     
     out <- list("Today's log/result" = today.log,
                 "Today's log on Posit/RStudio?" = log.status,
