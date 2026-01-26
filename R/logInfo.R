@@ -70,7 +70,9 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
               "Today's result on 'cranlogs'?" = cranlogs.status,
               status = status)
   
-  if (details) {
+  if (!is.logical(details)) {
+    stop("'details' must be TRUE or FALSE.", call. = FALSE)
+  } else if (details) {
     rev.dates <- seq(utc.date - 1, utc.date - check.days, by = -1)
     
     logs.available <- vapply(rev.dates, function(x) {
