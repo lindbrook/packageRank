@@ -53,11 +53,11 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
       status <- "Everything OK." 
     } else if (rstudio.results.available & !cranlogs.results.available) {
       status <- paste0("Today's 'cranlogs' usually posts by ",
-                       format(upload.loc + 3600L, date.fmt), " | ", 
+                       format(upload.loc + 3600L, date.fmt), " -- ", 
                        format(upload.utc + 3600L, date.fmt), ".")
     } else if (!rstudio.results.available) {
       status <- paste0("Today's log usually posts by ",
-                       format(upload.loc, date.fmt), " | ",
+                       format(upload.loc, date.fmt), " -- ",
                        format(upload.utc, date.fmt), ".")
     }
   }
