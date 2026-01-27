@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9051
+
+- format logInfo(details = TRUE) output.
+
+
 ### packageRank 0.9.7.9050
 
 - add current UTC to logInfo(details = TRUE).
