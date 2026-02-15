@@ -1,3 +1,9 @@
+### packageRank 0.9.7.9052
+
+- check argument values for time.unit and type in plot.packageLog().
+- add shortcut for plot.packageLog(type).
+
+
 ### packageRank 0.9.7.9051
 
 - format logInfo(details = TRUE) output.
