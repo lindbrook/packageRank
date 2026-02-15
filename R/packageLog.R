@@ -108,6 +108,14 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
 
   type <- toupper(type)
   
+  if (!type %in% c("1D", "2D")) {
+    stop('type must be "1D" or "2D".', call. = FALSE)
+  }
+  
+  if (!time.unit %in% c("second", "minute", "hour")) {
+    stop('time.unit must be "second", "minute", or "hour".', call. = FALSE)
+  }
+  
   x <- x[vapply(x, nrow, integer(1L)) != 0]
   log.date <- unique(x[[1]]$date)
   x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
