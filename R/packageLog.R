@@ -106,6 +106,8 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 plot.packageLog <- function(x, type = "1D", time.unit = "second",
   smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE, ...) {
 
+  type <- toupper(type)
+  
   x <- x[vapply(x, nrow, integer(1L)) != 0]
   log.date <- unique(x[[1]]$date)
   x.time <- c("00:00:00 UTC", "06:00:00 UTC", "12:00:00 UTC", "18:00:00 UTC")
