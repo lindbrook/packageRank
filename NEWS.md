@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9053
+
+- amend argument order and set localTime(time, date = Sys.Date()).
+
+
 ### packageRank 0.9.7.9052
 
 - check argument values for time.unit and type in plot.packageLog().
