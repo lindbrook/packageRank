@@ -4,12 +4,12 @@
 \alias{localTime}
 \title{Compute Local Time from Coordinated Universal Time (UTC/GMT).}
 \usage{
-localTime(date = "2021-1-1", time = "12:00", tz = Sys.timezone())
+localTime(time = "12:00", date = Sys.Date(), tz = Sys.timezone())
 }
 \arguments{
-\item{date}{Character. Date "yyyy-mm-dd".}
-
 \item{time}{Character. Local time "hh:mm" or "hh:mm:ss".}
+
+\item{date}{Character. Date "yyyy-mm-dd".}
 
 \item{tz}{Character. Local time zone. See OlsonNames() or use Sys.timezone().}
 }

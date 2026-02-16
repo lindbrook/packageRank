@@ -46,7 +46,7 @@ logInfo <- function(details = FALSE, tz = Sys.timezone(),
   }
 
   date.fmt <- "%d %b %H:%M %Z"
-  upload.loc <- localTime(upload.date, time = upload.time, tz = tz)
+  upload.loc <- localTime(time = upload.time, date = upload.date, tz = tz)
   
   if (rstudio.server.available & cranlogs.server.available) {
     if (rstudio.results.available & cranlogs.results.available) {
