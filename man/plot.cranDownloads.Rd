@@ -40,7 +40,7 @@
 
 \item{r.version}{Logical or "line". Add R release dates and vertical lines.}
 
-\item{multi.plot}{Logical.}
+\item{multi.plot}{Logical. Multiple package data in single plot.}
 
 \item{same.xy}{Logical. Use same scale for multiple packages when graphics = "base".}
 

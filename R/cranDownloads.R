@@ -72,7 +72,7 @@ cranDownloads <- function(package = NULL, when = NULL, from = NULL,
 #' @param axis.package Character. Add one additional package version to axis.
 #' @param axis.package.version Logical or "line". Add package release dates and vertical lines.
 #' @param r.version Logical or "line". Add R release dates and vertical lines.
-#' @param multi.plot Logical.
+#' @param multi.plot Logical. Multiple package data in single plot.
 #' @param same.xy Logical. Use same scale for multiple packages when graphics = "base".
 #' @param legend.location Character.
 #' @param ip.legend.location Character. Location of in-progress legend.
