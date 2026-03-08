@@ -4,7 +4,7 @@
 \alias{plot.packageLog}
 \title{Plot method for packageLog().}
 \usage{
-\method{plot}{packageLog}(x, type = "1D", time.unit = "second",
+\method{plot}{packageLog}(x, type = "1D", unit.observation = "second",
   smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE,
   ...)
 }
@@ -13,7 +13,7 @@
 
 \item{type}{Character. "1D" or "2D".}
 
-\item{time.unit}{Character. "second", "minute", or "hour".}
+\item{unit.observation}{Character. "second", "minute", or "hour".}
 
 \item{smooth}{Logical. Add smoother.}
 
