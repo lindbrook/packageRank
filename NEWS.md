@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9054
+
+- change 'time.unit' to 'unit.observation' in plot.packageLog().
+
+
 ### packageRank 0.9.7.9053
 
 - amend argument order and set localTime(time, date = Sys.Date()).

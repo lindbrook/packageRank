@@ -95,7 +95,7 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #'
 #' @param x Object.
 #' @param type Character. "1D" or "2D".
-#' @param time.unit Character. "second", "minute", or "hour".
+#' @param unit.observation Character. "second", "minute", or "hour".
 #' @param smooth Logical. Add smoother.
 #' @param points Logical. For "hour" and "minute" in 2D plots.
 #' @param same.xy Logical. Use same scale for multiple packages for type = "2D".
@@ -103,7 +103,7 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #' @param ... Additional parameters.
 #' @export
 
-plot.packageLog <- function(x, type = "1D", time.unit = "second",
+plot.packageLog <- function(x, type = "1D", unit.observation = "second",
   smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE, ...) {
 
   type <- toupper(type)
@@ -112,8 +112,8 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
     stop('type must be "1D" or "2D".', call. = FALSE)
   }
   
-  if (!time.unit %in% c("second", "minute", "hour")) {
-    stop('time.unit must be "second", "minute", or "hour".', call. = FALSE)
+  if (!unit.observation %in% c("second", "minute", "hour")) {
+    stop('unit.observation must be "second", "minute", or "hour".', call. = FALSE)
   }
   
   x <- x[vapply(x, nrow, integer(1L)) != 0]
@@ -137,17 +137,17 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
   obs.time <- lapply(x, function(pkg) dateTime(pkg$date, pkg$time))
   
   plot.data <- lapply(obs.time, function(t) {
-    if (time.unit == "second") {
+    if (unit.observation == "second") {
       data.frame(time = unique(t),
                  count = c(table(t)), 
                  row.names = NULL)
-    } else if (time.unit == "minute") {
+    } else if (unit.observation == "minute") {
       obs.minute <- format(t, format = "%H:%M")
       tab.minute <- table(obs.minute)
       data.frame(time = dateTime(log.date, names(tab.minute)),
                  count = c(tab.minute),
                  row.names = NULL)
-    } else if (time.unit == "hour") {
+    } else if (unit.observation == "hour") {
       obs.hour <- format(t, format = "%H")
       tab.hour <- table(obs.hour)
       data.frame(time = dateTime(log.date, names(tab.hour)),
@@ -168,15 +168,15 @@ plot.packageLog <- function(x, type = "1D", time.unit = "second",
   if (length(x) > 1) grDevices::devAskNewPage(ask = TRUE)
   
   invisible(lapply(names(plot.data), function(nm) {
-    logPlot(plot.data[[nm]], type, time.unit, points,
+    logPlot(plot.data[[nm]], type, unit.observation, points,
       log.date, x.tick, ylim, nm, smooth, x2.tick)
   }))
   
   if (length(x) > 1) grDevices::devAskNewPage(ask = FALSE)
 }
 
-logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
-  smooth, x2.tick) {
+logPlot <- function(pkg, type, unit.observation, points, log.date, x.tick, ylim,
+  nm, smooth, x2.tick) {
   
   xlab <- "UTC 24-Hour Clock"
  
@@ -205,7 +205,7 @@ logPlot <- function(pkg, type, time.unit, points, log.date, x.tick, ylim, nm,
   }
   day <- weekdays(log.date, abbreviate = TRUE)
   title(main = paste0(nm, " @ ", log.date, " (", day, ")"))
-  title(sub = paste0("time.unit: ", time.unit), cex.sub = 0.9)
+  title(sub = paste0("unit.observation: ", unit.observation), cex.sub = 0.9)
 }
 
 #' Print method for packageLog().
