@@ -1,0 +1,131 @@
+---
+title: "R Windows Spikes 2002-2023"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">",
+  fig.path = "figures/windows_spikes-"
+)
+```
+
+```{r library, echo = FALSE}
+library(packageRank)
+```
+
+<!-- https://github.com/lindbrook/packageRank#r-windows-sunday-and-wednesday-download-spikes-(06-nov-2022---19 march =-2023) -->
+
+On Sundays and Wednesdays from 2022-11-06 through 2023-03-19, there were spikes in the download of the Windows R application. 
+
+The graphs below decompose the data in the plot in README. Each plot, which is identically scaled, breaks down the data by day (Sunday or Wednesday) and platform. The key thing is to compare the data in the period bounded by vertical dotted lines with the data before and after. If a Sunday or Wednesday is orders-of-magnitude unusual, I plot that day with a filled rather than an empty circle. Only Windows, the final two graphs below, earn this distinction.
+
+```{r sunday_platform, echo = FALSE, eval = TRUE}
+alpha <- "2022-10-06"
+omega <- "2023-04-14"
+dat <- cranDownloads("R", from = alpha, to = omega)$cranlogs.data
+dat.dates <- seq.Date(from = as.Date(alpha), to = as.Date(omega), by = "days")
+
+win <- dat[dat$platform == "win", ]
+osx <- dat[dat$platform == "osx", ]
+src <- dat[dat$platform == "src", ]
+
+sun.start <- as.Date("2022-11-06")
+sun.stop <- as.Date("2023-03-19")
+
+wed.start <- as.Date("2023-01-18")
+wed.stop <- as.Date("2023-03-15")
+
+sundays <- dat.dates[weekdays(dat.dates) == "Sunday"]
+wednesdays <- dat.dates[weekdays(dat.dates) == "Wednesday"]
+
+inter.sun <- sundays >= sun.start & sundays <= sun.stop
+inter.wed <- wednesdays >= wed.start & wednesdays <= wed.stop
+```
+
+```{r sundays_mac, echo = FALSE, eval = TRUE}
+plot(osx$date, osx$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(osx[osx$date %in% sundays[inter.sun], c("date", "count")], pch = 1, 
+  col = "red")
+points(osx[osx$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
+  col = "red")
+title(main = "R Mac Sundays")
+
+plot(osx$date, osx$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+axis(3, at = wed.stop, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(osx[osx$date %in% wednesdays[inter.wed], c("date", "count")], pch = 1, 
+  col = "blue")
+points(osx[osx$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1, 
+  col = "blue")
+title(main = "R Mac Wednesdays")
+```
+
+```{r sundays_src, echo = FALSE, eval = TRUE}
+plot(src$date, src$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(src[src$date %in% sundays[inter.sun], c("date", "count")], pch = 1, 
+  col = "red")
+points(src[src$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
+  col = "red")
+title(main = "R Source Sundays")
+
+plot(src$date, src$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9,
+  col.axis = "blue", col.ticks = "blue")
+axis(3, at = wed.stop, labels = wed.start, cex.axis = 2/3, padj = 0.9,
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(src[src$date %in% wednesdays[inter.wed], c("date", "count")], pch = 1,
+  col = "blue")
+points(src[src$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1,
+  col = "blue")
+title(main = "R Source Wednesdays")
+```
+
+```{r sundays_win, echo = FALSE, eval = TRUE}
+plot(win$date, win$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = sun.start, labels = sun.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+axis(3, at = sun.stop, labels = sun.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "red", col.ticks = "red")
+abline(v = sun.start, lty = "dotted", col = "red")
+abline(v = sun.stop, lty = "dotted", col = "red")
+points(win[win$date %in% sundays[!inter.sun], c("date", "count")], pch = 1, 
+  col = "red")
+points(win[win$date %in% sundays[inter.sun], c("date", "count")], pch = 16, 
+  col = "red")
+title(main = "R Windows Sundays")
+
+plot(win$date, win$count, type = "l", xlab = "Date", ylab = "Count")
+axis(3, at = wed.start, labels = wed.start, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+axis(3, at = wed.stop, labels = wed.stop, cex.axis = 2/3, padj = 0.9, 
+  col.axis = "blue", col.ticks = "blue")
+abline(v = wed.start, lty = "dotted", col = "blue")
+abline(v = wed.stop, lty = "dotted", col = "blue")
+points(win[win$date %in% wednesdays[!inter.wed], c("date", "count")], pch = 1, 
+  col = "blue")
+points(win[win$date %in% wednesdays[inter.wed], c("date", "count")], pch = 16, 
+  col = "blue")
+title(main = "R Windows Wednesdays")
+```
