@@ -1,0 +1,46 @@
+---
+title: "Note on queryPercentile()"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">",
+  fig.path = "figures/query_percentile-"
+)
+```
+
+```{r library, echo = FALSE}
+library(packageRank)
+```
+
+Due to the discrete nature of counts, your choice of percentile may not be available. This is because they may fall in the vertical gaps in the observed data:
+
+```{R, discrete_counts, echo = FALSE}
+tmp <- cranDistribution(date = "2024-08-01")
+plot(tmp$data$percentile, pch = 46, xlab = "Nominal Rank", ylab = "Percentile Rank", main = "Observed Percentile Ranks")
+```
+
+For this reason, `queryPercentile()` rounds your selection to whole numbers. Also, be aware that the default value, which is set to 50, uses `median()`to guarantee a result.
+
+```{R, rank_percentile, eval = FALSE}
+head(queryPercentile())
+```
+```{R, rank_percentile_code, echo = FALSE}
+# head() is used because there will be many observations with median count.
+head(queryPercentile(date = "2024-08-01"))
+```
+
+You can also set a range of percentile ranks using the 'lo' and/or 'hi' arguments. If you get an error message, you may need to widen your interval:
+
+```{R, lo_hi, eval = FALSE}
+head(queryPercentile(lo = 95, hi = 96), 3)
+tail(queryPercentile(lo = 95, hi = 96), 3)
+```
+```{R, lo_hi_code, echo = FALSE}
+head(queryPercentile(lo = 95, hi = 96, date = "2024-08-01"), 3)
+tail(queryPercentile(lo = 95, hi = 96, date = "2024-08-01"), 3)
+```
