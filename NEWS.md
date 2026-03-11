@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9055
+
+- amend/update README.
+
+
 ### packageRank 0.9.7.9054
 
 - change 'time.unit' to 'unit.observation' in plot.packageLog().

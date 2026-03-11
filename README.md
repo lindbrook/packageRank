@@ -1,58 +1,99 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9054-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
-## packageRank: compute and visualize package download counts and percentile ranks
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9055-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+## packageRank: compute, visualize and contextualize R package and application download counts
 
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank) is an R
-package that helps put package download counts into context. It does so
-via two core functions, `cranDownloads()` and `packageRank()`, a set of
-filters that reduce download count inflation, and a host of other
-assorted functions.
+<div class="figure" style="text-align: center">
 
-You can read more about the package in the sections below:
+<img src="man/figures/README-plot_examples_code-1.png" alt=" "  />
+<p class="caption">
 
-- [I Download Counts](#i---download-counts) describes how
-  `cranDownloads()` gives
-  [`cranlogs::cran_downloads()`](https://r-hub.github.io/cranlogs/reference/cran_downloads.html)
-  a more user-friendly interface and makes visualizing those data easy
-  via its generic R `plot()` method.
-- [II Download Percentile Ranks](#ii---download-rank-percentiles)
-  describes how `packageRank()` makes use of percentile ranks. This
-  nonparametric statistic computes the percentage of packages that with
-  fewer downloads than yours: a package is in the 74th percentile has
-  more downloads than 74% of packages. This facilitates comparison and
-  helps you locate your package in the overall distribution of
-  [CRAN](https://CRAN.R-project.org/) package downloads.
-- [III Inflation Filters](#iii---inflation-filters) describes four
-  filter functions that remove software and behavioral artifacts that
-  inflate *nominal* download counts. This functionality is available in
-  `packageRank()` and `packageLog()`.
-- [IV Availability of Results](#iv---availability-of-results) discusses
-  when results become available, how to use `logInfo()` to check the
-  availability of results, and the effect of time zones.
-- [V Reverse lookup of counts, ranks and
-  percentiles](#v---reverse-lookup-of-counts-ranks-and-percentiles)
-  discusses `queryCount()`, `queryRank()`, `queryPercentile()` and
-  `cranDistribution()`.
-- [VI Data Fixes](#vi---data-fixes) discusses three problems with
-  download counts. The first involves issues with logs collected between
-  the end of 2012 and the beginning of 2013. This is fixed in
-  `fixDate_2012()` and `fixCranlogs()`. The second is an issue with
-  [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) that doubles
-  or triples the number of R application download counts between
-  2023-09-13 and 2023-10-02. This is fixed in `fixRCranlogs()`. The
-  third is the apparent loss of 7 download logs between late August and early
-  September 2025. When any of those dates are passed to
-  `cranDownloads()`, the function sends a message to the console,
-  graphically annotates plots to highlight the dates and ignores those
-  dates when plotting smoothers.
-- [VII Data Note](#vii---data-note) discusses the spike in the download
-  of the Windows version of the R application on Sundays and Wednesdays
-  between 06 November 2022 and 19 March 2023.
-- [VIII et cetera](#viii---et-cetera) discusses country code top-level
-  domains (e.g., `countryPackage()` and `packageCountry()`), the use of
-  memoization and the internet connection time out problem.
+</p>
+
+</div>
+
+- Functions and Visualization
+  - [`cranDownloads()`](#crandownloads)
+    - enhanced, user-friendly version of cranlogs::cran_downloads()
+      - “spell check” or validate package names
+      - two additional date formats: yyyy-mm and yyyy
+      - shortcuts for `from =` and `to =` (use one without other)
+      - check date validity
+      - cumulative download counts (growth curves)
+      - `pro.mode = TRUE` shortcut to cranlogs::cran_downloads()
+    - nominal and cumulative count
+    - [`plot(cranDownloads())`](#plotcrandownloads)
+      - single date -\> 1D dotchart (cross-sectional)
+      - multiple dates -\> 2D time series (longitudinal)
+      - logarithm of counts, smoothers, ‘ggplot2’ confidence bands
+      - annotations: package version, R version, ChatGPT release,
+        weekends
+      - unit of observation: “day” (default), “week”, “month”, or “year”
+  - [`packageRank()`](#packagerank)
+    - nominal counts v. rank and percentile rank
+    - percentile rank: nonparametric measure of location in distribution
+      - percent of packages with fewer downloads
+    - [`plot(packageRank())`](#plotpackagerank)
+      - rank v. base10 logarithm of count
+      - annotated with nominal count and percentile rank
+  - [`packageLog()`](#packagelog)
+    - package download logs via Posit/RStudio CDN server
+    - [`plot(packageLog())`](#plotpackagelog)
+      - time series (longitudinal) plot of log (24-hour period)
+        - 1D plot of observed times with \>= 1 download
+        - 2D plot of observed times v. download count
+        - time units: “second” (default), “minute”, or “hour”
+  - [`cranDistribution()`](#crandistribution)
+    - summary of download distribution for all of CRAN via
+      `package = NULL`
+    - [`plot(cranDistribution())`](#plotcrandistribution)
+      - histogram of base10 logarithm of count v. frequency
+      - annotate histogram with specific package via `package` argument
+  - [`packageHistory()`](#packagehistory)
+    - version release history
+  - [reverse lookup](#reverse-lookup)
+    - `queryCount()`, `queryPackage()`, `queryPercentile()`, and
+      `queryRank()`
+- [Inflation and Filters](#inflation-and-filters)
+  - download counts are positively biased (at least traffic through
+    Posit CDN)
+    - software artifacts: downloads that are too small
+    - behavioral artifacts: too many prior versions or effort to
+      downloads all CRAN packages
+  - available filters:
+    - IP: campaigns from IP addresses with too many downloads
+    - small: observations \<= 1000 bytes
+    - size: observed downloads \< actual package size
+    - version: include only current version
+- [Results Availability](#results-availability)
+  - `cranDownloads()` (and ‘cranlogs’ package)
+    - yesterday’s results are usually posted today by 18:00 UTC
+  - R and R package logs (and functions *other* than `cranDownloads()`)
+    - yesterday’s results are usually posted today by 17:00 UTC
+  - `logInfo()` checks availability and status of logs and ‘cranlogs’
+- [Data Fixes and Notes](#data-fixes-and-notes)
+  1.  jumbled logs at end of 2012 and first day of 2013 – FIXED
+      - three duplicates: Oct 07, Oct 08, and Oct 11
+      - one mis-labeled: Oct 12 (actual) is found on Oct 14 (nominal)
+      - 77 days (Oct 13 - Dec 28) offset by +3 days: e.g., Nov 28 is in
+        Dec 01
+      - 2 net effects:
+        - double download counts: Oct 06-08, Oct 11, Dec 27-28, and Jan
+          01
+        - triple download counts on Dec 26
+  2.  R Windows download spikes (Nov 2022 - March 2023) – NOTE
+      - Sundays and Wednesdays from 2022-11-06 through 2023-03-19
+  3.  doubled or tripled R application downloads counts (2023) – FIXED
+      - Sep 13 - Oct 02
+  4.  seven lost logs (2025) – FIXED
+      - Aug 25-26; Aug 29 - Sep 02
+      - message in the console
+      - graphical annotation in plots
+      - smoothers ignore missing dates
+- [et cetera](#et-cetera)
+  - Bioconductor: bioconductorDownloads() and bioconductorRank().
+  - country code top-level domains in CRAN/package logs
+  - use of memoization
+  - internet connection time out problem
 
 ### getting started
 
@@ -64,16 +105,18 @@ To install
 install.packages("packageRank")
 ```
 
-To install the development version from GitHub:
+To install the development version (GitHub):
 
 ``` r
-# You may need to first install 'remotes' via install.packages("remotes").
+# You may need to install.packages("remotes").
 remotes::install_github("lindbrook/packageRank", build_vignettes = TRUE)
 ```
 
-### I - download counts
+------------------------------------------------------------------------
 
-`cranDownloads()` uses all the same arguments as
+### `cranDownloads()`
+
+`cranDownloads()` essentially uses all the same arguments as
 `cranlogs::cran_downloads()`:
 
 ``` r
@@ -83,77 +126,60 @@ cranlogs::cran_downloads(packages = "HistData")
     >         date count  package
     > 1 2020-05-01   338 HistData
 
-The only difference is that `cranDownloads()` adds four features:
+Other than the use of the singular for the ‘package’ argument, he
+difference is that `cranDownloads()` adds five features:
 
 #### i) “spell check” for package names
 
 ``` r
-cranDownloads(packages = "GGplot2")
+cranDownloads(package = "GGplot2")
 ```
 
-    ## Error in cranDownloads(packages = "GGplot2") :
+    ## Error in cranDownloads(package = "GGplot2") :
     ##   GGplot2: misspelled or not on CRAN.
 
 <br/>
 
 ``` r
-cranDownloads(packages = "ggplot2")
+cranDownloads(package = "ggplot2")
 ```
 
-    >         date count cumulative package
-    > 1 2020-05-01 56357      56357 ggplot2
+    >         date package count cumulative
+    > 1 2020-05-01 ggplot2 56357      56357
 
-<br/> Note that his also works for inactive or “retired” packages in the
-[Archive](https://CRAN.R-project.org/src/contrib/Archive/):
+<br/> Note that this also works for inactive or “retired” packages in
+the [Archive](https://CRAN.R-project.org/src/contrib/Archive/):
 
-``` r
-cranDownloads(packages = "vr")
-```
-
-    ## Error in cranDownloads(packages = "vr") :
-    ##  vr: misspelled or not on CRAN/Archive.
-
-<br/>
-
-``` r
-cranDownloads(packages = "VR")
-```
-
-    >         date count cumulative package
-    > 1 2020-05-01    11         11      VR
-
-<br/>
-
-#### ii) two additional date formats
+#### ii) additional date formats
 
 With `cranlogs::cran_downloads()`, you specify a time frame using the
-`from` and `to` arguments. The downside of this is that you *must* use
-“yyyy-mm-dd”. For convenience’s sake, `cranDownloads()` also allows you
-to use “yyyy-mm” or yyyy (“yyyy” also works).
+`from` and `to` arguments. The downside is that you need to specify
+dates as “yyyy-mm-dd”. For convenience’s sake, `cranDownloads()` allows
+you to use “yyyy-mm” or yyyy (“yyyy” also works).
 
 ##### “yyyy-mm”
 
-Let’s say you want the download counts for
+With `cranlogs::cran_downloads()`, if you want the download counts for
 [‘HistData’](https://CRAN.R-project.org/package=HistData) for February
-2020. With `cranlogs::cran_downloads()`, you’d have to type out the
-whole date and remember that 2020 was a leap year:
+2020 you’d have to type out the whole date and remember that 2020 was a
+leap year:
 
 ``` r
-cranlogs::cran_downloads(packages = "HistData", from = "2020-02-01",
+cranlogs::cran_downloads(package = "HistData", from = "2020-02-01",
   to = "2020-02-29")
 ```
 
 <br/> With `cranDownloads()`, you can just specify the year and month:
 
 ``` r
-cranDownloads(packages = "HistData", from = "2020-02", to = "2020-02")
+cranDownloads(package = "HistData", from = "2020-02", to = "2020-02")
 ```
 
 ##### yyyy or “yyyy”
 
-Let’s say you want the download counts for
-[‘rstan’](https://CRAN.R-project.org/package=rstan) for 2020. With
-`cranlogs::cran_downloads()`, you’d type something like:
+With `cranlogs::cran_downloads()`, if you want the download counts for
+[‘rstan’](https://CRAN.R-project.org/package=rstan) for 2020 you’d type
+something like:
 
 ``` r
 cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
@@ -163,41 +189,35 @@ cranlogs::cran_downloads(packages = "rstan", from = "2022-01-01",
 <br/> With `cranDownloads()`, you can use:
 
 ``` r
-cranDownloads(packages = "rstan", from = 2020, to = 2020)
+cranDownloads(package = "rstan", from = 2020, to = 2020)
 ```
 
-or
-
-``` r
-cranDownloads(packages = "rstan", from = "2020", to = "2020")
-```
-
-<br/>
+Note that “2020” will also work.
 
 #### iii) shortcuts with `from =` and `to =` in `cranDownloads()`
 
-These additional date formats help to create convenient shortcuts. Let’s
+These additional date formats also provide convenient shortcuts. Let’s
 say you want the year-to-date download counts for
 [‘rstan’](https://CRAN.R-project.org/package=rstan). With
 `cranlogs::cran_downloads()`, you’d type something like:
 
 ``` r
-cranlogs::cran_downloads(packages = "rstan", from = "2023-01-01",
+cranlogs::cran_downloads(package = "rstan", from = "2023-01-01",
   to = Sys.Date() - 1)
 ```
 
 <br/> With `cranDownloads()`, you can just pass the current year to
-`from =`:
+`from` argument:
 
 ``` r
-cranDownloads(packages = "rstan", from = 2023)
+cranDownloads(package = "rstan", from = 2023)
 ```
 
-And if you wanted the entire download history, pass the current year to
-`to =`:
+If you wanted the entire download history, pass the current year to the
+`to` argument:
 
 ``` r
-cranDownloads(packages = "rstan", to = 2023)
+cranDownloads(package = "rstan", to = 2026)
 ```
 
 Note that the Posit/RStudio logs begin on 01 October 2012.
@@ -205,73 +225,75 @@ Note that the Posit/RStudio logs begin on 01 October 2012.
 #### iv) check date validity
 
 ``` r
-cranDownloads(packages = "HistData", from = "2019-01-15",
+cranDownloads(package = "HistData", from = "2019-01-15",
   to = "2019-01-35")
 ```
 
     ## Error in resolveDate(to, type = "to") : Not a valid date.
 
-#### v) cumulative count for selected time frame
+#### v) cumulative count
+
+By default, `cranDownloads()` also computes the cumulative download
+count. This is useful for plotting growth curves.
 
 ``` r
-cranDownloads(packages = "HistData", when = "last-week")
+cranDownloads(package = "HistData", when = "last-week")
 ```
 
-    >         date count cumulative  package
-    > 1 2020-05-01   338        338 HistData
-    > 2 2020-05-02   259        597 HistData
-    > 3 2020-05-03   321        918 HistData
-    > 4 2020-05-04   344       1262 HistData
-    > 5 2020-05-05   324       1586 HistData
-    > 6 2020-05-06   356       1942 HistData
-    > 7 2020-05-07   324       2266 HistData
+    >         date  package count cumulative
+    > 1 2020-05-01 HistData   338        338
+    > 2 2020-05-02 HistData   259        597
+    > 3 2020-05-03 HistData   321        918
+    > 4 2020-05-04 HistData   344       1262
+    > 5 2020-05-05 HistData   324       1586
+    > 6 2020-05-06 HistData   356       1942
+    > 7 2020-05-07 HistData   324       2266
 
 #### pro.mode
 
-The “spell check” or validation of packages described above, requires
-some additional background downloads. While those data are cached via
-the ‘meomoise’ package, this will add time the first time
-`cranDownloads()` is run. For faster results, you can bypass those
-features by setting `pro.mode = TRUE`. The downside is that you’ll see
-zero downloads for packages on dates before they’re published on CRAN
-and zero downloads for mis-spelled/non-existent packages. You’ll also
-won’t be able to use the `to =` argument by itself.
+Some of these features come at a cost: a one-time, per session download
+of additional data. While those data are cached via the ‘memoise’
+package, this adds time the first time `cranDownloads()` is run.
+
+For faster results, you can bypass those features by setting
+`pro.mode = TRUE`. The downside is that you might see odd results like
+zero downloads for packages on dates before they were on CRAN or zero
+downloads for mis-spelled/non-existent packages. You’ll also won’t be
+able to use the `to` argument by itself.
 
 For example, ‘packageRank’ was first published on CRAN on 2019-05-16 -
 you can verify this via `packageHistory("packageRank")`. But if you use
 `cranlogs::cran_downloads()` or `cranDownloads(pro.mode = TRUE)` before
-that date, you’ll see zero downloads for dates before 2019-05-16:
+that date, you’ll see zero downloads for days before 2019-05-16:
 
 ``` r
 cranDownloads("packageRank", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
->         date count cumulative     package
-> 1 2019-05-10     0          0 packageRank
-> 2 2019-05-11     0          0 packageRank
-> 3 2019-05-12     0          0 packageRank
-> 4 2019-05-13     0          0 packageRank
-> 5 2019-05-14     0          0 packageRank
-> 6 2019-05-15     0          0 packageRank
-> 7 2019-05-16    68         68 packageRank
+>         date     package count cumulative
+> 1 2019-05-10 packageRank     0          0
+> 2 2019-05-11 packageRank     0          0
+> 3 2019-05-12 packageRank     0          0
+> 4 2019-05-13 packageRank     0          0
+> 5 2019-05-14 packageRank     0          0
+> 6 2019-05-15 packageRank     0          0
+> 7 2019-05-16 packageRank    68         68
 ```
 
-You’ll notice this particularly when one of the packages you’re
-including newer packages in cranDownloads().
-
-If you mis-spell a package :
+This is particularly noticeable if you mis-spell or pass a “newer”
+package to cranDownloads().
 
 ``` r
 cranDownloads("vr", from = "2019-05-10", to = "2019-05-16", pro.mode = TRUE)
->         date count cumulative package
-> 1 2019-05-10     0          0      vr
-> 2 2019-05-11     0          0      vr
-> 3 2019-05-12     0          0      vr
-> 4 2019-05-13     0          0      vr
-> 5 2019-05-14     0          0      vr
-> 6 2019-05-15     0          0      vr
-> 7 2019-05-16     0          0      vr
+>         date package count cumulative
+> 1 2019-05-10      vr     0          0
+> 2 2019-05-11      vr     0          0
+> 3 2019-05-12      vr     0          0
+> 4 2019-05-13      vr     0          0
+> 5 2019-05-14      vr     0          0
+> 6 2019-05-15      vr     0          0
+> 7 2019-05-16      vr     0          0
 ```
 
-If you just use `to =` without a value for `from =`, you’ll get an
+Finally, if you just use `to` without a value for `from`, you’ll get an
 error:
 
 ``` r
@@ -282,83 +304,88 @@ cranDownloads(to = 2024, pro.mode = TRUE)
 
 <br/>
 
-### visualizing package download counts
+------------------------------------------------------------------------
 
-`cranDownloads()` makes visualizing package downloads easy by using
-`plot()`:
+### `plot(cranDownloads())`
+
+‘packageRank’ uses R’s generic plot method:
 
 ``` r
-plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"))
+plot(cranDownloads(package = "HistData", from = "2019", to = "2019"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz1-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-cranDownloads_viz1-1.png" alt="" style="display: block; margin: auto;" />
 
-If you pass a vector of package names for a single day, `plot()` returns
-a dotchart:
+If you pass a vector of package names for a single day, you’ll get a
+dotchart:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz2a-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-cranDownloads_viz2a-1.png" alt="" style="display: block; margin: auto;" />
 
-If you pass a vector of package names for multiple days, `plot()` uses
+If you pass a vector package names for multiple days, you’ll get a
+single graph with multiple time series plots using
 [‘ggplot2’](https://CRAN.R-project.org/package=ggplot2) facets:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz2-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-cranDownloads_viz2-1.png" alt="" style="display: block; margin: auto;" />
 <br/>
 
-To plot those data in a single frame, set `multi.plot = TRUE`:
+To plot these data in a single plot frame, set `multi.plot = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), multi.plot = TRUE)
 ```
 
 ![](man/figures/README-cranDownloads_viz3-1.png)<!-- -->
 
-<br/> To plot those data in separate plots on the same scale, set
-`graphics = "base"` and you’ll be prompted for each plot:
+<br/> To plot these data as separate plots, on the same scale, set
+`graphics = "base"`. You’ll be prompted for each plot:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+# Code only. Graph not shown.
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base")
 ```
 
-To do the above on separate, independent scales, set `same.xy = FALSE`:
+To do the above using separate, independent scales, set
+`same.xy = FALSE`:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+# Code only. Graph not shown.
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
 
-#### logarithm of download counts
+#### `log.y = TRUE`
 
 To use the base 10 logarithm of the download count in a plot, set
 `log.y = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = "HistData", from = "2019", to = "2019"),
+plot(cranDownloads(package = "HistData", from = "2019", to = "2019"),
   log.y = TRUE)
 ```
 
 ![](man/figures/README-log_count-1.png)<!-- -->
 
-Note that for the sake of the plot, zero counts are replaced by ones so
-that the logarithm can be computed (This does not affect the data
-returned by `cranDownloads()`).
+Note that any zero counts will be replaced by ones so that the logarithm
+can be computed (This does not affect the data returned by
+`cranDownloads()`).
 
-#### `packages = NULL`
+#### `package = NULL`
 
-`cranlogs::cran_download(packages = NULL)` computes the total number of
-package downloads from [CRAN](https://cran.r-project.org/). You can plot
-these data by using:
+The default first argument of `cranDownloads()` is `package = NULL`.
+This computes the total number of package downloads from CRAN. To plot
+these data, use:
 
 ``` r
 plot(cranDownloads(from = 2019, to = 2019))
@@ -366,256 +393,223 @@ plot(cranDownloads(from = 2019, to = 2019))
 
 ![](man/figures/README-null_packages-1.png)<!-- -->
 
-#### `packages = "R"`
+#### `package = "R"`
 
-`cranlogs::cran_download(packages = "R")` computes the total number of
-downloads of the R application (note that you can only use “R” or a
-vector of packages names, not both!). You can plot these data by using:
+`cranDownloads(package = "R")` computes the total number of downloads of
+the R application by platfrom: “mac” = macOS, “src” = source, and “win”
+= Windows. Note that, as with `cranlogs::cran_downloads()`, you can only
+use “R” *or* a vector of packages names, not both!.
+
+To plot these data:
 
 ``` r
-plot(cranDownloads(packages = "R", from = 2019, to = 2019))
-> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
+plot(cranDownloads(package = "R", from = 2019, to = 2019))
 ```
 
 ![](man/figures/README-r_downloads-1.png)<!-- -->
 
-If you want the total count of R downloads, set `r.total = TRUE`:
+If you want plot the total count of R downloads, set `r.total = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = "R", from = 2019, to = 2019), r.total = TRUE)
+plot(cranDownloads(package = "R", from = 2019, to = 2019), r.total = TRUE)
 ```
 
-Note that since Sunday 06 November 2022 and Wednesday, 18 January 2023,
-there’ve been spikes of downloads of the Windows version of R on Sundays
-and Wednesdays (details below in [R Windows Sunday and Wednesday
-downloads](#r-windows-sunday-and-wednesday-downloads)).
+#### `smooth = TRUE`
 
-#### smoothers and confidence intervals
-
-To add a smoother to your plot, use `smooth = TRUE`:
+To add a smoother, use `smooth = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+plot(cranDownloads(package = "rstan", from = "2019", to = "2019"),
   smooth = TRUE)
 ```
 
 ![](man/figures/README-lowess-1.png)<!-- -->
 
-With graphs that use ‘ggplot2’, `se = TRUE` will add a confidence
-interval:
+Note that loess is the default smoother, but with base graphics, lowess
+is used when there are 7 or fewer observations. To control the degree of
+smoothness, use the `span` argument (the default is span = 0.75) for
+loess and where applicable, use the `f` argument (the default is f =
+2/3):
 
 ``` r
-plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
+plot(cranDownloads(package = c("HistData", "rnaturalearth", "Zelig"),
+  from = "2020", to = "2020-03-20"), smooth = TRUE, span = 0.75)
+
+plot(cranDownloads(package = c("HistData", "rnaturalearth", "Zelig"),
+  from = "2020", to = "2020-03-20"), smooth = TRUE, graphics = "ggplot2", 
+  span = 0.33)
+```
+
+#### `se = TRUE`
+
+With graphs that use ‘ggplot2’, `se = TRUE` will add confidence bands:
+
+``` r
+plot(cranDownloads(package = c("HistData", "rnaturalearth", "Zelig"),
   from = "2020", to = "2020-03-20"), smooth = TRUE, se = TRUE)
 ```
 
 ![](man/figures/README-ci-1.png)<!-- -->
 
-In general, loess is the chosen smoother. Note that with base graphics,
-lowess is used when there are 7 or fewer observations. Thus, to control
-the degree of smoothness, you’ll typically use the `span` argument (the
-default is span = 0.75). With base graphics with 7 or fewer
-observations, you control the degree of smoothness using the `f`
-argument (the default is f = 2/3):
+#### `package.version = TRUE` or `package.version = "line"`
+
+To annotate a graph with a package’s release dates as ticks on the top
+axis, set `package.version = TRUE`:
 
 ``` r
-plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
-  from = "2020", to = "2020-03-20"), smooth = TRUE, span = 0.75)
-
-plot(cranDownloads(packages = c("HistData", "rnaturalearth", "Zelig"),
-  from = "2020", to = "2020-03-20"), smooth = TRUE, graphics = "ggplot2", 
-  span = 0.33)
-```
-
-#### package, R and ChatGPT release dates (base graphics)
-
-To annotate a graph with a package’s release dates:
-
-``` r
-plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+plot(cranDownloads(package = "rstan", from = "2019", to = "2019"),
   package.version = TRUE, unit.observation = "week")
 ```
 
 ![](man/figures/README-pkg_release_date-1.png)<!-- -->
 
-To annotate a graph with R release dates:
+If you want a vertical line, set `package.version = "line"`
 
 ``` r
-plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
-  r.version = TRUE, unit.observation = "week")
-```
-
-![](man/figures/README-r_release_date-1.png)<!-- -->
-
-By default, graphs that include ChatGPT's release date, 2022-11-30, will be 
-annotated:
-
-``` r
-plot(cranDownloads(packages = "R", from = "2020-12", to = "2025-01"),
-  r.total = TRUE, unit.observation = "week")
-> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
-```
-
-![](man/figures/README-chatgpt_release_date-1.png)<!-- -->
-
-Set plot.cranDownloads(chatgpt = FALSE) to exclude the annotation.
-
-If you pass “line” to the package.version, r.version or chatgpt
-argument, a vertical line will be drawn on the plot:
-
-``` r
-plot(cranDownloads(packages = "rstan", from = "2019", to = "2019"),
+plot(cranDownloads(package = "rstan", from = "2019", to = "2019"),
   package.version = "line", unit.observation = "week")
 ```
 
 ![](man/figures/README-vertical_date_line-1.png)<!-- -->
 
-#### weekends (base graphics)
+#### `r.version = TRUE` or r.version = “line”
 
-With unit.observation = “day”, you can highlight weekends with an empty
-circle by setting weekend = TRUE:
+To annotate a graph with R release dates:
 
 ``` r
-plot(cranDownloads(packages = "rstan", from = "2024-06", to = "2024-06"), weekend = TRUE)
+plot(cranDownloads(package = "rstan", from = "2019", to = "2019"),
+  r.version = TRUE, unit.observation = "week")
+```
+
+![](man/figures/README-r_release_date-1.png)<!-- -->
+
+If you want a vertical line, set `package.version = "line"`
+
+#### `chatgpt = TRUE` or `chatgpt = "line"`
+
+By default, graphs that include ChatGPT’s release date, 2022-11-30, will
+be annotated with an axis tick and a vertical line:
+
+``` r
+plot(cranDownloads(package = "R", from = "2020-12", to = "2025-01"),
+  r.total = TRUE, unit.observation = "week")
+```
+
+![](man/figures/README-chatgpt_release_date-1.png)<!-- -->
+
+To exclude this, set plot.cranDownloads(chatgpt = FALSE)
+
+#### `weekend = TRUE`
+
+With `unit.observation = "day"` and `graphics = "base"`, you can
+highlight weekends, as empty circles, by setting `weekend = TRUE`:
+
+``` r
+plot(cranDownloads(package = "rstan", from = "2024-06", to = "2024-06"), weekend = TRUE)
 ```
 
 ![](man/figures/README-r_weekend-1.png)<!-- -->
 
-#### plot growth curves (cumulative download counts)
+#### `statistic = "cumulative"`
 
-To plot growth curves, set `statistic = "cumulative"`:
+To plot growth curves using cumulative counts, set
+`statistic = "cumulative"`:
 
 ``` r
-plot(cranDownloads(packages = c("ggplot2", "data.table", "Rcpp"),
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"), statistic = "cumulative",
   multi.plot = TRUE, points = FALSE)
 ```
 
 ![](man/figures/README-cranDownloads_growth_curves-1.png)<!-- -->
 
-#### population plot
+#### unit of observation: “day”, “week”, “month”, “year”
 
-To visualize a package’s downloads relative to “all” other packages over
-time:
-
-``` r
-plot(cranDownloads(packages = "HistData", from = "2020", to = "2020-03-20"),
-  population.plot = TRUE)
-```
-
-![](man/figures/README-pop_plot_code-1.png)<!-- -->
-
-This longitudinal view plots the date (x-axis) against the base 10
-logarithm of the selected package’s download counts (y-axis). To get a
-sense of how the selected package’s performance stacks up against “all”
-other packages, a set of smoothed curves representing a stratified
-random sample of packages is plotted in gray in the background (this is
-the “typical” pattern of downloads on
-[CRAN](https://cran.r-project.org/) for the selected time period).[^1]
-
-#### unit of observation
-
-The default unit of observation for both `cranDownloads()` and
-`cranlogs::cran_dowanlods()` is the day. The graph below plots the daily
-downloads for [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs)
-from 01 January 2022 through 15 April 2022.
+The default unit of observation for `cranDownloads()` is the day. The
+graph below plots the daily downloads for
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) from 01
+January 2022 through 27 September 2023.
 
 ``` r
-plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"))
+plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"))
 ```
 
 ![](man/figures/README-day-1.png)<!-- -->
 
 To view the data from a less granular perspective, change
-plot.cranDownloads()’s `unit.observation` argument from “day” to “week”,
-“month”, or “year”.
-
-##### `unit.observation = "month"`
-
-The graph below plots the data aggregated by month (with an added
-smoother):
-
-``` r
-plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-04-15"),
-  unit.observation = "month", smooth = TRUE, graphics = "ggplot2")
-```
-
-![](man/figures/README-month-1.png)<!-- -->
-
-Three things to note. First, if the last/current month (far right) is
-still in-progress (it’s not yet the end of the month), that observation
-will be split in two: one point for the in-progress total (empty black
-square), another for the estimated total (empty red circle). The
-estimate is based on the proportion of the month completed. In the
-example above, the 635 observed downloads from April 1 through April 15
-translates into an estimate of 1,270 downloads for the entire month (30
-/ 15 \* 635). Second, if a smoother is included, it will only use
-“complete” observations, not in-progress or estimated data. Third, all
-points are plotted along the x-axis on the first day of the month.
+plot.cranDownloads()’s `unit.observation` argument to “week”, “month”,
+or “year”.
 
 ##### `unit.observation = "week"`
 
-The graph below plots the data aggregated by week (weeks begin on
-Sunday).
+The graph below plots the data aggregated by week, which begin on
+Sunday.
 
 ``` r
-plot(cranDownloads(packages = "cranlogs", from = 2022, to = "2022-06-15"),
-  unit.observation = "week", smooth = TRUE)
+plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), smooth = TRUE, unit.observation = "week")
 ```
 
 ![](man/figures/README-week-1.png)<!-- -->
 
-Four things to note. First, if the first week (far left) is incomplete
-(the ‘from’ date is not a Sunday), that observation will be split in
-two: one point for the observed total on the start date (gray empty
-square) and another point for the *backdated* total. Backdating involves
-completing the week by pushing the nominal start date back to include
-the previous Sunday (blue asterisk). In the example above, the nominal
-start date (01 January 2022) is moved back to include data through the
-previous Sunday (26 December 2021). This is useful because with a weekly
-unit of observation the first observation is likely to be truncated and
-would not give the most representative picture of the data. Second, if
-the last week (far right) is in-progress (the ‘to’ date is not a
-Saturday), that observation will be split in two: the observed total
-(gray empty square) and the estimated total based on the proportion of
-week completed (red empty circle). Third, just like the monthly plot,
-smoothers only use complete observations, including backdated data but
-excluding in-progress and estimated data. Fourth, with the exception of
-first week’s observed count, which is plotted at its nominal date,
-points are plotted along the x-axis on Sundays, the first day of the
-week.
+Four things to note.
 
-##### my default plots
+First, if the first week (far left) is incomplete (the ‘from’ date is
+not a Sunday), that observation will be split in two: one point for the
+observed total on ‘from’ date (empty gray square) and another point for
+the *backdated* total (blue asterisk). The backdated observation simply
+completes the week by pushing the start date back to include the
+previous Sunday.
 
-For what it’s worth, below are my go-to commands for graphs. They take
-advantage of RStudio IDE’s plot history panel, which allows you to cycle
-through and compare graphs. Typically, I’ll look at the data for the
-last year or so at the three available units of observation: day, week
-and month. I use base graphics, via `graphics = "base"`, to take
-advantage of prompts and “nicer” axes annotation. This also allows me to
-easily add graphical elements afterwards as needed, e.g.,
-`abline(h = 100, lty = "dotted")`.
+In the example above, the nominal start date (01 January 2022) is pushed
+back to include data through the previous Sunday (26 December 2021).
+This is useful because when using a weekly unit of observation, the
+first “week” (far left) is often truncated. Consequently, you won’t get
+the most representative picture of the data. Backdating aims to fix
+this.
+
+Second, if the last week (far right) is in-progress (the ‘to’ date is
+not a Saturday), that observation will be split in two: the observed
+total (empty gray square) and an estimated total based on the proportion
+of week completed (empty red circle).
+
+Third, smoothers only use complete observations. This includes backdated
+data but excludes in-progress and estimated data.
+
+Fourth, with the exception of first week’s observed count, which is
+plotted at its nominal date, points on the x-axis are plotted on
+Sundays.
+
+##### `unit.observation = "month"`
+
+The graph below plots the data aggregated by month.
 
 ``` r
-plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
-  graphics = "base", package.version = TRUE, smooth = TRUE, 
-  unit.observation = "day")
-
-plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
-  graphics = "base", package.version = TRUE, smooth = TRUE, 
-  unit.observation = "week")
-
-# Note that I disable smoothing for monthly data
-plot(cranDownloads(packages = c("cholera", "packageRank"), from = 2023),
-  graphics = "base", package.version = TRUE, smooth = FALSE, 
-  unit.observation = "month")
+plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), smooth = TRUE, unit.observation = "month")
 ```
+
+![](man/figures/README-month-1.png)<!-- -->
+
+Three things to note.
+
+First, if the last/current month (far right) is still in-progress (it’s
+not yet the end of the month), that observation will be split in two:
+one point for the in-progress total (empty black square), another for
+the estimated total (empty red circle). The estimate is based on the
+proportion of the month completed. In the example above, the 635
+observed downloads from April 1 through April 15 translates into an
+estimate of 1,270 downloads for the entire month (30 / 15 \* 635).
+
+Second, smoothers only use complete observations, not in-progress or
+estimated data.
+
+Third, all points are plotted along the x-axis at the first day of the
+month.
 
 #### pro.mode
 
-Perhaps the biggest downside of using cranDownloads(pro.mode = TRUE) is
-that you might draw mistaken inferences from plotting the data since it
-adds false zeroes to your data.
+Perhaps the biggest downside of using `cranDownloads(pro.mode = TRUE)`
+is that you might draw mistaken inferences from plotting the data since
+it can add false zeroes to the data.
 
 Using the example of ‘packageRank’, which was published on 2019-05-16:
 
@@ -633,18 +627,20 @@ plot(cranDownloads("packageRank", from = "2019-05", to = "2019-05",
 
 ![](man/figures/README-non_pro_mode_plot-1.png)<!-- -->
 
-### II - download percentile ranks
+------------------------------------------------------------------------
 
-After spending some time with nominal download counts, the “compared to
-what?” question will come to mind. For instance, consider the data for
-the ‘cholera’ package from the first week of March 2020:
+### `packageRank()`
+
+After spending some time with the *nominal* download counts above, the
+“compared to what?” question will come to mind. For instance, consider
+the data for the ‘cholera’ package from the first week of March 2020:
 
 ``` r
-plot(cranDownloads(packages = "cholera", from = "2020-03-01",
+plot(cranDownloads(package = "cholera", from = "2020-03-01",
   to = "2020-03-07"))
 ```
 
-<img src="man/figures/README-motivation_code-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-motivation_code-1.png" alt="" style="display: block; margin: auto;" />
 
 Do Wednesday and Saturday reflect surges of interest in the package or
 surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it
@@ -669,7 +665,7 @@ higher than the mid-week peak of total downloads.
 
 One way to better address these observations is to locate your package’s
 download counts in the overall frequency distribution of download
-counts. ‘cholera’ allows you to do so via `packageDistribution()`. Below
+counts. ‘cholera’ allows you to do so via `cranDistribution()`. Below
 are the distributions of logarithm of download counts for Wednesday and
 Saturday. Each vertical segment (along the x-axis) represents a download
 count. The height of a segment represents that download count’s
@@ -678,16 +674,16 @@ frequency. The location of
 distribution is highlighted in red.
 
 ``` r
-plot(packageDistribution(package = "cholera", date = "2020-03-04"))
+plot(cranDistribution(package = "cholera", date = "2020-03-04"))
 ```
 
-<img src="man/figures/README-packageDistribution_wed_code-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-cranDistribution_ex_wed_code-1.png" alt="" style="display: block; margin: auto;" />
 
 ``` r
-plot(packageDistribution(package = "cholera", date = "2020-03-07"))
+plot(cranDistribution(package = "cholera", date = "2020-03-07"))
 ```
 
-<img src="man/figures/README-packageDistribution_sat_code-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-cranDistribution_ex_sat_code-1.png" alt="" style="display: block; margin: auto;" />
 
 While these plots give us a better picture of where
 [‘cholera’](https://CRAN.R-project.org/package=cholera) is located,
@@ -703,6 +699,9 @@ package relative to the locations of all other packages. More
 importantly, by rescaling download counts to lie on the bounded interval
 between 0 and 100, percentile ranks make it easier to compare packages
 within and across distributions.
+
+This function returns a package’s nominal count, rank, and percentile
+rank for a given day (default is “today” or last available).
 
 For example, we can compare Wednesday (“2020-03-04”) to Saturday
 (“2020-03-07”):
@@ -742,7 +741,7 @@ packages with fewer downloads. Here are the details using
 as an example:
 
 ``` r
-pkg.rank <- packageRank(packages = "cholera", date = "2020-03-04")
+pkg.rank <- packageRank(package = "cholera", date = "2020-03-04")
 
 downloads <- pkg.rank$cran.data$count
 names(downloads) <- pkg.rank$cran.data$package
@@ -766,27 +765,23 @@ round(100 * pkgs.with.fewer.downloads / tot.pkgs, 1)
 
 #### competition v. nominal ranks
 
-In the example above, 38 downloads puts ‘cholera’ in 5,788th place if we
-allow for ties using
-[competition](https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
-(i.e., “1224” ranking) and 5,556th place if we don’t by using
-[nominal/ordinal](https://en.wikipedia.org/wiki/Ranking#Ordinal_ranking_(%221234%22_ranking))
-(i.e., “1234” ranking).
-
-Prior to v0.9.2.9008, only nominal/ordinal ranking was available.
-Competition ranking is now the default via
-`packageRank(rank.ties = TRUE)`. If you want ordinal ranking, use
+Note that, by default, `packageRank()` computes the [competition
+rank](https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
+(i.e., “1224”). [Nominal or ordinal
+ranking](https://en.wikipedia.org/wiki/Ranking#Ordinal_ranking_(%221234%22_ranking))
+(i.e., “1234” ranking) is available by setting
 `packageRank(rank.ties = FALSE)`.
 
-### visualizing package download percentile ranks
+### `plot(packageRank())`
 
-To visualize `packageRank()`, use `plot()`.
+To visualize the results for `packageRank()` for Wednesday and Sunday,
+use `plot()`.
 
 ``` r
 plot(packageRank(packages = "cholera", date = "2020-03-04"))
 ```
 
-<img src="man/figures/README-packageRank_plot_code_wed-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-packageRank_plot_code_wed-1.png" alt="" style="display: block; margin: auto;" />
 
 <br/>
 
@@ -794,7 +789,7 @@ plot(packageRank(packages = "cholera", date = "2020-03-04"))
 plot(packageRank(packages = "cholera", date = "2020-03-07"))
 ```
 
-<img src="man/figures/README-packageRank_plot_code_sat-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-packageRank_plot_code_sat-1.png" alt="" style="display: block; margin: auto;" />
 
 These graphs above, which are customized here to be on the same scale,
 plot the *rank order* of packages’ download counts (x-axis) against the
@@ -807,39 +802,309 @@ most downloads,
 is at top left (in blue). The total number of downloads is at the top
 right (in blue).
 
-### III - inflation filters
+------------------------------------------------------------------------
 
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) computes the
-number of package downloads by simply counting log entries. While
-straightforward, this approach can run into problems. Putting aside the
-question of whether package dependencies should be counted, what I have
-in mind here is what I believe to be two types of “invalid” log entries.
-The first, a software artifact, stems from entries that are smaller,
-often orders of magnitude smaller, than a package’s actual binary or
-source file. The second, a behavioral artifact, emerges from efforts to
-download all of [CRAN](https://cran.r-project.org/). In both cases, a
-reliance on nominal counts will give you an inflated sense of the degree
-of interest in your package. For those interested, an early but detailed
-analysis and discussion of both types of inflation is included as part
-of this [R-hub blog
+### `packageLog()`
+
+This function returns the download log(s) for selected package(s) for a
+given day (the default is “today” or last available).
+
+``` r
+packageLog(package = "packageRank")
+```
+
+    >               date     time    size r_version r_arch    r_os     package
+    > 1227088 2026-01-01 06:13:53 3285218      <NA>   <NA>    <NA> packageRank
+    > 1385514 2026-01-01 09:06:57 3501392      <NA>   <NA>    <NA> packageRank
+    > 26297   2026-01-01 09:26:58 3540287      <NA>   <NA>    <NA> packageRank
+    > 1897546 2026-01-01 10:01:27 3540380      <NA>   <NA>    <NA> packageRank
+    > 1897570 2026-01-01 10:01:29 3540380      <NA>   <NA>    <NA> packageRank
+    > 1899051 2026-01-01 10:03:51 2646084      <NA>   <NA>    <NA> packageRank
+    > 2166408 2026-01-01 10:05:46 2646087      <NA>   <NA>    <NA> packageRank
+    > 3256758 2026-01-01 11:07:30 3563240      <NA>   <NA>    <NA> packageRank
+    > 189598  2026-01-01 11:41:16 3560645     4.5.2 x86_64 mingw32 packageRank
+    > 1430170 2026-01-01 12:55:12 3560603     4.5.2 x86_64 mingw32 packageRank
+    > 2871829 2026-01-01 15:01:25 3560572      <NA>   <NA>    <NA> packageRank
+    > 665247  2026-01-01 18:58:57 3560623     4.5.2 x86_64 mingw32 packageRank
+    > 389617  2026-01-01 20:31:44 3539948      <NA>   <NA>    <NA> packageRank
+    >         version country ip_id
+    > 1227088   0.8.3      US  1327
+    > 1385514   0.9.6      US   844
+    > 26297     0.9.7      US   407
+    > 1897546   0.9.7      US  1109
+    > 1897570   0.9.7      US  3749
+    > 1899051   0.9.7      US   770
+    > 2166408   0.9.7      US   770
+    > 3256758   0.9.7      US   855
+    > 189598    0.9.7    <NA>     2
+    > 1430170   0.9.7    <NA>     2
+    > 2871829   0.9.7      NL  7532
+    > 665247    0.9.7    <NA>     2
+    > 389617    0.9.7      US   129
+
+The logs record the “date”, “time”, “size” (in bytes), “r_version” (R
+version), “r_arch” (computer architecture: x86_64 = Intel, aarch64 =
+Apple Silicon, etc.), “r_os” (operating system: linux-gnu, darwin20,
+mingw32, etc.), “package”, “version” (package version), “country” (top
+level country code domain) and “ip_id” (anonymized IP address).
+
+If you see information for “r_version”, “r_arch”, “r_os”, the client is
+the RStudio IDE. If those fields are NA, the client is something else
+(including Positron apparently).
+
+### `plot(packageLog())`
+
+Plotting the logs will give you time series plots. If you set
+`type = "1D"`(1-dimensional), which is the default, you’ll get a
+horizontal dot plot that shows the times when at least one download is
+observed. If you set `type = "2D"` (2-dimensional) you’ll get a time
+series graph that plots time versus count. There are three time units:
+“second” (default), “minute”, and “hour”.
+
+The plot below contrasts the data with time unit “second” to the same
+data aggregated by time unit “hour”:
+
+``` r
+plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", unit.observation = "second")
+plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", unit.observation = "hour")
+```
+
+![](man/figures/README-log_unit_obs_code-1.png)<!-- -->
+
+By default, your local time is appended to the top side of the graph
+(side = 3). You can override this by either setting
+`local.timezone = FALSE` to or by using a time zone from OlsonNames(),
+e.g., `local.timezone = "Australia/Sydney"`:
+
+``` r
+plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", unit.observation = "hour")
+plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", unit.observation = "hour",
+  local.timezone = "Australia/Sydney")
+```
+
+![](man/figures/README-time_type_code-1.png)<!-- -->
+
+------------------------------------------------------------------------
+
+### `packageHistory()`
+
+This function returns a package’s release history.
+
+``` r
+packageHistory(package = "cholera")
+>    Package Version       Date Repository
+> 1  cholera   0.2.1 2017-08-10    Archive
+> 2  cholera   0.3.0 2018-01-26    Archive
+> 3  cholera   0.4.0 2018-04-01    Archive
+> 4  cholera   0.5.0 2018-07-16    Archive
+> 5  cholera   0.5.1 2018-08-15    Archive
+> 6  cholera   0.6.0 2019-03-08    Archive
+> 7  cholera   0.6.5 2019-06-11    Archive
+> 8  cholera   0.7.0 2019-08-28    Archive
+> 9  cholera   0.7.5 2021-04-22    Archive
+> 10 cholera   0.7.9 2021-10-11    Archive
+> 11 cholera   0.8.0 2023-03-01    Archive
+> 12 cholera   0.9.0 2025-03-14    Archive
+> 13 cholera   0.9.1 2025-05-01       CRAN
+```
+
+------------------------------------------------------------------------
+
+### `cranDistribution()`
+
+This function computes the frequency distribution of downloads and
+returns summary statistics and the top-N packages.
+
+``` r
+cranDistribution(package = NULL)
+```
+
+    > $date
+    > [1] "2026-01-01 Thursday"
+    > 
+    > $unique.packages.downloaded
+    > [1] "24,333"
+    > 
+    > $total.downloads
+    > [1] "3,539,833"
+    > 
+    > $top.n
+    >        package count rank nominal.rank percentile
+    > 1         Rcpp 36411    1            1      100.0
+    > 2        rlang 27090    2            2      100.0
+    > 3          cli 26311    3            3      100.0
+    > 4     jsonlite 24401    4            4      100.0
+    > 5         glue 24052    5            5      100.0
+    > 6     magrittr 23951    6            6      100.0
+    > 7    lifecycle 23228    7            7      100.0
+    > 8        dplyr 22980    8            8      100.0
+    > 9           R6 22700    9            9      100.0
+    > 10       withr 22484   10           10      100.0
+    > 11       vctrs 21936   11           11      100.0
+    > 12 systemfonts 21623   12           12      100.0
+    > 13 textshaping 21357   13           13       99.9
+    > 14      tibble 21324   14           14       99.9
+    > 15      pillar 20748   15           15       99.9
+    > 16        curl 20739   16           16       99.9
+    > 17     stringr 20060   17           17       99.9
+    > 18       purrr 19813   18           18       99.9
+    > 19        utf8 19337   19           19       99.9
+    > 20          fs 19284   20           20       99.9
+
+If you pass a package to the function, e.g.,
+`cranDistribution(package = "packageRank")`, data for that package will
+be appended:
+
+``` r
+cranDistribution(package = "packageRank")
+```
+
+    > $date
+    > [1] "2026-01-01 Thursday"
+    > 
+    > $unique.packages.downloaded
+    > [1] "24,333"
+    > 
+    > $total.downloads
+    > [1] "3,539,833"
+    > 
+    > $top.n
+    >        package count rank nominal.rank percentile
+    > 1         Rcpp 36411    1            1      100.0
+    > 2        rlang 27090    2            2      100.0
+    > 3          cli 26311    3            3      100.0
+    > 4     jsonlite 24401    4            4      100.0
+    > 5         glue 24052    5            5      100.0
+    > 6     magrittr 23951    6            6      100.0
+    > 7    lifecycle 23228    7            7      100.0
+    > 8        dplyr 22980    8            8      100.0
+    > 9           R6 22700    9            9      100.0
+    > 10       withr 22484   10           10      100.0
+    > 11       vctrs 21936   11           11      100.0
+    > 12 systemfonts 21623   12           12      100.0
+    > 13 textshaping 21357   13           13       99.9
+    > 14      tibble 21324   14           14       99.9
+    > 15      pillar 20748   15           15       99.9
+    > 16        curl 20739   16           16       99.9
+    > 17     stringr 20060   17           17       99.9
+    > 18       purrr 19813   18           18       99.9
+    > 19        utf8 19337   19           19       99.9
+    > 20          fs 19284   20           20       99.9
+    > 
+    > $package.data
+    >          package count rank nominal.rank percentile
+    > 7300 packageRank    13 7668         7300       68.5
+
+### `plot(cranDistribution())`
+
+If you plot the above functions, you’ll get a histogram of the overall
+distribution of download counts (base 10 logarithm):
+
+``` r
+plot(cranDistribution(package = NULL))
+```
+
+![](man/figures/README-plot_cranDistribution_code-1.png)<!-- -->
+
+If you pass a package to the function, its location in the distribution
+will be annotated:
+
+``` r
+plot(cranDistribution(package = "packageRank"))
+```
+
+``` r
+plot(cranDistribution(package = "packageRank", date = "2026-01-01"))
+```
+
+![](man/figures/README-pkg_plot_cranDistribution_code-1.png)<!-- -->
+
+------------------------------------------------------------------------
+
+### reverse lookup
+
+To do a reverse lookup (e.g., find packages with a given download count
+or percentile rank), use `queryCount()`, `queryPackage()`,
+`queryPercentile()` or `queryRank()`.
+
+``` r
+queryCount(count = 100)
+>        package count rank nominal.rank percentile
+> 1        ascii   100 2717         2710       89.9
+> 2        gains   100 2717         2711       89.9
+> 3      ipsRdbs   100 2717         2712       89.9
+> 4      nhanesA   100 2717         2713       89.9
+> 5       rxode2   100 2717         2714       89.9
+> 6     sdcMicro   100 2717         2715       89.9
+> 7       TOSTER   100 2717         2716       89.9
+> 8 treesitter.r   100 2717         2717       89.9
+```
+
+``` r
+queryPackage(package = "cholera")
+>   package count rank nominal.rank percentile
+> 1 cholera    19 4765         4656       82.2
+```
+
+``` r
+head(queryPercentile(percentile = 99))
+>    package count rank nominal.rank percentile
+> 1      zip 18021  148          148       99.4
+> 2 reshape2 17900  149          149       99.4
+> 3 openxlsx 17715  150          150       99.4
+> 4  cowplot 17423  151          151       99.4
+> 5     doBy 17396  152          152       99.4
+> 6     urca 17364  153          153       99.4
+```
+
+Note that due to the discrete nature of counts, your choice of
+percentile may not be available. For details, see this
+[note](https://github.com/lindbrook/packageRank/blob/readme/docs/queryPercentile_note.md)
+in the ‘packageRank’ GitHub repository.
+
+``` r
+queryRank(rank = 9)
+>   package count rank nominal.rank percentile
+> 1    glue 71506    9            9        100
+```
+
+------------------------------------------------------------------------
+
+### Inflation and Filters
+
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) computes
+package downloads by counting log entries. While straightforward, this
+approach can run into problems. Putting aside package dependencies (the
+effect of packages that use packages), what I have in mind here are two
+types of “invalid” log entries.
+
+The first are software artifacts. These are entries that are smaller,
+often orders of magnitude smaller, than the package’s binary or source
+file. The second are behavioral artifact. The main culprit here appears
+to stem from efforts to download all of the packages on
+[CRAN](https://cran.r-project.org/). In both cases, simple nominal
+counts will give you an inflated sense of the degree of interest in your
+package.
+
+For what it’s worth, an early examination of inflation is included as
+part of this [R-hub blog
 post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts).
 
 #### software artifacts
 
-When looking at package download logs, the first thing you’ll notice are
-wrongly sized log entries. They come in two sizes. The “small” entries
-are approximately 500 bytes in size. The “medium” entries vary in size,
-falling somewhere between a “small” entry and a full download (i.e.,
+When looking at package’s download logs, the first thing you’ll often
+see are wrongly sized log entries. They come in two flavors: 1) “small”
+entries approximately 500 bytes in size and 2) “medium” entries (i.e.,
 “small” \<= “medium” \<= full download). “Small” entries manifest
-themselves as standalone entries, paired with a full download, or as
-part of a triplet along side a “medium” and a full download. “Medium”
-entries manifest themselves as either standalone entries or as part of a
+themselves as standalone entries, as paired with a full download, or as
+part of a triplet with a “medium” and a full download. “Medium” entries
+manifest themselves as either a standalone entry or as part of a
 triplet.
 
 The example below illustrates a triplet:
 
 ``` r
-packageLog(date = "2020-07-01")[4:6, -(4:6)]
+packageLog(date = "2020-07-01")$cholera[4:6, -(4:6)]
 >               date     time    size package version country ip_id
 > 3998633 2020-07-01 07:56:15   99622 cholera   0.7.0      US  4760
 > 3999066 2020-07-01 07:56:15 4161948 cholera   0.7.0      US  4760
@@ -848,30 +1113,36 @@ packageLog(date = "2020-07-01")[4:6, -(4:6)]
 
 The “medium” entry is the first observation (99,622 bytes). The full
 download is the second entry (4,161,948 bytes). The “small” entry is the
-last observation (536 bytes). At a minimum, what makes a triplet a
-triplet (or a pair a pair) is that all members share system
-configuration (e.g. IP address, etc.) and have identical or adjacent
-time stamps.
+last observation (536 bytes). At a minimum, what makes a triplet (or a
+pair) is that all members share system configuration (e.g. IP address,
+etc.) and have identical or adjacent time stamps.
 
-To deal with the inflationary effect of “small” entries, I filter out
-observations smaller than 1,000 bytes (the smallest package on
-[CRAN](https://cran.r-project.org/) appears to be
+To deal with “small” log entries, I filter out observations smaller than
+1,000 bytes (the smallest package on [CRAN](https://cran.r-project.org/)
+appears to be
 [‘LifeInsuranceContracts’](https://cran.r-project.org/package=LifeInsuranceContracts),
 whose source file weighs in at 1,100 bytes). “Medium” entries are harder
-to handle. I remove them using a filter functions that looks up a
-package’s actual size.
+to handle. I remove them using a function that looks up a package’s
+actual size.
 
 #### behavioral artifacts
 
-While wrongly sized entries are fairly easy to spot, seeing the effect
-of efforts to download all of [CRAN](https://cran.r-project.org/)
-require a change of perspective. While details and further evidence can
-be found in the [R-hub blog
-post](https://blog.r-hub.io/2020/05/11/packagerank-intro/#inflationary-bias-of-download-counts)
-mentioned above, I’ll illustrate the problem with the following example:
+The other pattern you’ll often see when looking at package download logs
+is the presence of “too many” prior versions. While there are legitimate
+reasons for downloading past versions (e.g., research, container-based
+software distribution, etc.), I’d argue that such patterns are
+“fingerprints” of efforts to download
+[CRAN](https://cran.r-project.org/). While there is nothing inherently
+problematic about this (other than infrastructure costs), it does
+inflate your package download count. When your package is downloaded as
+part of such efforts, those downloads are more a reflection of an
+interest in [CRAN](https://cran.r-project.org/) itself (a collection of
+packages) rather than of an interest in your package *per se*.
+
+To illustrate, consider the following example:
 
 ``` r
-packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
+packageLog(package = "cholera", date = "2020-07-31")[8:14, -(4:6)]
 ```
 
     >              date     time    size package version country ip_id
@@ -884,8 +1155,8 @@ packageLog(packages = "cholera", date = "2020-07-31")[8:14, -(4:6)]
     > 132644 2020-07-31 21:03:12 4284609 cholera   0.6.5      US    14
 
 Here, we see that seven different versions of the package were
-downloaded as a sequential bloc. A little digging shows that these seven
-versions represent *all* versions of ‘cholera’ available on that date:
+downloaded as a sequential bloc. A little digging shows that on that
+date there were seven extant versions of ‘cholera’:
 
 ``` r
 packageHistory(package = "cholera")
@@ -901,23 +1172,13 @@ packageHistory(package = "cholera")
     > 7 cholera   0.6.5 2019-06-11    Archive
     > 8 cholera   0.7.0 2019-08-28       CRAN
 
-While there are “legitimate” reasons for downloading past versions
-(e.g., research, container-based software distribution, etc.), I’d argue
-that examples like the above are “fingerprints” of efforts to download
-[CRAN](https://cran.r-project.org/). While this is not necessarily
-problematic, it does mean that when your package is downloaded as part
-of such efforts, that download is more a reflection of an interest in
-[CRAN](https://cran.r-project.org/) itself (a collection of packages)
-than of an interest in your package *per se*. And since one of the uses
-of counting package downloads is to assess interest in *your* package,
-it may be useful to exclude such entries.
-
-To do so, I try to filter out these entries in two ways. The first
-identifies IP addresses that download “too many” packages and then
-filters out *campaigns*, large blocs of downloads that occur in (nearly)
-alphabetical order. The second looks for campaigns not associated with
-“greedy” IP addresses and filters out sequences of past versions
-downloaded in a narrowly defined time window.
+And such, it may be useful to exclude such entries. To do so, I filter
+out these entries in two ways. The first identify IP addresses that
+download “too many” packages and then filter out *campaigns*, large
+blocs of downloads that occur in (nearly) alphabetical order. The second
+looks for campaigns not associated with “greedy” IP addresses and
+filters out sequences of past versions downloaded in a narrowly defined
+time window.
 
 #### example usage
 
@@ -928,18 +1189,13 @@ September 2021.
 ``` r
 filteredDownloads(package = "ggplot2", date = "2021-09-15")
 >         date package downloads filtered.downloads delta inflation
-> 1 2021-09-15 ggplot2    113842             111662  2180    1.95 %
+> 1 2021-09-15 ggplot2    113842             108326  5516    5.09 %
 ```
 
 While there were 113,842 nominal downloads, applying all the filters
 reduced that number to 111,662, an inflation of 1.95%.
 
-Excluding the time it takes to download the log file (typically the bulk
-of the computation time), the above example take approximate 15
-additional seconds to run on a single core on a 3.1 GHz Dual-Core Intel
-Core i5 processor.
-
-There are 4 filters. You can control them using the following arguments
+There are 5 filters. You can control them using the following arguments
 (listed in order of application):
 
 - `ip.filter`: removes campaigns of “greedy” IP addresses.
@@ -947,6 +1203,7 @@ There are 4 filters. You can control them using the following arguments
 - `sequence.filter`: removes blocs of past versions.
 - `size.filter`: removes entries smaller than a package’s binary or
   source file.
+- `version.filter`: include only the most recent package version.
 
 For `filteredDownloads()`, they are all on by default. For
 `packageLog()` and `packageRank()`, they are off by default. To apply
@@ -977,31 +1234,34 @@ individually to all packages in the log, which can involve tens of
 thousands of packages. While not unfeasible, currently this takes a long
 time. For this reason, when `all.filters = TRUE`, `packageRank()`,
 `ipPackage()`, `countryPackage()`, `countryDistribution()` and
-`packageDistribution()` use only CRAN specific filters while
+`cranDistribution()` use only CRAN specific filters while
 `packageLog()`, `packageCountry()`, and `filteredDownloads()` use both
 [CRAN](https://cran.r-project.org/) and package specific filters.
 
-### IV - availability of results
+------------------------------------------------------------------------
 
-To understand when results become available, you need to be aware that
+### Results Availability
+
+To understand when results become available, you need to know that
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank) has two
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
-package download logs](http://cran-logs.rstudio.com/), which record
-traffic to the “0-Cloud” mirror at cloud.r-project.org (formerly
-Posit/RStudio’s CRAN mirror). The second is Gábor Csárdi’s
-[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R package,
-which uses those logs to compute the download counts of both the R
-application and R packages.
+package download logs](http://cran-logs.rstudio.com/). These logs record
+traffic that passes through the
+[“0-Cloud”](https://cloud.r-project.org/) or equivalently [Global
+(CDN) - RStudio](https://cran.rstudio.com/). The second is Gábor
+Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
+package, which uses the Posit/RStudio logs to compute the download
+counts of both R packages and the R application itself.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the
 *previous* day are typically posted by 17:00 UTC. The results for
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) usually become
-available soon thereafter (sometimes as much as a day later).
+available soon thereafter.
 
-#### why aren’t today’s logs and results available?
+#### Why aren’t today’s logs and results available?
 
-Occasionally problems with “today’s” data can emerge due to the upstream
-dependencies (illustrated below).
+Occasionally, problems with “today’s” data can arise due to problems
+with one or both of the upstream dependencies (illustrated below).
 
     CRAN Download Logs --> 'cranlogs' --> 'packageRank'
 
@@ -1019,13 +1279,13 @@ is not (yet) on the server” error message.
 
 If there’s a problem with
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) but not with
-the [logs](http://cran-logs.rstudio.com/), only
-`packageRank::cranDownalods()` will be affected. In that case, you might
-get a warning that only “previous” results will be used. All other
+the [logs](http://cran-logs.rstudio.com/), only `cranDownalods()` will
+be affected. In that case, you might get a warning that only “previous”
+results will be used. All other
 [‘packageRank’](https://CRAN.R-project.org/package=packageRank)
 functions should work since they either directly access the logs or use
-some other source. Usually, these errors resolve themselves the next
-time the underlying scripts are run (“tomorrow”, if not sooner).
+some other data source. Usually, these errors resolve themselves the
+next time the underlying scripts are run (tomorrow, if not sooner).
 
 #### `logInfo()`
 
@@ -1048,7 +1308,7 @@ logInfo()
     [1] "No"
 
     $status
-    [1] "Today's log is typically posted by 01 Feb 09:00 PST | 01 Feb 17:00 UTC."
+    [1] "Today's log is typically posted by 01 Feb 09:00 PST -- 01 Feb 17:00 UTC."
 
 #### time zones
 
@@ -1059,7 +1319,7 @@ rank for [‘ergm’](https://CRAN.R-project.org/package=ergm) for the last
 day of 2020. You might be tempted to use the following:
 
 ``` r
-packageRank(packages = "ergm")
+packageRank(package = "ergm")
 ```
 
 However, depending on *where* you make this request, you may not get the
@@ -1086,7 +1346,7 @@ Using the Sydney example and the expression above, you’d get the results
 for 30 December 2020:
 
 ``` r
-packageRank(packages = "ergm")
+packageRank(package = "ergm")
 ```
 
     >         date package count          rank percentile
@@ -1095,7 +1355,7 @@ packageRank(packages = "ergm")
 If you had specified the date, you’d get an additional warning:
 
 ``` r
-packageRank(packages = "ergm", date = "2021-01-01")
+packageRank(package = "ergm", date = "2021-01-01")
 ```
 
     >         date package count          rank percentile
@@ -1138,203 +1398,34 @@ compute your local time and time zone (e.g., `Sys.time()` and
 `Sys.timezone()`). My understanding is that there may be operating
 system or platform specific issues that could undermine this.
 
-### V - Reverse lookup of counts, ranks and percentiles
+------------------------------------------------------------------------
 
-To query the log for a specific count, rank or percentile rank, use the
-functions below:
+### Data Fixes and Notes
 
-#### queryCount()
+There are three data errors and one data issue to note. I’ve patched the
+errors.
 
-To find the packages that had 100 downloads (the default is 1, the
-lowest number of observable downloads):
+#### 1) jumbled logs at end of 2012 and first day of 2013 - Error
 
-``` r
-queryCount(100)
-```
+The logs collected between late 2012 and the beginning of 2013 are a bit
+jumbled.
 
-    >         package count rank nominal.rank percentile
-    > 1     analogsea   100 2143         2129       92.1
-    > 2  ComplexUpset   100 2143         2130       92.1
-    > 3      detrendr   100 2143         2131       92.1
-    > 4          drat   100 2143         2132       92.1
-    > 5       enrichR   100 2143         2133       92.1
-    > 6      exact2x2   100 2143         2134       92.1
-    > 7       fdapace   100 2143         2135       92.1
-    > 8          fdth   100 2143         2136       92.1
-    > 9        ggmcmc   100 2143         2137       92.1
-    > 10      jsTreeR   100 2143         2138       92.1
-    > 11       likert   100 2143         2139       92.1
-    > 12      praznik   100 2143         2140       92.1
-    > 13     rayimage   100 2143         2141       92.1
-    > 14       rlemon   100 2143         2142       92.1
-    > 15        worcs   100 2143         2143       92.1
-
-#### queryRank()
-
-To find the package that was ranked 20th in downloads (the default is
-1st, the most downloaded package):
-
-``` r
-queryRank(20)
-```
-
-    >   package count rank nominal.rank percentile
-    > 1 stringr 33041   20           20       99.9
-
-#### queryPercentile()
-
-If you want the packages with a particular percentile rank, use
-`queryPercentile()`. Note that due to the discrete nature of counts,
-your choice of percentile may not be available because they may fall in
-the vertical gaps in the observed data:
-
-![](man/figures/README-discrete_counts-1.png)<!-- -->
-
-For this reason, `queryPercentile()` rounds you selection to whole
-numbers. Also, the default value, which is set to 50, uses `median()`to
-guarantee a result.
-
-``` r
-# head() is used because there will be many observations with median count.
-head(queryPercentile())
-```
-
-    >    package count  rank nominal.rank percentile
-    > 1 AATtools    12 13697        12845       49.2
-    > 2    abdiv    12 13697        12846       49.2
-    > 3 abglasso    12 13697        12847       49.2
-    > 4  ablasso    12 13697        12848       49.2
-    > 5   Ac3net    12 13697        12849       49.2
-    > 6      acp    12 13697        12850       49.2
-
-You can also set a range of percentile ranks using the ‘lo’ and/or ‘hi’
-arguments. If you get an error message, you may need to widen your
-interval:
-
-``` r
-head(queryPercentile(lo = 95, hi = 96), 3)
-tail(queryPercentile(lo = 95, hi = 96), 3)
-```
-
-    >      package count rank nominal.rank percentile
-    > 1    mapdata   420  931          931       96.5
-    > 2 shinyalert   418  932          932       96.5
-    > 3       klaR   416  935          933       96.5
-    >                package count rank nominal.rank percentile
-    > 536 PortfolioAnalytics   189 1466         1466       94.6
-    > 537              binom   188 1468         1467       94.6
-    > 538            prefmod   188 1468         1468       94.6
-
-#### cranDistribution()
-
-The above functions leverage `cranDistribution()`, which computes the
-ranks and the distribution of download counts for a given day’s log.
-
-Its print method provides the date, the number of unique packages
-downloaded, the total number of downloads (the total number of
-rows/observations in the log) and the count and rank data for the top 20
-packages:
-
-``` r
-cranDistribution()
-```
-
-    > $date
-    > [1] "2024-08-01 Thursday"
-    > 
-    > $unique.packages.downloaded
-    > [1] "26,959"
-    > 
-    > $total.downloads
-    > [1] "5,760,937"
-    > 
-    > $top.n
-    >       package count rank nominal.rank percentile
-    > 1       rlang 56311    1            1      100.0
-    > 2     ggplot2 53981    2            2      100.0
-    > 3       withr 51577    3            3      100.0
-    > 4         cli 51509    4            4      100.0
-    > 5   lifecycle 47771    5            5      100.0
-    > 6       dplyr 46734    6            6      100.0
-    > 7       vctrs 45173    7            7      100.0
-    > 8    jsonlite 43280    8            8      100.0
-    > 9        Rcpp 40935    9            9      100.0
-    > 10     tibble 39908   10           10      100.0
-    > 11       glue 39430   11           11      100.0
-    > 12     pillar 37875   12           12      100.0
-    > 13   magrittr 35133   13           13      100.0
-    > 14      bslib 35106   14           14       99.9
-    > 15 colorspace 34707   15           15       99.9
-    > 16       xfun 34442   16           16       99.9
-    > 17     scales 34052   17           17       99.9
-    > 18         R6 33516   18           18       99.9
-    > 19      fansi 33111   19           19       99.9
-    > 20    stringr 33041   20           20       99.9
-
-Note that if you want to specify the number of top N packages, you’ll
-have to explicitly use the print() and the ‘top.n’ argument:
-
-``` r
-print(cranDistribution(), top.n = 7)
-```
-
-Alternatively, you can use `queryRank()`:
-
-``` r
-queryRank(1:7)
-```
-
-The summary method provides the number of unique packages downloaded,
-the total number of downloads and the five number summary (plus the
-arithmetic mean):
-
-``` r
-summary(cranDistribution())
-```
-
-    > $unique.packages.downloaded
-    > [1] 26959
-    > 
-    > $total.downloads
-    > [1] 5760937
-    > 
-    > $download.summary
-    >    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    >     1.0     6.0    12.0   213.7    28.0 56311.0
-
-The plot method graphs the distribution of base 10 logarithm of download
-counts. Each plot is annotated with the median, mean and maximum
-download counts, as well as the total number of downloads and the total
-number of unique packages observed.
-
-``` r
-plot(cranDistribution())
-```
-
-![](man/figures/README-plot_distribution_code-1.png)<!-- -->
-
-### VI - data fixes
-
-[‘packageRank’](https://CRAN.R-project.org/package=packageRank) fixes
-three data problems.
-
-The first data problem involves logs collected between late 2012 and the
-beginning of 2013. It’s a bit complicated. To understand it, we need to
-be know that the Posit/RStudio download logs are stored as separate
-files with a name/URL that embeds the log’s date:
+To understand the problem, we need to be know that the Posit/RStudio
+download logs are stored as separate files with a name/URL that embeds
+the log’s date:
 
     http://cran-logs.rstudio.com/2022/2022-01-01.csv.gz
 
 For the logs in question, this convention was broken in three ways: i)
-some logs are effectively duplicated (same log, multiple names), ii) at
-least one is mislabeled and iii) the logs from 13 October through 28
+some logs are effectively duplicated (same log, different names), ii) at
+least one mislabeled log and iii) the logs from 13 October through 28
 December are offset by +3 days (e.g., the file with the name/URL
 “2012-12-01” contains the log for “2012-11-28”). As a result, we get
-erroneous download counts and we actually lose the last three logs of
-2012. Details are available
+erroneous download counts and actually lose the last three logs of 2012.
+Details are available
 [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
-Unsurprisingly, all this affects download counts.
+Unsurprisingly, this affects download counts.
 
 Functions that rely on `cranlogs::cran_download()` (e.g.,
 [‘packageRank::cranDownloads()’](https://github.com/lindbrook/packageRank/blob/master/R/cranDownloads.R),
@@ -1343,32 +1434,59 @@ and [‘dlstats’](https://CRAN.R-project.org/package=dlstats)) are
 susceptible to the first error - duplicate names. My understanding is
 that this is because
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) uses the date
-in a log rather than the filename/URL to retrieve logs. To put it
-differently, [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs)
-can’t detect multiple instances of logs with the same date. I found 3
-logs with duplicate filename/URLs, and 5 additional instances of
-overcounting (including one of tripling).
+in the log rather than the date in the filename/URL to retrieve logs. To
+put it differently,
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) can’t detect
+multiple instances of logs with the same date. I found 3 logs with
+duplicate filename/URLs, and 5 additional instances of overcounting
+(including one of tripling).
 [‘fixCranlogs()’](https://github.com/lindbrook/packageRank/blob/master/R/fixCranlogs.R)
-addresses this overcounting problem behind the scenes by recomputing the
-download counts using the actual log(s) when any of the eight
-problematic dates are requested. Details about the 8 days and
-`fixCranlogs()` can be found
+addresses this overcounting by recomputing the download counts using the
+correct log(s) when any of the eight problematic dates are requested.
+Details about the 8 days and `fixCranlogs()` can be found
 [here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
 
 Functions that access logs via their filename/URL, e.g., `packageRank()`
 and `packageLog()`, are affected by the second and third defects -
 mislabeled and offset logs.
 [`fixDate_2012()`](https://github.com/lindbrook/packageRank/blob/master/R/fixDate_2012.R)
-addresses this, in the background, by re-mapping problematic logs so you
-get the log you expect.
+addresses this by re-mapping problematic logs so that you get the log
+you expect.
 
-The second data problem is of more recent vintage. From 2023-09-13
-through 2023-10-02, the download counts for the R application returned
-by `cranlogs::cran_downloads(packages = "R")`, is, with two exceptions,
-twice what one would expect when looking at the actual log(s). The two
-exceptions are: 1) 2023-09-28 where the counts are identical but for a
-“rounding error” possibly due to NAs and 2) 2023-09-30 where there is
-actually a three-fold difference.
+#### 2) Windows R Application download spikes (Nov 2022 - March 2023) - Note
+
+Typically, the pattern of R application downloads is a series of weekday
+peaks and weekends troughs. You can see this in the graph below, which
+plots the January 2022 data broken down by platform (Mac, Source, and
+Windows) and weekday/weekend (filled v. empty circles):
+
+``` r
+plot(cranDownloads(package = "R", from = "2022-01", to = "2022-01"), r.version = TRUE, weekend = TRUE)
+```
+
+![](man/figures/README-R_jan2022-1.png)<!-- -->
+
+However, between November 2022 and March 2023, this pattern was broken.
+On Sundays (06 November 2022 - 19 March 2023) and Wednesdays (18 January
+2023 - 15 March 2023), there were noticeable, repeated,
+orders-of-magnitude spikes in the daily downloads of just the Windows
+version of R.
+
+![](man/figures/README-sundays-1.png)<!-- -->
+
+These spikes appear to be real patterns in the data and not coding
+errors. Detailed, visual evidence for this can be found online in this
+[note](https://github.com/lindbrook/packageRank/blob/readme/docs/windows_spikes.md)
+in the `packageRank` GitHub respository.
+
+#### 3) doubled (or tripled) R application downloads counts (2023) - Error
+
+From 2023-09-13 through 2023-10-02, the download counts for the R
+application returned by `cranlogs::cran_downloads(package = "R")`, is,
+with two exceptions, twice the count you’d get when looking at the
+actual log(s). The two exceptions are: 1) 2023-09-28 where the counts
+are identical but for a “rounding error” possibly due to NAs and 2)
+2023-09-30 where there is actually a three-fold difference.
 
 Here are the relevant ratios of counts comparing
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) results with
@@ -1395,86 +1513,43 @@ download counts around the same period but that is now fixed in
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs). For details,
 see issue [\#68](https://github.com/r-hub/cranlogs/issues/68)
 
-The third problem is the apparent loss (i.e., zero downloads for the R
-application and for all packages) for 7 logs in 2025: 8/25-8/26 and
-8/29-9/02. For what it’s worth, both gaps were preceeded by two
-unusually large sets of downloads: Sun 8/24 (14,521,256) and Wed 8/27 &
-Thu 8/28 (16,860,505 and 16,477,023). These outliers are approximately
-twice the size of “typical” counts (see graph below).
+#### 4) seven lost logs (2025) - Error
 
-As a “fix” for the missing data, which are stored as a vector of dates
-in cholera::missing.date, I did the following. First, when a missing
-date is included, `cranDownloads()` prints a message in the console:
+In 2025, 7 logs, 8/25-8/26 and 8/29-9/02, appear to be lost. For what
+it’s worth, both gaps were preceded by two unusually large number of
+downloads: Sun 8/24 (14,521,256) and Wed 8/27 & Thu 8/28 (16,860,505 and
+16,477,023). These outliers are approximately twice the size of
+“typical” download counts (see graph below).
 
-    Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
-
-Second, when plotting `cranDownloads()` two gray polygons to highlight
-those dates are added to the graph and are labeled with a “⌀” (empty
-set) on the top axis. Third, smoothers ignore these missing dates.
+As a “fix”, the missing dates (see cholera::missing.date),
+`cranDownloads()` does the following. First, when a missing date is
+included it prints a message in the console. Second, when plotting two
+gray polygons are added to the graph to highlight those dates. They are
+labeled with a “⌀” (empty set) on the top axis. Third, smoothers ignore
+the missing data.
 
 The graph below, which plots the *total* number of downloads recorded by
-the Posit/RStudio mirror from Sat 7/05 through Sun 9/14 (weekends are
-represented by open circles), shows the magnitude of the outliers and
-the two graphical fixes.
+the Posit/RStudio mirror from Sat 7/05 through Sun 9/14, shows the
+magnitude of the outliers and the two graphical fixes (open circles are
+weekends).
 
 ``` r
-plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, weekend = TRUE)
+plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, points = TRUE, weekend = TRUE)
 > Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 ```
 
 ![](man/figures/README-missing-1.png)<!-- -->
 
-### VII - data note
+------------------------------------------------------------------------
 
-#### R Windows Sunday and Wednesday download spikes (06 Nov 2022 - 19 March 2023)
+### et cetera
 
-The graph above for [R downloads](#packages--r) shows the daily
-downloads of the R application broken down by platform (Mac, Source,
-Windows). In it, you can see the typical pattern of mid-week peaks and
-weekend troughs.
+This section describes some additional issues that may be of interest.
 
-Between 06 November 2022 and 19 March 2023, this pattern was broken. On
-Sundays (06 November 2022 - 19 March 2023) and Wednesdays (18 January
-2023 - 15 March 2023), there were noticeable, repeated
-orders-of-magnitude spikes in the daily downloads of the Windows version
-of R.
+#### Bioconductor
 
-``` r
-plot(cranDownloads("R", from = "2022-10-06", to = "2023-04-14"))
-> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
-axis(3, at = as.Date("2022-11-06"), labels = "2022-11-06", cex.axis = 2/3, 
-  padj = 0.9)
-axis(3, at = as.Date("2023-03-19"), labels = "2023-03-19", cex.axis = 2/3, 
-  padj = 0.9)
-abline(v = as.Date("2022-11-06"), col = "gray", lty = "dotted")
-abline(v = as.Date("2023-03-19"), col = "gray", lty = "dotted")
-```
-
-![](man/figures/README-sundays-1.png)<!-- -->
-
-These download spikes did not seem to affect either the Mac or Source
-versions. I show this in the graphs below. Each plot, which is
-individually scaled, breaks down the data in the graph above by day
-(Sunday or Wednesday) and platform.
-
-The key thing is to compare the data in the period bounded by vertical
-dotted lines with the data before and after. If a Sunday or Wednesday is
-orders-of-magnitude unusual, I plot that day with a filled rather than
-an empty circle. Only Windows, the final two graphs below, earn this
-distinction.
-
-    > Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
-
-![](man/figures/README-sundays_mac-1.png)<!-- -->![](man/figures/README-sundays_mac-2.png)<!-- -->
-
-![](man/figures/README-sundays_src-1.png)<!-- -->![](man/figures/README-sundays_src-2.png)<!-- -->
-
-![](man/figures/README-sundays_win-1.png)<!-- -->![](man/figures/README-sundays_win-2.png)<!-- -->
-
-### VIII - et cetera
-
-For those interested in directly using the , this section describes some
-issues that may be of use.
+Note that the “raw” Bioconductor package download are already aggregated
+by month.
 
 #### country codes (top level domains)
 
@@ -1514,8 +1589,8 @@ if (RCurl::url.exists(url)) {
 # Note that data.table::fread() relies on R.utils::decompressFile().
 ```
 
-This means that logs are intelligently cached; those that have already
-been downloaded in your current R session will not be downloaded again.
+This means that logs are cached; logs that have already been downloaded
+in your current R session will not be downloaded again.
 
 #### timeout
 
@@ -1531,7 +1606,3 @@ This change can affect functions that download logs. This is especially
 true over slower internet connections or when you’re dealing with large
 log files. To fix this, `fetchCranLog()` will, if needed, temporarily
 set the timeout to 600 seconds.
-
-[^1]: Specifically, within each 5% interval of percentile ranks (e.g., 0
-    to 5, 5 to 10, 95 to 100, etc.), a random sample of 5% of packages
-    is selected and tracked.
