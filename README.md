@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9055-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9056-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 <div class="figure" style="text-align: center">
@@ -20,7 +20,7 @@
       - check date validity
       - cumulative download counts (growth curves)
       - `pro.mode = TRUE` shortcut to cranlogs::cran_downloads()
-    - nominal and cumulative count
+      - nominal and cumulative count
     - [`plot(cranDownloads())`](#plotcrandownloads)
       - single date -\> 1D dotchart (cross-sectional)
       - multiple dates -\> 2D time series (longitudinal)
@@ -225,8 +225,7 @@ Note that the Posit/RStudio logs begin on 01 October 2012.
 #### iv) check date validity
 
 ``` r
-cranDownloads(package = "HistData", from = "2019-01-15",
-  to = "2019-01-35")
+cranDownloads(package = "HistData", from = "2019-01-15", to = "2019-01-35")
 ```
 
     ## Error in resolveDate(to, type = "to") : Not a valid date.
@@ -352,8 +351,8 @@ plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
 
 ``` r
 # Code only. Graph not shown.
-plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020", to = "2020-03-20"), graphics = "base")
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"), from = "2020", 
+  to = "2020-03-20"), graphics = "base")
 ```
 
 To do the above using separate, independent scales, set
@@ -361,8 +360,8 @@ To do the above using separate, independent scales, set
 
 ``` r
 # Code only. Graph not shown.
-plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020", to = "2020-03-20"), graphics = "base", same.xy = FALSE)
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"), from = "2020", 
+  to = "2020-03-20"), graphics = "base", same.xy = FALSE)
 ```
 
 #### `log.y = TRUE`
@@ -505,7 +504,8 @@ With `unit.observation = "day"` and `graphics = "base"`, you can
 highlight weekends, as empty circles, by setting `weekend = TRUE`:
 
 ``` r
-plot(cranDownloads(package = "rstan", from = "2024-06", to = "2024-06"), weekend = TRUE)
+plot(cranDownloads(package = "rstan", from = "2024-06", to = "2024-06"), 
+  weekend = TRUE)
 ```
 
 ![](man/figures/README-r_weekend-1.png)<!-- -->
@@ -516,9 +516,9 @@ To plot growth curves using cumulative counts, set
 `statistic = "cumulative"`:
 
 ``` r
-plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
-  from = "2020", to = "2020-03-20"), statistic = "cumulative",
-  multi.plot = TRUE, points = FALSE)
+plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"), from = "2020", 
+ to = "2020-03-20"), statistic = "cumulative", multi.plot = TRUE,
+ points = FALSE)
 ```
 
 ![](man/figures/README-cranDownloads_growth_curves-1.png)<!-- -->
@@ -546,7 +546,8 @@ The graph below plots the data aggregated by week, which begin on
 Sunday.
 
 ``` r
-plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), smooth = TRUE, unit.observation = "week")
+plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), 
+  smooth = TRUE, unit.observation = "week")
 ```
 
 ![](man/figures/README-week-1.png)<!-- -->
@@ -584,7 +585,8 @@ Sundays.
 The graph below plots the data aggregated by month.
 
 ``` r
-plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), smooth = TRUE, unit.observation = "month")
+plot(cranDownloads(package = "cranlogs", from = 2022, to = "2023-09-27"), 
+  smooth = TRUE, unit.observation = "month")
 ```
 
 ![](man/figures/README-month-1.png)<!-- -->
@@ -636,8 +638,7 @@ After spending some time with the *nominal* download counts above, the
 the data for the ‘cholera’ package from the first week of March 2020:
 
 ``` r
-plot(cranDownloads(package = "cholera", from = "2020-03-01",
-  to = "2020-03-07"))
+plot(cranDownloads(package = "cholera", from = "2020-03-01", to = "2020-03-07"))
 ```
 
 <img src="man/figures/README-motivation_code-1.png" alt="" style="display: block; margin: auto;" />
@@ -865,8 +866,10 @@ The plot below contrasts the data with time unit “second” to the same
 data aggregated by time unit “hour”:
 
 ``` r
-plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", unit.observation = "second")
-plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", unit.observation = "hour")
+plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", 
+  unit.observation = "second")
+plot(packageLog(package = "cranlogs", date = "2026-01-01"), type = "1D", 
+  unit.observation = "hour")
 ```
 
 ![](man/figures/README-log_unit_obs_code-1.png)<!-- -->
@@ -877,9 +880,10 @@ By default, your local time is appended to the top side of the graph
 e.g., `local.timezone = "Australia/Sydney"`:
 
 ``` r
-plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", unit.observation = "hour")
-plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", unit.observation = "hour",
-  local.timezone = "Australia/Sydney")
+plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", 
+  unit.observation = "hour")
+plot(packageLog(package = "HistData", date = "2026-01-01"), type = "2D", 
+  unit.observation = "hour", local.timezone = "Australia/Sydney")
 ```
 
 ![](man/figures/README-time_type_code-1.png)<!-- -->
@@ -1059,7 +1063,7 @@ head(queryPercentile(percentile = 99))
 
 Note that due to the discrete nature of counts, your choice of
 percentile may not be available. For details, see this
-[note](https://github.com/lindbrook/packageRank/blob/readme/docs/queryPercentile_note.md)
+[note](https://github.com/lindbrook/packageRank/blob/master/docs/queryPercentile_note.md)
 in the ‘packageRank’ GitHub repository.
 
 ``` r
@@ -1324,14 +1328,14 @@ packageRank(package = "ergm")
 
 However, depending on *where* you make this request, you may not get the
 data you expect. In Honolulu, USA, you will. In Sydney, Australia you
-won’t. The reason is that you’ve somehow forgotten a key piece of
-trivia: Posit/RStudio typically posts *yesterday’s* log around 17:00 UTC
-the following day.
+won’t. The reason is that you’ve forgotten a key piece of trivia:
+Posit/RStudio typically posts *yesterday’s* log around 17:00 UTC the
+following day.
 
 The expression works in Honolulu because 09:01 HST on 01 January 2021 is
 19:01 UTC 01 January 2021. So the log you want has been available for 2
 hours. The expression fails in Sydney because 09:01 AEDT on 01 January
-2021 is 31 December 2020 22:00 UTC. The log you want won’t actually be
+2021 is 31 December 2020 22:01 UTC. The log you want won’t actually be
 available for another 19 hours.
 
 To make life a little easier,
@@ -1372,7 +1376,7 @@ entries (e.g., weekdays); earlier than 17:00 UTC when there are fewer
 entries (e.g., weekends). Again, barring server issues, the ‘cranlogs’
 results are usually available *before* 18:00 UTC.
 
-Here’s what you’d see using the Honolulu example:
+Here’s what you might see using the Honolulu example:
 
 ``` r
 logInfo(details = TRUE)
@@ -1389,6 +1393,9 @@ logInfo(details = TRUE)
 
     $`Available log/result`
     [1] "Posit/RStudio (2020-12-31); 'cranlogs' (2020-12-31)."
+
+    $`Current date-time`
+    [1] "01 Jan 09:01 HST -- 01 Jan 19:01 UTC"
 
     $status
     [1] "Everything OK."
@@ -1461,7 +1468,8 @@ plots the January 2022 data broken down by platform (Mac, Source, and
 Windows) and weekday/weekend (filled v. empty circles):
 
 ``` r
-plot(cranDownloads(package = "R", from = "2022-01", to = "2022-01"), r.version = TRUE, weekend = TRUE)
+plot(cranDownloads(package = "R", from = "2022-01", to = "2022-01"), 
+  r.version = TRUE, weekend = TRUE)
 ```
 
 ![](man/figures/README-R_jan2022-1.png)<!-- -->
@@ -1476,7 +1484,7 @@ version of R.
 
 These spikes appear to be real patterns in the data and not coding
 errors. Detailed, visual evidence for this can be found online in this
-[note](https://github.com/lindbrook/packageRank/blob/readme/docs/windows_spikes.md)
+[note](https://github.com/lindbrook/packageRank/blob/master/docs/windows_spikes.md)
 in the `packageRank` GitHub respository.
 
 #### 3) doubled (or tripled) R application downloads counts (2023) - Error
@@ -1534,7 +1542,8 @@ magnitude of the outliers and the two graphical fixes (open circles are
 weekends).
 
 ``` r
-plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, points = TRUE, weekend = TRUE)
+plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, 
+  points = TRUE, weekend = TRUE)
 > Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
 ```
 
