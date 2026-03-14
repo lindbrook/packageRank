@@ -1251,8 +1251,8 @@ To understand when results become available, you need to know that
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
 package download logs](http://cran-logs.rstudio.com/). These logs record
 traffic that passes through the
-[“0-Cloud”](https://CLOUD.R-project.org/), which is currently sponsored by 
-Posit. The second is Gábor Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
+[“0-Cloud”](https://CLOUD.R-project.org/) mirror, which is currently sponsored 
+by Posit. The second is Gábor Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
 package, which uses the Posit/RStudio logs to compute the download
 counts of both R packages and the R application itself.
 
