@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9056-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.7.9057-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 <div class="figure" style="text-align: center">
@@ -1251,9 +1251,8 @@ To understand when results become available, you need to know that
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
 package download logs](http://cran-logs.rstudio.com/). These logs record
 traffic that passes through the
-[“0-Cloud”](https://cloud.r-project.org/) or equivalently [Global
-(CDN) - RStudio](https://cran.rstudio.com/). The second is Gábor
-Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
+[“0-Cloud”](https://CLOUD.R-project.org/), which is currently sponsored by 
+Posit. The second is Gábor Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
 package, which uses the Posit/RStudio logs to compute the download
 counts of both R packages and the R application itself.
 
