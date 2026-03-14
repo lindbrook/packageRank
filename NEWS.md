@@ -1,3 +1,8 @@
+### packageRank 0.9.7.9057
+
+- copyedit and amend URLs in README.
+
+
 ### packageRank 0.9.7.9056
 
 - copyedit and update PNGs in README.
