@@ -1,308 +1,52 @@
-### packageRank 0.9.7.9057
+### packageRank 0.9.8
 
-- copyedit and amend URLs in README.
+#### Documentation
+ 
+ - amend/update README.
 
-
-### packageRank 0.9.7.9056
-
-- copyedit and update PNGs in README.
-
-
-### packageRank 0.9.7.9055
-
-- amend/update README.
-
-
-### packageRank 0.9.7.9054
-
-- change 'time.unit' to 'unit.observation' in plot.packageLog().
-
-
-### packageRank 0.9.7.9053
-
-- amend argument order and set localTime(time, date = Sys.Date()).
-
-
-### packageRank 0.9.7.9052
-
-- check argument values for time.unit and type in plot.packageLog().
-- add shortcut for plot.packageLog(type).
-
-
-### packageRank 0.9.7.9051
-
-- format logInfo(details = TRUE) output.
-
-
-### packageRank 0.9.7.9050
-
-- add current UTC to logInfo(details = TRUE).
-
-
-### packageRank 0.9.7.9049
-
-- set r.ver = "4.5" in cranPackageSize().
-
-
-### packageRank 0.9.7.9048
-
-- amend legend in plot.packageLog().
-
-
-### packageRank 0.9.7.9047
-
-- add calendar date(s) to plot.packageLog(local.timezone = TRUE).
-
-
-### packageRank 0.9.7.9046
-
-- add summary.packageDistribution().
-- add/set print.packageDistribution(top.n = 20).
-- archive package_distribution().
-- clean/amend subtitles in plot.packageDistribution() & plot.cranDistribution().
-- remove plot.cranDistribution(type).
-
-
-### packageRank 0.9.7.9045
-
-- set plot.packageLog(local.timezone = TRUE).
-
-
-### packageRank 0.9.7.9044
-
-- return data.frame for single package in print.packageLog().
-
-
-### packageRank 0.9.7.9043
-
-- amend variable order in cranDownloads().
-
-
-### packageRank 0.9.7.9042
-
-- add/set plot.packageLog(local.timezone = FALSE).
-- fix xlim in plot.packageLog(type = "2D").
-
-
-### packageRank 0.9.7.9041
-
-- replace 'packages' argument/object with 'package'.
-
-
-### packageRank 0.9.7.9040
-
-- replace 'packages' argument/object with 'package' in bioconductorDownloads().
-- replace 'size' with 'linewidth' in ggplot2::geom_line().
-- fix plot() in bioc_plot().
-- fix ylabs in gg_bioc_plot(log.y = TRUE).
-
-
-### packageRank 0.9.7.9039
-
-- add temp stop() for packageLog("R").
-
-
-### packageRank 0.9.7.9038
-
-- add day of week to title in plot.packageLog().
-
-
-### packageRank 0.9.7.9037
-
-- fix cranDownloads("R", when).
-
-
-### packageRank 0.9.7.9036
-
-- fix output of packageHistory("R").
-
-
-### packageRank 0.9.7.9035
-
-- amend xlab in plot.packageLog().
-
-
-### packageRank 0.9.7.9034
-
-- fix y labels in plot.packageRank().
-
-
-### packageRank 0.9.7.9033
-
-- fix ggplot2 xlab in plot.packageDistribution().
-
-
-### packageRank 0.9.7.9032
-
-- add/set plot.packageLog(smooth = FALSE).
-
-
-### packageRank 0.9.7.9031
-
-- add/set plot.packageLog(points = TRUE, same.xy = TRUE, time.unit = "second").
-- change plot.packageLog(unit.observation) to plot.packageLog(time.unit).
-- set min ylim to 0 for plot.packageLog(type = "2D").
-
-
-### packageRank 0.9.7.9030
-
-- set type = "o" in logPlot(type = "2D", unit.observation = "minute").
-
-
-### packageRank 0.9.7.9029
-
-- filter out packages with zero observations in plot.packageLog().
-
-
-### packageRank 0.9.7.9028
-
-- add plot.packageLog() and print.packageLog() prototypes.
-- set output of packageLog() as list of class 'packageLog'.
-
-
-### packageRank 0.9.7.9027
-
-- fix inProgressEstimate(unit.observation = "month") for December.
-
-
-### packageRank 0.9.7.9026
-
-- plot line before label in singlePlot(graphics = "ggplot2", package.version).
-
-
-### packageRank 0.9.7.9025
-
-- fix subtitle in plot.cranDistribution().
-
-
-### packageRank 0.9.7.9024
-
-- add data check and stop() to queryPercentile() and queryRank().
-
-
-### packageRank 0.9.7.9023
-
-- plot line before label in multiPlot(graphics = "ggplot2", package.version).
-
-
-### packageRank 0.9.7.9022
-
-- change 'num.rank' to 'rank' in queryRank().
-
-
-### packageRank 0.9.7.9021
-
-- change argument to cranDistribution(packages).
-- change 'size' to geom_vline(linewidth).
-- set geom_label(size = 2.5).
-
-
-### packageRank 0.9.7.9020
-
-- amend importFrom and NAMESPACE.
-
-
-### packageRank 0.9.7.9019
-
-- color lines in plot.cranDownloads(graphics = "ggplot2",
-  package.version = "line").
-
-
-### packageRank 0.9.7.9018
-
-- integrate packageDistribution() into cranDistribution().
-
-
-### packageRank 0.9.7.9017
-
-- move query*() to query.R.
-
-
-### packageRank 0.9.7.9016
-
-- archive populationPlot().
-
-
-### packageRank 0.9.7.9015
-
-- enable multiPlot(package.version) for "base" and "ggplot2".
-
-
-### packageRank 0.9.7.9014
-
-- enable package.version for singlePlot(graphics = "ggplot2").
-
-
-### packageRank 0.9.7.9013
-
-- add gg_axis.annotation_polygon(r_date, r_v) and clean code.
-
-
-### packageRank 0.9.7.9012
-
-- set geom_vline(colour = "black") in singlePlot(package.version = TRUE).
-
-
-### packageRank 0.9.7.9011
-
-- amend gg_axis.annotation_polygon().
-
-
-### packageRank 0.9.7.9010
-
-- add gg_axis.annotation_polygon(axis.package, axis.package.version).
-
-
-### packageRank 0.9.7.9009
-
-- disable multiPlot(package.version) for "base" and "gglot2".
-
-
-### packageRank 0.9.7.9008
-
-- enable singlePlot(package.version = TRUE, graphics = "ggplot2").
-
-
-### packageRank 0.9.7.9007
-
-- add multiPlot(package.version).
-
-
-### packageRank 0.9.7.9006
-
-- add/set plot.cranDownloads(axis.package = NULL, axis.package.version = FALSE).
-
-
-### packageRank 0.9.7.9005
-
-- add multiPlot(axis.package, axis.package.version).
-
-
-### packageRank 0.9.7.9004
+#### Fixes
 
 - fix multiPlot(r.version = TRUE, graphics = "base").
+- fix ggplot2 xlab in plot.packageDistribution().
+- fix y labels in plot.packageRank().
+- fix output of packageHistory("R").
+- fix cranDownloads("R", when).
 
-
-### packageRank 0.9.7.9003
-
-- add rPlot(axis.package, axis.package.version) and 
-  rTotPlot(axis.package, axis.package.version).
-
-
-### packageRank 0.9.7.9002
-
-- add cranPlot(axis.package, axis.package.version).
-
-
-### packageRank 0.9.7.9001
-
-- amend/add singlePlot(axis.package, axis.package.version).
-
-
-### packageRank 0.9.7.9000
+#### Function Changes
 
 - remove parallel code from packageLog().
+- amend/add singlePlot(axis.package, axis.package.version).
+- add cranPlot(axis.package, axis.package.version).
+- add rPlot(axis.package, axis.package.version) 
+- add rTotPlot(axis.package, axis.package.version).
+- add multiPlot(axis.package, axis.package.version).
+- add/set plot.cranDownloads(axis.package = NULL, axis.package.version = FALSE).
+- add multiPlot(package.version) for "base" and "ggplot2".
+- enable singlePlot(package.version = TRUE, graphics = "ggplot2").
+- disable multiPlot(package.version) for "base" and "gglot2".
+- add gg_axis.annotation_polygon(axis.package, axis.package.version).
+- set geom_vline(colour = "black") in singlePlot(package.version = TRUE).
+- enable package.version for singlePlot(graphics = "ggplot2").
+- archive populationPlot().
+- integrate packageDistribution() into cranDistribution().
+- change 'num.rank' to 'rank' in queryRank().
+- fix inProgressEstimate(unit.observation = "month") for December.
+- add plot.packageLog() and print.packageLog().
+- filter out packages with zero observations in plot.packageLog().
+- replace 'packages' argument/object with 'package' in bioconductorDownloads().
+- amend variable order in cranDownloads().
+- set r.ver = "4.5" in cranPackageSize().
+- add current UTC to logInfo(details = TRUE).
+- format logInfo(details = TRUE) output.
+- amend argument order and set localTime(time, date = Sys.Date()).
+- change 'time.unit' to 'unit.observation' in plot.packageLog().
 
+#### Graphic Changes
+
+- change 'size' to geom_vline(linewidth) and set geom_label(size = 2.5).
+- add day of week to title in plot.packageLog().
+- fix plot() in bioc_plot().
+- fix ylabs in gg_bioc_plot(log.y = TRUE).
 
 ### packageRank 0.9.7
 
