@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9000
+
+- fix resolveDate(type = "from") for future dates.
+
+
 ### packageRank 0.9.8
 
 #### Documentation

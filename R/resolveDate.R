@@ -27,8 +27,12 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
       stop("Month must be between 01 and 12.", call. = FALSE)
     } else if (type == "from") {
       x.date <- dayOfMonth(date.txt)
+      if (x.date > cal.date) x.date <- cal.date
+      message("Future dates removed.")
     } else if (type == "to") {
       x.date <- dayOfMonth(date.txt, end.of.month = TRUE)
+      if (x.date > cal.date) x.date <- cal.date
+      message("Future dates removed.")
     }
   } else if (nchar(date.txt) == 4L) {
     if (is.na(suppressWarnings(as.numeric(date.txt)))) {
@@ -37,6 +41,8 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
       stop(msg1, msg2, call. = FALSE)
     } else if (type == "from") {
       x.date <- as.Date(paste0(date.txt, "-01-01"), optional = TRUE)
+      if (x.date > cal.date) x.date <- cal.date
+      message("Future dates removed.")
     } else if (type == "to") {
       x.date <- as.Date(paste0(date.txt, "-12-31"), optional = TRUE)
       if (x.date > cal.date) x.date <- cal.date
@@ -45,6 +51,8 @@ resolveDate <- function(date, type = "from", fix.date = FALSE) {
     date <- as.Date(date, optional = TRUE)
     if (!is.na(date)) {
       x.date <- date
+      if (x.date > cal.date) x.date <- cal.date
+      message("Future dates removed.")
     } else {
       msg1 <- 'Not a valid date or format:'
       msg2 <- ' "yyyy-mm-dd", "yyyy-mm", "yyyy", or yyyy.'
