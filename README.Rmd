@@ -852,7 +852,7 @@ If you pass a package to the function, its location in the distribution will be 
 ```{r pkg_plot_cranDistribution, echo = TRUE, eval = FALSE}
 plot(cranDistribution(package = "packageRank"))
 ```
-```{r pkg_plot_cranDistribution_code, echo = FALSE, echo = TRUE}
+```{r pkg_plot_cranDistribution_code, echo = FALSE}
 plot(cranDistribution(package = "packageRank", date = "2026-01-01"))
 ```
 
@@ -863,25 +863,36 @@ plot(cranDistribution(package = "packageRank", date = "2026-01-01"))
 To do a reverse lookup (e.g., find packages with a given download count or percentile rank), use `queryCount()`, `queryPackage()`, `queryPercentile()` or `queryRank()`.
  
 
-```{r, eval = TRUE}
+```{r q_count, eval = FALSE}
 queryCount(count = 100)
 ```
-
-```{r, eval = TRUE}
-queryPackage(package = "cholera")
+```{r q_count_code, echo = FALSE}
+queryCount(count = 100, date = "2026-01-01")
 ```
 
-```{r, eval = TRUE}
+```{r q_pkg, eval = FALSE}
+queryPackage(package = "cholera")
+```
+```{r q_pkg_code, echo = FALSE}
+queryPackage(package = "cholera", date = "2026-01-01")
+```
+
+```{r q_pct, eval = FALSE}
 head(queryPercentile(percentile = 99))
+```
+```{r q_pct_code, echo = FALSE}
+head(queryPercentile(percentile = 99, date = "2026-01-01"))
 ```
 
 Note that due to the discrete nature of counts, your choice of percentile may not be available. For details, see this [note](https://github.com/lindbrook/packageRank/blob/master/docs/queryPercentile_note.md) in the package's GitHub repository.
 
 
-```{r, eval = TRUE}
+```{r q_rank, eval = FALSE}
 queryRank(rank = 9)
 ```
-
+```{r q_rank_code, echo = FALSE}
+queryRank(rank = 9, date = "2026-01-01")
+```
 ------
 
 ### Inflation and Filters
