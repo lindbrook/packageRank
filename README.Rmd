@@ -16,14 +16,14 @@ library(packageRank)
 
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
-```{r plot_examples, fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = FALSE}
+```{r plot_examples, fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", echo = FALSE, eval = FALSE}
 plot(cranDownloads("cholera", "last-month"))
 plot(packageRank("cholera"))
 plot(packageLog("cholera"))
 plot(cranDistribution("cholera"))
 ```
 
-```{r plot_examples_code, fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = TRUE}
+```{r plot_examples_code, fig.height = 6, fig.width = 6, fig.cap = " ", echo = FALSE}
 par(mfrow = c(2, 2))
 plot(cranDownloads("cholera", from = "2025-12-04", to = "2026-01-01"), package.version = TRUE)
 plot(packageRank("cholera", "2026-01-01"))
