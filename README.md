@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.8.9000-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.8.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 <div class="figure" style="text-align: center">
@@ -1017,10 +1017,6 @@ will be annotated:
 plot(cranDistribution(package = "packageRank"))
 ```
 
-``` r
-plot(cranDistribution(package = "packageRank", date = "2026-01-01"))
-```
-
 ![](man/figures/README-pkg_plot_cranDistribution_code-1.png)<!-- -->
 
 ------------------------------------------------------------------------
@@ -1033,44 +1029,53 @@ or percentile rank), use `queryCount()`, `queryPackage()`,
 
 ``` r
 queryCount(count = 100)
->        package count rank nominal.rank percentile
-> 1        ascii   100 2717         2710       89.9
-> 2        gains   100 2717         2711       89.9
-> 3      ipsRdbs   100 2717         2712       89.9
-> 4      nhanesA   100 2717         2713       89.9
-> 5       rxode2   100 2717         2714       89.9
-> 6     sdcMicro   100 2717         2715       89.9
-> 7       TOSTER   100 2717         2716       89.9
-> 8 treesitter.r   100 2717         2717       89.9
 ```
+
+    >       package count rank nominal.rank percentile
+    > 1        BSDA   100 1858         1846       92.4
+    > 2       cvAUC   100 1858         1847       92.4
+    > 3  elasticnet   100 1858         1848       92.4
+    > 4     fishMod   100 1858         1849       92.4
+    > 5      glmmML   100 1858         1850       92.4
+    > 6        gmnl   100 1858         1851       92.4
+    > 7      gRbase   100 1858         1852       92.4
+    > 8   httptest2   100 1858         1853       92.4
+    > 9    keyringr   100 1858         1854       92.4
+    > 10   limSolve   100 1858         1855       92.4
+    > 11     ROOPSD   100 1858         1856       92.4
+    > 12   textstem   100 1858         1857       92.4
+    > 13 tidycensus   100 1858         1858       92.4
 
 ``` r
 queryPackage(package = "cholera")
->   package count rank nominal.rank percentile
-> 1 cholera    19 4765         4656       82.2
 ```
+
+    >   package count rank nominal.rank percentile
+    > 1 cholera    14 6375         5639       73.8
 
 ``` r
 head(queryPercentile(percentile = 99))
->    package count rank nominal.rank percentile
-> 1      zip 18021  148          148       99.4
-> 2 reshape2 17900  149          149       99.4
-> 3 openxlsx 17715  150          150       99.4
-> 4  cowplot 17423  151          151       99.4
-> 5     doBy 17396  152          152       99.4
-> 6     urca 17364  153          153       99.4
 ```
+
+    >      package count rank nominal.rank percentile
+    > 1        png  8620  134          134       99.4
+    > 2     praise  8539  135          135       99.4
+    > 3   rematch2  8393  136          136       99.4
+    > 4        TTR  8360  137          137       99.4
+    > 5     dtplyr  8319  138          138       99.4
+    > 6 conflicted  8313  139          139       99.4
 
 Note that due to the discrete nature of counts, your choice of
 percentile may not be available. For details, see this
 [note](https://github.com/lindbrook/packageRank/blob/master/docs/queryPercentile_note.md)
-in the ‘packageRank’ GitHub repository.
+in the package’s GitHub repository.
 
 ``` r
 queryRank(rank = 9)
->   package count rank nominal.rank percentile
-> 1    glue 71506    9            9        100
 ```
+
+    >   package count rank nominal.rank percentile
+    > 1      R6 22700    9            9        100
 
 ------------------------------------------------------------------------
 
@@ -1251,10 +1256,11 @@ To understand when results become available, you need to know that
 upstream, online dependencies. The first is Posit/RStudio’s [CRAN
 package download logs](http://cran-logs.rstudio.com/). These logs record
 traffic that passes through the
-[“0-Cloud”](https://CLOUD.R-project.org/) mirror, which is currently sponsored 
-by Posit. The second is Gábor Csárdi’s [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R
-package, which uses the Posit/RStudio logs to compute the download
-counts of both R packages and the R application itself.
+[“0-Cloud”](https://CLOUD.R-project.org/) mirror, which is currently
+sponsored by Posit. The second is Gábor Csárdi’s
+[‘cranlogs’](https://CRAN.R-project.org/package=cranlogs) R package,
+which uses the Posit/RStudio logs to compute the download counts of both
+R packages and the R application itself.
 
 The [CRAN package download logs](http://cran-logs.rstudio.com/) for the
 *previous* day are typically posted by 17:00 UTC. The results for
@@ -1428,8 +1434,9 @@ least one mislabeled log and iii) the logs from 13 October through 28
 December are offset by +3 days (e.g., the file with the name/URL
 “2012-12-01” contains the log for “2012-11-28”). As a result, we get
 erroneous download counts and actually lose the last three logs of 2012.
-Details are available
-[here](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md).
+Details are available online in this
+[note](https://github.com/lindbrook/packageRank/blob/master/docs/logs.md)
+in the package’s GitHub repository.
 
 Unsurprisingly, this affects download counts.
 
@@ -1484,7 +1491,7 @@ version of R.
 These spikes appear to be real patterns in the data and not coding
 errors. Detailed, visual evidence for this can be found online in this
 [note](https://github.com/lindbrook/packageRank/blob/master/docs/windows_spikes.md)
-in the `packageRank` GitHub respository.
+in the package’s GitHub respository.
 
 #### 3) doubled (or tripled) R application downloads counts (2023) - Error
 
