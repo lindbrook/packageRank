@@ -1,15 +1,8 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.8.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.8.9002-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
-<div class="figure" style="text-align: center">
-
-<img src="man/figures/README-plot_examples_code-1.png" alt=" "  />
-<p class="caption">
-
-</p>
-
-</div>
+![](man/figures/README-plot_examples_code-1.png)
 
 - Functions and Visualization
   - [`cranDownloads()`](#crandownloads)
@@ -313,7 +306,7 @@ cranDownloads(to = 2024, pro.mode = TRUE)
 plot(cranDownloads(package = "HistData", from = "2019", to = "2019"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz1-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-cranDownloads_viz1-1.png)<!-- -->
 
 If you pass a vector of package names for a single day, you’ll get a
 dotchart:
@@ -323,7 +316,7 @@ plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz2a-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-cranDownloads_viz2a-1.png)<!-- -->
 
 If you pass a vector package names for multiple days, you’ll get a
 single graph with multiple time series plots using
@@ -334,8 +327,7 @@ plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"))
 ```
 
-<img src="man/figures/README-cranDownloads_viz2-1.png" alt="" style="display: block; margin: auto;" />
-<br/>
+![](man/figures/README-cranDownloads_viz2-1.png)<!-- --> <br/>
 
 To plot these data in a single plot frame, set `multi.plot = TRUE`:
 
@@ -641,7 +633,7 @@ the data for the ‘cholera’ package from the first week of March 2020:
 plot(cranDownloads(package = "cholera", from = "2020-03-01", to = "2020-03-07"))
 ```
 
-<img src="man/figures/README-motivation_code-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-motivation_code-1.png)<!-- -->
 
 Do Wednesday and Saturday reflect surges of interest in the package or
 surges of traffic to [CRAN](https://CRAN.R-project.org/)? To put it
@@ -678,13 +670,13 @@ distribution is highlighted in red.
 plot(cranDistribution(package = "cholera", date = "2020-03-04"))
 ```
 
-<img src="man/figures/README-cranDistribution_ex_wed_code-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-cranDistribution_ex_wed_code-1.png)<!-- -->
 
 ``` r
 plot(cranDistribution(package = "cholera", date = "2020-03-07"))
 ```
 
-<img src="man/figures/README-cranDistribution_ex_sat_code-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-cranDistribution_ex_sat_code-1.png)<!-- -->
 
 While these plots give us a better picture of where
 [‘cholera’](https://CRAN.R-project.org/package=cholera) is located,
@@ -782,7 +774,7 @@ use `plot()`.
 plot(packageRank(packages = "cholera", date = "2020-03-04"))
 ```
 
-<img src="man/figures/README-packageRank_plot_code_wed-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-packageRank_plot_code_wed-1.png)<!-- -->
 
 <br/>
 
@@ -790,7 +782,7 @@ plot(packageRank(packages = "cholera", date = "2020-03-04"))
 plot(packageRank(packages = "cholera", date = "2020-03-07"))
 ```
 
-<img src="man/figures/README-packageRank_plot_code_sat-1.png" alt="" style="display: block; margin: auto;" />
+![](man/figures/README-packageRank_plot_code_sat-1.png)<!-- -->
 
 These graphs above, which are customized here to be on the same scale,
 plot the *rank order* of packages’ download counts (x-axis) against the

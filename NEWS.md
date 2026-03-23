@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9002
+
+- left-justify all README PNGs.
+
+
 ### packageRank 0.9.8.9001
 
 - fix reverse lookup and plot(cranDistribution()) R markdown chunks.

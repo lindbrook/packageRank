@@ -16,14 +16,14 @@ library(packageRank)
 
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
-```{r plot_examples, fig.align = "center", fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = FALSE}
+```{r plot_examples, fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = FALSE}
 plot(cranDownloads("cholera", "last-month"))
 plot(packageRank("cholera"))
 plot(packageLog("cholera"))
 plot(cranDistribution("cholera"))
 ```
 
-```{r plot_examples_code, fig.align = "center", fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = TRUE}
+```{r plot_examples_code, fig.height = 6, fig.width = 6, echo = FALSE, fig.cap = " ", eval = TRUE}
 par(mfrow = c(2, 2))
 plot(cranDownloads("cholera", from = "2025-12-04", to = "2026-01-01"), package.version = TRUE)
 plot(packageRank("cholera", "2026-01-01"))
@@ -280,20 +280,20 @@ Error: You must also provide a date for "from".
 
 'packageRank' uses R's generic plot method:
 
-```{r cranDownloads_viz1, fig.align = "center"}
+```{r cranDownloads_viz1}
 plot(cranDownloads(package = "HistData", from = "2019", to = "2019"))
 ```
 
 If you pass a vector of package names for a single day, you'll get a dotchart:
 
-```{r cranDownloads_viz2a, fig.align = "center"}
+```{r cranDownloads_viz2a}
 plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020-03-01", to = "2020-03-01"))
 ```
 
 If you pass a vector package names for multiple days, you'll get a single graph with multiple time series plots using ['ggplot2'](https://CRAN.R-project.org/package=ggplot2) facets:
 
-```{r cranDownloads_viz2, fig.align = "center"}
+```{r cranDownloads_viz2}
 plot(cranDownloads(package = c("ggplot2", "data.table", "Rcpp"),
   from = "2020", to = "2020-03-20"))
 ```
@@ -521,7 +521,7 @@ After spending some time with the _nominal_ download counts above, the "compared
 plot(cranDownloads(package = "cholera", from = "2020-03-01", to = "2020-03-07"))
 ```
 
-```{r motivation_code, echo = FALSE, fig.align = "center"}
+```{r motivation_code, echo = FALSE}
 par(mar = c(5, 4, 4, 4))
 plot(cranDownloads(package = "cholera", from = "2020-03-01", to = "2020-03-07"))
 par(mar = c(5, 4, 4, 2))
@@ -570,14 +570,14 @@ ylim <- range(lapply(distn.data, function(x) x$freq.dist$frequency))
 ```{r cranDistribution_ex_wed, eval = FALSE}
 plot(cranDistribution(package = "cholera", date = "2020-03-04"))
 ```
-```{r cranDistribution_ex_wed_code, echo = FALSE, fig.align = "center"}
+```{r cranDistribution_ex_wed_code, echo = FALSE}
 plot_package_distribution(distn.data[[1]], xlim, ylim)
 ```
 
 ```{r cranDistribution_ex_sat, eval = FALSE}
 plot(cranDistribution(package = "cholera", date = "2020-03-07"))
 ```
-```{r cranDistribution_ex_sat_code, echo = FALSE, fig.align = "center"}
+```{r cranDistribution_ex_sat_code, echo = FALSE}
 plot_package_distribution(distn.data[[2]], xlim, ylim)
 ```
 
@@ -649,7 +649,7 @@ xlim <- range(seq_along(freqtab1), seq_along(freqtab2))
 ylim <- range(c(freqtab1), c(freqtab2))
 ```
 
-```{r packageRank_plot_code_wed, echo = FALSE, fig.align = "center"}
+```{r packageRank_plot_code_wed, echo = FALSE}
 
 freqtab <- dat[[1]]$cran.data$count
 names(freqtab) <- dat[[1]]$cran.data$package
@@ -698,7 +698,7 @@ title(main = paste0(pkg, " @ ", date, " (", day, ")"))
 plot(packageRank(packages = "cholera", date = "2020-03-07"))
 ```
 
-```{r packageRank_plot_code_sat, echo = FALSE, fig.align = "center"}
+```{r packageRank_plot_code_sat, echo = FALSE}
 freqtab <- dat[[2]]$cran.data$count
 names(freqtab) <- dat[[2]]$cran.data$package
 package.data <- dat[[2]]$package.data
