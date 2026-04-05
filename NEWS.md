@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9003
+
+- fix print.packageDistribution() for multiple packages.
+
+
 ### packageRank 0.9.8.9002
 
 - left-justify all README PNGs.
