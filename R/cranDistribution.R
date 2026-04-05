@@ -169,7 +169,7 @@ print.packageDistribution <- function(x, top.n = 20, ...) {
              unique.packages.downloaded = pkg.ct,
              total.downloads = dwnld.ct,
              top.n = head(x$data, top.n),
-             package.data = x$data[x$data$package == x$package, ]))
+             package.data = x$data[x$data$package %in% x$package, ]))
 }
 
 #' Plot method for cranDistribution().
