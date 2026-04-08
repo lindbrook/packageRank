@@ -2143,7 +2143,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
           p <- p +
             ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
               ggplot2::aes(linetype = "Backdate")) +
-            ggplot2::geom_point(data = wk1.backdate, aes(shape = "Backdate")) +
+            ggplot2::geom_point(data = wk1.backdate,
+              ggplot2::aes(shape = "Backdate")) +
             ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
               ggplot2::aes(linetype = "Partial/In-Progress")) +
             ggplot2::geom_point(data = wk1.partial,
