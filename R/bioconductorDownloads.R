@@ -643,24 +643,28 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     if (multi.plot) {
       if (cumulative) {
         if (count == "download") {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, 
-                              y = .data$cumulative_Nb_of_downloads, 
-                              colour = .data$package))
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date, 
+                                        y = .data$cumulative_Nb_of_downloads,
+                                        colour = .data$package))
         } else if (count == "ip") {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date,
-                              y = .data$cumulative_Nb_of_distinct_IPs, 
-                              colour = .data$package))
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date,
+                                        y = .data$cumulative_Nb_of_distinct_IPs,
+                                       colour = .data$package))
         }
       } else {
         if (count == "download") {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, 
-                              y = .data$Nb_of_downloads,
-                              colour = .data$package)) 
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date, 
+                                        y = .data$Nb_of_downloads,
+                                        colour = .data$package)) 
         } else if (count == "ip") {
-          p <- ggplot2::ggplot(data = dat, 
+          p <- ggplot2::ggplot(
+                 data = dat, 
                  ggplot2::aes(x = .data$date, 
                               y = .data$Nb_of_distinct_IPs,
                               colour = .data$package)) 
@@ -681,21 +685,28 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
     } else {
       if (cumulative) {
         if (count == "download") {
-          p <- ggplot2::ggplot(data = dat,
-                 ggplot2::aes(x = .data$date, 
-                              y = .data$cumulative_Nb_of_downloads))
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date,
+                                        y = .data$cumulative_Nb_of_downloads))
         } else if (count == "ip") {
-          p <- ggplot2::ggplot(data = dat,
-                 ggplot2::aes(x = .data$date, 
-                              y = .data$cumulative_Nb_of_distinct_IPs)) 
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(
+                    x = .data$date,
+                    y = .data$cumulative_Nb_of_distinct_IPs))
         }
       } else {
         if (count == "download") {
-          p <- ggplot2::ggplot(data = dat,
-                 ggplot2::aes(x = .data$date, y = .data$Nb_of_downloads)) 
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date,
+                                        y = .data$Nb_of_downloads)) 
         } else if (count == "ip") {
-          p <- ggplot2::ggplot(data = dat,
-                 ggplot2::aes(x = .data$date, y = .data$Nb_of_distinct_IPs))
+          p <- ggplot2::ggplot(
+                 data = dat,
+                 mapping = ggplot2::aes(x = .data$date,
+                                        y = .data$Nb_of_distinct_IPs))
         }
       }
 
@@ -725,21 +736,27 @@ gg_bioc_plot <- function(x, graphics, count, points, smooth, span, se,
   } else {
     if (cumulative) {
       if (count == "download") {
-        p <- ggplot2::ggplot(data = dat,
-               ggplot2::aes(x = .data$date, 
-                            y = .data$cumulative_Nb_of_downloads))
+        p <- ggplot2::ggplot(
+               data = dat,
+               mapping = ggplot2::aes(x = .data$date,
+                                      y = .data$cumulative_Nb_of_downloads))
       } else if (count == "ip") {
-        p <- ggplot2::ggplot(data = dat,
-               ggplot2::aes(x = .data$date, 
-                            y = .data$cumulative_Nb_of_distinct_IPs))
+        p <- ggplot2::ggplot(
+               data = dat,
+               mapping = ggplot2::aes(x = .data$date, 
+                                      y = .data$cumulative_Nb_of_distinct_IPs))
       }
     } else {
       if (count == "download") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$Nb_of_downloads))
+        p <- ggplot2::ggplot(
+               data = dat,
+               mapping = ggplot2::aes(x = .data$date,
+                                      y = .data$Nb_of_downloads))
       } else if (count == "ip") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$Nb_of_distinct_IPs))
+        p <- ggplot2::ggplot(
+               data = dat,
+               mapping = ggplot2::aes(x = .data$date,
+                                      y = .data$Nb_of_distinct_IPs))
       }
     }
 
