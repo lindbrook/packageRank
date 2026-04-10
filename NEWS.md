@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9004
+
+- explicitly use 'mapping' argument in ggplot2::ggplot().
+
+
 ### packageRank 0.9.8.9003
 
 - fix print.packageDistribution() for multiple packages.

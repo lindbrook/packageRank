@@ -38,12 +38,16 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
         
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]],
+                                      y = .data$platform)) +
              ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]],
+                                      y = .data$platform)) +
              ggplot2::labs(x = y.nm.case)
       }
 
@@ -347,12 +351,14 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$count))
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, y = .data$count))
       
       } else if (statistic == "cumulative") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$cumulative))
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
       
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
@@ -388,14 +394,20 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             name = "In-progress",
             breaks = c("Observed", "Estimate"),
             values = c("dotted", "solid")) +
-          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
-            ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
-          ggplot2::geom_line(data = obs.seg, linewidth = 1/3,
-            ggplot2::aes(col = "Observed", linetype = "Observed")) +
-          ggplot2::geom_point(data = est.data,
-            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-          ggplot2::geom_point(data = ip.data,
-            ggplot2::aes(colour = "Observed", shape = "Observed"))
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = est.seg,
+            mapping = ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = obs.seg,
+            mapping = ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(
+            data = est.data,
+            mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(
+            data = ip.data,
+            mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
         
@@ -499,16 +511,24 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ggplot2::geom_point(data = current.wk.est)
         } else {
           p <- p +
-            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
-            ggplot2::geom_point(data = current.wk.est, size = 1.5,
-              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = current.wk,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.est.seg,
+              mapping = ggplot2::aes(colour = "Estimate",
+                                     linetype = "Estimate")) +
+            ggplot2::geom_point(
+              size = 1.5,
+              data = current.wk.est,
+              mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.seg,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = current.wk,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     shape = "Partial/In-Progress"))
          }
 
          if (weekdays(x$from) == "Sunday") {
@@ -518,16 +538,24 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
          
          } else {
            p <- p +
-             ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-               ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
-             ggplot2::geom_point(data = wk1.backdate,
-               ggplot2::aes(colour = "Backdate", shape = "Backdate")) +
-             ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-               ggplot2::aes(colour = "Partial/In-Progress",
-                            linetype = "Partial/In-Progress")) +
-             ggplot2::geom_point(data = wk1.partial,
-               ggplot2::aes(colour = "Partial/In-Progress",
-                            shape = "Partial/In-Progress"))
+             ggplot2::geom_line(
+               linewidth = 1/3,
+               data = wk1.backdate.seg,
+               mapping = ggplot2::aes(colour = "Backdate",
+                                      linetype = "Backdate")) +
+             ggplot2::geom_point(
+               data = wk1.backdate,
+               mapping = ggplot2::aes(colour = "Backdate",
+                                      shape = "Backdate")) +
+             ggplot2::geom_line(
+               linewidth = 1/3,
+               data = wk1.partial.seg,
+               mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                      linetype = "Partial/In-Progress")) +
+             ggplot2::geom_point(
+               data = wk1.partial,
+               mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                      shape = "Partial/In-Progress"))
          }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
@@ -1123,15 +1151,15 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
       if (log.y) {
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], 
-                            y = .data$package)) +
-             ggplot2::labs(x = paste("log10", y.nm.case))
+        p <- ggplot2::labs(x = paste("log10", y.nm.case)) +
+             ggplot2::ggplot(data = dat,
+                             mapping = ggplot2::aes(x = .data[[statistic]],
+                                                    y = .data$package))
       } else {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], 
-                            y = .data$package)) +
-             ggplot2::labs(x = y.nm.case)
+        p <- ggplot2::labs(x = y.nm.case) +
+             ggplot2::ggplot(data = dat, 
+                             mapping = ggplot2::aes(x = .data[[statistic]], 
+                                                    y = .data$package))
       }
 
       p + ggplot2::geom_point(size = 1.5) +
@@ -1143,11 +1171,13 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
 
     } else if (obs.ct > 1) {
       if (statistic == "count") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$count))
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, y = .data$count))
       } else if (statistic == "cumulative") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$cumulative))
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
@@ -1171,13 +1201,18 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
         names(pkg.history) <- tolower(names(pkg.history))
         
         if (package.version == "line") {
-          p <- p + ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
-                     ggplot2::aes(xintercept = .data$date))
+          p <- p + ggplot2::geom_vline(
+                     data = pkg.history, linetype = "dotted",
+                     mapping = ggplot2::aes(xintercept = .data$date))
         }
 
-        p <- p + ggplot2::geom_label(data = pkg.history, 
-                   ggplot2::aes(x = .data$date, y = Inf, label = .data$version),
-                     size = 2.5, vjust = "top")
+        p <- p + ggplot2::geom_label(
+                   size = 2.5,
+                   vjust = "top",
+                   data = pkg.history, 
+                   mapping = ggplot2::aes(x = .data$date, 
+                                          y = Inf,
+                                          label = .data$version))
       }
 
       if (any(dat$in.progress)) {
@@ -1220,14 +1255,20 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           ggplot2::scale_linetype_manual(name = "In-progress",
                                          breaks = c("Observed", "Estimate"),
                                          values = c("dotted", "solid")) +
-          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
-            ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
-          ggplot2::geom_line(data = obs.seg, linewidth = 1/3,
-            ggplot2::aes(col = "Observed", linetype = "Observed")) +
-          ggplot2::geom_point(data = est.data,
-            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-          ggplot2::geom_point(data = ip.data,
-            ggplot2::aes(colour = "Observed", shape = "Observed"))
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = est.seg,
+            mapping = ggplot2::aes(col = "Estimate", linetype = "Estimate")) +
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = obs.seg,
+            mapping = ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(
+            data = est.data,
+            mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(
+            data = ip.data,
+            mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
@@ -1337,16 +1378,23 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
-            ggplot2::geom_point(data = current.wk.est, size = 1.5,
-              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = current.wk,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              data = current.wk.est.seg, linewidth = 1/3,
+              mapping = ggplot2::aes(colour = "Estimate",
+                                     linetype = "Estimate")) +
+            ggplot2::geom_point(
+              size = 1.5,
+              data = current.wk.est,
+              mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.seg,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = current.wk,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     shape = "Partial/In-Progress"))
         }
 
         if (weekdays(x$from) == "Sunday") {
@@ -1355,18 +1403,24 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Backdate", 
-                           linetype = "Backdate")) +
-            ggplot2::geom_point(data = wk1.backdate,
-              ggplot2::aes(colour = "Backdate", 
-                           shape = "Backdate")) +
-            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = wk1.partial,
-              ggplot2::aes(colour = "Partial/In-Progress", 
-                           shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.backdate.seg,
+              mapping = ggplot2::aes(colour = "Backdate", 
+                                     linetype = "Backdate")) +
+            ggplot2::geom_point(
+              data = wk1.backdate,
+              mapping = ggplot2::aes(colour = "Backdate", 
+                                     shape = "Backdate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.partial.seg,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = wk1.partial,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress", 
+                                     shape = "Partial/In-Progress"))
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
@@ -1910,12 +1964,16 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
       if (log.y) {
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]], 
+                                      y = .data$package)) +
              ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$package)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]], 
+                                      y = .data$package)) +
              ggplot2::labs(x = y.nm.case)
       }
 
@@ -1929,15 +1987,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         
     } else if (obs.ct > 1) {
       if (statistic == "count") {
-        p <- ggplot2::ggplot(data = dat, 
-                ggplot2::aes(x = .data$date, y = .data$count, 
-                  colour = .data$package)) + 
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, 
+                                      y = .data$count, 
+                                      colour = .data$package)) + 
              ggplot2::labs(title = "Package Download Counts")
       
       } else if (statistic == "cumulative") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$cumulative, 
-                 colour = .data$package)) + 
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, 
+                                      y = .data$cumulative, 
+                                      colour = .data$package)) + 
              ggplot2::labs(title = "Cumulative Package Downloads")
       }
 
@@ -1962,14 +2024,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
         names(pkg.history) <- tolower(names(pkg.history))
         
         if (package.version == "line") {
-          p <- p + ggplot2::geom_vline(data = pkg.history, linetype = "dotted",
-                     ggplot2::aes(xintercept = .data$date, 
-                                  colour = .data$package))
+          p <- p + ggplot2::geom_vline(
+                     data = pkg.history, linetype = "dotted",
+                     mapping = ggplot2::aes(xintercept = .data$date, 
+                                            colour = .data$package))
         }
 
-        p <- p + ggplot2::geom_label(data = pkg.history,
-                   ggplot2::aes(x = .data$date, y = Inf, label = .data$version),
-                     size = 2.5, vjust = "top")
+        p <- p + ggplot2::geom_label(
+                   size = 2.5, 
+                   vjust = "top",
+                   data = pkg.history,
+                   mapping = ggplot2::aes(x = .data$date,
+                                          y = Inf,
+                                          label = .data$version))
       }
 
       if (any(dat$in.progress)) {
@@ -2011,14 +2078,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             name = "In-progress",
             breaks = c("Observed", "Estimate"),
             values = c("dotted", "longdash")) +
-          ggplot2::geom_line(data = est.seg, linewidth = 1/3, 
-            ggplot2::aes(linetype = "Estimate")) +
-          ggplot2::geom_line(data = obs.seg, linewidth = 1/3, 
-            ggplot2::aes(linetype = "Observed")) +
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = est.seg,
+            mapping = ggplot2::aes(linetype = "Estimate")) +
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = obs.seg,
+            mapping = ggplot2::aes(linetype = "Observed")) +
           ggplot2::geom_point(data = est.data, 
-            ggplot2::aes(shape = "Estimate")) +
-          ggplot2::geom_point(data = ip.data, 
-            ggplot2::aes(shape = "Observed")) +
+            mapping = ggplot2::aes(shape = "Estimate")) +
+          ggplot2::geom_point(
+            data = ip.data,
+            mapping = ggplot2::aes(shape = "Observed")) +
           ggplot2::theme(legend.position = "bottom",
                          panel.grid.major = ggplot2::element_blank(),
                          panel.grid.minor = ggplot2::element_blank(),
@@ -2126,14 +2198,21 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                    ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-              ggplot2::aes(linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = current.wk, 
-              ggplot2::aes(shape = "Partial/In-Progress")) +
-            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-              ggplot2::aes(linetype = "Estimate")) +
-            ggplot2::geom_point(data = current.wk.est, size = 1.5,
-              ggplot2::aes(shape = "Estimate"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.seg,
+              mapping = ggplot2::aes(linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = current.wk, 
+              mapping = ggplot2::aes(shape = "Partial/In-Progress")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.est.seg,
+              mapping = ggplot2::aes(linetype = "Estimate")) +
+            ggplot2::geom_point(
+              size = 1.5,
+              data = current.wk.est,
+              mapping = ggplot2::aes(shape = "Estimate"))
         }
 
         if (weekdays(x$from) == "Sunday") {
@@ -2141,14 +2220,19 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                    ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-              ggplot2::aes(linetype = "Backdate")) +
-            ggplot2::geom_point(data = wk1.backdate,
-              ggplot2::aes(shape = "Backdate")) +
-            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-              ggplot2::aes(linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = wk1.partial,
-              ggplot2::aes(shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.backdate.seg,
+              mapping = ggplot2::aes(linetype = "Backdate")) +
+            ggplot2::geom_point(
+              data = wk1.backdate, mapping = aes(shape = "Backdate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.partial.seg,
+              mapping = ggplot2::aes(linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = wk1.partial,
+              mapping = ggplot2::aes(shape = "Partial/In-Progress"))
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
@@ -2237,14 +2321,16 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
         
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], 
-                            y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]], 
+                                      y = .data$platform)) +
              ggplot2::labs(x = paste("log10", y.nm.case))
       } else {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], 
-                            y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]], 
+                                      y = .data$platform)) +
              ggplot2::labs(x = y.nm.case)
              
       }
@@ -2672,24 +2758,28 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
         if (multi.plot) {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, 
-                              y = .data$count,
-                              colour = .data$platform))
+          p <- ggplot2::ggplot(
+                 data = dat, 
+                 mapping = ggplot2::aes(x = .data$date, 
+                                        y = .data$count,
+                                        colour = .data$platform))
         } else {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, y = .data$count)) +
+          p <- ggplot2::ggplot(
+                 data = dat, 
+                 mapping = ggplot2::aes(x = .data$date, y = .data$count)) +
                ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
       } else if (statistic == "cumulative") {
         if (multi.plot) {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date,
-                              y = .data$cumulative, 
-                              colour = .data$platform))
+          p <- ggplot2::ggplot(
+                 data = dat, 
+                 mapping = ggplot2::aes(x = .data$date,
+                                        y = .data$cumulative, 
+                                        colour = .data$platform))
         } else {
-          p <- ggplot2::ggplot(data = dat, 
-                 ggplot2::aes(x = .data$date, y = .data$cumulative)) +
+          p <- ggplot2::ggplot(
+                 data = dat, 
+                 mapping = ggplot2::aes(x = .data$date, y = .data$cumulative)) +
                ggplot2::facet_wrap(ggplot2::vars(.data$platform), nrow = 2)
         }
       }
@@ -2745,14 +2835,18 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               name = "In-progress",
               breaks = c("Observed", "Estimate"),
               values = c("dotted", "solid")) +
-            ggplot2::geom_line(data = est.seg, 
-              ggplot2::aes(linetype = "Estimate")) +
-            ggplot2::geom_line(data = obs.seg, 
-              ggplot2::aes(linetype = "Observed")) +
-            ggplot2::geom_point(data = est.data, 
-              ggplot2::aes(shape = "Estimate")) +
-            ggplot2::geom_point(data = obs.data, 
-              ggplot2::aes(shape = "Observed"))
+            ggplot2::geom_line(
+              data = est.seg, 
+              mapping = ggplot2::aes(linetype = "Estimate")) +
+            ggplot2::geom_line(
+              data = obs.seg, 
+              mapping = ggplot2::aes(linetype = "Observed")) +
+            ggplot2::geom_point(
+              data = est.data, 
+              mapping = ggplot2::aes(shape = "Estimate")) +
+            ggplot2::geom_point(
+              data = obs.data, 
+              mapping = ggplot2::aes(shape = "Observed"))
         } else {
           p <- p +
             ggplot2::scale_color_manual(
@@ -2767,14 +2861,19 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
               name = "In-progress",
               breaks = c("Observed", "Estimate"),
               values = c("dotted", "solid")) +
-            ggplot2::geom_line(data = est.seg,
-              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
-            ggplot2::geom_line(data = obs.seg,
-              ggplot2::aes(col = "Observed", linetype = "Observed")) +
-            ggplot2::geom_point(data = est.data,
-              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-            ggplot2::geom_point(data = obs.data,
-              ggplot2::aes(colour = "Observed", shape = "Observed"))
+            ggplot2::geom_line(
+              data = est.seg,
+              mapping = ggplot2::aes(colour = "Estimate",
+                                     linetype = "Estimate")) +
+            ggplot2::geom_line(
+              data = obs.seg,
+              mapping = ggplot2::aes(col = "Observed", linetype = "Observed")) +
+            ggplot2::geom_point(
+              data = est.data,
+              mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_point(
+              data = obs.data,
+              mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
@@ -2910,26 +3009,41 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         } else {
           if (multi.plot) {
             p <- p +
-              ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-                ggplot2::aes(linetype = "Partial/In-Progress")) +
-              ggplot2::geom_point(data = current.wk.est, size = 1.5,
-                ggplot2::aes(shape = "Partial/In-Progress")) +
-              ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-                ggplot2::aes(linetype = "Observed")) +
-              ggplot2::geom_point(data = current.wk, 
-                ggplot2::aes(shape = "Observed"))
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = current.wk.est.seg,
+                mapping = ggplot2::aes(linetype = "Partial/In-Progress")) +
+              ggplot2::geom_point(
+                size = 1.5,
+                data = current.wk.est,
+                mapping = ggplot2::aes(shape = "Partial/In-Progress")) +
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = current.wk.seg,
+                mapping = ggplot2::aes(linetype = "Observed")) +
+              ggplot2::geom_point(
+                data = current.wk, 
+                mapping = ggplot2::aes(shape = "Observed"))
           } else {
             p <- p +
-              ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-                ggplot2::aes(colour = "Partial/In-Progress",
-                  linetype = "Partial/In-Progress")) +
-              ggplot2::geom_point(data = current.wk.est, size = 1.5,
-                ggplot2::aes(colour = "Partial/In-Progress",
-                  shape = "Partial/In-Progress")) +
-              ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-                ggplot2::aes(colour = "Observed", linetype = "Observed")) +
-              ggplot2::geom_point(data = current.wk,
-                ggplot2::aes(colour = "Observed", shape = "Observed"))
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = current.wk.est.seg,
+                mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                       linetype = "Partial/In-Progress")) +
+              ggplot2::geom_point(
+                size = 1.5,
+                data = current.wk.est,
+                mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                       shape = "Partial/In-Progress")) +
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = current.wk.seg,
+                mapping = ggplot2::aes(colour = "Observed", 
+                                       linetype = "Observed")) +
+              ggplot2::geom_point(
+                data = current.wk,
+                mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
           }
         }
 
@@ -2939,24 +3053,38 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
         } else {
           if (multi.plot) {
             p <- p +
-              ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-                ggplot2::aes(linetype = "Backdate")) +
-              ggplot2::geom_point(data = wk1.backdate, 
-                ggplot2::aes(shape = "Backdate")) +
-              ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-                ggplot2::aes(linetype = "Observed")) +
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = wk1.backdate.seg,
+                mapping = ggplot2::aes(linetype = "Backdate")) +
+              ggplot2::geom_point(
+                data = wk1.backdate, 
+                mapping = ggplot2::aes(shape = "Backdate")) +
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = wk1.partial.seg,
+                mapping = ggplot2::aes(linetype = "Observed")) +
               ggplot2::geom_point(data = wk1.partial, 
-                ggplot2::aes(shape = "Observed"))
+                mapping = ggplot2::aes(shape = "Observed"))
           } else {
             p <- p +
-              ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-                ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
-              ggplot2::geom_point(data = wk1.backdate,
-                ggplot2::aes(shape = "Backdate", colour = "Backdate")) +
-              ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-                ggplot2::aes(colour = "Observed", linetype = "Observed")) +
-              ggplot2::geom_point(data = wk1.partial,
-                ggplot2::aes(colour = "Observed", shape = "Observed"))
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = wk1.backdate.seg,
+                mapping = ggplot2::aes(colour = "Backdate", 
+                                       linetype = "Backdate")) +
+              ggplot2::geom_point(
+                data = wk1.backdate,
+                mapping = ggplot2::aes(shape = "Backdate",
+                                       colour = "Backdate")) +
+              ggplot2::geom_line(
+                linewidth = 1/3,
+                data = wk1.partial.seg,
+                mapping = ggplot2::aes(colour = "Observed",
+                                       linetype = "Observed")) +
+              ggplot2::geom_point(
+                data = wk1.partial,
+                mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
           }
         }
 
@@ -3069,15 +3197,19 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         dat$count <- log10(dat$count)
         dat$cumulative <- log10(dat$cumulative)
       
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]],
+                                      y = .data$platform)) +
              ggplot2::geom_point(size = 2) + 
              ggplot2::labs(x = paste("log10", y.nm.case)) + 
              ggplot2::labs(y = NULL)
       
       } else {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data[[statistic]], y = .data$platform)) +
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data[[statistic]],
+                                      y = .data$platform)) +
              ggplot2::geom_point(size = 2) + 
              ggplot2::labs(y = NULL)
       }
@@ -3339,11 +3471,13 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
 
     } else if (graphics == "ggplot2") {
       if (statistic == "count") {
-        p <- ggplot2::ggplot(data = dat, 
-               ggplot2::aes(x = .data$date, y = .data$count))
+        p <- ggplot2::ggplot(
+               data = dat, 
+               mapping = ggplot2::aes(x = .data$date, y = .data$count))
       } else if (statistic == "cumulative") {
-        p <- ggplot2::ggplot(data = dat,
-               ggplot2::aes(x = .data$date, y = .data$cumulative))
+        p <- ggplot2::ggplot(
+               data = dat,
+               mapping = ggplot2::aes(x = .data$date, y = .data$cumulative))
       }
 
       p <- gg_axis.annotation_polygon(dat, p, log.y, chatgpt, r.version, r_date,
@@ -3378,14 +3512,21 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             name = "In-progress",
             breaks = c("Observed", "Estimate"),
             values = c("dotted", "solid")) +
-          ggplot2::geom_line(data = est.seg, linewidth = 1/3,
-            ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
-          ggplot2::geom_line(data = obs.seg,  linewidth = 1/3,
-            ggplot2::aes(col = "Observed", linetype = "Observed")) +
-          ggplot2::geom_point(data = est.data,
-            ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-          ggplot2::geom_point(data = ip.data,
-            ggplot2::aes(colour = "Observed", shape = "Observed"))
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = est.seg,
+            mapping = ggplot2::aes(colour = "Estimate",
+                                   linetype = "Estimate")) +
+          ggplot2::geom_line(
+            linewidth = 1/3,
+            data = obs.seg,
+            mapping = ggplot2::aes(col = "Observed", linetype = "Observed")) +
+          ggplot2::geom_point(
+            data = est.data,
+            mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+          ggplot2::geom_point(
+            data = ip.data,
+            mapping = ggplot2::aes(colour = "Observed", shape = "Observed"))
 
         if (points) p <- p + ggplot2::geom_point(data = complete)
 
@@ -3466,16 +3607,24 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             ggplot2::geom_point(data = current.wk)
         } else {
           p <- p +
-            ggplot2::geom_line(data = current.wk.est.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Estimate", linetype = "Estimate")) +
-            ggplot2::geom_point(data = current.wk.est, size = 1.5,
-              ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
-            ggplot2::geom_line(data = current.wk.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = current.wk,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.est.seg,
+              mapping = ggplot2::aes(colour = "Estimate",
+                                     linetype = "Estimate")) +
+            ggplot2::geom_point(
+              size = 1.5,
+              data = current.wk.est,
+              mapping = ggplot2::aes(colour = "Estimate", shape = "Estimate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = current.wk.seg,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = current.wk,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     shape = "Partial/In-Progress"))
         }
 
         if (weekdays(x$from) == "Sunday") {
@@ -3484,16 +3633,23 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             ggplot2::geom_point(data = wk1.partial)
         } else {
           p <- p +
-            ggplot2::geom_line(data = wk1.backdate.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Backdate", linetype = "Backdate")) +
-            ggplot2::geom_point(data = wk1.backdate,
-              ggplot2::aes(colour = "Backdate", shape = "Backdate")) +
-            ggplot2::geom_line(data = wk1.partial.seg, linewidth = 1/3,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                  linetype = "Partial/In-Progress")) +
-            ggplot2::geom_point(data = wk1.partial,
-              ggplot2::aes(colour = "Partial/In-Progress",
-                           shape = "Partial/In-Progress"))
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.backdate.seg,
+              mapping = ggplot2::aes(colour = "Backdate",
+                                     linetype = "Backdate")) +
+            ggplot2::geom_point(
+              data = wk1.backdate,
+              mapping = ggplot2::aes(colour = "Backdate", shape = "Backdate")) +
+            ggplot2::geom_line(
+              linewidth = 1/3,
+              data = wk1.partial.seg,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     linetype = "Partial/In-Progress")) +
+            ggplot2::geom_point(
+              data = wk1.partial,
+              mapping = ggplot2::aes(colour = "Partial/In-Progress",
+                                     shape = "Partial/In-Progress"))
         }
 
         if (points) p <- p + ggplot2::geom_point(data = complete)

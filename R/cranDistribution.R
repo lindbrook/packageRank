@@ -97,20 +97,35 @@ plot.packageDistribution <- function(x, ...) {
 
     geom.col <- grDevices::adjustcolor("red", alpha.f = 2/3)
 
-    ggplot2::ggplot(data = dat2, ggplot2::aes(x = .data$x, y = .data$y)) +
-      ggplot2::geom_segment(linewidth = 1/3,
-        ggplot2::aes(x = .data$x, xend = .data$x, y = 0, yend = .data$y)) +
-      ggplot2::geom_vline(data = p.data, colour = "red", linetype = "dotted",
-        linewidth = 0.5, ggplot2::aes(xintercept = .data$count)) +
-      ggplot2::geom_label(data = l.data, aes(x = .data$x, y = .data$y),
-        fill = geom.col, colour = "white", size = 2.5, label = pkg.ct$count) +
-      ggplot2::scale_x_log10() +
-      ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
-      ggplot2::labs(x = "log10 Downloads") +
-      ggplot2::labs(y = "Frequency") +
-      ggplot2::theme_bw() +
-      ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
-                     panel.grid.minor = ggplot2::element_blank())
+    ggplot2::ggplot(
+      data = dat2, 
+      mapping = ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_segment(
+      linewidth = 1/3,
+      mapping = ggplot2::aes(x = .data$x,
+                             xend = .data$x,
+                             y = 0,
+                             yend = .data$y)) +
+    ggplot2::geom_vline(
+      colour = "red",
+      linetype = "dotted",
+      linewidth = 0.5,
+      data = p.data,
+      mapping = ggplot2::aes(xintercept = .data$count)) +
+    ggplot2::geom_label(
+      colour = "white", 
+      fill = geom.col, 
+      label = pkg.ct$count,
+      size = 2.5, 
+      data = l.data, 
+      mapping = aes(x = .data$x, y = .data$y)) +
+    ggplot2::scale_x_log10() +
+    ggplot2::facet_wrap(ggplot2::vars(.data$package), nrow = 2) +
+    ggplot2::labs(x = "log10 Downloads") +
+    ggplot2::labs(y = "Frequency") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank())
   }
 }
 
