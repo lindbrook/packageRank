@@ -113,7 +113,8 @@ plot.packageLog <- function(x, type = "1D", unit.observation = "second",
   }
   
   if (!unit.observation %in% c("second", "minute", "hour")) {
-    stop('unit.observation must be "second", "minute", or "hour".', call. = FALSE)
+    stop('unit.observation must be "second", "minute", or "hour".',
+      call. = FALSE)
   }
   
   x <- x[vapply(x, nrow, integer(1L)) != 0]
