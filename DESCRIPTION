@@ -1,8 +1,8 @@
 Package: packageRank
 Type: Package
 Title: Computation and Visualization of Package Download Counts and Percentile Ranks
-Version: 0.9.8.9004
-Date: 2026-04-10
+Version: 0.9.8.9005
+Date: 2026-05-02
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
     role = c("aut", "cre"))
 Maintainer: lindbrook <lindbrook@gmail.com>
@@ -15,7 +15,6 @@ License: GPL (>= 2)
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.3.3
 Roxygen: list(old_usage = TRUE)
 Imports:
     cachem,
@@ -35,3 +34,4 @@ Imports:
     sugrrants
 Suggests: knitr,
           rmarkdown
+Config/roxygen2/version: 8.0.0

@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9005
+ 
+- update roxygen2 version to "8.0.0".
+
+
 ### packageRank 0.9.8.9004
 
 - explicitly use 'mapping' argument in ggplot2::ggplot().
