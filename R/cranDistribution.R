@@ -183,6 +183,8 @@ print.packageDistribution <- function(x, top.n = 20, ...) {
   print(list(date = paste(x$date, weekdays(x$date)),
              unique.packages.downloaded = pkg.ct,
              total.downloads = dwnld.ct,
+             median.package.downloads = stats::median(x$data$count),
+             averagg.package.downloads = mean(x$data$count),
              top.n = head(x$data, top.n),
              package.data = x$data[x$data$package %in% x$package, ]))
 }
@@ -235,6 +237,8 @@ print.cranDistribution <- function(x, top.n = 20, ...) {
   print(list(date = paste(x$date, weekdays(x$date)),
              unique.packages.downloaded = pkg.ct,
              total.downloads = dwnld.ct,
+             median.package.downloads = stats::median(x$data$count),
+             avgerage.downloads = mean(x$data$count),
              top.n = head(x$data, top.n)))
 }
 
