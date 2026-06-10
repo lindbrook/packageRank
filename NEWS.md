@@ -1,3 +1,9 @@
+### packageRank 0.9.8.9006
+
+- add median and average package downloads to print.packageDistribution() and
+  print.cranDistribution().
+  
+
 ### packageRank 0.9.8.9005
  
 - update roxygen2 version to "8.0.0".
