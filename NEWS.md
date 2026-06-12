@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9007
+
+- round average package download and copyedit/fix typo in cranDistribution().
+
+
 ### packageRank 0.9.8.9006
 
 - add median and average package downloads to print.packageDistribution() and
