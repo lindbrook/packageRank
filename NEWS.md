@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9008
+
+- fix plot.cranDownloads(x$when = "last-day").
+
+
 ### packageRank 0.9.8.9007
 
 - round average package download and copyedit/fix typo in cranDistribution().
