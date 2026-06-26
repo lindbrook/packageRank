@@ -126,6 +126,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       msg2 <- 'unit.observation = "month" is not available.'
       stop(paste(msg1, msg2), call. = FALSE)
     }
+    if (x$when == "last-day" & multi.plot == FALSE) multi.plot <- TRUE
   }
 
   if (is.logical(log.y) == FALSE) {
