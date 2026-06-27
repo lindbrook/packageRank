@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9009
+
+- copyedit print.cranDistribution() and print.packageDistribution().
+
+
 ### packageRank 0.9.8.9008
 
 - fix plot.cranDownloads(x$when = "last-day").
