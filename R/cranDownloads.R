@@ -127,6 +127,8 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
       stop(paste(msg1, msg2), call. = FALSE)
     }
     if (x$when == "last-day" & multi.plot == FALSE) multi.plot <- TRUE
+  } else {
+    if (x$to == x$from & multi.plot == FALSE) multi.plot <- TRUE
   }
 
   if (is.logical(log.y) == FALSE) {
