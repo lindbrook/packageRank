@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9010
+
+- fix 'from' = 'to' in plot.cranDownloads().
+
+
 ### packageRank 0.9.8.9009
 
 - copyedit print.cranDistribution() and print.packageDistribution().
