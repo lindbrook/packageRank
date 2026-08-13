@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9011
+
+- use roxygen2 v.8.1.0.
+
+
 ### packageRank 0.9.8.9010
 
 - fix 'from' = 'to' in plot.cranDownloads().
