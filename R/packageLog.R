@@ -157,6 +157,9 @@ plot.packageLog <- function(x, type = "1D", unit.observation = "second",
     }
   })
   
+  one_D.test<- all(unlist(lapply(plot.data, function(x) x$count)) == 1L)
+  if (one_D.test) type <- "1D"
+  
   if (type == "2D") {
     if (same.xy) {
       cts <- vapply(plot.data, function(dat) max(dat$count), integer(1L))
