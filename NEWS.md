@@ -1,3 +1,8 @@
+### packageRank 0.9.8.9013
+
+- archive plot.cranFilterCounts() and plot.packageFilterCounts().
+
+
 ### packageRank 0.9.8.9012
 
 - add/use one_D.test to default back to 1D plot.
