@@ -1,73 +1,28 @@
-### packageRank 0.9.8.9013
+### packageRank 0.9.9
 
-- archive plot.cranFilterCounts() and plot.packageFilterCounts().
-
-
-### packageRank 0.9.8.9012
-
-- add/use one_D.test to default back to 1D plot.
-
-
-### packageRank 0.9.8.9011
-
-- use roxygen2 v.8.1.0.
-
-
-### packageRank 0.9.8.9010
-
-- fix 'from' = 'to' in plot.cranDownloads().
-
-
-### packageRank 0.9.8.9009
-
-- copyedit print.cranDistribution() and print.packageDistribution().
-
-
-### packageRank 0.9.8.9008
-
-- fix plot.cranDownloads(x$when = "last-day").
-
-
-### packageRank 0.9.8.9007
-
-- round average package download and copyedit/fix typo in cranDistribution().
-
-
-### packageRank 0.9.8.9006
-
-- add median and average package downloads to print.packageDistribution() and
-  print.cranDistribution().
-  
-
-### packageRank 0.9.8.9005
- 
-- update roxygen2 version to "8.0.0".
-
-
-### packageRank 0.9.8.9004
-
-- explicitly use 'mapping' argument in ggplot2::ggplot().
-
-
-### packageRank 0.9.8.9003
-
-- fix print.packageDistribution() for multiple packages.
-
-
-### packageRank 0.9.8.9002
+#### Documentation
 
 - left-justify all README PNGs.
+- explicitly use 'mapping' argument in ggplot2::ggplot().
+- use roxygen2 v.8.1.0.
+- copyedit print.cranDistribution() and print.packageDistribution().
 
-
-### packageRank 0.9.8.9001
-
-- fix reverse lookup and plot(cranDistribution()) R markdown chunks.
-
-
-### packageRank 0.9.8.9000
+#### Fixes
 
 - fix resolveDate(type = "from") for future dates.
+- fix reverse lookup and plot(cranDistribution()) R markdown chunks.
+- fix print.packageDistribution() for multiple packages.
+- fix plot.cranDownloads(x$when = "last-day").
+- fix 'from' = 'to' in plot.cranDownloads().
 
+#### Function Changes
+
+- add/use one_D.test to default back to 1D plot.
+- add median and average package downloads to print.packageDistribution() and
+  print.cranDistribution().
+- round average package download and copyedit/fix typo in cranDistribution().
+- fix resolveDate(type = "from") for future dates.
+- archive plot.cranFilterCounts() and plot.packageFilterCounts().
 
 ### packageRank 0.9.8
 
