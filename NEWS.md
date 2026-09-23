@@ -21,7 +21,6 @@
 - add median and average package downloads to print.packageDistribution() and
   print.cranDistribution().
 - round average package download and copyedit/fix typo in cranDistribution().
-- fix resolveDate(type = "from") for future dates.
 - archive plot.cranFilterCounts() and plot.packageFilterCounts().
 
 ### packageRank 0.9.8
