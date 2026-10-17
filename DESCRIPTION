@@ -23,7 +23,6 @@ Imports:
     data.table (>= 1.12.2),
     fasttime,
     ggplot2,
-    graphics,
     ISOcodes,
     memoise,
     patchwork,
