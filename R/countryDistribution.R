@@ -22,7 +22,6 @@ countryDistribution <- function(date = NULL, all.filters = FALSE,
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)

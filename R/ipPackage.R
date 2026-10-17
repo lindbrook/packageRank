@@ -25,7 +25,6 @@ ipPackage <- function(ip = 10, date = NULL, all.filters = FALSE,
   if (ip < 1) stop("Invalid IP. Use a positive integer.")
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   file.url.date <- logDate(date)
   cran_log <- fetchCranLog(date = file.url.date, memoization = memoization)

@@ -12,8 +12,6 @@ ipFilter <- function(cran_log, campaigns = TRUE, rle.depth = 100,
   case.sensitive = FALSE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
-
   greedy.ips <- greedyIP(cran_log)
 
   if (campaigns) {

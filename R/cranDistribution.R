@@ -28,7 +28,7 @@ cranDistribution <- function(package = NULL, date = NULL, all.filters = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L    
+   
   if (small.filter) cran_log <- smallFilter(cran_log)
   if (ip.filter) cran_log <- ipFilter(cran_log, multi.core = cores)
   

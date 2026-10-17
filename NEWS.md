@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9000
+
+- add Positron and move Windows client tests into multiCore().
+
+
 ### packageRank 0.9.9
 
 #### Documentation
