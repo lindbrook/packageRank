@@ -83,7 +83,6 @@ identifyTriplets <- function(dat, output = "data.frame", time.window = 2,
       parallel::stopCluster(cl)
 
     } else {
-      if (.Platform$OS.type == "windows") cores <- 1L
       out <- parallel::mclapply(unique(dat$version), function(v) {
         v.data <- dat[dat$version == v, ]
         v.data$machine <- paste0(v.data$ip_id, "-", v.data$r_version, "-",

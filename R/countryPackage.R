@@ -20,11 +20,7 @@ countryPackage <- function(country = "HK", date = NULL, all.filters = FALSE,
   small.filter = FALSE, version.filter = FALSE, sort.count = TRUE,
   memoization = TRUE, multi.core = FALSE) {
 
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  cores <- multiCore(multi.core)
 
   if (!curl::has_internet()) stop("Check internet connection.", call. = FALSE)
   file.url.date <- logDate(date)
