@@ -1,10 +1,13 @@
 #' Set or compute the number of cores for parallelized functions.
 #'
 #' @param x Logical or Numeric. \code{TRUE} returns the number of logical cores. \code{FALSE} uses one, single core. You can also specify the number of cores. For performance reasons, valid only for macOS and Unix. Windows defaults to one.
+#' @note parallel::mclapply() not supported in Positron (ark) or Windows.
 #' @noRd
 
 multiCore <- function(x = TRUE) {
-  if (.Platform$OS.type == "windows") {
+  positron <- any(c("vscode", "Positron") %in% Sys.getenv("TERM_PROGRAM"))
+  windows <- .Platform$OS.type == "windows"
+  if (positron | windows) {
     cores <- 1L
   } else {
     if (is.logical(x) | is.numeric(x)) {
