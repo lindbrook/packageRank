@@ -34,4 +34,4 @@ Imports:
     sugrrants
 Suggests: knitr,
           rmarkdown
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
