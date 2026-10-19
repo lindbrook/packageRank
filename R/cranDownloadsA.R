@@ -98,7 +98,11 @@ cranDownloadsA <- function(package = NULL, when = NULL, from = NULL,
       end.date.test <- first.published > end.date
       if (any(end.date.test)) {
         drop.pkgs <- paste(package[end.date.test], collapse = ", ")
-        message("Note: ", drop.pkgs, " not published by selected end date.")
+        if (sum(end.date.test) == length(package)) {
+          stop("Note: ", drop.pkgs, " not published by selected end date.")
+        } else if (sum(end.date.test) < length(package)) {
+          message("Note: ", drop.pkgs, " not published by selected end date.")
+        }
         package <- package[!end.date.test]
         first.published <- first.published[!end.date.test]
       }
@@ -121,7 +125,11 @@ cranDownloadsA <- function(package = NULL, when = NULL, from = NULL,
       end.date.test <- first.published > end.date
       if (any(end.date.test)) {
         drop.pkgs <- paste(package[end.date.test], collapse = ", ")
-        message("Note: ", drop.pkgs, " not published by selected end date.")
+        if (sum(end.date.test) == length(package)) {
+          stop("Note: ", drop.pkgs, " not published by selected end date.")
+        } else if (sum(end.date.test) < length(package)) {
+          message("Note: ", drop.pkgs, " not published by selected end date.")
+        }        
         package <- package[!end.date.test]
         first.published <- first.published[!end.date.test]
       }
