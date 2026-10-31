@@ -104,6 +104,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
 
   cores <- multiCore(multi.core)
   chatgpt.release <- as.Date("2022-11-30")
+  claude.release <- as.Date("2023-03-14")
 
   if (graphics == "auto") {
     if (is.null(x$package)) {
