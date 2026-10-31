@@ -43,17 +43,6 @@ cranDownloads <- function(package = NULL, when = NULL, from = NULL,
       fix.cranlogs = fix.cranlogs)
   }
   
-  missing <- packageRank::missing.dates %in% out$cranlogs.data$date
-
-  if (any(missing)) {
-    if (all(missing)) {
-      message(c("Missing: ", paste(packageRank::missing.dates,
-        collapse = ", ")))
-    } else if (any(missing)) {
-      message(c("Missing: ", paste(packageRank::missing.dates[missing],
-        collapse = ", ")))
-    }
-  }
   out
 }
 

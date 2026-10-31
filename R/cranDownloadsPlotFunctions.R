@@ -89,8 +89,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(dat, ylim, log.y = log.y)
-
         points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
         points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
 
@@ -183,8 +181,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(dat, ylim, log.y = log.y)
-
         if (weekdays(x$from) == "Sunday") {
           points(wk1.partial$date, wk1.partial[, y.nm], pch = 16)
           segments(wk1.partial$date, wk1.partial[, y.nm],
@@ -260,8 +256,6 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
           plot(dat$date, dat[, y.nm], type = type, xlab = "Date",
             ylab = y.nm.case, pch = NA)
         }
-
-        missingDatesPolygons(dat, ylim, log.y = log.y)
         
         if (type == "o") {
           if (weekend) {
@@ -286,11 +280,7 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
 
         if (smooth) {
-          if (any(packageRank::missing.dates %in% dat$date) ) {
-            sel <- !dat$date %in% packageRank::missing.dates
-            smooth.data <- dat[sel, ]
-          } else smooth.data <- dat
-          
+          smooth.data <- dat
           if (nrow(smooth.data) > 7) {
             smooth.data <- stats::loess(smooth.data[, y.nm] ~
               as.numeric(smooth.data$date), span = span)
@@ -426,14 +416,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)      
           } else {
-            if (any(packageRank::missing.dates %in% dat$date)) {
-              smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-              p <- p + ggplot2::geom_smooth(data = smooth.data, 
-                method = "loess", formula = "y ~ x",  se = se, span = span)
-            } else {
-              p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
-                se = se, span = span)
-            }
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+              se = se, span = span)
           }
         }
 
@@ -578,14 +562,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
             p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
               formula = "y ~ x", se = se, span = span)
           } else {
-            if (any(packageRank::missing.dates %in% dat$date)) {
-              smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-              p <- p + ggplot2::geom_smooth(data = smooth.data, 
-                method = "loess", formula = "y ~ x",  se = se, span = span)
-            } else {
-              p <- p + ggplot2::geom_smooth(method = "loess", 
-                formula = "y ~ x", se = se, span = span)
-            }
+            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+              se = se, span = span)
           }
         }
       } else {
@@ -601,14 +579,8 @@ cranPlot <- function(x, statistic, graphics, obs.ct, points, log.y, smooth,
         }
         
         if (smooth) {
-          if (any(packageRank::missing.dates %in% dat$date)) {
-            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
-              formula = "y ~ x",  se = se, span = span)
-          } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
-              se = se, span = span)
-          }
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+            se = se, span = span)
         }
       }
 
@@ -710,8 +682,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             plot(complete$date, complete[, y.nm], type = type, xlab = "Date", 
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
           }
-
-          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           points(ip.data[, "date"], ip.data[, y.nm], col = "black", pch = 0)
           points(est.data[, "date"], est.data[, y.nm], col = "red", pch = 1)
@@ -900,8 +870,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = 16)
           }
 
-          missingDatesPolygons(dat, ylim, log.y = log.y)
-
           if (weekdays(x$from) == "Sunday") {
             points(wk1.partial[, c("date", y.nm)], pch = 16)
             segments(wk1.partial$date, wk1.partial[, y.nm],
@@ -1042,8 +1010,6 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
               ylab = y.nm.case, xlim = xlim, ylim = ylim, pch = NA)
           }
 
-          missingDatesPolygons(dat, ylim, log.y = log.y)
-
           if (type == "o") {
             if (weekend) {
               points(wk.day$date, wk.day[, y.nm], pch = 16)
@@ -1115,11 +1081,7 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
           }
 
           if (smooth) {
-            if (any(packageRank::missing.dates %in% pkg.dat$date) ) {
-              sel <- !pkg.dat$date %in% packageRank::missing.dates
-              smooth.data <- pkg.dat[sel, ]
-            } else smooth.data <- pkg.dat
-            
+            smooth.data <- pkg.dat
             if (nrow(smooth.data) > 7) {
               smooth.data <- stats::loess(smooth.data[, y.nm] ~
                 as.numeric(smooth.data$date), span = span)
@@ -1453,14 +1415,8 @@ singlePlot <- function(x, statistic, graphics, obs.ct, points, smooth,
             formula = "y ~ x", se = se, span = span)
         
         } else {
-          if (any(packageRank::missing.dates %in% dat$date)) {
-            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-            p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess", 
-              formula = "y ~ x",  se = se, span = span)
-          } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-              se = se, span = span)  
-          }
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 
@@ -1554,8 +1510,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             plot(dat[, vars], pch = NA, xlim = xlim, ylim = ylim, main = ttl, 
               xlab = "Date", ylab = y.nm.case)
           }
-
-          missingDatesPolygons(dat, ylim, log.y = log.y)
 
           invisible(lapply(seq_along(pkg.data), function(i) {
             complete <- pkg.data[[i]]$complete
@@ -1707,8 +1661,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
                xlab = "Date", ylab = y.nm.case)
           }
 
-          missingDatesPolygons(dat, ylim, log.y = log.y)
-
           invisible(lapply(seq_along(plot.data), function(i) {
             pkg.dat <- plot.data[[i]]$pkg.dat
             wk1.partial <- plot.data[[i]]$wk1.partial
@@ -1818,8 +1770,6 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
               xlab = "Date", ylab = y.nm.case)
           }
 
-          missingDatesPolygons(dat, ylim, log.y = log.y)
-
           invisible(lapply(seq_along(x$package), function(i) {
             tmp <- dat[dat$package == x$package[i], ]
             lines(tmp$date, tmp[, statistic], col = cbPalette[i])
@@ -1858,10 +1808,7 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             }
 
             if (smooth) {
-              if (any(packageRank::missing.dates %in% dat$date) ) {
-                smooth.data <- tmp[!tmp$date %in% packageRank::missing.dates, ]
-              } else smooth.data <- dat
-
+              smooth.data <- dat
               if (nrow(smooth.data) > 7) {
                 smooth.data <- stats::loess(smooth.data[, statistic] ~ 
                   as.numeric(smooth.data$date), span = span)
@@ -2264,14 +2211,8 @@ multiPlot <- function(x, statistic, graphics, obs.ct, log.y,
             formula = "y ~ x", se = se, span = span)
         
         } else {
-          if (any(packageRank::missing.dates %in% dat$date)) {
-            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-            p <- p + ggplot2::geom_smooth(data = smooth.data, 
-              method = "loess", formula = "y ~ x",  se = se, span = span)
-          } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
-              se = se, span = span)
-          }
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+            se = se, span = span)
         }
       }
       
@@ -2386,8 +2327,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           plot(dat$date, dat[, statistic], pch = NA, xlab = "Date", 
             ylab = y.nm.case, ylim = ylim)
         }
-
-        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (points) {
           invisible(lapply(seq_along(complete), function(i) {
@@ -2537,8 +2476,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
             ylab = y.nm.case, ylim = ylim)
         }
 
-        missingDatesPolygons(dat, ylim, log.y = log.y)
-
         if (points) {
           invisible(lapply(seq_along(complete), function(i) {
             tmp <- complete[[i]]
@@ -2638,8 +2575,6 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
                dat[dat$platform == "win", statistic],
                pch = NA, ylim = ylim, xlab = "Date", ylab = y.nm.case)
         }
-
-        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         pltfrm <- sort(unique(dat$platform))
         pltfrm.col <- c("red", "dodgerblue", "black")
@@ -3120,14 +3055,8 @@ rPlot <- function(x, statistic, graphics, obs.ct, legend.location,
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          if (any(packageRank::missing.dates %in% dat$date)) {
-            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-            p <- p + ggplot2::geom_smooth(data = smooth.data, 
-              method = "loess", formula = "y ~ x",  se = se, span = span)
-          } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
-              se = se, span = span)
-          }
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x",
+            se = se, span = span)
         }
       }
 
@@ -3253,8 +3182,6 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(dat, ylim, log.y = log.y)
-
         points(ip.data[, vars], col = "black", pch = 0)
         points(est.data[, vars], col = "red", pch = 1)
 
@@ -3345,8 +3272,6 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
             xlim = xlim, ylim = ylim, pch = 16)
         }
 
-        missingDatesPolygons(dat, ylim, log.y = log.y)
-
         if (weekdays(x$from) == "Sunday") {
           points(wk1.partial[, vars], pch = 16)
           segments(wk1.partial$date, wk1.partial[, statistic],
@@ -3402,7 +3327,6 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
         }
 
         ylim <- range(dat[, statistic])
-        missingDatesPolygons(dat, ylim, log.y = log.y)
 
         if (type == "o") {
           if (weekend) {
@@ -3677,14 +3601,8 @@ rTotPlot <- function(x, statistic, graphics, obs.ct, legend.location, points,
           p <- p + ggplot2::geom_smooth(data = smooth.data, method = "loess",
             formula = "y ~ x", se = se, span = span)
         } else {
-          if (any(packageRank::missing.dates %in% dat$date)) {
-            smooth.data <- dat[!dat$date %in% packageRank::missing.dates, ]
-            p <- p + ggplot2::geom_smooth(data = smooth.data, 
-              method = "loess", formula = "y ~ x",  se = se, span = span)
-          } else {
-            p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
-              se = se, span = span)
-          }
+          p <- p + ggplot2::geom_smooth(method = "loess", formula = "y ~ x", 
+            se = se, span = span)
         }
       }
 

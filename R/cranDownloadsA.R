@@ -155,18 +155,6 @@ cranDownloadsA <- function(package = NULL, when = NULL, from = NULL,
       ## restore zeroes because cranlogs::cran_downloads("R") drops them ##
       argmts.dates <- seq.Date(from = min(cranlogs.data$date),
         to = max(cranlogs.data$date), by = "day")
-      missing <- packageRank::missing.dates %in% argmts.dates
-
-      if (any(missing)) {
-        r.history <- packageHistory("R", check.package = FALSE)
-        obs.missing <- packageRank::missing.dates[missing]
-        os <- sort(unique(cranlogs.data$os))
-        m.date <- rep(obs.missing, each = length(os))
-        m.vr <- rep(r.history[nrow(r.history), "Version"], length(m.date))
-        m.os <- rep(os, length(obs.missing))
-        tmp <- data.frame(date = m.date, version = m.vr, os = m.os, count = 0)
-        cranlogs.data <- rbind(cranlogs.data, tmp)
-      }
       
       count <- tapply(cranlogs.data$count, list(cranlogs.data$date,
         cranlogs.data$os), sum)
