@@ -1,18 +1,13 @@
-#' Annotate top axis (side = 3) with ChatGPT relase, R version, and missing.dates and add missing dates polygons.
+#' Annotate top axis (side = 3) with ChatGPT release and R version.
 #' @importFrom ggplot2 dup_axis scale_x_date 
 #' @noRd
 
 gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version, 
   r_date, r_v, chatgpt.release, axis.package, axis.package.version) {
 
-  null.set <- expression(symbol("\306"))
   date.range <- range(dat$date)
   exp.dates <- seq.Date(from = date.range[1], to = date.range[2])
   obs.chatgpt <- chatgpt.release %in% exp.dates
-  obs.missing <- packageRank::missing.dates %in% exp.dates
-
-  missing.breaks <- c(mean(packageRank::missing.dates[1:2]), 
-                      packageRank::missing.dates[5])
 
   if (isTRUE(r.version) | isTRUE(r.version == "line")) {
     sel <- r_date %in% exp.dates
@@ -95,82 +90,6 @@ gg_axis.annotation_polygon <- function(dat, p, log.y, chatgpt, r.version,
   
     brk <- NULL
     lbl <- NULL
-  }
-
-  if (any(obs.missing)) {
-    ymin <- ifelse(log.y, 0, -Inf)
-
-    if (all(obs.missing)) {
-      p <- gg_missingDatesPolygons(p, ymin)
-      brk <- c(missing.breaks, brk)
-      lbl <- c(rep(null.set, 2), lbl)
-    
-    } else if (any(obs.missing == FALSE)) {
-      missingA <- obs.missing[1:2]
-      missingB <- obs.missing[3:7]
-      polygon.adjustment <- list(missingA = missingA, missingB = missingB)
-      p <- gg_missingDatesPolygons(p, ymin, polygon.adjustment)
-          
-      if (all(missingA) & all(missingB == FALSE)) {
-        missing.brk <- mean(packageRank::missing.dates[1:2])
-        missing.lbl <- null.set
-      
-      } else if (all(missingA == FALSE) & all(missingB)) {
-        missing.brk <- packageRank::missing.dates[5]
-        missing.lbl <- null.set
-      
-      } else if (all(missingA) & any(missingB == FALSE)) {
-        if (all(missingB)) {
-          brkB <- packageRank::missing.dates[5]
-        } else {
-          brkB <- mean(packageRank::missing.dates[3:7][missingB])
-        }
-        missing.brk <- c(mean(packageRank::missing.dates[1:2]), brkB)
-        missing.lbl <- rep(null.set, 2)
-      
-      } else if (any(missingA == FALSE) & all(missingB)) {
-        if (all(missingA)) {
-          brkA <- mean(packageRank::missing.dates[1:2])
-        } else {
-          brkA <- packageRank::missing.dates[1:2][missingA]
-        }
-        missing.brk <- c(brkA, packageRank::missing.dates[5])
-        missing.lbl <- rep(null.set, 2)
-      
-      } else if (all(missingA == FALSE) & any(missingB == FALSE)) {
-        if (all(missingB)) {
-          missing.brk <- packageRank::missing.dates[5]
-        } else {
-          missing.brk <- mean(packageRank::missing.dates[3:7][missingB])
-        }
-        missing.lbl <- null.set
-      
-      } else if (any(missingA == FALSE) & all(missingB == FALSE)) {
-        if (all(missingA)) {
-          missing.brk <- mean(packageRank::missing.dates[1:2])
-        } else {
-          missing.brk <- packageRank::missing.dates[1:2][missingA]
-        }
-        missing.lbl <- null.set
-      
-      } else if (any(missingA == FALSE) & any(missingB == FALSE)) {
-        if (all(missingA)) {
-          brkA <- mean(packageRank::missing.dates[1:2])
-        } else {
-          brkA <- packageRank::missing.dates[1:2][missingA]
-        }
-        if (all(missingB)) {
-          brkB <- packageRank::missing.dates[5]
-        } else {
-          brkB <- mean(packageRank::missing.dates[3:7][missingB])
-        }
-        missing.brk <- c(brkA, brkB)
-        missing.lbl <- rep(null.set, 2)
-      }
-
-      brk <- c(missing.brk, brk)
-      lbl <- c(missing.lbl, lbl)
-    }
   }
 
   p <- p + ggplot2::scale_x_date(sec.axis =

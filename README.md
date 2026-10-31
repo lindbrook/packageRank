@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.9.9001-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.9.9002-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 ![](man/figures/README-plot_examples_code-1.png)
@@ -77,11 +77,9 @@
       - Sundays and Wednesdays from 2022-11-06 through 2023-03-19
   3.  doubled or tripled R application downloads counts (2023) – FIXED
       - Sep 13 - Oct 02
-  4.  seven lost logs (2025) – FIXED
+  4.  seven lost logs (2025) – NOTE
       - Aug 25-26; Aug 29 - Sep 02
-      - message in the console
-      - graphical annotation in plots
-      - smoothers ignore missing dates
+      - upstream data restored; code amended with v0.9.9.9002.
 - [et cetera](#et-cetera)
   - Bioconductor: bioconductorDownloads() and bioconductorRank().
   - country code top-level domains in CRAN/package logs
@@ -924,6 +922,12 @@ cranDistribution(package = NULL)
     > $total.downloads
     > [1] "3,539,833"
     > 
+    > $median.package.downloads
+    > [1] 9
+    > 
+    > $average.package.downloads
+    > [1] 145.5
+    > 
     > $top.n
     >        package count rank nominal.rank percentile
     > 1         Rcpp 36411    1            1      100.0
@@ -963,6 +967,12 @@ cranDistribution(package = "packageRank")
     > 
     > $total.downloads
     > [1] "3,539,833"
+    > 
+    > $median.package.downloads
+    > [1] 9
+    > 
+    > $average.package.downloads
+    > [1] 145.5
     > 
     > $top.n
     >        package count rank nominal.rank percentile
@@ -1519,33 +1529,20 @@ download counts around the same period but that is now fixed in
 [‘cranlogs’](https://CRAN.R-project.org/package=cranlogs). For details,
 see issue [\#68](https://github.com/r-hub/cranlogs/issues/68)
 
-#### 4) seven lost logs (2025) - Error
+#### 4) seven lost logs (2025) - Note
 
-In 2025, 7 logs, 8/25-8/26 and 8/29-9/02, appear to be lost. For what
-it’s worth, both gaps were preceded by two unusually large number of
-downloads: Sun 8/24 (14,521,256) and Wed 8/27 & Thu 8/28 (16,860,505 and
-16,477,023). These outliers are approximately twice the size of
-“typical” download counts (see graph below).
-
-As a “fix”, the missing dates (see cholera::missing.date),
-`cranDownloads()` does the following. First, when a missing date is
-included it prints a message in the console. Second, when plotting two
-gray polygons are added to the graph to highlight those dates. They are
-labeled with a “⌀” (empty set) on the top axis. Third, smoothers ignore
-the missing data.
-
-The graph below, which plots the *total* number of downloads recorded by
-the Posit/RStudio mirror from Sat 7/05 through Sun 9/14, shows the
-magnitude of the outliers and the two graphical fixes (open circles are
-weekends).
+In 2025, 7 logs, 8/25-8/26 and 8/29-9/02, appeared to be lost. Those
+data were restored October 2026. The changes are reflected in
+packageRank v0.9.9.9002. The graph below plots the updated data for the
+period; note the multiple orders of magnitude increase in total package
+downloads.
 
 ``` r
-plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), smooth = TRUE, 
-  points = TRUE, weekend = TRUE)
-> Missing: 2025-08-25, 2025-08-26, 2025-08-29, 2025-08-30, 2025-08-31, 2025-09-01, 2025-09-02
+plot(cranDownloads(from = "2025-07-05", to = "2025-09-10"), points = TRUE,
+  weekend = TRUE, log.y = TRUE)
 ```
 
-![](man/figures/README-missing-1.png)<!-- -->
+![](man/figures/README-restored-1.png)<!-- -->
 
 ------------------------------------------------------------------------
 

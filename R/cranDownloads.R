@@ -43,17 +43,6 @@ cranDownloads <- function(package = NULL, when = NULL, from = NULL,
       fix.cranlogs = fix.cranlogs)
   }
   
-  missing <- packageRank::missing.dates %in% out$cranlogs.data$date
-
-  if (any(missing)) {
-    if (all(missing)) {
-      message(c("Missing: ", paste(packageRank::missing.dates,
-        collapse = ", ")))
-    } else if (any(missing)) {
-      message(c("Missing: ", paste(packageRank::missing.dates[missing],
-        collapse = ", ")))
-    }
-  }
   out
 }
 
@@ -104,6 +93,7 @@ plot.cranDownloads <- function(x, statistic = "count", graphics = "auto",
 
   cores <- multiCore(multi.core)
   chatgpt.release <- as.Date("2022-11-30")
+  claude.release <- as.Date("2023-03-14")
 
   if (graphics == "auto") {
     if (is.null(x$package)) {
