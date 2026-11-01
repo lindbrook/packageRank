@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9003
+
+- fix ggplot2 importFrom in annualPlot().
+
+
 ### packageRank 0.9.9.9002
 
 - upstream Posit/RStudio data (missing dates) restored.
