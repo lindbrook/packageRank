@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9005
+
+- amend nudges in ggPlot() for plot.packageRank(graphics = "ggplot2").
+
+
 ### packageRank 0.9.9.9004
 
 - use orders of magnitude on y-axis for plot.packageRank(log.y = TRUE).
