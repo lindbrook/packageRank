@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9004
+
+- use orders of magnitude on y-axis for plot.packageRank(log.y = TRUE).
+
+
 ### packageRank 0.9.9.9003
 
 - fix ggplot2 importFrom in annualPlot().
