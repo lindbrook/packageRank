@@ -76,7 +76,9 @@ packageRank <- function(package = "packageRank", date = NULL,
 plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
   if (is.logical(log.y) == FALSE) stop("log.y must be TRUE or FALSE.")
 
-  freqtab <- x$cran.data$count
+  if (log.y) freqtab <- log10(x$cran.data$count)
+  else freqtab <- x$cran.data$count
+    
   names(freqtab) <- x$cran.data$package
   package.data <- x$package.data
   package <- x$package
@@ -121,13 +123,9 @@ plot.packageRank <- function(x, graphics = NULL, log.y = TRUE, ...) {
 #' @noRd
 
 basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
-  if (log.y) {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10 Count",
-      log = "y")
-  } else {
-    plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Count")
-  }
-
+  if (log.y) plot(c(freqtab), type = "l", xlab = "Rank", ylab = "log10 Count")
+  else plot(c(freqtab), type = "l", xlab = "Rank", ylab = "Count")
+  
   abline(v = iqr, col = "gray", lty = "dotted")
   iqr.labels <- c("75th", "50th", "25th")
 
@@ -150,7 +148,7 @@ basePlot <- function(pkg, log.y, freqtab, iqr, package.data, y.max, date) {
     col.ticks = "red", labels = pct.label, cex.axis = 0.8)
 
   axis(4, at = freqtab[pkg], col.axis = "red", col.ticks = "red",
-    cex.axis = 0.8, labels = format(freqtab[pkg], big.mark = ","))
+    cex.axis = 0.8, labels = format(10^freqtab[pkg], big.mark = ","))
   points(which(names(freqtab) == pkg), freqtab[pkg], col = "red")
   points(which(names(freqtab) == names(freqtab[1])), y.max,
     col = "dodgerblue")
@@ -221,8 +219,9 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
   tot.dwnld <- paste("Total =", format(sum(freqtab), big.mark = ","))
 
   xlabel <- paste0(round(package.data$percentile, 2), "%")
-  ylabel <- format(point.data$y, big.mark = ",")
-
+  if (log.y) ylabel <- format(10^point.data$y, big.mark = ",")
+  else ylabel <- format(point.data$y, big.mark = ",")
+  
   if (length(package) > 1) {
     label.size <- 2.5
     ylabel.nudge <- 0.75
@@ -275,8 +274,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
        ggplot2::theme_bw() +
        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                       panel.grid.minor = ggplot2::element_blank())
-
-  if (log.y) p + ggplot2::scale_y_log10() else p
+  p
 }
 
 #' Print method for packageRank().
