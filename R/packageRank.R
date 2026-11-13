@@ -222,11 +222,16 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
   if (log.y) ylabel <- format(10^point.data$y, big.mark = ",")
   else ylabel <- format(point.data$y, big.mark = ",")
   
-  if (length(package) > 1) {
-    label.size <- 2.5
+  label.size <- 3
+
+  if (length(package) == 1) {  
+    xlabel.nudge <- 4000
+    ylabel.nudge <- 0.75
+  } else if (length(package) == 2) {
+    xlabel.nudge <- 3000
     ylabel.nudge <- 0.75
   } else {
-    label.size <- 3.5
+    xlabel.nudge <- 4000
     ylabel.nudge <- 0.5
   }
 
@@ -263,7 +268,7 @@ ggPlot <- function(x, log.y, freqtab, iqr, package.data, y.max, date) {
        ggplot2::geom_label(data = point.data, 
          ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
            colour = "white", size = label.size, label = ylabel,
-           nudge_x = 2000) +
+           nudge_x = xlabel.nudge) +
        ggplot2::geom_label(data = point.data, 
           ggplot2::aes(x = .data$x, y = .data$y), fill = alpha.col, 
             colour = "white", size = label.size, label = xlabel, 
