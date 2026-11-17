@@ -23,7 +23,7 @@
 - upstream Posit/RStudio data (missing dates) restored.
 - remove missing.dates code in gg_axis.annotation_polygon().
 - archive missingDatesPolygons() and missing.dates.
-- remove missing.dates code in cranDownload functions>
+- remove missing.dates code in cranDownload functions.
 - amend README.
 
 
