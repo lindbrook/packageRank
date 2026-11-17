@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9007
+
+- amend README.
+
+
 ### packageRank 0.9.9.9006
 
 - set plot.packageLog(type = "2D", unit.observation = "minute").

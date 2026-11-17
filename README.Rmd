@@ -99,8 +99,8 @@ par(mfrow = c(1, 1))
     3. doubled or tripled R application downloads counts (2023) -- FIXED
         + Sep 13 - Oct 02
     4. seven lost logs (2025) -- NOTE
-        + Aug 25-26; Aug 29 - Sep 02
-        + upstream data restored; code amended with v0.9.9.9002.
+        + Aug 25-26; Aug 29-Sep 02
+        + upstream data restored and code amended (>= v0.9.9.9002).
 * [et cetera]
     * Bioconductor: bioconductorDownloads() and bioconductorRank().
     * country code top-level domains in CRAN/package logs

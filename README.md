@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.9.9006-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.9.9007-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 ![](man/figures/README-plot_examples_code-1.png)
@@ -78,8 +78,8 @@
   3.  doubled or tripled R application downloads counts (2023) – FIXED
       - Sep 13 - Oct 02
   4.  seven lost logs (2025) – NOTE
-      - Aug 25-26; Aug 29 - Sep 02
-      - upstream data restored; code amended with v0.9.9.9002.
+      - Aug 25-26; Aug 29-Sep 02
+      - upstream data restored and code amended (>= v0.9.9.9002).
 - [et cetera](#et-cetera)
   - Bioconductor: bioconductorDownloads() and bioconductorRank().
   - country code top-level domains in CRAN/package logs
