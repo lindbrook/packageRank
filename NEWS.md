@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9007
+
+- amend README.
+
+
 ### packageRank 0.9.9.9006
 
 - set plot.packageLog(type = "2D", unit.observation = "minute").
@@ -23,7 +28,7 @@
 - upstream Posit/RStudio data (missing dates) restored.
 - remove missing.dates code in gg_axis.annotation_polygon().
 - archive missingDatesPolygons() and missing.dates.
-- remove missing.dates code in cranDownload functions>
+- remove missing.dates code in cranDownload functions.
 - amend README.
 
 
