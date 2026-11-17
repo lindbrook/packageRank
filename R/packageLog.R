@@ -97,14 +97,14 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #' @param type Character. "1D" or "2D".
 #' @param unit.observation Character. "second", "minute", or "hour".
 #' @param smooth Logical. Add smoother.
-#' @param points Logical. For "hour" and "minute" in 2D plots.
+#' @param points Logical or Character. "auto": TRUE for <100 observations; FALSE otherwise. For "hour" and "minute" in 2D plots.
 #' @param same.xy Logical. Use same scale for multiple packages for type = "2D".
 #' @param local.timezone Logical or Character. TRUE for Sys.timezone(). See OlsonNames() for other time zones.
 #' @param ... Additional parameters.
 #' @export
 
 plot.packageLog <- function(x, type = "2D", unit.observation = "minute",
-  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE, ...) {
+  smooth = FALSE, points = "auto", same.xy = TRUE, local.timezone = TRUE, ...) {
   
   type <- toupper(type)
   
@@ -171,8 +171,14 @@ plot.packageLog <- function(x, type = "2D", unit.observation = "minute",
   
   if (length(x) > 1) grDevices::devAskNewPage(ask = TRUE)
   
+  if (points == "auto") {
+    obs.ct <- vapply(plot.data, nrow, integer(1L))
+    points <- ifelse (obs.ct > 100,  FALSE, TRUE)
+    names(points) <- names(plot.data)
+  }
+  
   invisible(lapply(names(plot.data), function(nm) {
-    logPlot(plot.data[[nm]], type, unit.observation, points,
+    logPlot(plot.data[[nm]], type, unit.observation, points[nm],
       log.date, x.tick, ylim, nm, smooth, x2.tick)
   }))
   

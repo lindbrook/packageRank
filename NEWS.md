@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9008
+
+- set plot.packageLog(points = "auto").
+
+
 ### packageRank 0.9.9.9007
 
 - amend README.

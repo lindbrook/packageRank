@@ -5,8 +5,8 @@
 \title{Plot method for packageLog().}
 \usage{
 \method{plot}{packageLog}(x, type = "2D", unit.observation = "minute",
-  smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE,
-  ...)
+  smooth = FALSE, points = "auto", same.xy = TRUE,
+  local.timezone = TRUE, ...)
 }
 \arguments{
 \item{x}{Object.}
@@ -17,7 +17,7 @@
 
 \item{smooth}{Logical. Add smoother.}
 
-\item{points}{Logical. For "hour" and "minute" in 2D plots.}
+\item{points}{Logical or Character. "auto": TRUE for <100 observations; FALSE otherwise. For "hour" and "minute" in 2D plots.}
 
 \item{same.xy}{Logical. Use same scale for multiple packages for type = "2D".}
 
