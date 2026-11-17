@@ -1,3 +1,8 @@
+### packageRank 0.9.9.9006
+
+- set plot.packageLog(type = "2D", unit.observation = "minute").
+
+
 ### packageRank 0.9.9.9005
 
 - amend nudges in ggPlot() for plot.packageRank(graphics = "ggplot2").

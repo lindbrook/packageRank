@@ -103,9 +103,9 @@ packageLog <- function(package = "cholera", date = NULL, all.filters = FALSE,
 #' @param ... Additional parameters.
 #' @export
 
-plot.packageLog <- function(x, type = "1D", unit.observation = "second",
+plot.packageLog <- function(x, type = "2D", unit.observation = "minute",
   smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE, ...) {
-
+  
   type <- toupper(type)
   
   if (!type %in% c("1D", "2D")) {
