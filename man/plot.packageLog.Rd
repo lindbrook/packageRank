@@ -4,7 +4,7 @@
 \alias{plot.packageLog}
 \title{Plot method for packageLog().}
 \usage{
-\method{plot}{packageLog}(x, type = "1D", unit.observation = "second",
+\method{plot}{packageLog}(x, type = "2D", unit.observation = "minute",
   smooth = FALSE, points = TRUE, same.xy = TRUE, local.timezone = TRUE,
   ...)
 }
