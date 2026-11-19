@@ -68,7 +68,7 @@ cranDownloads <- function(package = NULL, when = NULL, from = NULL,
 #' @param r.total Logical.
 #' @param dev.mode Logical. Use packageHistory0() to scrape CRAN.
 #' @param unit.observation Character. "year", "month", "week", or "day".
-#' @param chatgpt Logical or "line". Add intitial availability date and vertical line for ChatGPT.
+#' @param chatgpt Logical or "line". Add initial availability date and vertical line for ChatGPT.
 #' @param weekend Logical. Highlight weekends (pch = 1) when unit.observation = "day".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. Mac and Unix only.
 #' @param ... Additional plotting parameters.
