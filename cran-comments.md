@@ -1,18 +1,18 @@
 #### Test environments
 
-* local: macOS 27.0; R 4.6.1 (2026-06-24)
+* local: macOS 27.2.1; R 4.6.2 (2026-10-29)
 * win-builder: devel, oldrelease and release
 
 
 #### R CMD check results
 
-R 4.6.1 (2026-06-24), aarch64-apple-darwin23:  
+R 4.6.2 (2026-10-29), aarch64-apple-darwin23:  
 0 errors | 0 warnings | 0 notes
 
 
 #### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2026-09-20 r90574 ucrt):  
+R-devel: R Under development (unstable) (2026-11-17 r90926 ucrt):  
 0 errors | 0 warnings | 0 notes
 
 R-oldrelease: R 4.5.3 (2026-03-11 ucrt):  
@@ -29,7 +29,7 @@ R-oldrelease: R 4.5.3 (2026-03-11 ucrt):
     https://cloud.r-project.org/ >>
 ```
 
-R-release: R 4.6.1 (2026-06-24 ucrt):  
+R-release: R 4.6.2 (2026-10-29 ucrt):  
 0 errors | 0 warnings | 0 note
 
 

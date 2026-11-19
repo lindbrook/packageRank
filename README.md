@@ -1,3 +1,5 @@
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.10.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 ![](man/figures/README-plot_examples_code-1.png)
