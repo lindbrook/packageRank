@@ -1,50 +1,30 @@
-### packageRank 0.9.9.9008
+### packageRank 0.10.0
 
-- set plot.packageLog(points = "auto").
+- upstream Posit/RStudio data (missing dates) restored:
+  - seven logs in 2025: Aug 25-26 and Aug 29-Sep 02.
+  - related code amended.
 
+#### Data
 
-### packageRank 0.9.9.9007
+- archive missing.dates.
 
-- amend README.
+#### Documentation
 
-
-### packageRank 0.9.9.9006
-
-- set plot.packageLog(type = "2D", unit.observation = "minute").
-
-
-### packageRank 0.9.9.9005
-
-- amend nudges in ggPlot() for plot.packageRank(graphics = "ggplot2").
-
-
-### packageRank 0.9.9.9004
-
-- use orders of magnitude on y-axis for plot.packageRank(log.y = TRUE).
-
-
-### packageRank 0.9.9.9003
-
+- amend README for restored missing.dates.
 - fix ggplot2 importFrom in annualPlot().
 
+#### Function Changes
 
-### packageRank 0.9.9.9002
-
-- upstream Posit/RStudio data (missing dates) restored.
-- remove missing.dates code in gg_axis.annotation_polygon().
-- archive missingDatesPolygons() and missing.dates.
-- remove missing.dates code in cranDownload functions.
-- amend README.
-
-
-### packageRank 0.9.9.9001
-
+- add Positron and move Windows client tests into multiCore() - 
+    parallelization unsupported.
 - add stop()'s for before-publication dates in cranDownloadsA().
-
-
-### packageRank 0.9.9.9000
-
-- add Positron and move Windows client tests into multiCore().
+- remove missing.dates code in cranDownload functions.
+- archive missingDatesPolygons().
+- remove missing.dates code in gg_axis.annotation_polygon().
+- use orders of magnitude on y-axis for plot.packageRank(log.y = TRUE).
+- amend nudges in ggPlot() for plot.packageRank(graphics = "ggplot2").
+- set plot.packageLog(type = "2D", unit.observation = "minute").
+- set plot.packageLog(points = "auto").
 
 
 ### packageRank 0.9.9

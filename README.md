@@ -1,5 +1,5 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/packageRank)](https://cran.r-project.org/package=packageRank)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.9.9008-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.10.0-red.svg)](https://github.com/lindbrook/packageRank/blob/master/NEWS.md)
 ## packageRank: compute, visualize and contextualize R package and application download counts
 
 ![](man/figures/README-plot_examples_code-1.png)
@@ -385,7 +385,7 @@ plot(cranDownloads(from = 2019, to = 2019))
 #### `package = "R"`
 
 `cranDownloads(package = "R")` computes the total number of downloads of
-the R application by platfrom: “mac” = macOS, “src” = source, and “win”
+the R application by platform: “mac” = macOS, “src” = source, and “win”
 = Windows. Note that, as with `cranlogs::cran_downloads()`, you can only
 use “R” *or* a vector of packages names, not both!.
 
@@ -1493,7 +1493,7 @@ version of R.
 These spikes appear to be real patterns in the data and not coding
 errors. Detailed, visual evidence for this can be found online in this
 [note](https://github.com/lindbrook/packageRank/blob/master/docs/windows_spikes.md)
-in the package’s GitHub respository.
+in the package’s GitHub repository.
 
 #### 3) doubled (or tripled) R application downloads counts (2023) - Error
 
